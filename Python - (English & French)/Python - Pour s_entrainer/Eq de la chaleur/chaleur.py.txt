@@ -1,0 +1,153 @@
+# JL - 03/18
+
+import numpy as np
+import matplotlib.pyplot as plt
+
+## Newton-Raphson
+
+def distance(X, Y):
+    "distance euclidienne entre les deux vecteurs"
+    return np.sqrt(sum((X - Y) ** 2))
+
+def Newton(X0, f, Jf, epsilon):
+    "MÃ©thode de Newton vectorielle aves prÃ©cision epsilon"
+    X = X0
+    X1 = X0 - np.linalg.solve(Jf(X0), f(X0))
+    while distance(X, X1) > epsilon:
+        #print(np.linalg.det(Jf(X1)))
+        X, X1 = X1, X1 - np.linalg.solve(Jf(X1), f(X1))
+        #print(X1)
+    return X
+    
+def f(X):
+    "f : z -> zÂ³ - 1 vectorilaisÃ©e"
+    x, y = X
+    return np.array([x ** 3 - 3 * x * y ** 2 - 1, 3 * x ** 2 * y - y ** 3])
+    
+def Jf(X):
+    x, y = X
+    return np.array(
+    [[3 * x ** 2 - 3 * y ** 2, -6 * x * y],
+    [6 * x * y, 3 * x ** 2 - 3 * y ** 2]])
+    
+def attraction(h, epsilon):
+    racines = [np.array([np.cos(2 * k * np.pi / 3), np.sin(2 * k * np.pi / 3)]) for k in range(3)]
+    x = np.arange(-1.5, 1.5 + h, h)
+    y = np.arange(-1.5, 1.5 + h, h)
+    n = len(x)
+    T = np.zeros((n, n), int)
+    for i in range(n):
+        for j in range(n):
+            X = Newton(np.array([x[i], y[j]]), f, Jf, epsilon)
+            k = 0
+            while k < 3 and distance(X, racines[k]) > 1e-4:
+                k += 1
+            T[i, j] = k
+    return T
+    
+def trace_newton(h, epsilon):
+    "tracÃ© et enregistrement du fractal de Newton dans un fichier newton.png"
+    T = attraction(h, epsilon)
+    plt.imshow(T)
+    plt.axis('off')
+    plt.savefig('newton')
+    plt.show()
+            
+
+## Equation de la chaleur
+
+## Crank-Nicholson
+
+def matrice(m, a, b):
+    """renvoie une matrice de taille (m + 1) x (m + 1) de la forme
+              (1 0   (0))
+              (a b a    )
+              (  ...    )
+              (   a b a )
+              ((0)   0 1)"""
+
+    mat = b * np.identity(m + 1)
+    mat += a * np.diag(np.ones(m), 1)
+    mat += a * np.diag(np.ones(m), -1)
+    mat[0, 0] = mat[-1, -1] = 1
+    mat[0, 1] = mat[-1, -2] = 0
+    return mat
+
+def CrankNicholson(L, tf, D, T0, Text, Nx, Nt):
+    "rÃ©solution par schÃ©ma de Crank Nicholson."
+    delta = L / Nx
+    tau = tf / Nt
+    alpha = D * tau / (2 * delta**2)
+
+    t = np.linspace(0, tf, Nt + 1)
+    x = np.linspace(0, L, Nx + 1)
+
+    T = Text * np.zeros((Nx + 1, Nt + 1)) # On initialise Ã  Text
+
+    T[:, 0] = np.vectorize(T0)(x) # Distribution initiale des tempÃ©ratures
+    
+    
+    A = matrice(Nx, -alpha, 1 + 2 * alpha)
+    B = matrice(Nx, alpha, 1 - 2 * alpha)
+
+    # Pour que le schÃ©ma soit correct :
+    # T[i, 0] = T[i, -1] = Text pour tout i
+    T[0, 0] = T[-1, 0] = Text 
+
+    for n in range(Nt):
+        # Calcul de la tempÃ©rature au temps n + 1
+        # Ã  partir du temps n.
+        T[:, n + 1] = np.linalg.solve(A, B.dot(T[:, n]))
+
+    # On remet les valeurs initales
+    T[0, 0] = T0(x[0])
+    T[-1, 0] = T0(x[-1])
+    
+    return T
+
+def trace():
+    "TracÃ© pour une tempÃ©rature initiale constante de 100 degrÃ©s"
+    T0 = lambda x: 100
+    L = 1
+    D = 1
+    tf = .5
+    Text = 20
+    Nt = 1000
+    Nx = 50
+    
+    T = CrankNicholson(L, tf, D, T0, Text, Nx, Nt)
+
+    x = np.linspace(0, L, Nx + 1)
+
+    plt.figure(figsize=(15, 8))
+    for i in range(0, Nt + 1, 50):
+        plt.plot(x, T[:, i], 'k')
+    plt.xlabel('Position')
+    plt.ylabel('TempÃ©rature')
+    plt.title("Refroidissement d'un barreau")
+    plt.savefig('chaleur')
+    plt.show()
+        
+
+## SÃ©ries de Fourier
+
+def c(k, T0, Text, L):
+    "coefficient de Fourier"
+    f = lambda s : np.sin(k * np.pi * s / L) * (T0(s) - Text)
+    h = 1e-3
+    s = np.arange(0, L, h)
+    return 2 / L * sum(h * (f(s[k + 1]) + f(s[k])) / 2 for k in range(len(s) - 1))
+
+def T(T0, n, L, D, x, t, Text):
+    g = lambda k, x, t : np.sin(k * np.pi * x / L) * np.exp(-(k * np.pi / L) ** 2 * D * t)
+    return Text + sum(c(k, T0, Text, L) * g(k, x, t) for k in range(1, n + 1))
+
+def Fourier(L=1, D=1, T0=lambda x: 100, Text=20):
+    x = np.linspace(0, L, 50)
+    for t in np.linspace(0, .5, 20):
+        y = T(T0, 200, L, D, x, t, Text)
+        plt.plot(x, y, 'k', label='t = {:.2f}'.format(t))
+    plt.xlabel('Position')
+    plt.ylabel('TempÃ©rature')
+    #plt.legend(loc='best')
+    plt.show()
