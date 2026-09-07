@@ -1,0 +1,42 @@
+Unix Story
+http://web.maths.unsw.edu.au/~lafaye/CCM/unix/unixintro.htm
+
+site web du prof
+http://www.s3.eurecom.fr/~balzarot/
+http://s3.eurecom.fr/~balzarot/softdev/
+
+La commande sed : https://openclassrooms.com/courses/la-commande-sed
+
+Credentials :
+BrendaF@softdev.s3.eurecom.fr
+password unix
+
+MONTH = $$(date "+%B" | sed 's/./\U&/')
+
+
+dev 2
+http://sametmax.com/appeler-du-code-c-depuis-python-avec-ctypes/
+http://tromey.com/blog/?p=501
+http://transit.iut2.upmf-grenoble.fr/doc/gdb-doc/html/gdb/Commands-In-Python.html
+https://github.com/cinsk/gdb-scripts/blob/master/gdbx.py
+
+py3
+http://benhoyt.com/writings/python-pentomino/
+
+shell 3 : commande find
+http://www.linux-france.org/article/memo/node126.html
+
+dev3
+https://www.lrde.epita.fr/~adl/autotools.html
+http://freesoftwaremagazine.com/books/autotools_a_guide_to_autoconf_automake_libtool/
+http://www.heiner-eichmann.de/autotools/autotools_overview.html
+https://autotools.io/autoconf/finding.html
+https://www.gnu.org/software/autoconf/manual/autoconf-2.66/html_node/Default-Prefix.html
+
+Les expressions regulières, grep, find
+http://www.funix.org/fr/unix/grep-find.htm
+
+
+converting goal threads into ?
+personal brand
+get the job you want
