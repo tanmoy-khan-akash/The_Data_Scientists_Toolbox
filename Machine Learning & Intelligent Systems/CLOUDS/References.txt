@@ -1,0 +1,53 @@
+http://michiard.github.io/DISC-CLOUD-COURSE/
+
+requierements :
+1-python
+2-Linux
+3-Git (cours openClassroom : Gérez votre code avec Git et GitHub)
+4-distribued algorithms
+
+Livresà consulter :
+1-Tom White.
+Hadoop, The Definitive Guide.
+O’Reilly, Yahoo, 2010.
+2-
+
+
+mini-batch SGD
+http://adventuresinmachinelearning.com/stochastic-gradient-descent/
+
+tp GD
+https://github.com/EURECOM-CLOUDS-COURSE/StochasticGradientDescent/blob/master/SGD-public.ipynb
+
+Cluster Schedulers
+http://www.firmament.io/blog/scheduler-architectures.html
+
+Musique
+https://www.youtube.com/watch?v=WPni755-Krg
+
+tp SparkSQL
+https://perso.telecom-paristech.fr/qleroy/aml/lab3.html
+
+SparkSQL Labs
+https://perso.telecom-paristech.fr/qleroy/aml/
+
+Introduction to Amazon Web Storage (DynamoDB)
+https://www.youtube.com/watch?v=7elel-asftY
+
+Introduction to HBase
+https://www.youtube.com/watch?v=C3ilG2-tIn0
+
+Introduction to Cassandra
+https://www.youtube.com/watch?v=oawc4doC76U
+https://www.youtube.com/watch?v=FNfiYJm1GJs
+
+Virtual nodes in Cassandra
+http://docs.datastax.com/en/archived/cassandra/2.0/cassandra/architecture/architectureDataDistributeDistribute_c.html
+https://fr.slideshare.net/patrickmcfadin/cassandra-virtual-node-talk
+
+Fault tolerance in Cassandra
+https://fr.slideshare.net/acunu/fault-tolerance-in-cassandra
+
+Zookeeper : distributed centralized coordinate service that is open source and ready for use
+https://www.youtube.com/watch?v=gifeThkqHjg
+https://zookeeper.apache.org/doc/r3.4.5/zookeeperProgrammers.html#ch_zkWatches

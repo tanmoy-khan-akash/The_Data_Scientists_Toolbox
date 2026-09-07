@@ -1,0 +1,109 @@
+How to Start this journey ?
+
+
+A Good Concise Plan: 
+
+👉 https://blog.usejournal.com/i-want-to-learn-data-science-where-do-i-start-what-if-i-get-stuck-a3a8d1921875
+
+
+A Detailed Plan: 
+
+👉 https://www.analyticsvidhya.com/blog/2017/01/the-most-comprehensive-data-science-learning-plan-for-2017/
+
+
+After elaborating your own 'plan of attack', you can find here the everyday resources you'll need: 
+
+👉 Visit: www.claoudml.com && https://data-flair.training/blogs/data-science-tutorials-home/
+
+
+
+General Resources :
+
+http://www.ngdata.com/top-data-science-resources/
+https://blog.modeanalytics.com/data-science-career/
+https://medium.freecodecamp.com/if-you-want-to-learn-data-science-start-with-one-of-these-programming-classes-fb694ffe780c#.i0rtmcxsu
+http://datascienceglossary.org/
+
+
+75 free lectures on this link: 
+http://www.listendata.com/p/r-programming-tutorials.html
+
+
+http://scikit-learn.org/stable/tutorial/machine_learning_map/
+https://www.springboard.com/learning-paths/data-analysis/learn/
+
+
+Self paced online courses
+http://www.datasciguide.com/contenttype/self-paced-online/
+
+
+Scheduled Online courses
+http://www.datasciguide.com/contenttype/scheduled-course-online/
+
+
+Websites you should daily check:
+
+https://allthingsds.wordpress.com/
+http://www.becomingadatascientist.com/
+http://wesmckinney.com/
+https://miningthesocialweb.com/
+http://www.gregreda.com/
+http://kldavenport.com/
+http://jvns.ca/
+https://www.cse.unr.edu/~hkardes/
+http://seanjtaylor.com/
+http://drewconway.com/
+http://www.hilarymason.com/
+http://complexdiagrams.com/
+http://hairysun.com/
+
+
+Where can I find trainings free of charge ?
+
+1. https://lnkd.in/gkXWHDS 
+2. https://lnkd.in/guve2Qx 
+
+
+100+ Free Data Science E-Books* Download Link: 👇
+http://bit.ly/100-free-datascience-ebooks
+
+
+Where can I find amazing free ebooks?
+
+Free Computer, Mathematics, Technical Books and Lecture Notes, etc.
+
+1)DigiLibraries....................https://digilibraries.com/
+
+2)Free-Ebooks................... https://www.free-ebooks.net/
+
+3)Internet Archive.......................https://archive.org/
+
+4)ManyBooks............................https://manybooks.net/
+
+5)OverDrive....................... https://www.overdrive.com/
+
+6)PDFBooksWorld................. http://www.pdfbooksworld.com/
+
+7)Project Gutenberg................ https://www.gutenberg.org/
+
+8)Sharing.................. https://www.sharingebook.com/?m=1
+
+9)Snewd................................... https://snewd.com/
+
+10)CrazyBooks...................... https://www.crazybooks.in/
+
+11)Free-eBooks.uk..........https://free-ebooks.uk/m_index.html
+
+12)'Wowebook' : ........................https://bit.ly/2EzpgKg
+
+13)'Free Tech Books' : .................https://bit.ly/2QXMcIW
+
+14)'Ebook 3000' : ......................https://bit.ly/2Ll5lPG
+
+15)'Free Book Centre' ..................https://bit.ly/2EsyVS8
+
+16)'Free Computer Books' : .............https://bit.ly/2ST69Ol
+
+
+
+To compete with worldwide amazing data specialists 👉 Visit: https://www.kaggle.com/wiki/Tutorials
