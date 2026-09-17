@@ -1,0 +1,29 @@
+<?xml version='1.0' encoding='utf-8'?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+  <head>
+    <title>Implementing a single-layer neural network</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <link href="../stylesheet.css" rel="stylesheet" type="text/css"/>
+<link href="../page_styles.css" rel="stylesheet" type="text/css"/>
+</head>
+  <body id="1JFUC0-5e1e3ce63feb42db9ae6338e8302dfdb" class="calibre">
+        <section class="calibre1">
+
+                            <header class="calibre1">
+                    </header><h1 class="header-title" id="calibre_pb_0">Implementing a single-layer neural network</h1>
+                
+            
+            <article class="calibre1">
+                
+<p class="calibre3"><span>Now we can move on to <strong class="calibre5">neural networks</strong>. We will start by implementing the simplest form of a neural network: a single-layer neural network. The difference from a perceptron is that the computations are done by multiple units (neurons), hence a network. As you may expect, adding more units will increase the number of problems that can be solved. The units perform their computations separately and are stacked in a layer; we call this layer the <strong class="calibre5">hidden layer</strong>. Therefore, we call the units stacked in this layer the <strong class="calibre5">hidden units</strong>. For now, we will only consider a single hidden layer. The output layer performs as a perceptron. This time, as input we have the hidden units in the hidden layer instead of the input variables:</span></p>
+<div class="mce-root1"><img src="../images/00014.jpeg" class="calibre41"/></div>
+<div class="mce-root1">Figure 2.4: Single-layer neural network with two input variables, <em class="calibre22">n</em> hidden units, and a single output unit</div>
+<p class="calibre3">In our implementation of the perceptron, we've used a unit step function to determine the class. In the next recipe, we will use a non-linear activation function sigmoid for the hidden units and the output function. By replacing the step function with a non-linear activation function, the network will be able to uncover non-linear patterns as well. More on this later in the <em class="calibre22">Activation functions</em> section. In the backward pass, we use the <span>derivative</span> of the sigmoid to update the weights.</p>
+<p class="calibre3">In the following recipe, we will classify two non-linearly separable classes with NumPy.</p>
+
+
+            </article>
+
+            
+        </section>
+    </body></html>

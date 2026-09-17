@@ -1,0 +1,65 @@
+<?xml version='1.0' encoding='utf-8'?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+  <head>
+    <title>How to do it...</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <link href="../stylesheet.css" rel="stylesheet" type="text/css"/>
+<link href="../page_styles.css" rel="stylesheet" type="text/css"/>
+</head>
+  <body id="1KEEU0-5e1e3ce63feb42db9ae6338e8302dfdb" class="calibre">
+        <section class="calibre1">
+
+                            <header class="calibre1">
+                    </header><h1 class="header-title" id="calibre_pb_0">How to do it...</h1>
+                
+            
+            <article class="calibre1">
+                
+<ol class="calibre17">
+<li value="1" class="calibre15">Import libraries and dataset:</li>
+</ol>
+<pre class="calibre23">import numpy as np <br class="calibre24"/>from sklearn.model_selection import train_test_split<br class="calibre24"/>import matplotlib.pyplot as plt<br class="calibre24"/># We will be using make_circles from scikit-learn<br class="calibre24"/>from sklearn.datasets import make_circles<br class="calibre24"/><br class="calibre24"/>SEED = 2017</pre>
+<ol start="2" class="calibre17">
+<li class="calibre15" value="2">First, we need to create the training data:</li>
+</ol>
+<pre class="calibre23"># We create an inner and outer circle<br class="calibre24"/>X, y = make_circles(n_samples=400, factor=.3, noise=.05, random_state=2017)<br class="calibre24"/>outer = y == 0<br class="calibre24"/>inner = y == 1</pre>
+<ol start="3" class="calibre17">
+<li value="3" class="calibre15">Let's plot the data to show the two classes:</li>
+</ol>
+<pre class="calibre23">plt.title("Two Circles")<br class="calibre24"/>plt.plot(X[outer, 0], X[outer, 1], "ro")<br class="calibre24"/>plt.plot(X[inner, 0], X[inner, 1], "bo")<br class="calibre24"/>plt.show()</pre>
+<div class="cdpaligncenter"><img src="../images/00015.jpeg" class="calibre42"/></div>
+<div class="mce-root1">Figure 2.5: Example of non-linearly separable data</div>
+<ol start="4" class="calibre17">
+<li value="4" class="calibre15">We normalize the data to make sure the center of both circles is <em class="calibre22">(1,1)</em>:</li>
+</ol>
+<pre class="calibre23">X = X+1</pre>
+<ol start="5" class="calibre17">
+<li value="5" class="calibre15">To determine the performance of our algorithm we split our data:</li>
+</ol>
+<pre class="calibre23">X_train, X_val, y_train, y_val = train_test_split(X, y, test_size=0.2, random_state=SEED)</pre>
+<ol start="6" class="calibre17">
+<li value="6" class="calibre15">A linear activation function won't work in this case, so we'll be using a <kbd class="calibre12">sigmoid</kbd> function:</li>
+</ol>
+<pre class="calibre23">def sigmoid(x):<br class="calibre24"/> return 1 / (1 + np.exp(-x))</pre>
+<ol start="7" class="calibre17">
+<li value="7" class="calibre15">Next, we define the hyperparameters:</li>
+</ol>
+<pre class="calibre23">n_hidden = 50 # number of hidden units<br class="calibre24"/>n_epochs = 1000<br class="calibre24"/>learning_rate = 1</pre>
+<ol start="8" class="calibre17">
+<li value="8" class="calibre15">Initialize the weights and other variables:</li>
+</ol>
+<pre class="calibre23"># <span>Initialise</span> weights<br class="calibre24"/>weights_hidden = np.random.normal(0.0, size=(X_train.shape[1], n_hidden))<br class="calibre24"/>weights_output = np.random.normal(0.0, size=(n_hidden))<br class="calibre24"/><br class="calibre24"/>hist_loss = []<br class="calibre24"/>hist_accuracy = []</pre>
+<ol start="9" class="calibre17">
+<li value="9" class="calibre15">Run the single-layer neural network and output the statistics:</li>
+</ol>
+<pre class="calibre23">for e in range(n_epochs):<br class="calibre24"/> del_w_hidden = np.zeros(weights_hidden.shape)<br class="calibre24"/> del_w_output = np.zeros(weights_output.shape)<br class="calibre24"/><br class="calibre24"/> # Loop through training data in batches of 1<br class="calibre24"/> for x_, y_ in zip(X_train, y_train):<br class="calibre24"/>  # Forward computations<br class="calibre24"/>  hidden_input = np.dot(x_, weights_hidden)<br class="calibre24"/>  hidden_output = sigmoid(hidden_input)<br class="calibre24"/>  output = sigmoid(np.dot(hidden_output, weights_output))<br class="calibre24"/><br class="calibre24"/>  # Backward computations<br class="calibre24"/>  error = y_ - output<br class="calibre24"/>  output_error = error * output * (1 - output)<br class="calibre24"/>  hidden_error = np.dot(output_error, weights_output) * hidden_output <br class="calibre24"/>                     * (1 - hidden_output)<br class="calibre24"/>  del_w_output += output_error * hidden_output<br class="calibre24"/>  del_w_hidden += hidden_error * x_[:, None]<br class="calibre24"/><br class="calibre24"/> # Update weights<br class="calibre24"/> weights_hidden += learning_rate * del_w_hidden / X_train.shape[0]<br class="calibre24"/> weights_output += learning_rate * del_w_output / X_train.shape[0]<br class="calibre24"/><br class="calibre24"/> # Print stats (validation loss and accuracy)<br class="calibre24"/> if e % 100 == 0:<br class="calibre24"/>  hidden_output = sigmoid(np.dot(X_val, weights_hidden))<br class="calibre24"/>  out = sigmoid(np.dot(hidden_output, weights_output))<br class="calibre24"/>  loss = np.mean((out - y_val) ** 2)<br class="calibre24"/>  # Final prediction is based on a threshold of 0.5<br class="calibre24"/>  predictions = out &gt; 0.5<br class="calibre24"/>  accuracy = np.mean(predictions == y_val)<br class="calibre24"/>  print("Epoch: ", '{:&gt;4}'.format(e), <br class="calibre24"/>        "; Validation loss: ", '{:&gt;6}'.format(loss.round(4)), <br class="calibre24"/>        "; Validation accuracy: ", '{:&gt;6}'.format(accuracy.round(4)))<br class="calibre24"/><br class="calibre24"/></pre>
+<p class="calibre27">In the following screenshot, the output during training is shown:</p>
+<div class="cdpaligncenter"><img src="../images/00016.jpeg" class="calibre43"/></div>
+<div class="mce-root1">Figure 2.6: Training statistics</div>
+
+
+            </article>
+
+            
+        </section>
+    </body></html>

@@ -1,0 +1,58 @@
+<?xml version='1.0' encoding='utf-8'?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+  <head>
+    <title>How to do it...</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <link href="../stylesheet.css" rel="stylesheet" type="text/css"/>
+<link href="../page_styles.css" rel="stylesheet" type="text/css"/>
+</head>
+  <body id="1AT9A0-5e1e3ce63feb42db9ae6338e8302dfdb" class="calibre">
+        <section class="calibre1">
+
+                            <header class="calibre1">
+                    </header><h1 class="header-title" id="calibre_pb_0">How to do it...</h1>
+                
+            
+            <article class="calibre1">
+                
+<ol class="calibre17">
+<li value="1" class="calibre15">First, we install <kbd class="calibre12">CNTK</kbd> with <kbd class="calibre12">pip</kbd> as follows:</li>
+</ol>
+<pre class="calibre23"><strong class="calibre5">pip install https://cntk.ai/PythonWheel/GPU/cntk-2.2-cp35-cp35m-linux_x86_64.whl</strong></pre>
+<p class="calibre29">Adjust the wheel file if necessary (see <a href="https://docs.microsoft.com/en-us/cognitive-toolkit/Setup-Linux-Python?tabs=cntkpy22" target="_blank" class="calibre6">https://docs.microsoft.com/en-us/cognitive-toolkit/Setup-Linux-Python?tabs=cntkpy22</a>). </p>
+<ol start="2" class="calibre17">
+<li value="2" class="calibre15">After installing CNTK, we can import it into our Python environment:</li>
+</ol>
+<pre class="calibre23">import cntk</pre>
+<ol start="3" class="calibre17">
+<li value="3" class="calibre15">Let's create some simple dummy data that we can use for training:</li>
+</ol>
+<pre class="calibre23">import numpy as np<br class="calibre24"/>x_input = np.array([[1,2,3,4,5]], np.float32)<br class="calibre24"/>y_input = np.array([[10]], np.float32)</pre>
+<ol start="4" class="calibre17">
+<li value="4" class="calibre15">Next, we need to define the placeholders for the input data:</li>
+</ol>
+<pre class="calibre23">X = cntk.input_variable(5, np.float32)<br class="calibre24"/>y = cntk.input_variable(1, np.float32)</pre>
+<ol start="5" class="calibre17">
+<li value="5" class="calibre15">With CNTK, it's straightforward to stack multiple layers. We stack a dense layer with 32 inputs on top of an output layer with 1 output:</li>
+</ol>
+<pre class="calibre23">from cntk.layers import Dense, Sequential<br class="calibre24"/>model = Sequential([Dense(32),<br class="calibre24"/>                Dense(1)])(X)</pre>
+<ol start="6" class="calibre17">
+<li value="6" class="calibre15">Next, we define the loss function:</li>
+</ol>
+<pre class="calibre23">loss = cntk.squared_error(model, y)</pre>
+<ol start="7" class="calibre17">
+<li value="7" class="calibre15">Now, we are ready to finalize our model with an optimizer:</li>
+</ol>
+<pre class="calibre23">learning_rate = 0.001<br class="calibre24"/>trainer = cntk.Trainer(model, (loss), cntk.adagrad(model.parameters, learning_rate))</pre>
+<ol start="8" class="calibre17">
+<li value="8" class="calibre15">Finally, we can train our model as follows:</li>
+</ol>
+<pre class="calibre23">for epoch in range(10):<br class="calibre24"/>        trainer.train_minibatch({X: x_input, y: y_input})</pre>
+<div class="packt_infobox">As we have demonstrated in this introduction, it is straightforward to build models in CNTK with the appropriate high-level wrappers. However, just like TensorFlow and PyTorch, you can choose to implement your model on a more granular level, which gives you a lot of freedom.</div>
+
+
+            </article>
+
+            
+        </section>
+    </body></html>

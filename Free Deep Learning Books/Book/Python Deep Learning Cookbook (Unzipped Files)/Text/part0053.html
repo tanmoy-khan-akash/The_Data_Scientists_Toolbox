@@ -1,0 +1,84 @@
+<?xml version='1.0' encoding='utf-8'?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+  <head>
+    <title>How to do it...</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <link href="../stylesheet.css" rel="stylesheet" type="text/css"/>
+<link href="../page_styles.css" rel="stylesheet" type="text/css"/>
+</head>
+  <body id="1IHDQ0-5e1e3ce63feb42db9ae6338e8302dfdb" class="calibre">
+        <section class="calibre1">
+
+                            <header class="calibre1">
+                    </header><h1 class="header-title" id="calibre_pb_0">How to do it...</h1>
+                
+            
+            <article class="calibre1">
+                
+<ol class="calibre17">
+<li class="calibre15" value="1"><span>Import the libraries and dataset</span> as follows<span>:</span></li>
+</ol>
+<pre class="calibre23">import numpy as np <br class="calibre24"/>from sklearn.model_selection import train_test_split<br class="calibre24"/>import matplotlib.pyplot as plt<br class="calibre24"/># We will be using the Iris Plants Database<br class="calibre24"/>from sklearn.datasets import load_iris<br class="calibre24"/><br class="calibre24"/>SEED = 2017</pre>
+<ol start="2" class="calibre17">
+<li class="calibre15" value="2">First, we subset the imported data as shown here:</li>
+</ol>
+<pre class="calibre23"># The first two classes (Iris-Setosa and Iris-Versicolour) are linear separable<br class="calibre24"/>iris = load_iris()<br class="calibre24"/>idxs = np.where(iris.target&lt;2)<br class="calibre24"/>X = iris.data[idxs]<br class="calibre24"/>y = iris.target[idxs]</pre>
+<ol start="3" class="calibre17">
+<li value="3" class="calibre15">Let's plot the data for two of the four variables with the following code snippet:</li>
+</ol>
+<pre class="calibre23">plt.scatter(X[Y==0][:,0],X[Y==0][:,2], color='green', label='Iris-Setosa')<br class="calibre24"/>plt.scatter(X[Y==1][:,0],X[Y==1][:,2], color='red', label='Iris-Versicolour')<br class="calibre24"/>plt.title('Iris Plants Database')<br class="calibre24"/>plt.xlabel('sepal length in cm')<br class="calibre24"/>plt.ylabel('sepal width in cm')<br class="calibre24"/>plt.legend()<br class="calibre24"/>plt.show()</pre>
+<p class="mce-root2">In the following graph, we've plotted the distribution of the two classes:</p>
+<p class="cdpaligncenter1"><img src="../images/00012.jpeg" class="calibre39"/></p>
+<div class="mce-root1">Figure 2.2: Iris plants database (two classes)</div>
+<ol start="4" class="calibre17">
+<li value="4" class="calibre15">To validate our results, we split the data into training and validation sets as follows:</li>
+</ol>
+<pre class="calibre23">X_train, X_val, y_train, y_val = train_test_split(X, y, test_size=0.2, random_state=SEED)</pre>
+<ol start="5" class="calibre17">
+<li value="5" class="calibre15">Next, we initialize the <kbd class="calibre12">weights</kbd> and the <kbd class="calibre12">bias</kbd> for the perceptron:</li>
+</ol>
+<pre class="calibre23">weights = np.random.normal(size=X_train.shape[1])<br class="calibre24"/>bias = 1</pre>
+<ol start="6" class="calibre17">
+<li value="6" class="calibre15">Before training, we need to define the hyperparameters:</li>
+</ol>
+<pre class="calibre23">learning_rate = 0.1<br class="calibre24"/>n_epochs = 15</pre>
+<ol start="7" class="calibre17">
+<li value="7" class="calibre15">Now, we can start training our perceptron with a <kbd class="calibre12">for</kbd> loop:</li>
+</ol>
+<pre class="calibre23">del_w = np.zeros(weights.shape)
+hist_loss = []
+hist_accuracy = []
+
+for i in range(n_epochs):
+    # We apply a simple step function, if the output is &gt; 0.5 we predict 1, else 0
+    output = np.where((X_train.dot(weights)+bias)&gt;0.5, 1, 0)
+
+    # Compute MSE
+    error = np.mean((y_train-output)**2)
+
+    # Update weights and bias
+    weights-= learning_rate * np.dot((output-y_train), X_train)
+    bias += learning_rate * np.sum(np.dot((output-y_train), X_train))
+
+    # Calculate MSE
+    loss = np.mean((output - y_train) ** 2)
+    hist_loss.append(loss)
+
+    # Determine validation accuracy
+    output_val = np.where(X_val.dot(weights)&gt;0.5, 1, 0)
+    accuracy = np.mean(np.where(y_val==output_val, 1, 0))
+    hist_accuracy.append(accuracy)</pre>
+<ol start="8" class="calibre17">
+<li value="8" class="calibre15">We've saved the training loss and validation accuracy so that we can plot them:</li>
+</ol>
+<pre class="calibre23">fig = plt.figure(figsize=(8, 4))<br class="calibre24"/>a = fig.add_subplot(1,2,1)<br class="calibre24"/>imgplot = plt.plot(hist_loss)<br class="calibre24"/>plt.xlabel('epochs')<br class="calibre24"/>a.set_title('Training loss')<br class="calibre24"/><br class="calibre24"/>a=fig.add_subplot(1,2,2)<br class="calibre24"/>imgplot = plt.plot(hist_accuracy)<br class="calibre24"/>plt.xlabel('epochs')<br class="calibre24"/>a.set_title('Validation Accuracy')<br class="calibre24"/>plt.show()</pre>
+<p class="cdpalignleft">In the following screenshot, the resulting training loss and validation accuracy are shown:</p>
+<div class="cdpaligncenter"><img src="../images/00013.jpeg" class="calibre40"/></div>
+<div class="mce-root1">Figure 2.3: Training loss and validation accuracy</div>
+
+
+            </article>
+
+            
+        </section>
+    </body></html>

@@ -1,0 +1,32 @@
+<?xml version='1.0' encoding='utf-8'?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+  <head>
+    <title>Understanding the perceptron</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <link href="../stylesheet.css" rel="stylesheet" type="text/css"/>
+<link href="../page_styles.css" rel="stylesheet" type="text/css"/>
+</head>
+  <body id="1HIT80-5e1e3ce63feb42db9ae6338e8302dfdb" class="calibre">
+        <section class="calibre1">
+
+                            <header class="calibre1">
+                    </header><h1 class="header-title" id="calibre_pb_0">Understanding the perceptron</h1>
+                
+            
+            <article class="calibre1">
+                
+<p class="calibre3">First, we need to understand the basics of neural networks. A neural network consists of one or multiple layers of <strong class="calibre5">neurons</strong>, named after the biological neurons in human brains. We will demonstrate the mechanics of a single neuron by implementing a perceptron. In a perceptron, a single unit (neuron) performs all the computations. Later, we will scale the number of units to create deep neural networks:</p>
+<div class="cdpaligncenter"><img src="../images/00009.jpeg" class="calibre34"/></div>
+<div class="mce-root1">Figure 2.1: Perceptron</div>
+<p class="calibre3">A perceptron can have multiple inputs. On these inputs, the unit performs some computations and outputs a single value, for example a binary value to classify two classes. The computations performed by the unit are a simple matrix multiplication of the input and the weights. The resulting values are summed up and a bias is added:</p>
+<div class="calibre35"><img src="../images/00010.jpeg" class="calibre36"/></div>
+<p class="calibre3">These computations can easily be scaled to high dimensional input. An <strong class="calibre5">activation function</strong> (<em class="calibre22">φ</em>) determines the final output of the perceptron in the <strong class="calibre5">forward pass</strong>:</p>
+<div class="calibre37"><img src="../images/00011.jpeg" class="calibre38"/></div>
+<p class="calibre3">The weights and bias are randomly initialized. After each <strong class="calibre5">epoch</strong> (iteration over the training data), the weights are updated based on the difference between the output and the desired output (<strong class="calibre5">error</strong>) multiplied by the <strong class="calibre5">learning rate</strong>. As a consequence, the weights will be updated towards the training data (<strong class="calibre5">backward pass</strong>) and the accuracy of the output will improve. Basically, the perceptron is a linear <span>combination</span> optimized on the training data. As an activation function we will use a unit step function: if the output is above a certain threshold the output will be activated (hence a 0 versus 1 binary classifier). A perceptron is able to classify classes with 100% accuracy if the classes are linearly separable. In the next recipe, we will show you how to implement a perceptron with NumPy. </p>
+
+
+            </article>
+
+            
+        </section>
+    </body></html>

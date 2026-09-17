@@ -1,0 +1,66 @@
+<?xml version='1.0' encoding='utf-8'?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+  <head>
+    <title>How to do it...</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <link href="../stylesheet.css" rel="stylesheet" type="text/css"/>
+<link href="../page_styles.css" rel="stylesheet" type="text/css"/>
+</head>
+  <body id="1CQAE0-5e1e3ce63feb42db9ae6338e8302dfdb" class="calibre">
+        <section class="calibre1">
+
+                            <header class="calibre1">
+                    </header><h1 class="header-title" id="calibre_pb_0">How to do it...</h1>
+                
+            
+            <article class="calibre1">
+                
+<ol class="calibre17">
+<li class="calibre15" value="1">To install MXNet on Ubuntu with GPU support, we can use the following command in the terminal:</li>
+</ol>
+<pre class="calibre23"><strong class="calibre5">pip install mxnet-cu80==0.11.0</strong></pre>
+<p class="calibre29">For other platforms and non-GPU support, have a look at <a href="https://mxnet.incubator.apache.org/get_started/install.html" class="calibre6">https://mxnet.incubator.apache.org/get_started/install.html</a>.</p>
+<ol start="2" class="calibre17">
+<li value="2" class="calibre15">Next, we are ready to import <kbd class="calibre12">mxnet</kbd> in our Python environment:</li>
+</ol>
+<pre class="calibre23"><span>import</span> <span>mxnet</span> <span>as</span> <span>mx</span></pre>
+<ol start="3" class="calibre17">
+<li value="3" class="calibre15">We create some simple dummy data that we assign to the GPU and CPU:</li>
+</ol>
+<pre class="calibre23">import numpy as np<br class="calibre24"/>x_input = mx.nd.empty((1, 5), mx.gpu())<br class="calibre24"/>x_input[:] = np.array([[1,2,3,4,5]], np.float32)<br class="calibre24"/><br class="calibre24"/>y_input = mx.nd.empty((1, 5), mx.cpu())<br class="calibre24"/>y_input[:] = np.array([[10, 15, 20, 22.5, 25]], np.float32)</pre>
+<ol start="4" class="calibre17">
+<li value="4" class="calibre15">We can easily copy and adjust the data. Where possible MXNet will automatically execute operations in parallel:</li>
+</ol>
+<pre class="calibre23">x_input<br class="calibre24"/>w_input = x_input<br class="calibre24"/>z_input = x_input.copyto(mx.cpu())<br class="calibre24"/>x_input += 1<br class="calibre24"/>w_input /= 2<br class="calibre24"/>z_input *= 2</pre>
+<ol start="5" class="calibre17">
+<li value="5" class="calibre15">We can print the output as follows:</li>
+</ol>
+<pre class="calibre23">print(x_input.asnumpy())<br class="calibre24"/>print(w_input.asnumpy())<br class="calibre24"/>print(z_input.asnumpy())</pre>
+<ol start="6" class="calibre17">
+<li value="6" class="calibre15">If we want to feed our data to a model, we should create an iterator first:</li>
+</ol>
+<pre class="calibre23">batch_size = 1<br class="calibre24"/>train_iter = mx.io.NDArrayIter(x_input, y_input, batch_size, shuffle=True, data_name='input', label_name='target')</pre>
+<ol start="7" class="calibre17">
+<li value="7" class="calibre15">Next, we can create the symbols for our model:</li>
+</ol>
+<pre class="calibre23">X = mx.sym.Variable('input')<br class="calibre24"/>Y = mx.symbol.Variable('target')<br class="calibre24"/>fc1 = mx.sym.FullyConnected(data=X, name='fc1', num_hidden = 5)<br class="calibre24"/>lin_reg = mx.sym.LinearRegressionOutput(data=fc1, label=Y, name="lin_reg")</pre>
+<ol start="8" class="calibre17">
+<li value="8" class="calibre15">Before we can start training, we need to define our model:</li>
+</ol>
+<pre class="calibre23">model = mx.mod.Module(<br class="calibre24"/>    symbol = lin_reg,<br class="calibre24"/>    data_names=['input'], <br class="calibre24"/>    label_names = ['target']<br class="calibre24"/>)</pre>
+<ol start="9" class="calibre17">
+<li value="9" class="calibre15">Let's start training:</li>
+</ol>
+<pre class="calibre33">model.fit(train_iter,<br class="calibre24"/>            optimizer_params={'learning_rate':0.01, 'momentum': 0.9},<br class="calibre24"/>            num_epoch=100,<br class="calibre24"/>            batch_end_callback = mx.callback.Speedometer(batch_size, 2))</pre>
+<ol start="10" class="calibre17">
+<li value="10" class="calibre15">To use the trained model for prediction we:</li>
+</ol>
+<pre class="calibre23">model.predict(train_iter).asnumpy()</pre>
+<div class="packt_infobox">We've shortly introduced the MXNet framework. In this introduction, we've demonstrated how easily one can assign variables and computations to a CPU or GPU and how to use the Symbol interface. However, there is much more to explore and the MXNet is a powerful framework for building flexible and efficient deep learning models.</div>
+
+
+            </article>
+
+            
+        </section>
+    </body></html>

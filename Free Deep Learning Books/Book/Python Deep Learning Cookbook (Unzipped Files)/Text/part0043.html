@@ -1,0 +1,60 @@
+<?xml version='1.0' encoding='utf-8'?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+  <head>
+    <title>How to do it...</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <link href="../stylesheet.css" rel="stylesheet" type="text/css"/>
+<link href="../page_styles.css" rel="stylesheet" type="text/css"/>
+</head>
+  <body id="190860-5e1e3ce63feb42db9ae6338e8302dfdb" class="calibre">
+        <section class="calibre1">
+
+                            <header class="calibre1">
+                    </header><h1 class="header-title" id="calibre_pb_0">How to do it...</h1>
+                
+            
+            <article class="calibre1">
+                
+<ol class="calibre17">
+<li value="1" class="calibre15">First, we install PyTorch in our Anaconda environment, as follows:</li>
+</ol>
+<pre class="calibre23"><strong class="calibre5">conda install pytorch torchvision cuda80 -c soumith</strong></pre>
+<p class="calibre29">If you want to install PyTorch on another platform, you can have a look at the PyTorch website for clear guidance: <a href="http://pytorch.org/" target="_blank" class="calibre6">http://pytorch.org/</a>.</p>
+<ol start="2" class="calibre17">
+<li value="2" class="calibre15">Let's import PyTorch into our Python environment:</li>
+</ol>
+<pre class="calibre23">import torch</pre>
+<ol start="3" class="calibre17">
+<li value="3" class="calibre15">While Keras provides higher-level abstraction for building neural networks, PyTorch has this feature built in. This means one can build with higher-level building blocks or can even build the forward and backward pass manually. In this introduction, we will use the higher-level abstraction. First, we need to set the size of our random training data:</li>
+</ol>
+<pre class="calibre23"> batch_size = 32<br class="calibre24"/> input_shape = 5<br class="calibre24"/> output_shape = 10</pre>
+<ol start="4" class="calibre17">
+<li value="4" class="calibre15">To make use of GPUs, we will cast the tensors as follows:</li>
+</ol>
+<pre class="calibre23">torch.set_default_tensor_type('torch.cuda.FloatTensor') </pre>
+<p class="calibre29">This ensures that all computations will use the attached GPU. </p>
+<ol start="5" class="calibre17">
+<li value="5" class="calibre15">We can use this to generate random training data:</li>
+</ol>
+<pre class="calibre23">from torch.autograd import Variable<br class="calibre24"/>X = Variable(torch.randn(batch_size, input_shape))<br class="calibre24"/>y = Variable(torch.randn(batch_size, output_shape), requires_grad=False)</pre>
+<ol start="6" class="calibre17">
+<li value="6" class="calibre15">We will use a simple neural network having one hidden layer with 32 units and an output layer:</li>
+</ol>
+<pre class="calibre23">model = torch.nn.Sequential(<br class="calibre24"/>          torch.nn.Linear(input_shape, 32),<br class="calibre24"/>          torch.nn.Linear(32, output_shape),<br class="calibre24"/>        ).cuda()</pre>
+<p class="calibre29">We use the <kbd class="calibre12">.cuda()</kbd> extension to make sure the model runs on the GPU. </p>
+<ol start="7" class="calibre17">
+<li value="7" class="calibre15">Next, we define the MSE loss function:</li>
+</ol>
+<pre class="calibre23">loss_function = torch.nn.MSELoss()</pre>
+<ol start="8" class="calibre17">
+<li value="8" class="calibre15">We are now ready to start training our model for 10 epochs with the following code:</li>
+</ol>
+<pre class="calibre23">learning_rate = 0.001<br class="calibre24"/>for i in range(10):<br class="calibre24"/>    y_pred = model(x)<br class="calibre24"/>    loss = loss_function(y_pred, y)<br class="calibre24"/>    print(loss.data[0])<br class="calibre24"/>    # Zero gradients<br class="calibre24"/>    model.zero_grad()<br class="calibre24"/>    loss.backward()<br class="calibre24"/><br class="calibre24"/>    # Update weights<br class="calibre24"/>    for param in model.parameters():<br class="calibre24"/>        param.data -= learning_rate * param.grad.data</pre>
+<div class="packt_infobox">The PyTorch framework gives a lot of freedom to implement simple neural networks and more complex deep learning models. What we didn't demonstrate in this introduction, is the use of dynamic graphs in PyTorch. This is a really powerful feature that we will demonstrate in other chapters of this book.</div>
+
+
+            </article>
+
+            
+        </section>
+    </body></html>
