@@ -1,0 +1,68 @@
+<?xml version='1.0' encoding='utf-8'?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+  <head>
+    <title>How to do it...</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <link href="../stylesheet.css" rel="stylesheet" type="text/css"/>
+<link href="../page_styles.css" rel="stylesheet" type="text/css"/>
+</head>
+  <body id="3STPM0-5e1e3ce63feb42db9ae6338e8302dfdb" class="calibre">
+        <section class="calibre1">
+
+                            <header class="calibre1">
+                    </header><h1 class="header-title" id="calibre_pb_0">How to do it...</h1>
+                
+            
+            <article class="calibre1">
+                
+<ol class="calibre17">
+<li value="1" class="calibre15">We start with importing all necessary libraries and setting the seed, as follows:</li>
+</ol>
+<pre class="calibre23">import pandas as pd<br class="calibre24"/>import numpy as np<br class="calibre24"/>import matplotlib.pyplot as plt<br class="calibre24"/><br class="calibre24"/>from sklearn.model_selection import train_test_split<br class="calibre24"/>import tensorflow as tf<br class="calibre24"/><br class="calibre24"/>SEED = 2017</pre>
+<ol start="2" class="calibre17">
+<li value="2" class="calibre15">Next, we load the dataset and output some numbers:</li>
+</ol>
+<pre class="calibre23">DIR = 'Data/faces/'<br class="calibre24"/>training_file = pd.read_csv(DIR + 'training.csv')<br class="calibre24"/><br class="calibre24"/>cols = training_file.columns[:-1]<br class="calibre24"/>training_file['Image'] = training_file['Image'].apply(lambda Image: np.fromstring(Image, sep=' '))<br class="calibre24"/>training_file = training_file.dropna()</pre>
+<ol start="3" class="calibre17">
+<li value="3" class="calibre15">Before proceeding, we need to reshape and normalize the data:</li>
+</ol>
+<pre class="calibre23">img_cols = 96<br class="calibre24"/>img_rows = 96<br class="calibre24"/>img_channels = 1<br class="calibre24"/>n_labels = 30 # 15 times x, y pairs<br class="calibre24"/><br class="calibre24"/>X = np.vstack(training_file['Image'])<br class="calibre24"/>X = X.reshape(-1, img_cols, img_rows, 1)<br class="calibre24"/>y = training_file[cols].values<br class="calibre24"/><br class="calibre24"/>X = X / 255.<br class="calibre24"/>y = y / 96.<br class="calibre24"/><br class="calibre24"/>print(X.shape, y.shape)</pre>
+<ol start="4" class="calibre17">
+<li value="4" class="calibre15">We will split the training set randomly into a training and a validation set:</li>
+</ol>
+<pre class="calibre23"> X_train, X_val, y_train, y_val = train_test_split(X, y, test_size=0.2, random_state=SEED)</pre>
+<ol start="5" class="calibre17">
+<li value="5" class="calibre15">Let's plot five example images and mark the facial keypoints:</li>
+</ol>
+<pre class="calibre23">plt.figure(figsize=(15, 15))<br class="calibre24"/><br class="calibre24"/>n_examples = 5<br class="calibre24"/>for i in range(n_examples):<br class="calibre24"/>    plt.subplot(n_examples, n_examples, i+1)<br class="calibre24"/>    rand = np.random.randint(len(X_train))<br class="calibre24"/>    img = X_train[rand].reshape(img_cols, img_rows)<br class="calibre24"/>    plt.imshow(img, cmap='gray')<br class="calibre24"/>    kp = y_train[rand]<br class="calibre24"/>    plt.scatter(kp[0::2] * img_cols, kp[1::2] * img_rows)<br class="calibre24"/><br class="calibre24"/>plt.show()</pre>
+<div class="cdpaligncenter"><img src="../images/00068.jpeg" class="calibre93"/></div>
+<div class="mce-root1">Figure 7.13: Random examples of a training set and labels</div>
+<ol start="6" class="calibre17">
+<li value="6" class="calibre15">We can now define our network's architecture in a function so that we can reuse it for training and testing:</li>
+</ol>
+<pre class="calibre23"> def model(data, dropout=1.0):<br class="calibre24"/>    conv = tf.nn.conv2d(data, conv1_weights, strides=[1, 1, 1, 1], <br class="calibre24"/>    padding='SAME')<br class="calibre24"/>    relu = tf.nn.relu(tf.nn.bias_add(conv, conv1_biases))<br class="calibre24"/>    pool = tf.nn.max_pool(relu, ksize=[1, 2, 2, 1], <br class="calibre24"/>    strides=[1, 2, 2, 1], padding='SAME')<br class="calibre24"/><br class="calibre24"/>    conv = tf.nn.conv2d(pool, conv2_weights, strides=[1, 1, 1, 1], <br class="calibre24"/>    padding='SAME')<br class="calibre24"/>    relu = tf.nn.relu(tf.nn.bias_add(conv, conv2_biases))<br class="calibre24"/>    pool = tf.nn.max_pool(relu, ksize=[1, 2, 2, 1], strides=<br class="calibre24"/>    [1, 2, 2, 1], padding='SAME')<br class="calibre24"/><br class="calibre24"/>    pool_shape = pool.get_shape().as_list()<br class="calibre24"/>    reshape = tf.reshape(pool, [pool_shape[0], <br class="calibre24"/>    pool_shape[1] * pool_shape[2] * pool_shape[3]])<br class="calibre24"/><br class="calibre24"/>    hidden1 = tf.nn.relu(tf.matmul(reshape, fc1_weights) + fc1_biases)<br class="calibre24"/>    hidden1 = tf.nn.dropout(hidden1, dropout, seed=SEED)<br class="calibre24"/><br class="calibre24"/>    hidden2 = tf.nn.relu(tf.matmul(hidden1, fc2_weights) + fc2_biases)<br class="calibre24"/>    hidden2 = tf.nn.dropout(hidden2, dropout, seed=SEED)<br class="calibre24"/>    <br class="calibre24"/>    output = tf.matmul(hidden2, fc3_weights) + fc3_biases<br class="calibre24"/><br class="calibre24"/>    return output</pre>
+<ol start="7" class="calibre17">
+<li value="7" class="calibre15">It's time to define the hyperparameters:</li>
+</ol>
+<pre class="calibre23">batch_size = 128<br class="calibre24"/>n_epochs = 500<br class="calibre24"/>learning_rate = 1e-4<br class="calibre24"/>print_every = 10<br class="calibre24"/>early_stopping_patience = 5</pre>
+<ol start="8" class="calibre17">
+<li value="8" class="calibre15">Before building our model, we need to set the placeholders:</li>
+</ol>
+<pre class="calibre23">inputs = tf.placeholder(tf.float32, shape=(batch_size, <br class="calibre24"/>img_cols, img_rows, img_channels))<br class="calibre24"/>targets = tf.placeholder(tf.float32, shape=(batch_size, n_labels))<br class="calibre24"/><br class="calibre24"/>evals = tf.placeholder(tf.float32, shape=(batch_size, <br class="calibre24"/>img_cols, img_rows, img_channels))<br class="calibre24"/><br class="calibre24"/>conv1_weights = tf.Variable(tf.truncated_normal([5, 5, img_channels, 32], stddev=0.1,seed=SEED))<br class="calibre24"/>conv1_biases = tf.Variable(tf.zeros([32]))<br class="calibre24"/><br class="calibre24"/>conv2_weights = tf.Variable(tf.truncated_normal([5, 5, 32, 64], <br class="calibre24"/>stddev=0.1, seed=SEED))<br class="calibre24"/>conv2_biases = tf.Variable(tf.constant(0.1, shape=[64]))<br class="calibre24"/><br class="calibre24"/>fc1_weights = tf.Variable(tf.truncated_normal([img_cols // <br class="calibre24"/>4 * img_rows // 4 * 64, 512], stddev=0.1, seed=SEED))<br class="calibre24"/>fc1_biases = tf.Variable(tf.constant(0.1, shape=[512]))<br class="calibre24"/><br class="calibre24"/>fc2_weights = tf.Variable(tf.truncated_normal([512, 512], <br class="calibre24"/>stddev=0.1, seed=SEED))<br class="calibre24"/>fc2_biases = tf.Variable(tf.constant(0.1, shape=[512]))<br class="calibre24"/><br class="calibre24"/>fc3_weights = tf.Variable(tf.truncated_normal([512, n_labels], <br class="calibre24"/>stddev=0.1, seed=SEED))<br class="calibre24"/>fc3_biases = tf.Variable(tf.constant(0.1, shape=[n_labels]))</pre>
+<ol start="9" class="calibre17">
+<li value="9" class="calibre15">We can now initialize our model and start training including early stopping:</li>
+</ol>
+<pre class="calibre23">val_size = X_val.shape[0]<br class="calibre24"/><br class="calibre24"/>train_prediction = model(inputs, 0.5)<br class="calibre24"/>loss = tf.reduce_mean(tf.reduce_sum(tf.square(train_prediction - targets), 1))<br class="calibre24"/>eval_prediction = model(evals)<br class="calibre24"/><br class="calibre24"/>train_step = tf.train.AdamOptimizer(learning_rate).minimize(loss)<br class="calibre24"/><br class="calibre24"/>init = tf.global_variables_initializer()<br class="calibre24"/>sess = tf.InteractiveSession()<br class="calibre24"/>sess.run(init)<br class="calibre24"/><br class="calibre24"/>history = []<br class="calibre24"/>patience_count = 0<br class="calibre24"/>for epoch in range(n_epochs):<br class="calibre24"/>    for step in range(int(len(X_train) / batch_size)):<br class="calibre24"/>        offset = step * batch_size<br class="calibre24"/>        batch_data = X_train[offset:(offset + batch_size), ...]<br class="calibre24"/>        batch_labels = y_train[offset:(offset + batch_size)]<br class="calibre24"/><br class="calibre24"/>        feed_dict = {inputs: batch_data, targets: batch_labels}<br class="calibre24"/>        _, loss_train = sess.run([train_step, loss], feed_dict=feed_dict)<br class="calibre24"/>    <br class="calibre24"/>    predictions = np.ndarray(shape=(val_size, n_labels), dtype=np.float32) <br class="calibre24"/>    for begin in range(0, val_size, batch_size):<br class="calibre24"/>        end = begin + batch_size<br class="calibre24"/>        if end &lt;= val_size:<br class="calibre24"/>            predictions[begin:end, :] = sess.run(eval_prediction, <br class="calibre24"/>feed_dict={evals: X_val[begin:end, ...]})<br class="calibre24"/>        else:<br class="calibre24"/>            batch_predictions = sess.run(eval_prediction, <br class="calibre24"/>feed_dict={evals: X_val[-batch_size:, ...]})<br class="calibre24"/>            predictions[begin:, :] = batch_predictions[begin - val_size:, :] <br class="calibre24"/>    loss_val = np.sum(np.power(predictions - y_val, 2)) / <br class="calibre24"/>(2 * predictions.shape[0])<br class="calibre24"/>    history.append(loss_val)<br class="calibre24"/>    if epoch % print_every == 0:<br class="calibre24"/>        print('Epoch {:04d}: train loss {:.8f}; <br class="calibre24"/>validation loss {:.8f}'.format(epoch, loss_train, loss_val))<br class="calibre24"/>    if epoch &gt; 0 and history[epoch-1] &gt; history[epoch]:<br class="calibre24"/>        patience_count = 0<br class="calibre24"/>    else:<br class="calibre24"/>        patience_count += 1<br class="calibre24"/> <br class="calibre24"/>    if patience_count &gt; early_stopping_patience:<br class="calibre24"/>        break</pre>
+<ol start="10" class="calibre17">
+<li value="10" class="calibre15">To validate, we can plot some example images with the predicted keypoints and the truth values:</li>
+</ol>
+<pre class="calibre23"> plt.figure(figsize=(15, 15))<br class="calibre24"/><br class="calibre24"/>n_examples = 5<br class="calibre24"/>for i in range(n_examples):<br class="calibre24"/>    plt.subplot(n_examples, n_examples, i+1)<br class="calibre24"/>    rand = np.random.randint(len(X_val))<br class="calibre24"/>    img = X_val[rand].reshape(img_cols, img_rows)<br class="calibre24"/>    plt.imshow(img, cmap='gray')<br class="calibre24"/>    kp = y_val[rand]<br class="calibre24"/>    pred = predictions[rand]<br class="calibre24"/>    plt.scatter(kp[0::2] * img_cols, kp[1::2] * img_rows)<br class="calibre24"/>    plt.scatter(pred[0::2] * img_cols, pred[1::2] * img_rows)<br class="calibre24"/><br class="calibre24"/>plt.show()</pre>
+<div class="cdpaligncenter"><img src="../images/00069.jpeg" class="calibre94"/></div>
+<div class="mce-root1">Figure 7.14: Examples of predicted and actual facial keypoints</div>
+
+
+            </article>
+
+            
+        </section>
+    </body></html>

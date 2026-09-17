@@ -1,0 +1,28 @@
+<?xml version='1.0' encoding='utf-8'?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+  <head>
+    <title>Getting started with activation functions</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <link href="../stylesheet.css" rel="stylesheet" type="text/css"/>
+<link href="../page_styles.css" rel="stylesheet" type="text/css"/>
+</head>
+  <body id="1NA0K0-5e1e3ce63feb42db9ae6338e8302dfdb" class="calibre">
+        <section class="calibre1">
+
+                            <header class="calibre1">
+                    </header><h1 class="header-title" id="calibre_pb_0">Getting started with activation functions</h1>
+                
+            
+            <article class="calibre1">
+                
+<p class="calibre3">If we only use linear activation functions, a neural network would represent a large collection of linear combinations. However, the power of neural networks lies in their ability to model complex nonlinear behavior. We briefly introduced the non-linear activation functions sigmoid and ReLU in the previous recipes, and there are many more popular nonlinear activation functions, such as <strong class="calibre5">ELU</strong>, <strong class="calibre5">Leaky ReLU</strong>, <strong class="calibre5">TanH</strong>, and <strong class="calibre5">Maxout</strong>.</p>
+<p class="calibre3">There is no general rule as to which activation works best for the hidden units. Deep learning is a relatively new field and most results are obtained by trial and error instead of mathematical proofs. For the output unit, we use a single output unit and a linear activation function for regression tasks. For classification tasks with n classes, we use <em class="calibre22">n</em> output nodes and a softmax activation function. The softmax function forces the network to output probabilities between <em class="calibre22">0</em> and <em class="calibre22">1</em> for mutually exclusive classes and the probabilities sum up to <em class="calibre22">1</em>. For binary classification, we can also use a single output node and a sigmoid activation function to output probabilities. </p>
+<p class="calibre3">Choosing the correct activation function for the hidden units can be crucial. In the backward pass, the updates are dependent on the derivative of the activation function. For deep neural networks, the gradients of the updated weights can go to zero in the first couple of layers (also known as the <strong class="calibre5">vanishing gradients</strong> problem) or can grow exponentially big (also known as the <strong class="calibre5">exploding gradients</strong> problem). This holds especially when activation functions have a derivative that only takes on small values (for example the sigmoid activation function) or activation functions that have a derivative that can take values that are larger than <em class="calibre22">1</em>.</p>
+<p class="calibre3">Activation functions such as the ReLU prevents such cases. The <span>ReLU has a derivative of <em class="calibre22">1</em> when the output is positive and is <em class="calibre22">0</em> otherwise.</span> When using a ReLU activation function, a sparse network is generated<span> with a relatively small number of activated connections. The loss that is passed through the network seems more useful in such cases. In some cases, the ReLU causes too many of the neurons to die; in such cases, you should try a variant such as Leaky ReLU. In our next recipe, we will compare the difference in results between a sigmoid and a ReLU activation function when classifying handwritten digits with a deep FNN. </span></p>
+
+
+            </article>
+
+            
+        </section>
+    </body></html>

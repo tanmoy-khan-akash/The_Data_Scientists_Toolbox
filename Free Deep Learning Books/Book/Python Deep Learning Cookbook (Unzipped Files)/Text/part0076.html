@@ -1,0 +1,71 @@
+<?xml version='1.0' encoding='utf-8'?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+  <head>
+    <title>How to do it...</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <link href="../stylesheet.css" rel="stylesheet" type="text/css"/>
+<link href="../page_styles.css" rel="stylesheet" type="text/css"/>
+</head>
+  <body id="28FAO0-5e1e3ce63feb42db9ae6338e8302dfdb" class="calibre">
+        <section class="calibre1">
+
+                            <header class="calibre1">
+                    </header><h1 class="header-title" id="calibre_pb_0">How to do it...</h1>
+                
+            
+            <article class="calibre1">
+                
+<ol class="calibre17">
+<li value="1" class="calibre15">Import all necessary libraries:</li>
+</ol>
+<pre class="calibre23">import numpy as np<br class="calibre24"/>from matplotlib import pyplot as plt<br class="calibre24"/><br class="calibre24"/>from keras.utils.np_utils import to_categorical<br class="calibre24"/>from keras.models import Sequential<br class="calibre24"/>from keras.layers.core import Dense, Dropout, Flatten<br class="calibre24"/>from keras.layers import Conv2D<br class="calibre24"/>from keras.optimizers import Adam<br class="calibre24"/>from keras.datasets import mnist</pre>
+<ol start="2" class="calibre17">
+<li value="2" class="calibre15">Load the <kbd class="calibre12">mnist</kbd> dataset:</li>
+</ol>
+<pre class="calibre23">from keras.datasets import mnist<br class="calibre24"/>(X_train, y_train), (X_test, y_test) = mnist.load_data()</pre>
+<ol start="3" class="calibre17">
+<li value="3" class="calibre15">Reshape the training data to represent one-channel image input:</li>
+</ol>
+<pre class="calibre23">img_rows, img_cols = X_train[0].shape[0], X_train[0].shape[1]<br class="calibre24"/>X_train = X_train.reshape(X_train.shape[0], img_rows, img_cols, 1)<br class="calibre24"/>X_test = X_test.reshape(X_test.shape[0], img_rows, img_cols, 1)<br class="calibre24"/>input_shape = (img_rows, img_cols, 1)</pre>
+<ol start="4" class="calibre17">
+<li value="4" class="calibre15">Normalize the input data:</li>
+</ol>
+<pre class="calibre23">X_train = X_train.astype('float32')/255.<br class="calibre24"/>X_test = X_test.astype('float32')/255.</pre>
+<ol start="5" class="calibre17">
+<li value="5" class="calibre15">One-hot encode the labels:</li>
+</ol>
+<pre class="calibre23">n_classes = len(set(y_train))<br class="calibre24"/>y_train = to_categorical(y_train, n_classes)<br class="calibre24"/>y_test = to_categorical(y_test, n_classes)</pre>
+<ol start="6" class="calibre17">
+<li value="6" class="calibre15">Define the CNN architecture:</li>
+</ol>
+<pre class="calibre23">model = Sequential()<br class="calibre24"/>model.add(Conv2D(32, kernel_size=(3, 3), activation='relu', input_shape=input_shape))<br class="calibre24"/>model.add(Conv2D(64, kernel_size=(3, 3), activation='relu'))<br class="calibre24"/>model.add(Conv2D(128, kernel_size=(3, 3), activation='relu'))<br class="calibre24"/>model.add(Dropout(0.5))<br class="calibre24"/>model.add(Flatten())<br class="calibre24"/>model.add(Dense(128, activation='relu'))<br class="calibre24"/>model.add(Dropout(0.5))<br class="calibre24"/>model.add(Dense(n_classes, activation='softmax'))<br class="calibre24"/><br class="calibre24"/>opt = Adam()<br class="calibre24"/>model.compile(loss=losses.categorical_crossentropy,<br class="calibre24"/>              optimizer=opt,<br class="calibre24"/>metrics=['accuracy'])</pre>
+<ol start="7" class="calibre17">
+<li value="7" class="calibre15">Set network hyperparameters and the callback function:</li>
+</ol>
+<pre class="calibre23">batch_size = 128<br class="calibre24"/>n_epochs = 11<br class="calibre24"/><br class="calibre24"/>callbacks = [EarlyStopping(monitor='val_acc', patience=5)]</pre>
+<ol start="8" class="calibre17">
+<li value="8" class="calibre15">Train the model:</li>
+</ol>
+<pre class="calibre23">model.fit(X_train, y_train, batch_size=batch_size, epochs=n_epochs, verbose=1, validation_split=0.2, callbacks=callbacks)</pre>
+<ol start="9" class="calibre17">
+<li value="9" class="calibre15">Show the results on the test set:</li>
+</ol>
+<pre class="calibre23">score = model.evaluate(X_test, y_test, verbose=0)<br class="calibre24"/>print('Test loss:', score[0])<br class="calibre24"/>print('Test accuracy:', score[1])<br class="calibre24"/># Test loss: 0.0288668684929<br class="calibre24"/># Test accuracy: 0.9927<br class="calibre24"/><br class="calibre24"/># Extract predictions<br class="calibre24"/>preds = model.predict(X_test)<br class="calibre24"/><br class="calibre24"/>n_examples = 10<br class="calibre24"/>plt.figure(figsize=(15, 15))<br class="calibre24"/>for i in range(n_examples):<br class="calibre24"/>    ax = plt.subplot(2, n_examples, i + 1)<br class="calibre24"/>    plt.imshow(X_test[i, :, :, 0], cmap='gray')<br class="calibre24"/>    plt.title("Label: {}\nPredicted:<br class="calibre24"/>    {}".format(np.argmax(y_test[i]), np.argmax(preds[i])))<br class="calibre24"/>    plt.axis('off')<br class="calibre24"/>    <br class="calibre24"/>plt.show()</pre>
+<p class="calibre45">The output of is as follows:</p>
+<div class="mce-root1"><img src="../images/00031.jpeg" class="calibre62"/></div>
+<div class="mce-root1"><span>Figure 3.2: 10 examples of the truth labels, predicted labels, and input image</span></div>
+<ol start="10" class="calibre17">
+<li value="10" class="calibre15">Let's also plot the misclassified images and their labels:</li>
+</ol>
+<pre class="calibre23">plt.    figure(figsize=(15, 15))<br class="calibre24"/><br class="calibre24"/>j=1<br class="calibre24"/>for i in range(len(y_test)):<br class="calibre24"/>    if(j==10):<br class="calibre24"/>        break<br class="calibre24"/>    label = np.argmax(y_test[i])<br class="calibre24"/>    pred = np.argmax(preds[i])<br class="calibre24"/>    if label != pred: <br class="calibre24"/>        ax = plt.subplot(2, n_examples, j + 1)<br class="calibre24"/>        plt.imshow(X_test[i, :, :, 0], cmap='gray')<br class="calibre24"/>        plt.title("Label: {}\nPredicted: {}".format(label, pred))<br class="calibre24"/>        plt.axis('off')<br class="calibre24"/>        j+=1<br class="calibre24"/>plt.show()</pre>
+<p class="calibre29">As we can see in our output, some of the misclassified examples are actually really hard to predict. For example, the 7th example with label 8 and predicted label 9:</p>
+<div class="cdpaligncenter"><img src="../images/00032.jpeg" class="calibre50"/></div>
+<div class="mce-root1">Figure 3.3: 10 examples of misclassified images</div>
+<p class="calibre3">The results of this model are already quite nice. With a limited depth (three convolutional layers and one fully connected layer), and just around 11 epochs, we were able to get 99.30% accuracy on the test set. Our model has 16,230,794 trainable parameters and runs 1 epoch in around 45 seconds on a NVIDIA Tesla K80 GPU. A state-of-the-art research paper was reported to have obtained an error rate of 0.23 (which maps to an accuracy of 99.77%). The model in this paper used an ensemble of 35 deep neural networks, including image augmentation. With some of the additional techniques discussed later, we can boost our own test score for our model further.</p>
+
+
+            </article>
+
+            
+        </section>
+    </body></html>

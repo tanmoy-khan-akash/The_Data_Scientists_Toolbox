@@ -1,0 +1,84 @@
+<?xml version='1.0' encoding='utf-8'?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+  <head>
+    <title>How to do it...</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <link href="../stylesheet.css" rel="stylesheet" type="text/css"/>
+<link href="../page_styles.css" rel="stylesheet" type="text/css"/>
+</head>
+  <body id="3UQQQ0-5e1e3ce63feb42db9ae6338e8302dfdb" class="calibre">
+        <section class="calibre1">
+
+                            <header class="calibre1">
+                    </header><h1 class="header-title" id="calibre_pb_0">How to do it...</h1>
+                
+            
+            <article class="calibre1">
+                
+<ol class="calibre17">
+<li value="1" class="calibre15">As usual, let's start with importing the libraries and setting the seed:</li>
+</ol>
+<pre class="calibre23">import glob<br class="calibre24"/>import re<br class="calibre24"/>import matplotlib.pyplot as plt<br class="calibre24"/>import numpy as np<br class="calibre24"/>import cv2<br class="calibre24"/>from sklearn.preprocessing import LabelBinarizer<br class="calibre24"/>from sklearn.model_selection import train_test_split<br class="calibre24"/>from sklearn.metrics import accuracy_score<br class="calibre24"/><br class="calibre24"/>from keras.models import Model<br class="calibre24"/>from keras.layers import Flatten, Dense, Input, GlobalAveragePooling2D, GlobalMaxPooling2D, Activation<br class="calibre24"/>from keras.layers import Convolution2D, MaxPooling2D<br class="calibre24"/>from keras import optimizers<br class="calibre24"/>from keras import backend as K<br class="calibre24"/><br class="calibre24"/>seed = 2017</pre>
+<ol start="2" class="calibre17">
+<li value="2" class="calibre15">In the following step, we will load the data and output some example images to get an idea of the data:</li>
+</ol>
+<pre class="calibre23"> DATA_DIR = 'Data/lfw/'<br class="calibre24"/>images = glob.glob(DATA_DIR + '*/*.jpg')<br class="calibre24"/><br class="calibre24"/>plt.figure(figsize=(10, 10))<br class="calibre24"/><br class="calibre24"/>n_examples = 5<br class="calibre24"/>for i in range(5):<br class="calibre24"/>    rand = np.random.randint(len(images))<br class="calibre24"/>    image_name = re.search('Data/lfw\/(.+?)\/', images[rand], re.IGNORECASE).group(1).replace('_', ' ')<br class="calibre24"/>    img = cv2.imread(images[rand])<br class="calibre24"/>    img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)<br class="calibre24"/>    plt.subplot(n_examples, n_examples, i+1)<br class="calibre24"/>    plt.title(image_name)<br class="calibre24"/>    plt.imshow(img)<br class="calibre24"/>    <br class="calibre24"/>plt.show()</pre>
+<div class="cdpaligncenter"><img src="../images/00070.jpeg" class="calibre50"/></div>
+<div class="mce-root1">Figure 7.15: Example images of faces</div>
+<ol start="3" class="calibre17">
+<li value="3" class="calibre15">Some of the persons (labels) have multiple images; let's plot them to see if they look alike:</li>
+</ol>
+<pre class="calibre23"> images_arnold = glob.glob(DATA_DIR + 'Arnold_Schwarzenegger/*.jpg')<br class="calibre24"/><br class="calibre24"/>plt.figure(figsize=(10, 10))<br class="calibre24"/><br class="calibre24"/>for i in range(n_examples):<br class="calibre24"/>    image_name = re.search('Data/lfw\/(.+?)\/', images_arnold[i], re.IGNORECASE).group(1).replace('_', ' ')<br class="calibre24"/>    img = cv2.imread(images_arnold[i])<br class="calibre24"/>    img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)<br class="calibre24"/>    plt.subplot(n_examples, n_examples, i+1)<br class="calibre24"/># plt.title(image_name)<br class="calibre24"/>    plt.imshow(img)<br class="calibre24"/>    <br class="calibre24"/>plt.show()</pre>
+<div class="cdpaligncenter"><img src="../images/00071.jpeg" class="calibre50"/></div>
+<div class="mce-root1">Figure 7.16: Example images of Arnold Schwarzenegger</div>
+<p class="calibre29">What we see is that the images are quite different in terms of background and angle of the face. Also, in the fifth example, part of the face is covered and he is wearing glasses.</p>
+<ol start="4" class="calibre17">
+<li value="4" class="calibre15">The images are neatly stored in separate folders per class (person), so we can extract the labels with a simple regular expression:</li>
+</ol>
+<pre class="calibre23">labels = np.asarray([re.search('Data/lfw\/(.+?)\/', image, re.IGNORECASE).group(1) for image in np.asarray(images)])</pre>
+<ol start="5" class="calibre17">
+<li value="5" class="calibre15">Let's also output some statistics about our dataset:</li>
+</ol>
+<pre class="calibre23">print('Number of images: {}'.format(len(y)))<br class="calibre24"/>print('Number of unique labels: {}'.format(len(np.unique(labels))))</pre>
+<ol start="6" class="calibre17">
+<li value="6" class="calibre15">We're now ready to preprocess our labels:</li>
+</ol>
+<pre class="calibre23">encoder = LabelBinarizer()<br class="calibre24"/>encoder.fit(labels)<br class="calibre24"/>y = encoder.transform(labels).astype(float)</pre>
+<ol start="7" class="calibre17">
+<li value="7" class="calibre15">To validate our model, we will use a 20% split for our validation set:</li>
+</ol>
+<pre class="calibre23"> X_train, X_val, y_train , y_val = train_test_split(X, y, test_size=0.2, random_state=seed)</pre>
+<ol start="8" class="calibre17">
+<li value="8" class="calibre15">Next, we can define our model. We will take a network architecture inspired by the famous VGG16 network:</li>
+</ol>
+<pre class="calibre23"> input_shape = (250, 250, 3)<br class="calibre24"/>img_input = Input(shape=input_shape)<br class="calibre24"/>inputs = img_input<br class="calibre24"/><br class="calibre24"/># Block 1<br class="calibre24"/>x = Convolution2D(64, (3, 3), activation='relu', padding='same', <br class="calibre24"/>name='conv1_1')(img_input)<br class="calibre24"/>x = Convolution2D(64, (3, 3), activation='relu', padding='same', <br class="calibre24"/>name='conv1_2')(x)<br class="calibre24"/>x = MaxPooling2D((2, 2), strides=(2, 2), name='pool1')(x)<br class="calibre24"/><br class="calibre24"/># Block 2<br class="calibre24"/>x = Convolution2D(128, (3, 3), activation='relu', padding='same', <br class="calibre24"/>name='conv2_1')(x)<br class="calibre24"/>x = Convolution2D(128, (3, 3), activation='relu', padding='same', <br class="calibre24"/>name='conv2_2')(x)<br class="calibre24"/>x = MaxPooling2D((2, 2), strides=(2, 2), name='pool2')(x)<br class="calibre24"/><br class="calibre24"/># Block 3<br class="calibre24"/>x = Convolution2D(256, (3, 3), activation='relu', padding='same', <br class="calibre24"/>name='conv3_1')(x)<br class="calibre24"/>x = Convolution2D(256, (3, 3), activation='relu', padding='same', <br class="calibre24"/>name='conv3_2')(x)<br class="calibre24"/>x = Convolution2D(256, (3, 3), activation='relu', padding='same', <br class="calibre24"/>name='conv3_3')(x)<br class="calibre24"/>x = MaxPooling2D((2, 2), strides=(2, 2), name='pool3')(x)<br class="calibre24"/><br class="calibre24"/># Block 4<br class="calibre24"/>x = Convolution2D(512, (3, 3), activation='relu', padding='same', <br class="calibre24"/>name='conv4_1')(x)<br class="calibre24"/>x = Convolution2D(512, (3, 3), activation='relu', padding='same', <br class="calibre24"/>name='conv4_2')(x)<br class="calibre24"/>x = Convolution2D(512, (3, 3), activation='relu', padding='same', <br class="calibre24"/>name='conv4_3')(x)<br class="calibre24"/>x = MaxPooling2D((2, 2), strides=(2, 2), name='pool4')(x)<br class="calibre24"/><br class="calibre24"/># Block 5<br class="calibre24"/>x = Convolution2D(512, (3, 3), activation='relu', padding='same', <br class="calibre24"/>name='conv5_1')(x)<br class="calibre24"/>x = Convolution2D(512, (3, 3), activation='relu', padding='same', <br class="calibre24"/>name='conv5_2')(x)<br class="calibre24"/>x = Convolution2D(512, (3, 3), activation='relu', padding='same', <br class="calibre24"/>name='conv5_3')(x)<br class="calibre24"/>x = MaxPooling2D((2, 2), strides=(2, 2), name='pool5')(x)<br class="calibre24"/><br class="calibre24"/>x = Flatten(name='flatten')(x)<br class="calibre24"/>x = Dense(4096, name='fc6')(x)<br class="calibre24"/>x = Activation('relu', name='fc6/relu')(x)<br class="calibre24"/>x = Dense(4096, name='fc7')(x)<br class="calibre24"/>x = Activation('relu', name='fc7/relu')(x)<br class="calibre24"/>x = Dense(len(y[0]), name='fc8')(x)<br class="calibre24"/>x = Activation('relu', name='fc8/softmax')(x)<br class="calibre24"/><br class="calibre24"/>model = Model(inputs, x)<br class="calibre24"/><br class="calibre24"/>opt = optimizers.Adam()<br class="calibre24"/>model.compile(loss='categorical_crossentropy', optimizer=opt, <br class="calibre24"/>metrics=['accuracy'])</pre>
+<ol start="9" class="calibre17">
+<li value="9" class="calibre15">Currently, we have a rather limited training set. Therefore, we will be using image augmentation techniques to expand our dataset. We'll be using <kbd class="calibre12">random_shifts</kbd>, random flipping, and random scaling:</li>
+</ol>
+<pre class="calibre23">def random_shifts(image, shift_max_x=100, shift_max_y=100):<br class="calibre24"/>    width, height, _ = image.shape<br class="calibre24"/>    shift_x = np.random.randint(shift_max_x)<br class="calibre24"/>    shift_y = np.random.randint(shift_max_y)<br class="calibre24"/>    M = np.float32([[1, 0, shift_x],[0, 1, shift_y]])<br class="calibre24"/>    return (cv2.warpAffine(image, M, (height, width)))<br class="calibre24"/><br class="calibre24"/>def random_flip(image, p_flip=0.5):<br class="calibre24"/>    rand = np.random.random()<br class="calibre24"/>    if rand &lt; p_flip:<br class="calibre24"/>        image = cv2.flip(image, 1)<br class="calibre24"/>    return image<br class="calibre24"/><br class="calibre24"/>def scale_image(image, scale_range=[0.6, 1.4]):<br class="calibre24"/>    width, height, _ = image.shape <br class="calibre24"/>    <br class="calibre24"/>    scale_x = np.random.uniform(low=scale_range[0], <br class="calibre24"/>    high=scale_range[1])<br class="calibre24"/>    scale_y = np.random.uniform(low=scale_range[0],<br class="calibre24"/>    high=scale_range[1])<br class="calibre24"/>    scale_matrix = np.array([[scale_x, 0., (1. - scale_x) * <br class="calibre24"/>    width / 2.], [0., scale_y, (1. - scale_y) * height / 2.]], <br class="calibre24"/>    dtype=np.float32)<br class="calibre24"/>    return(cv2.warpAffine(image, scale_matrix, (width, height), <br class="calibre24"/>    flags=cv2.INTER_LINEAR, <br class="calibre24"/>    borderMode=cv2.BORDER_REFLECT_101))</pre>
+<ol start="10" class="calibre17">
+<li value="10" class="calibre15">We don't want to load all the images in memory, so we will implement a batch generator that uses our image augmentation functions:</li>
+</ol>
+<pre class="calibre55">img_rows = img_cols = 250<br class="calibre24"/>img_channels = 3<br class="calibre24"/><br class="calibre24"/>def batchgen(x, y, batch_size, transform=False):<br class="calibre24"/>    # Create empty numpy arrays<br class="calibre24"/>    images = np.zeros((batch_size, img_rows, img_cols, img_channels))<br class="calibre24"/>    class_id = np.zeros((batch_size, len(y[0])))<br class="calibre24"/><br class="calibre24"/>    while 1:<br class="calibre24"/>        for n in range(batch_size):<br class="calibre24"/>            i = np.random.randint(len(x))<br class="calibre24"/>            x_ = cv2.imread(x[i])<br class="calibre24"/>            x_ = cv2.cvtColor(x_, cv2.COLOR_BGR2RGB)<br class="calibre24"/>            if transform:<br class="calibre24"/>                x_ = random_shifts(x_, 10, 10)<br class="calibre24"/>                x_ = random_flip(x_)<br class="calibre24"/>                x_ = scale_image(x_, [0.8, 1,2])<br class="calibre24"/>            images[n] = x_<br class="calibre24"/>            class_id[n] = y[i]<br class="calibre24"/>        yield images, class_id</pre>
+<ol start="11" class="calibre17">
+<li value="11" class="calibre15">For our model, we will define the following hyperparamters:</li>
+</ol>
+<pre class="calibre23">batch_size = 32<br class="calibre24"/>n_epochs = 1000<br class="calibre24"/>s_epoch = <br class="calibre24"/>val_steps = (len(X_val)/batch_size)</pre>
+<ol start="12" class="calibre17">
+<li value="12" class="calibre15">Let's start training our model:</li>
+</ol>
+<pre class="calibre23">train_generator = batchgen(X_train, y_train, batch_size, True)<br class="calibre24"/>val_generator = batchgen(X_val, y_val, batch_size, False)<br class="calibre24"/><br class="calibre24"/>history = model.fit_generator(train_generator, <br class="calibre24"/>                               steps_per_epoch=s_epoch, <br class="calibre24"/>                               epochs=n_epochs, <br class="calibre24"/>                               validation_data=val_generator,<br class="calibre24"/>                               validation_steps = val_steps,<br class="calibre24"/>                               verbose=1<br class="calibre24"/>                             )</pre>
+<ol start="13" class="calibre17">
+<li value="13" class="calibre15">Now, let's see how our model performs and plot some results:</li>
+</ol>
+<pre class="calibre23"> test_generator = batchgen(X_val, y_val, batch_size, False)<br class="calibre24"/>preds = model.predict_generator(test_generator, steps=1)<br class="calibre24"/><br class="calibre24"/>y_val_ = [np.argmax(x) for x in y_val]<br class="calibre24"/>y_preds = [np.argmax(x) for x in preds]<br class="calibre24"/><br class="calibre24"/>accuracy_score(y_val_, y_preds)</pre>
+<div class="cdpaligncenter"><img src="../images/00072.jpeg" class="calibre95"/></div>
+<div class="mce-root1">Figure 7.17: Example predictions on the test set</div>
+<p class="calibre3"><span>If we want to add new faces to our model, we can use <strong class="calibre5">fine-tuning</strong> to adjust the weights of our trained model.</span> <span>More specifically, we will use a slightly smaller learning rate when training on the new examples. In <a href="part0198.html#5SQFC0-5e1e3ce63feb42db9ae6338e8302dfdb" class="calibre6">Chapter 14</a>, <em class="calibre22">Pretrained Models</em>, we will demonstrate how to use fine-tuning for the model trained in this recipe.</span></p>
+
+
+            </article>
+
+            
+        </section>
+    </body></html>

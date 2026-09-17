@@ -1,0 +1,60 @@
+<?xml version='1.0' encoding='utf-8'?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+  <head>
+    <title>How to do it...</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <link href="../stylesheet.css" rel="stylesheet" type="text/css"/>
+<link href="../page_styles.css" rel="stylesheet" type="text/css"/>
+</head>
+  <body id="1Q5IA0-5e1e3ce63feb42db9ae6338e8302dfdb" class="calibre">
+        <section class="calibre1">
+
+                            <header class="calibre1">
+                    </header><h1 class="header-title" id="calibre_pb_0">How to do it...</h1>
+                
+            
+            <article class="calibre1">
+                
+<ol class="calibre17">
+<li class="calibre15" value="1">Import libraries as follows:</li>
+</ol>
+<pre class="calibre23">import numpy as np <br class="calibre24"/>import pandas as pd<br class="calibre24"/>import matplotlib.pyplot as plt<br class="calibre24"/>from sklearn.model_selection import train_test_split<br class="calibre24"/>from sklearn.preprocessing import StandardScaler<br class="calibre24"/><br class="calibre24"/>from keras.models import Sequential<br class="calibre24"/>from keras.layers import Dense<br class="calibre24"/>from keras.optimizers import SGD<br class="calibre24"/><br class="calibre24"/>SEED = 2017</pre>
+<ol start="2" class="calibre17">
+<li value="2" class="calibre15">Load the dataset:</li>
+</ol>
+<pre class="calibre23">data = pd.read_csv('Data/winequality-red.csv', sep=';')<br class="calibre24"/>y = data['quality']<br class="calibre24"/>X = data.drop(['quality'], axis=1)</pre>
+<ol start="3" class="calibre17">
+<li value="3" class="calibre15">Split the dataset into training and testing:</li>
+</ol>
+<pre class="calibre23">X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=SEED)</pre>
+<ol start="4" class="calibre17">
+<li value="4" class="calibre15">Normalize the input data:</li>
+</ol>
+<pre class="calibre23">scaler = StandardScaler().fit(X_train)<br class="calibre24"/>X_train = pd.DataFrame(scaler.transform(X_train))<br class="calibre24"/>X_test = pd.DataFrame(scaler.transform(X_test))</pre>
+<ol start="5" class="calibre17">
+<li value="5" class="calibre15">Define the model and optimizer and compile:</li>
+</ol>
+<pre class="calibre23">model = Sequential()<br class="calibre24"/>model.add(Dense(1024, input_dim=X_train.shape[1], activation='relu')) <br class="calibre24"/>model.add(Dense(1024, activation='relu')) <br class="calibre24"/>model.add(Dense(512, activation='relu')) <br class="calibre24"/>model.add(Dense(512, activation='relu')) <br class="calibre24"/># Output layer<br class="calibre24"/>model.add(Dense(1, activation='linear'))<br class="calibre24"/># Set optimizer<br class="calibre24"/>opt = SGD()<br class="calibre24"/># Compile model<br class="calibre24"/>model.compile(loss='mse', optimizer=opt, metrics=['accuracy'])</pre>
+<ol start="6" class="calibre17">
+<li value="6" class="calibre15">Set the hyperparameters and train the model:</li>
+</ol>
+<pre class="calibre23">n_epochs = 500<br class="calibre24"/>batch_size = 256<br class="calibre24"/><br class="calibre24"/>history = model.fit(X_train.values, y_train, batch_size=batch_size, epochs=n_epochs, validation_split=0.2, verbose=0)</pre>
+<ol start="7" class="calibre17">
+<li value="7" class="calibre15">Predict on the test set:</li>
+</ol>
+<pre class="calibre23">predictions = model.predict(X_test.values)<br class="calibre24"/>print('Test accuracy: {:f&gt;2}%'.format(np.round(np.sum([y_test==predictions.flatten().round()])/y_test.shape[0]*100, 2)))</pre>
+<ol start="8" class="calibre17">
+<li value="8" class="calibre15">Plot the training and validation accuracy:</li>
+</ol>
+<pre class="calibre23">plt.plot(np.arange(len(history.history['acc'])), history.history['acc'], label='training')<br class="calibre24"/>plt.plot(np.arange(len(history.history['val_acc'])), history.history['val_acc'], label='validation')<br class="calibre24"/>plt.title('Accuracy')<br class="calibre24"/>plt.xlabel('epochs')<br class="calibre24"/>plt.ylabel('accuracy ')<br class="calibre24"/>plt.legend(loc=0)<br class="calibre24"/>plt.show()</pre>
+<p class="calibre29">The following graph is obtained:</p>
+<div class="cdpaligncenter"><img src="../images/00022.jpeg" class="calibre53"/></div>
+<div class="mce-root1">Figure 2.12: Training and validation accuracy</div>
+<div class="packt_infobox">We should focus on the validation accuracy and use <strong class="calibre25">early stopping</strong> to stop the training after around 450 epochs. This results in the highest validation accuracy. in the sections <em class="calibre52">Improving generalization with regularization</em> and <em class="calibre52">A`dding dropout to prevent overfitting</em>, we will introduce techniques to prevent overfitting. By using these techniques, we can create deeper models without overfitting on the training data.  </div>
+
+
+            </article>
+
+            
+        </section>
+    </body></html>

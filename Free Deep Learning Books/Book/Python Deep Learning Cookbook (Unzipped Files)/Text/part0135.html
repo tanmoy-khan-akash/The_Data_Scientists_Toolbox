@@ -1,0 +1,70 @@
+<?xml version='1.0' encoding='utf-8'?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+  <head>
+    <title>How to do it...</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <link href="../stylesheet.css" rel="stylesheet" type="text/css"/>
+<link href="../page_styles.css" rel="stylesheet" type="text/css"/>
+</head>
+  <body id="40NRU0-5e1e3ce63feb42db9ae6338e8302dfdb" class="calibre">
+        <section class="calibre1">
+
+                            <header class="calibre1">
+                    </header><h1 class="header-title" id="calibre_pb_0">How to do it...</h1>
+                
+            
+            <article class="calibre1">
+                
+<ol class="calibre17">
+<li value="1" class="calibre15">We start with importing all the necessary libraries as follows:</li>
+</ol>
+<pre class="calibre23">from keras.preprocessing.image import load_img, img_to_array<br class="calibre24"/>from scipy.misc import imsave<br class="calibre24"/>import numpy as np<br class="calibre24"/>from scipy.optimize import fmin_l_bfgs_b<br class="calibre24"/>import time<br class="calibre24"/>import argparse<br class="calibre24"/><br class="calibre24"/>from keras.applications import vgg16<br class="calibre24"/>from keras import backend as K</pre>
+<ol start="2" class="calibre17">
+<li value="2" class="calibre15">Next, we load the two images that we will use for style transfer and plot them:</li>
+</ol>
+<pre class="calibre23">base_image_path = 'Data/golden_gate.jpg'<br class="calibre24"/>style_reference_image_path = 'Data/starry_night.jpg'<br class="calibre24"/>result_prefix = 'result_'<br class="calibre24"/><br class="calibre24"/>width, height = load_img(base_image_path).size<br class="calibre24"/>img_rows = 400<br class="calibre24"/>img_cols = 600<br class="calibre24"/>img_channels = 3<br class="calibre24"/><br class="calibre24"/>plt.figure(figsize=(15, 15))<br class="calibre24"/>plt.subplot(2, 2, 1)<br class="calibre24"/>img = load_img(base_image_path)<br class="calibre24"/>plt.imshow(img)<br class="calibre24"/>plt.subplot(2, 2, 2)<br class="calibre24"/>img = load_img(style_reference_image_path)<br class="calibre24"/>plt.imshow(img)<br class="calibre24"/>plt.show()</pre>
+<div class="cdpaligncenter"><img src="../images/00073.jpeg" class="calibre96"/></div>
+<div class="mce-root1">Figure 7.18: Input images for style transfer (left: original image, right: style reference image)</div>
+<ol start="3" class="calibre17">
+<li value="3" class="calibre15">We define two functions that can preprocess and process images:</li>
+</ol>
+<pre class="calibre23">def preprocess_image(image_path):<br class="calibre24"/>    img = load_img(image_path, target_size=(img_rows, img_cols))<br class="calibre24"/>    img = img_to_array(img)<br class="calibre24"/>    img = np.expand_dims(img, axis=0)<br class="calibre24"/>    img = trained_model.preprocess_input(img)<br class="calibre24"/>    return img<br class="calibre24"/><br class="calibre24"/>def deprocess_image(x):<br class="calibre24"/>    x = x.reshape((img_rows, img_cols, img_channels))<br class="calibre24"/>    x[:, :, 0] += 103.939<br class="calibre24"/>    x[:, :, 1] += 116.779<br class="calibre24"/>    x[:, :, 2] += 123.68<br class="calibre24"/>    x = x[:, :, ::-1]<br class="calibre24"/>    x = np.clip(x, 0, 255).astype('uint8')<br class="calibre24"/>    return x</pre>
+<ol start="4" class="calibre17">
+<li value="4" class="calibre15">We now define the placeholders we need for training:</li>
+</ol>
+<pre class="calibre23">base_image = K.variable(preprocess_image(base_image_path))<br class="calibre24"/>style_reference_image = K.variable(preprocess_image<br class="calibre24"/>(style_reference_image_path))<br class="calibre24"/>combination_image = K.placeholder((1, img_rows, img_cols, 3))<br class="calibre24"/>input_tensor = K.concatenate([base_image, <br class="calibre24"/>style_reference_image, combination_image], axis=0)</pre>
+<ol start="5" class="calibre17">
+<li value="5" class="calibre15">Let's import the <kbd class="calibre12">VGG16</kbd> model and create a <kbd class="calibre12">dict</kbd> for the model's architecture:</li>
+</ol>
+<pre class="calibre23">model = vgg16.VGG16(input_tensor=input_tensor, weights='imagenet', <br class="calibre24"/>include_top=False)<br class="calibre24"/>model_dict = dict([(layer.name, layer.output) <br class="calibre24"/>for layer in model.layers])</pre>
+<ol start="6" class="calibre17">
+<li value="6" class="calibre15">For our style transfer, we need three different loss functions:</li>
+</ol>
+<pre class="calibre23"> def gram_matrix(x):<br class="calibre24"/>    features = K.batch_flatten(K.permute_dimensions(x, (2, 0, 1)))<br class="calibre24"/>    gram = K.dot(features, K.transpose(features))<br class="calibre24"/>    return gram<br class="calibre24"/><br class="calibre24"/>def style_loss(style, combination):<br class="calibre24"/>    assert K.ndim(style) == 3<br class="calibre24"/>    assert K.ndim(combination) == 3<br class="calibre24"/>    S = gram_matrix(style)<br class="calibre24"/>    C = gram_matrix(combination)<br class="calibre24"/>    channels = 3<br class="calibre24"/>    size = img_nrows * img_ncols<br class="calibre24"/>    return K.sum(K.square(S - C)) / <br class="calibre24"/>    (4. * (channels ** 2) * (size ** 2))<br class="calibre24"/><br class="calibre24"/>def content_loss(base, combination):<br class="calibre24"/>    return K.sum(K.square(combination - base))<br class="calibre24"/><br class="calibre24"/>def total_variation_loss(x):<br class="calibre24"/>    a = K.square(x[:, :img_nrows - 1, :img_ncols - 1, :] - <br class="calibre24"/>x[:, 1:, :img_ncols - 1, :])<br class="calibre24"/>    b = K.square(x[:, :img_nrows - 1, :img_ncols - 1, :] - <br class="calibre24"/>x[:, :img_nrows - 1, 1:, :])<br class="calibre24"/>    return K.sum(K.pow(a + b, 1.25))</pre>
+<ol start="7" class="calibre17">
+<li value="7" class="calibre15">It's time to define the hyperparameters:</li>
+</ol>
+<pre class="calibre23">total_variation_weight = 1.0<br class="calibre24"/>style_weight = 1.0<br class="calibre24"/>content_weight = 0.25<br class="calibre24"/>iterations = 10</pre>
+<ol start="8" class="calibre17">
+<li value="8" class="calibre15">Next, we need to create placeholder functions to determine the losses during training:</li>
+</ol>
+<pre class="calibre23">loss = K.variable(0.)<br class="calibre24"/>layer_features = model_dict['block5_conv2']<br class="calibre24"/>base_image_features = layer_features[0, :, :, :]<br class="calibre24"/>combination_features = layer_features[2, :, :, :]<br class="calibre24"/>loss += content_weight * content_loss(base_image_features, <br class="calibre24"/>combination_features)<br class="calibre24"/><br class="calibre24"/>feature_layers = ['block1_conv1', 'block2_conv1', <br class="calibre24"/>'block3_conv1', 'block4_conv1', 'block5_conv1']<br class="calibre24"/>for layer_name in feature_layers:<br class="calibre24"/>    layer_features = model_dict[layer_name]<br class="calibre24"/>    style_reference_features = layer_features[1, :, :, :]<br class="calibre24"/>    combination_features = layer_features[2, :, :, :]<br class="calibre24"/>    sl = style_loss(style_reference_features, combination_features)<br class="calibre24"/>    loss += (style_weight / len(feature_layers)) * sl<br class="calibre24"/>loss += total_variation_weight * total_variation_loss(combination_image)<br class="calibre24"/><br class="calibre24"/>grads = K.gradients(loss, combination_image)<br class="calibre24"/><br class="calibre24"/>outputs = [loss]<br class="calibre24"/>if isinstance(grads, (list, tuple)):<br class="calibre24"/>    outputs += grads<br class="calibre24"/>else:<br class="calibre24"/>    outputs.append(grads)<br class="calibre24"/><br class="calibre24"/>f_outputs = K.function([combination_image], outputs)</pre>
+<ol start="9" class="calibre17">
+<li value="9" class="calibre15">We also need to define functions to evaluate the losses:</li>
+</ol>
+<pre class="calibre23"> def eval_loss_and_grads(x):<br class="calibre24"/>    x = x.reshape((1, img_nrows, img_ncols, 3))<br class="calibre24"/>    outs = f_outputs([x])<br class="calibre24"/>    loss_value = outs[0]<br class="calibre24"/>    if len(outs[1:]) == 1:<br class="calibre24"/>        grad_values = outs[1].flatten().astype('float64')<br class="calibre24"/>    else:<br class="calibre24"/>        grad_values = np.array(outs[1:]).flatten().astype('float64')<br class="calibre24"/>    return loss_value, grad_values<br class="calibre24"/><br class="calibre24"/><br class="calibre24"/>class Evaluator(object):<br class="calibre24"/><br class="calibre24"/>    def __init__(self):<br class="calibre24"/>        self.loss_value = None<br class="calibre24"/>        self.grads_values = None<br class="calibre24"/><br class="calibre24"/>    def loss(self, x):<br class="calibre24"/>        assert self.loss_value is None<br class="calibre24"/>        loss_value, grad_values = eval_loss_and_grads(x)<br class="calibre24"/>        self.loss_value = loss_value<br class="calibre24"/>        self.grad_values = grad_values<br class="calibre24"/>        return self.loss_value<br class="calibre24"/><br class="calibre24"/>    def grads(self, x):<br class="calibre24"/>        assert self.loss_value is not None<br class="calibre24"/>        grad_values = np.copy(self.grad_values)<br class="calibre24"/>        self.loss_value = None<br class="calibre24"/>        self.grad_values = None<br class="calibre24"/>        return grad_values<br class="calibre24"/><br class="calibre24"/>evaluator = Evaluator()</pre>
+<ol start="10" class="calibre17">
+<li value="10" class="calibre15">Let's start the style transfer and plot the results for each iteration:</li>
+</ol>
+<pre class="calibre23"> x = preprocess_image(base_image_path)<br class="calibre24"/><br class="calibre24"/>for i in range(iterations):<br class="calibre24"/>    print(i)<br class="calibre24"/>    x, min_val, info = fmin_l_bfgs_b(evaluator.loss, x.flatten(), fprime=evaluator.grads, maxfun=20)<br class="calibre24"/><br class="calibre24"/>    print('Current loss value:', min_val)<br class="calibre24"/><br class="calibre24"/>    img = deprocess_image(x.copy())<br class="calibre24"/>    fname = result_prefix + '_at_iteration_%d.png' % i<br class="calibre24"/>    plt.imshow(img)<br class="calibre24"/>    plt.show()</pre>
+<div class="cdpaligncenter"><img src="../images/00074.jpeg" class="calibre97"/></div>
+<div class="mce-root1">Figure 7.19: Example of transferring styles after 10 iterations</div>
+<p class="calibre3"></p>
+<p class="calibre3"></p>
+
+
+            </article>
+
+            
+        </section>
+    </body></html>

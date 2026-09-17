@@ -1,0 +1,60 @@
+<?xml version='1.0' encoding='utf-8'?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+  <head>
+    <title>How to do it...</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <link href="../stylesheet.css" rel="stylesheet" type="text/css"/>
+<link href="../page_styles.css" rel="stylesheet" type="text/css"/>
+</head>
+  <body id="20R680-5e1e3ce63feb42db9ae6338e8302dfdb" class="calibre">
+        <section class="calibre1">
+
+                            <header class="calibre1">
+                    </header><h1 class="header-title" id="calibre_pb_0">How to do it...</h1>
+                
+            
+            <article class="calibre1">
+                
+<ol class="calibre17">
+<li value="1" class="calibre15">Load the libraries:</li>
+</ol>
+<pre class="calibre23">import numpy as np<br class="calibre24"/>import pandas as pd<br class="calibre24"/><br class="calibre24"/>from sklearn.model_selection import train_test_split<br class="calibre24"/>from keras.models import Sequential<br class="calibre24"/>from keras.layers import Dense, Dropout<br class="calibre24"/>from keras.callbacks import EarlyStopping, ModelCheckpoint<br class="calibre24"/>from keras.optimizers import SGD, Adadelta, Adam, RMSprop, Adagrad, Nadam, Adamax</pre>
+<ol start="2" class="calibre17">
+<li value="2" class="calibre15">Import the dataset and extract the target variable:</li>
+</ol>
+<pre class="calibre23">data = pd.read_csv('../Data/winequality-red.csv', sep=';')<br class="calibre24"/>y = data['quality']<br class="calibre24"/>X = data.drop(['quality'], axis=1)</pre>
+<ol start="3" class="calibre17">
+<li value="3" class="calibre15">Split the dataset for training, validation, and testing:</li>
+</ol>
+<pre class="calibre23">X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=2017)<br class="calibre24"/>X_train, X_val, y_train, y_val = train_test_split(X_train, y_train, test_size=0.2, random_state=2017)</pre>
+<ol start="4" class="calibre17">
+<li value="4" class="calibre15">Define a function that creates the model:</li>
+</ol>
+<pre class="calibre23">def create_model(opt): <br class="calibre24"/>model = Sequential()<br class="calibre24"/>model.add(Dense(100, input_dim=X_train.shape[1],<br class="calibre24"/>activation='relu'))<br class="calibre24"/>model.add(Dense(50, activation='relu'))<br class="calibre24"/>model.add(Dense(25, activation='relu'))<br class="calibre24"/>model.add(Dense(10, activation='relu'))<br class="calibre24"/>model.add(Dense(1, activation='linear'))<br class="calibre24"/>return model</pre>
+<ol start="5" class="calibre17">
+<li value="5" class="calibre15">Create a function that defines <kbd class="calibre12">callbacks</kbd> we will be using during training:</li>
+</ol>
+<pre class="calibre23">def create_callbacks(opt):<br class="calibre24"/>callbacks = [<br class="calibre24"/>EarlyStopping(monitor='val_acc', patience=200, verbose=2),<br class="calibre24"/>ModelCheckpoint('best_model_' + opt + '.h5', monitor='val_acc', save_best_only=True, verbose=0)<br class="calibre24"/>]<br class="calibre24"/>return callbacks</pre>
+<ol start="6" class="calibre17">
+<li value="6" class="calibre15">Create a <kbd class="calibre12">dict</kbd> of the optimizers we want to try:</li>
+</ol>
+<pre class="calibre23">opts = dict({<br class="calibre24"/>'sgd': SGD(),<br class="calibre24"/> 'sgd-0001': SGD(lr=0.0001, decay=0.00001),<br class="calibre24"/> 'adam': Adam(),<br class="calibre24"/> 'adadelta': Adadelta(),<br class="calibre24"/> 'rmsprop': RMSprop(),<br class="calibre24"/> 'rmsprop-0001': RMSprop(lr=0.0001),<br class="calibre24"/> 'nadam': Nadam(),<br class="calibre24"/> 'adamax': Adamax()<br class="calibre24"/>})</pre>
+<ol start="7" class="calibre17">
+<li value="7" class="calibre15">Train our networks and store <kbd class="calibre12">results</kbd>:</li>
+</ol>
+<pre class="calibre23">results = []<br class="calibre24"/># Loop through the optimizers<br class="calibre24"/>for opt in opts:<br class="calibre24"/> model = create_model(opt)<br class="calibre24"/> callbacks = create_callbacks(opt)<br class="calibre24"/> model.compile(loss='mse', optimizer=opts[opt], metrics=['accuracy'])<br class="calibre24"/> hist = model.fit(X_train.values, y_train, batch_size=128, epochs=5000,<br class="calibre24"/>  validation_data=(X_val.values, y_val),<br class="calibre24"/>  verbose=0,<br class="calibre24"/>  callbacks=callbacks)<br class="calibre24"/> best_epoch = np.argmax(hist.history['val_acc'])<br class="calibre24"/> best_acc = hist.history['val_acc'][best_epoch] <br class="calibre24"/> best_model = create_model(opt)<br class="calibre24"/> # Load the model weights with the highest validation accuracy <br class="calibre24"/> best_model.load_weights('best_model_' + opt + '.h5')<br class="calibre24"/> best_model.compile(loss='mse', optimizer=opts[opt], metrics=['accuracy'])<br class="calibre24"/> score = best_model.evaluate(X_test.values, y_test, verbose=0)<br class="calibre24"/> results.append([opt, best_epoch, best_acc, score[1]])</pre>
+<ol start="8" class="calibre17">
+<li value="8" class="calibre15">Compare the results:</li>
+</ol>
+<pre class="calibre23">res = pd.DataFrame(results)<br class="calibre24"/>res.columns = ['optimizer', 'epochs', 'val_accuracy', 'test_accuracy']<br class="calibre24"/>res</pre>
+<p class="calibre27">We obtain the following result:</p>
+<div class="cdpaligncenter"><img src="../images/00025.jpeg" class="calibre58"/></div>
+<div class="mce-root1">Figure 2.15: Results of training with different optimizers on the Wine Quality dataset</div>
+<div class="packt_tip">In <a href="part0169.html#515F20-5e1e3ce63feb42db9ae6338e8302dfdb" class="calibre51">Chapter 12</a>, <em class="calibre52">Hyperparameter Selection, Tuning, and Neural Network Learning</em> we will demonstrate how to use grid search for parameter tuning. Grid search can be used to find the right optimizer (in combination with other hyperparameters) to tune you neural network.</div>
+
+
+            </article>
+
+            
+        </section>
+    </body></html>

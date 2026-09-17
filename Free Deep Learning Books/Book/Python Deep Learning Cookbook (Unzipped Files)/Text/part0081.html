@@ -1,0 +1,29 @@
+<?xml version='1.0' encoding='utf-8'?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+  <head>
+    <title>Understanding padding and strides</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <link href="../stylesheet.css" rel="stylesheet" type="text/css"/>
+<link href="../page_styles.css" rel="stylesheet" type="text/css"/>
+</head>
+  <body id="2D7TI0-5e1e3ce63feb42db9ae6338e8302dfdb" class="calibre">
+        <section class="calibre1">
+
+                            <header class="calibre1">
+                    </header><h1 class="header-title" id="calibre_pb_0">Understanding padding and strides</h1>
+                
+            
+            <article class="calibre1">
+                
+<p class="calibre3">Up until now, we've used the default strides of one for our networks. This indicates that the model convolves one input over each axis (step size of one). However, when a dataset contains less granular information on the pixel level, we can experiment with larger values as strides. By increasing the strides, the convolutional layer skips more input variables over each axis, and therefore the number of trainable parameters is reduced. This can speed up convergence without too much performance loss.</p>
+<p class="calibre3">Another parameter that can be tuned is the padding. The padding defines how the borders of the input data (for example images) are handled. If no padding is added, <span>only</span><span> </span><span>the border pixels (in the case of an image) will be included. So if you expect the borders to include valuable information, you can try to add padding to your data. This adds a border of dummy data that can be used while convolving over the data. A benefit of using padding is that the dimensions of the data are kept the same over each convolutional layer, which means that you can stack more convolutional layers on top of each other. In the following diagram, we can see an example of stride 1 with zero padding, and an example of stride 2 with padding:</span></p>
+<div class="cdpaligncenter"><img src="../images/00034.jpeg" class="calibre63"/></div>
+<div class="mce-root1">Figure 3.5: Left: an input image of 5 x 5 with stride 1 and zero padding; Right: an input image of 5 x 5 with stride 2 and same padding</div>
+<p class="calibre3">There is no general rule for which value to choose for the padding and strides. It largely depends on the size and complexity of the data in combination with the potential pre-processing techniques used. Next, we will experiment with different settings for the strides and padding and compare the results of our models. The dataset we will use contains images of cats and dogs, and our task is to classify the animal.</p>
+
+
+            </article>
+
+            
+        </section>
+    </body></html>

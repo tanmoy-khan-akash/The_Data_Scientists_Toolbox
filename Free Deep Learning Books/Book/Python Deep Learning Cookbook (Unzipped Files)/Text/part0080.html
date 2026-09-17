@@ -1,0 +1,72 @@
+<?xml version='1.0' encoding='utf-8'?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+  <head>
+    <title>How to do it...</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <link href="../stylesheet.css" rel="stylesheet" type="text/css"/>
+<link href="../page_styles.css" rel="stylesheet" type="text/css"/>
+</head>
+  <body id="2C9D00-5e1e3ce63feb42db9ae6338e8302dfdb" class="calibre">
+        <section class="calibre1">
+
+                            <header class="calibre1">
+                    </header><h1 class="header-title" id="calibre_pb_0">How to do it...</h1>
+                
+            
+            <article class="calibre1">
+                
+<ol class="calibre17">
+<li value="1" class="calibre15">Import all necessary libraries:</li>
+</ol>
+<pre class="calibre23">import numpy as np<br class="calibre24"/>from matplotlib import pyplot as plt<br class="calibre24"/><br class="calibre24"/>from keras.utils import np_utils<br class="calibre24"/>from keras.models import Sequential<br class="calibre24"/>from keras.layers.core import Dense, Dropout, Activation, Flatten<br class="calibre24"/>from keras.callbacks import EarlyStopping<br class="calibre24"/>from keras.layers import Conv2D, MaxPooling2D<br class="calibre24"/>from keras.layers.normalization import BatchNormalization</pre>
+<ol start="2" class="calibre17">
+<li value="2" class="calibre15">Load the <kbd class="calibre12">cifar10</kbd> dataset:</li>
+</ol>
+<pre class="calibre23">from keras.datasets import cifar10<br class="calibre24"/>(X_train, y_train), (X_val, y_val) = cifar10.load_data()</pre>
+<ol start="3" class="calibre17">
+<li value="3" class="calibre15">Normalize the input data:</li>
+</ol>
+<pre class="calibre23">X_train = X_train.astype('float32')/255.<br class="calibre24"/>X_val = X_val.astype('float32')/255.</pre>
+<ol start="4" class="calibre17">
+<li value="4" class="calibre15">One-hot encode the labels:</li>
+</ol>
+<pre class="calibre23">n_classes = 10<br class="calibre24"/>y_train = np_utils.to_categorical(y_train, n_classes)<br class="calibre24"/>y_val = np_utils.to_categorical(y_val, n_classes)</pre>
+<ol start="5" class="calibre17">
+<li value="5" class="calibre15">Define the CNN architecture and output the network architecture:</li>
+</ol>
+<pre class="calibre23">input_shape = X_train[0].shape<br class="calibre24"/><br class="calibre24"/>model = Sequential()<br class="calibre24"/><br class="calibre24"/>model.add(Conv2D(32, kernel_size=(3, 3), input_shape=input_shape, padding='same'))<br class="calibre24"/>model.add(Activation('relu'))<br class="calibre24"/>model.add(Conv2D(32, kernel_size=(3, 3), padding='same'))<br class="calibre24"/>model.add(Activation('relu'))<br class="calibre24"/>model.add(MaxPooling2D(pool_size=(2, 2), padding='same'))<br class="calibre24"/><br class="calibre24"/>model.add(Dropout(0.25))<br class="calibre24"/><br class="calibre24"/>model.add(Conv2D(64, kernel_size=(3, 3), padding='same'))<br class="calibre24"/>model.add(Activation('relu'))<br class="calibre24"/>model.add(Conv2D(64, kernel_size=(3, 3), padding='same'))<br class="calibre24"/>model.add(Activation('relu'))<br class="calibre24"/>model.add(MaxPooling2D(pool_size=(2, 2), padding='same'))<br class="calibre24"/><br class="calibre24"/>model.add(Dropout(0.25))<br class="calibre24"/><br class="calibre24"/>model.add(Conv2D(128, kernel_size=(3, 3), padding='same'))<br class="calibre24"/>model.add(Activation('relu'))<br class="calibre24"/>model.add(Conv2D(128, kernel_size=(3, 3), padding='same'))<br class="calibre24"/>model.add(Activation('relu'))<br class="calibre24"/>model.add(MaxPooling2D(pool_size=(2, 2), padding='same'))<br class="calibre24"/><br class="calibre24"/>model.add(Dropout(0.25))<br class="calibre24"/><br class="calibre24"/>model.add(Flatten())<br class="calibre24"/>model.add(Dense(512, activation='relu'))<br class="calibre24"/>model.add(Dropout(0.5))<br class="calibre24"/>model.add(Dense(128, activation='relu'))<br class="calibre24"/>model.add(Dense(n_classes, activation='softmax'))<br class="calibre24"/><br class="calibre24"/>model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])<br class="calibre24"/>model.summary()</pre>
+<ol start="6" class="calibre17">
+<li value="6" class="calibre15">Define a callback to prevent overfitting:</li>
+</ol>
+<pre class="calibre23">callbacks = [EarlyStopping(monitor='val_acc', patience=5, verbose=1)]</pre>
+<ol start="7" class="calibre17">
+<li value="7" class="calibre15">Set network hyperparameters:</li>
+</ol>
+<pre class="calibre23">batch_size = 256<br class="calibre24"/>n_epochs = 300</pre>
+<ol start="8" class="calibre17">
+<li value="8" class="calibre15">Next, we can train our first model:</li>
+</ol>
+<pre class="calibre23">history = model.fit(X_train, y_train, batch_size=batch_size, epochs=n_epochs, verbose=1, validation_data=(X_val, y_val), callbacks=callbacks)</pre>
+<ol start="9" class="calibre17">
+<li value="9" class="calibre15">Now, let's add batch normalization to our network architecture:</li>
+</ol>
+<pre class="calibre23">model_bn = Sequential()<br class="calibre24"/><br class="calibre24"/>model_bn.add(Conv2D(32, kernel_size=(3, 3), input_shape=input_shape, padding='same'))<br class="calibre24"/>model_bn.add(Activation('relu'))<br class="calibre24"/>model_bn.add(BatchNormalization())<br class="calibre24"/>model_bn.add(Conv2D(32, kernel_size=(3, 3), padding='same'))<br class="calibre24"/>model_bn.add(Activation('relu'))<br class="calibre24"/>model_bn.add(BatchNormalization())<br class="calibre24"/>model_bn.add(MaxPooling2D(pool_size=(2, 2), padding='same'))<br class="calibre24"/><br class="calibre24"/>model_bn.add(Dropout(0.25))<br class="calibre24"/><br class="calibre24"/>model_bn.add(Conv2D(64, kernel_size=(3, 3), padding='same'))<br class="calibre24"/>model_bn.add(Activation('relu'))<br class="calibre24"/>model_bn.add(BatchNormalization())<br class="calibre24"/>model_bn.add(Conv2D(64, kernel_size=(3, 3), padding='same'))<br class="calibre24"/>model_bn.add(Activation('relu'))<br class="calibre24"/>model_bn.add(BatchNormalization())<br class="calibre24"/>model_bn.add(MaxPooling2D(pool_size=(2, 2), padding='same'))<br class="calibre24"/><br class="calibre24"/>model_bn.add(Dropout(0.25))<br class="calibre24"/><br class="calibre24"/>model_bn.add(Conv2D(128, kernel_size=(3, 3), padding='same'))<br class="calibre24"/>model_bn.add(Activation('relu'))<br class="calibre24"/>model_bn.add(BatchNormalization())<br class="calibre24"/>model_bn.add(Conv2D(128, kernel_size=(3, 3), padding='same'))<br class="calibre24"/>model_bn.add(Activation('relu'))<br class="calibre24"/>model_bn.add(BatchNormalization())<br class="calibre24"/>model_bn.add(MaxPooling2D(pool_size=(2, 2), padding='same'))<br class="calibre24"/><br class="calibre24"/>model_bn.add(Dropout(0.25))<br class="calibre24"/><br class="calibre24"/>model_bn.add(Flatten())<br class="calibre24"/>model_bn.add(Dense(512, activation='relu'))<br class="calibre24"/>model_bn.add(BatchNormalization())<br class="calibre24"/>model_bn.add(Dropout(0.5))<br class="calibre24"/>model_bn.add(Dense(128, activation='relu'))<br class="calibre24"/>model_bn.add(Dense(n_classes, activation='softmax'))<br class="calibre24"/><br class="calibre24"/>model_bn.compile(loss='categorical_crossentropy', optimizer='adam, metrics=['accuracy'])<br class="calibre24"/>model_bn.summary()</pre>
+<ol start="10" class="calibre17">
+<li value="10" class="calibre15">Now we are ready to train the model that includes batch normalization as well:</li>
+</ol>
+<pre class="calibre23">history_bn = model_bn.fit(X_train, y_train,<br class="calibre24"/>        batch_size=batch_size,<br class="calibre24"/>        epochs=n_epochs,<br class="calibre24"/>        verbose=1,<br class="calibre24"/>        validation_data=(X_val, y_val), callbacks=callbacks)</pre>
+<ol start="11" class="calibre17">
+<li value="11" class="calibre15">Let's plot the validation accuracy of both models to compare the performance:</li>
+</ol>
+<pre class="calibre23">val_acc_bn = history_bn.history['val_acc']<br class="calibre24"/>val_acc = history.history['val_acc']<br class="calibre24"/>plt.plot(range(len(val_acc)), val_acc, label='CNN model')<br class="calibre24"/>plt.plot(range(len(val_acc_bn)), val_acc_bn, label='CNN model with BN')<br class="calibre24"/>plt.title('Validation accuracy on Cifar10 dataset')<br class="calibre24"/>plt.xlabel('epochs')<br class="calibre24"/>plt.ylabel('accuracy')<br class="calibre24"/>plt.legend()<br class="calibre24"/>plt.show()</pre>
+<p class="calibre45">The results of both models are as follows:</p>
+<div class="cdpaligncenter"><img src="../images/00033.jpeg" class="calibre50"/></div>
+<div class="mce-root1"><span>Figure 3.4: Comparing validation accuracy of a model with and without batch normalization</span></div>
+<p class="calibre3">As we can see, the model with batch normalization takes the lead on validation accuracy after a couple of epochs and manages to stay ahead of the model without batch normalization, with a maximum validation accuracy of 84.16%, compared to a validation accuracy of 83.19% for the model without batch normalization. The model with batch normalization also converges faster (26 epochs vs 40 epochs). However, with 25 seconds per epoch, the model with batch normalization is slightly slower per epoch than the model without batch normalization (17 seconds).</p>
+
+
+            </article>
+
+            
+        </section>
+    </body></html>

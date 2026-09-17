@@ -1,0 +1,75 @@
+<?xml version='1.0' encoding='utf-8'?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+  <head>
+    <title>How to do it...</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <link href="../stylesheet.css" rel="stylesheet" type="text/css"/>
+<link href="../page_styles.css" rel="stylesheet" type="text/css"/>
+</head>
+  <body id="3KB4K0-5e1e3ce63feb42db9ae6338e8302dfdb" class="calibre">
+        <section class="calibre1">
+
+                            <header class="calibre1">
+                    </header><h1 class="header-title" id="calibre_pb_0">How to do it...</h1>
+                
+            
+            <article class="calibre1">
+                
+<ol class="calibre17">
+<li value="1" class="calibre15">Create a new Python file and import the necessary libraries:</li>
+</ol>
+<pre class="calibre23">import numpy as np<br class="calibre24"/>import glob<br class="calibre24"/>import cv2<br class="calibre24"/>import matplotlib.pyplot as plt<br class="calibre24"/><br class="calibre24"/>from sklearn.preprocessing import LabelBinarizer<br class="calibre24"/>from sklearn.model_selection import train_test_split<br class="calibre24"/>from sklearn.metrics import accuracy_score<br class="calibre24"/><br class="calibre24"/>import keras<br class="calibre24"/>from keras.models import Sequential, load_model<br class="calibre24"/>from keras.layers import Dense, Dropout, Activation, Flatten, Conv2D, MaxPooling2D, Lambda, Cropping2D<br class="calibre24"/>from keras.utils import np_utils<br class="calibre24"/>from keras import optimizers<br class="calibre24"/><br class="calibre24"/>SEED = 2017</pre>
+<ol start="2" class="calibre17">
+<li value="2" class="calibre15">Next, we load the dataset and extract the labels:</li>
+</ol>
+<pre class="calibre23"># Specify data directory and extract all file names<br class="calibre24"/>DATA_DIR = '../Data/'<br class="calibre24"/>images = glob.glob(DATA_DIR + "flower_photos/*/*.jpg")<br class="calibre24"/># Extract labels from file names<br class="calibre24"/>labels = [x.split('/')[3] for x in images]</pre>
+<ol start="3" class="calibre17">
+<li value="3" class="calibre15">Let's have a look at the data:</li>
+</ol>
+<pre class="calibre23">unique_labels = set(labels)<br class="calibre24"/>plt.figure(figsize=(15, 15))<br class="calibre24"/>i = 1<br class="calibre24"/>for label in unique_labels:<br class="calibre24"/>    image = images[labels.index(label)]<br class="calibre24"/>    img = cv2.imread(image)<br class="calibre24"/>    img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)<br class="calibre24"/>    plt.subplot(5, 5, i)<br class="calibre24"/>    plt.title("{0} ({1})".format(label, labels.count(label)))<br class="calibre24"/>    i += 1<br class="calibre24"/>    _ = plt.imshow(img)<br class="calibre24"/>plt.show()</pre>
+<div class="cdpaligncenter"><img src="../images/00061.jpeg" class="calibre88"/></div>
+<div class="mce-root1">Figure 7.8: Flower dataset examples per label and counts</div>
+<ol start="4" class="calibre17">
+<li value="4" class="calibre15">Transform the labels into binary format:</li>
+</ol>
+<pre class="calibre23">encoder = LabelBinarizer()<br class="calibre24"/>encoder.fit(labels)<br class="calibre24"/>y = encoder.transform(labels).astype(float)</pre>
+<ol start="5" class="calibre17">
+<li value="5" class="calibre15">Split the dataset for training and testing:</li>
+</ol>
+<pre class="calibre23">X_train, X_val, y_train , y_val = train_test_split(images, y, test_size=0.1, random_state=SEED)</pre>
+<ol start="6" class="calibre17">
+<li value="6" class="calibre15">Define a network architecture:</li>
+</ol>
+<pre class="calibre23"># Define architecture<br class="calibre24"/>model = Sequential()<br class="calibre24"/>model.add(Lambda(lambda x: (x / 255.) - 0.5, input_shape=(100, 100, 3)))<br class="calibre24"/>model.add(Conv2D(16, (5, 5), activation='relu', padding='same'))<br class="calibre24"/>model.add(MaxPooling2D(pool_size=(2,2)))<br class="calibre24"/>model.add(Dropout(0.5))<br class="calibre24"/>model.add(Conv2D(32, (5, 5), activation='relu', padding='same'))<br class="calibre24"/>model.add(MaxPooling2D(pool_size=(2,2)))<br class="calibre24"/>model.add(Dropout(0.5))<br class="calibre24"/>model.add(Conv2D(64, (3, 3), activation='relu', padding='same'))<br class="calibre24"/>model.add(MaxPooling2D(pool_size=(2,2)))<br class="calibre24"/>model.add(Dropout(0.5))<br class="calibre24"/>model.add(Flatten())<br class="calibre24"/>model.add(Dense(256, activation='relu'))<br class="calibre24"/>model.add(Dropout(0.5))<br class="calibre24"/>model.add(Dense(5, activation='softmax'))<br class="calibre24"/><br class="calibre24"/># Define optimizer and compile<br class="calibre24"/>sgd = optimizers.SGD(lr=0.01, decay=1e-6, momentum=0.9, nesterov=True)<br class="calibre24"/>model.compile(loss='categorical_crossentropy', optimizer=sgd, metrics=['accuracy'])</pre>
+<ol start="7" class="calibre17">
+<li value="7" class="calibre15">Create a batch generator to loop through the data randomly:</li>
+</ol>
+<pre class="calibre33">img_rows = img_cols = 100<br class="calibre24"/>img_channels = 3<br class="calibre24"/><br class="calibre24"/>def batchgen(x, y, batch_size, transform=False):<br class="calibre24"/>    # Create empty numpy arrays<br class="calibre24"/>    images = np.zeros((batch_size, img_rows, img_cols, img_channels))<br class="calibre24"/>    class_id = np.zeros((batch_size, len(y[0])))<br class="calibre24"/><br class="calibre24"/>    while 1:<br class="calibre24"/>        for n in range(batch_size):<br class="calibre24"/>            i = np.random.randint(len(x))<br class="calibre24"/>            x_ = cv2.imread(x[i])<br class="calibre24"/>            x_ = cv2.cvtColor(x_, cv2.COLOR_BGR2RGB)<br class="calibre24"/>            # The images have different sizes, we transform all to 100x100 pixels<br class="calibre24"/>            x_ = cv2.resize(x_, (100, 100)) <br class="calibre24"/>            images[n] = x_<br class="calibre24"/>            class_id[n] = y[i]<br class="calibre24"/>            yield images, class_id</pre>
+<ol start="8" class="calibre17">
+<li value="8" class="calibre15">Next, we can train the model:</li>
+</ol>
+<pre class="calibre23">batch_size = 256<br class="calibre24"/>n_epochs = 20<br class="calibre24"/>s_epoch = 100<br class="calibre24"/>val_size = 0.2<br class="calibre24"/>val_steps = 20<br class="calibre24"/><br class="calibre24"/>train_generator = batchgen(X_train, y_train, batch_size, True)<br class="calibre24"/>val_generator = batchgen(X_valid, y_valid, batch_size, False)<br class="calibre24"/><br class="calibre24"/>history = model.fit_generator(train_generator, <br class="calibre24"/>                               steps_per_epoch=s_epoch, <br class="calibre24"/>                               nb_epoch=n_epochs, <br class="calibre24"/>                               validation_data=val_generator,<br class="calibre24"/>                               validation_steps = val_steps<br class="calibre24"/>                             )</pre>
+<ol start="9" class="calibre17">
+<li value="9" class="calibre15">Let's plot the training results:</li>
+</ol>
+<pre class="calibre23">plt.plot(history.history['acc'])<br class="calibre24"/>plt.plot(history.history['val_acc'])<br class="calibre24"/>plt.title('model_accuracy')<br class="calibre24"/>plt.ylabel('accuracy')<br class="calibre24"/>plt.xlabel('epochs')<br class="calibre24"/>plt.legend(['train', 'validation'], loc='lower right')<br class="calibre24"/>plt.show()</pre>
+<div class="cdpaligncenter"><img src="../images/00062.jpeg" class="calibre50"/></div>
+<div class="mce-root1">Figure 7.9: Training results on flower dataset</div>
+<ol start="10" class="calibre17">
+<li value="10" class="calibre15">We can now check how our model performs on the unseen test set:</li>
+</ol>
+<pre class="calibre23">test_generator = batchgen(X_valid, y_valid, 1, False)<br class="calibre24"/>preds = model.predict_generator(test_generator, steps=len(X_valid))<br class="calibre24"/><br class="calibre24"/>y_valid_ = [np.argmax(x) for x in y_valid]<br class="calibre24"/>y_preds = [np.argmax(x) for x in preds]<br class="calibre24"/>accuracy_score(y_valid_, y_preds)</pre>
+<ol start="11" class="calibre17">
+<li value="11" class="calibre15">Finally, let's plot some of the predictions:</li>
+</ol>
+<pre class="calibre33">n_predictions = 5<br class="calibre24"/>plt.figure(figsize=(15, 15))<br class="calibre24"/>for i in range(n_predictions):<br class="calibre24"/>  <br class="calibre24"/>    plt.subplot(n_predictions, n_predictions, i+1)<br class="calibre24"/>    plt.title("{0} ({1})".format(list(set(labels))[np.argmax(preds[i])], <br class="calibre24"/>                                 list(set(labels))[np.argmax(y_valid[i])]))<br class="calibre24"/>    img = cv2.imread(X_valid[i])<br class="calibre24"/>    img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)<br class="calibre24"/>    plt.axis('off')<br class="calibre24"/>    plt.imshow(img)<br class="calibre24"/>    plt.tight_layout() <br class="calibre24"/>plt.show()</pre>
+<div class="cdpaligncenter"><img src="../images/00063.jpeg" class="calibre89"/></div>
+<div class="mce-root1">Figure 7-10: Predictions on the five test images and their true labels between brackets</div>
+<div class="packt_tip">In <a target="_blank" href="part0198.html#5SQFC0-5e1e3ce63feb42db9ae6338e8302dfdb" class="calibre51">Chapter 14</a>, <em class="calibre52">Pretrained Models</em>, we will show you how to leverage state-of-the art networks for object classification.</div>
+
+
+            </article>
+
+            
+        </section>
+    </body></html>

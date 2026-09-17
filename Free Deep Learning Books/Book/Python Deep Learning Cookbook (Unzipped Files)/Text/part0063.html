@@ -1,0 +1,28 @@
+<?xml version='1.0' encoding='utf-8'?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+  <head>
+    <title>Implementing an autoencoder</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <link href="../stylesheet.css" rel="stylesheet" type="text/css"/>
+<link href="../page_styles.css" rel="stylesheet" type="text/css"/>
+</head>
+  <body id="1S2JE0-5e1e3ce63feb42db9ae6338e8302dfdb" class="calibre">
+        <section class="calibre1">
+
+                            <header class="calibre1">
+                    </header><h1 class="header-title" id="calibre_pb_0">Implementing an autoencoder</h1>
+                
+            
+            <article class="calibre1">
+                
+<p class="calibre3">For autoencoders, we use a different network architecture, as shown in the following figure. In the first couple of layers, we decrease the number of hidden units. Halfway, we start increasing the number of hidden units again until the number of hidden units is the same as the number of input variables. The middle hidden layer can be seen as an encoded variant of the inputs, where the output determines the quality of the encoded variant:</p>
+<div class="mce-root1"><img src="../images/00023.jpeg" class="calibre54"/></div>
+<div class="mce-root1">Figure 2.13: Autoencoder network with three hidden layers, with m &lt; n</div>
+<p class="mce-root">In the next recipe, we will implement an autoencoder in Keras to decode <strong class="calibre5">Street View House Numbers </strong>(<strong class="calibre5">SVHN</strong>) from 32 x 32 images to 32 floating numbers. We can determine the quality of the encoder by decoding back to 32 x 32 and comparing the images.</p>
+
+
+            </article>
+
+            
+        </section>
+    </body></html>

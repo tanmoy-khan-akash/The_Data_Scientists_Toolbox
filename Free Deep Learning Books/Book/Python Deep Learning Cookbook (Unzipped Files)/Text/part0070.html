@@ -1,0 +1,77 @@
+<?xml version='1.0' encoding='utf-8'?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+  <head>
+    <title>How to do it...</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <link href="../stylesheet.css" rel="stylesheet" type="text/css"/>
+<link href="../page_styles.css" rel="stylesheet" type="text/css"/>
+</head>
+  <body id="22O7C0-5e1e3ce63feb42db9ae6338e8302dfdb" class="calibre">
+        <section class="calibre1">
+
+                            <header class="calibre1">
+                    </header><h1 class="header-title" id="calibre_pb_0">How to do it...</h1>
+                
+            
+            <article class="calibre1">
+                
+<ol class="calibre17">
+<li value="1" class="calibre15">First, load all libraries:</li>
+</ol>
+<pre class="calibre23">import numpy as np<br class="calibre24"/>import pandas as pd<br class="calibre24"/>from matplotlib import pyplot as plt<br class="calibre24"/><br class="calibre24"/>from keras.models import Sequential<br class="calibre24"/>from keras.layers import Dense, Dropout<br class="calibre24"/>from keras import regularizers</pre>
+<ol start="2" class="calibre17">
+<li value="2" class="calibre15">Import the data and extract the features:</li>
+</ol>
+<pre class="calibre23">data = pd.read_csv('Data/bike-sharing/hour.csv')<br class="calibre24"/># Feature engineering<br class="calibre24"/>ohe_features = ['season', 'weathersit', 'mnth', 'hr', 'weekday']<br class="calibre24"/>for feature in ohe_features:<br class="calibre24"/>    dummies = pd.get_dummies(data[feature], prefix=feature, drop_first=False)<br class="calibre24"/>    data = pd.concat([data, dummies], axis=1)<br class="calibre24"/><br class="calibre24"/>drop_features = ['instant', 'dteday', 'season', 'weathersit', <br class="calibre24"/>                  'weekday', 'atemp', 'mnth', 'workingday', 'hr', 'casual', 'registered']<br class="calibre24"/>data = data.drop(drop_features, axis=1)</pre>
+<ol start="3" class="calibre17">
+<li value="3" class="calibre15">Normalize numerical data:</li>
+</ol>
+<pre class="calibre23">norm_features = ['cnt', 'temp', 'hum', 'windspeed']<br class="calibre24"/>scaled_features = {}<br class="calibre24"/>for feature in norm_features:<br class="calibre24"/>    mean, std = data[feature].mean(), data[feature].std()<br class="calibre24"/>    scaled_features[feature] = [mean, std]<br class="calibre24"/>    data.loc[:, feature] = (data[feature] - mean)/std</pre>
+<ol start="4" class="calibre17">
+<li value="4" class="calibre15">Split data for training, validation, and testing:</li>
+</ol>
+<pre class="calibre23"># Save the final month for testing<br class="calibre24"/>test_data = data[-31*24:]<br class="calibre24"/>data = data[:-31*24]<br class="calibre24"/># Extract the target field<br class="calibre24"/>target_fields = ['cnt']<br class="calibre24"/>features, targets = data.drop(target_fields, axis=1), data[target_fields]<br class="calibre24"/>test_features, test_targets = test_data.drop(target_fields, axis=1), test_data[target_fields]<br class="calibre24"/># Create a validation set (based on the last )<br class="calibre24"/>X_train, y_train = features[:-30*24], targets[:-30*24]<br class="calibre24"/>X_val, y_val = features[-30*24:], targets[-30*24:]</pre>
+<ol start="5" class="calibre17">
+<li value="5" class="calibre15">Define the network architecture:</li>
+</ol>
+<pre class="calibre23">model = Sequential()<br class="calibre24"/>model.add(Dense(250, input_dim=X_train.shape[1], activation='relu'))<br class="calibre24"/>model.add(Dense(150, activation='relu'))<br class="calibre24"/>model.add(Dense(50, activation='relu'))<br class="calibre24"/>model.add(Dense(25, activation='relu'))<br class="calibre24"/>model.add(Dense(1, activation='linear'))<br class="calibre24"/><br class="calibre24"/># Compile model<br class="calibre24"/>model.compile(loss='mse', optimizer='sgd', metrics=['mse'])</pre>
+<ol start="6" class="calibre17">
+<li value="6" class="calibre15">Train the network architecture on training data and use the validation set:</li>
+</ol>
+<pre class="calibre33">n_epochs = 4000<br class="calibre24"/>batch_size = 1024<br class="calibre24"/><br class="calibre24"/>history = model.fit(X_train.values, y_train['cnt'], <br class="calibre24"/>                 validation_data=(X_val.values, y_val['cnt']), <br class="calibre24"/>                 batch_size=batch_size, epochs=n_epochs, verbose=0<br class="calibre24"/>                )</pre>
+<ol start="7" class="calibre17">
+<li value="7" class="calibre15">Plot training and validation loss:</li>
+</ol>
+<pre class="calibre23">plt.plot(np.arange(len(history.history['loss'])), history.history['loss'], label='training')<br class="calibre24"/>plt.plot(np.arange(len(history.history['val_loss'])), history.history['val_loss'], label='validation')<br class="calibre24"/>plt.title('Overfit on Bike Sharing dataset')<br class="calibre24"/>plt.xlabel('epochs')<br class="calibre24"/>plt.ylabel('loss')<br class="calibre24"/>plt.legend(loc=0)<br class="calibre24"/>plt.show()</pre>
+<div class="cdpaligncenter"><img src="../images/00026.jpeg" class="calibre50"/></div>
+<div class="mce-root1">Figure 2.16: Model overfits on training data (training loss shows slightly increasing trend after 1000 epochs)</div>
+<ol start="8" class="calibre17">
+<li value="8" class="calibre15">We also plot the minimum loss and after how many epochs this minimum has been reached:</li>
+</ol>
+<pre class="calibre23">print('Minimum loss: ', min(history.history['val_loss']),<br class="calibre24"/>          '\nAfter ', np.argmin(history.history['val_loss']), ' epochs')<br class="calibre24"/><br class="calibre24"/># Minimum loss: 0.140975862741 <br class="calibre24"/># After 730 epochs</pre>
+<ol start="9" class="calibre17">
+<li value="9" class="calibre15">Define the network architecture with <strong class="calibre5">L2 regularization</strong>:</li>
+</ol>
+<pre class="calibre23">model_reg = Sequential()<br class="calibre24"/>model_reg.add(Dense(250, input_dim=X_train.shape[1], activation='relu',<br class="calibre24"/>            kernel_regularizer=regularizers.l2(0.005)))<br class="calibre24"/>model_reg.add(Dense(150, activation='relu'))<br class="calibre24"/>model_reg.add(Dense(50, activation='relu'))<br class="calibre24"/>model_reg.add(Dense(25, activation='relu',<br class="calibre24"/>            kernel_regularizer=regularizers.l2(0.005)))<br class="calibre24"/>model_reg.add(Dense(1, activation='linear'))<br class="calibre24"/><br class="calibre24"/># Compile model<br class="calibre24"/>model_reg.compile(loss='mse', optimizer='sgd', metrics=['mse'])</pre>
+<ol start="10" class="calibre17">
+<li value="10" class="calibre15">Train the adjusted network:</li>
+</ol>
+<pre class="calibre23">hist_reg = model_reg.fit(X_train.values, y_train['cnt'], <br class="calibre24"/>validation_data=(X_val.values, y_val['cnt']), <br class="calibre24"/>                 batch_size=1024, nb_epoch=4000, verbose=0<br class="calibre24"/>                )</pre>
+<ol start="11" class="calibre17">
+<li value="11" class="calibre15">Plot the results:</li>
+</ol>
+<pre class="calibre23">plt.plot(np.arange(len(history_reg.history['loss'])), history_reg.history['loss'], label='training')<br class="calibre24"/>plt.plot(np.arange(len(history_reg.history['val_loss'])), history_reg.history['val_loss'], label='validation')<br class="calibre24"/>plt.title('Use regularisation for Bike Sharing dataset')<br class="calibre24"/>plt.xlabel('epochs')<br class="calibre24"/>plt.ylabel('loss')<br class="calibre24"/>plt.legend(loc=0)<br class="calibre24"/>plt.show()</pre>
+<p class="calibre45">We obtain the following result:</p>
+<div class="cdpaligncenter"><img src="../images/00027.jpeg" class="calibre59"/></div>
+<div class="mce-root1">Figure 2.17: Model with L2 regularization to prevent overfitting</div>
+<ol start="12" class="calibre17">
+<li value="12" class="calibre15">We also print the statistics of our model with regularisation:</li>
+</ol>
+<pre class="calibre23">print('Minimum loss: ', min(history_reg.history['val_loss']), <br class="calibre24"/>      '\nAfter ', np.argmin(history_reg.history['val_loss']), ' epochs')<br class="calibre24"/><br class="calibre24"/># Minimum loss: 0.13514482975 <br class="calibre24"/># After 3647 epochs</pre>
+
+
+            </article>
+
+            
+        </section>
+    </body></html>

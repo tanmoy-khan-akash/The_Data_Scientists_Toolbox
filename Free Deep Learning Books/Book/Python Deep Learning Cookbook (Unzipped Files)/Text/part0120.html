@@ -1,0 +1,75 @@
+<?xml version='1.0' encoding='utf-8'?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+  <head>
+    <title>How to do it...</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <link href="../stylesheet.css" rel="stylesheet" type="text/css"/>
+<link href="../page_styles.css" rel="stylesheet" type="text/css"/>
+</head>
+  <body id="3IE3G0-5e1e3ce63feb42db9ae6338e8302dfdb" class="calibre">
+        <section class="calibre1">
+
+                            <header class="calibre1">
+                    </header><h1 class="header-title" id="calibre_pb_0">How to do it...</h1>
+                
+            
+            <article class="calibre1">
+                
+<ol class="calibre17">
+<li value="1" class="calibre15">Let's first load all the necessary libraries:</li>
+</ol>
+<pre class="calibre23">import numpy as np<br class="calibre24"/>import cv2<br class="calibre24"/>import matplotlib.pyplot as plt<br class="calibre24"/>import glob</pre>
+<ol start="2" class="calibre17">
+<li value="2" class="calibre15">Next, we load some sample images that we will use and plot them:</li>
+</ol>
+<pre class="calibre23">DATA_DIR = 'Data/augmentation/'<br class="calibre24"/>images = glob.glob(DATA_DIR + '*')<br class="calibre24"/><br class="calibre24"/>plt.figure(figsize=(10, 10))<br class="calibre24"/>i = 1<br class="calibre24"/>for image in images:<br class="calibre24"/>    img = cv2.imread(image)<br class="calibre24"/>    img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)<br class="calibre24"/>    plt.subplot(3, 3, i)<br class="calibre24"/>    plt.imshow(img)<br class="calibre24"/>    i += 1<br class="calibre24"/>    <br class="calibre24"/>plt.show()</pre>
+<div class="cdpaligncenter"><img src="../images/00054.jpeg" class="calibre80"/></div>
+<div class="mce-root1">Figure 7.1: Example images that we will be using for augmentation</div>
+<ol start="3" class="calibre17">
+<li value="3" class="calibre15">We start by defining a function to easily plot examples of our augmentations:</li>
+</ol>
+<pre class="calibre23">def plot_images(image, function, *args):<br class="calibre24"/>    plt.figure(figsize=(10, 10))<br class="calibre24"/>    n_examples = 3<br class="calibre24"/>    for i in range(n_examples):<br class="calibre24"/>        img = cv2.imread(image)<br class="calibre24"/>        img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)<br class="calibre24"/>        img = function(img, *args)<br class="calibre24"/>        plt.subplot(3, 3, i+1)<br class="calibre24"/>        plt.imshow(img)<br class="calibre24"/>    plt.show()</pre>
+<ol start="4" class="calibre17">
+<li value="4" class="calibre15">We define a function to randomly rotate an image and plot some examples:</li>
+</ol>
+<pre class="calibre23"> def rotate_image(image, rotate=20):<br class="calibre24"/>    width, height, _ = image.shape<br class="calibre24"/>    random_rotation = np.random.uniform(low=-rotate, high=rotate)<br class="calibre24"/>    M = cv2.getRotationMatrix2D((width/2, height/2), random_rotation, 1)<br class="calibre24"/>    return(cv2.warpAffine(image, M, (width, height)))<br class="calibre24"/><br class="calibre24"/>plot_images(images[2], rotate_image, 40)</pre>
+<div class="cdpaligncenter"><img src="../images/00055.jpeg" class="calibre81"/></div>
+<div class="mce-root1">Figure 7.2: Examples of random rotations</div>
+<ol start="5" class="calibre17">
+<li value="5" class="calibre15">Next, we define a function to adjust the brightness of an image:</li>
+</ol>
+<pre class="calibre23"> def adjust_brightness(image, brightness=60):<br class="calibre24"/>    rand_brightness = np.random.uniform(low=-brightness, high=brightness)<br class="calibre24"/>    return(cv2.add(image, rand_brightness))<br class="calibre24"/><br class="calibre24"/>plot_images(images[0], adjust_brightness, 85)</pre>
+<div class="cdpaligncenter"><img src="../images/00056.jpeg" class="calibre82"/></div>
+<div class="mce-root1">Figure 7.3: Examples of randomly adjusted brightness</div>
+<ol start="6" class="calibre17">
+<li value="6" class="calibre15">The following function will randomly shift an image using the parameters provided:</li>
+</ol>
+<pre class="calibre23">def random_shifts(image, shift_max_x=100, shift_max_y=100):<br class="calibre24"/>    width, height, _ = image.shape<br class="calibre24"/>    shift_x = np.random.randint(shift_max_x)<br class="calibre24"/>    shift_y = np.random.randint(shift_max_y)<br class="calibre24"/>    M = np.float32([[1, 0, shift_x],[0, 1, shift_y]])<br class="calibre24"/>    return (cv2.warpAffine(image, M, (height, width)))<br class="calibre24"/><br class="calibre24"/>plot_images(images[1], random_shifts, 100, 20)</pre>
+<div class="cdpaligncenter"><img src="../images/00057.jpeg" class="calibre83"/></div>
+<div class="mce-root1">Figure 7.4: Examples of randomly shifted images</div>
+<ol start="7" class="calibre17">
+<li value="7" class="calibre15">For some images, it is beneficial to scale up or down:</li>
+</ol>
+<pre class="calibre23">def scale_image(image, scale_range=[0.6, 1.4]):<br class="calibre24"/>    width, height, _ = image.shape    <br class="calibre24"/>    <br class="calibre24"/>    scale_x = np.random.uniform(low=scale_range[0], high=scale_range[1])<br class="calibre24"/>    scale_y = np.random.uniform(low=scale_range[0], high=scale_range[1])<br class="calibre24"/>    scale_matrix = np.array([[scale_x, 0., (1. - scale_x) * width / 2.], <br class="calibre24"/>                             [0., scale_y, (1. - scale_y) * height / 2.]], <br class="calibre24"/>                            dtype=np.float32)<br class="calibre24"/>    return(cv2.warpAffine(image, scale_matrix, (width, height), flags=cv2.INTER_LINEAR, <br class="calibre24"/>                         borderMode=cv2.BORDER_REFLECT_101))<br class="calibre24"/><br class="calibre24"/>plot_images(images[2], scale_image, [0.7, 1.3])</pre>
+<div class="cdpaligncenter"><img src="../images/00058.jpeg" class="calibre84"/></div>
+<div class="mce-root1">Figure 7.5: Examples of randomly scaled images</div>
+<ol start="8" class="calibre17">
+<li value="8" class="calibre15">Our final augmentation is meant to randomly flip an image:</li>
+</ol>
+<pre class="calibre23">def random_flip(image, p_flip=0.5):<br class="calibre24"/>    rand = np.random.random()<br class="calibre24"/>    if rand &lt; p_flip:<br class="calibre24"/>        image = cv2.flip(image, 1)<br class="calibre24"/>    return image<br class="calibre24"/><br class="calibre24"/>plot_images(images[2], random_flip)</pre>
+<div class="cdpaligncenter"><img src="../images/00059.jpeg" class="calibre85"/></div>
+<div class="mce-root1">Figure 7.6: Examples of random flips</div>
+<ol start="9" class="calibre17">
+<li value="9" class="calibre15">Let's apply all our augmentations together randomly and plot the results of 32 examples:</li>
+</ol>
+<pre class="calibre23">plt.figure(figsize=(15, 15))<br class="calibre24"/>image = images[1]<br class="calibre24"/>for i in range(32):<br class="calibre24"/>    img = cv2.imread(image)<br class="calibre24"/>    img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)<br class="calibre24"/>    img = transform_image(img)<br class="calibre24"/>    plt.subplot(8, 8, i+1)<br class="calibre24"/>    plt.axis('off')<br class="calibre24"/>    plt.imshow(img, interpolation="nearest")<br class="calibre24"/>plt.show()</pre>
+<div class="cdpaligncenter"><img src="../images/00060.jpeg" class="calibre86"/></div>
+<div class="mce-root1">Figure 7.7: All augmentations randomly applied 32 times</div>
+<div class="packt_tip">Most deep learning frameworks have their own implementations for image augmentations. For example, for PyTorch, take a look at<em class="calibre52"> </em><kbd class="calibre87">torchvision.transforms</kbd><em class="calibre52">.</em> These transformations make it easy to add augmentations such as random cropping and flipping to your data. In Keras, you can use <kbd class="calibre87">ImageDataGenerator</kbd> for random augmentation. </div>
+
+
+            </article>
+
+            
+        </section>
+    </body></html>

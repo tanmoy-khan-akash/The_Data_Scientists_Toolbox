@@ -1,0 +1,30 @@
+<?xml version='1.0' encoding='utf-8'?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+  <head>
+    <title>Getting started with filters and parameter sharing</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <link href="../stylesheet.css" rel="stylesheet" type="text/css"/>
+<link href="../page_styles.css" rel="stylesheet" type="text/css"/>
+</head>
+  <body id="27GQ60-5e1e3ce63feb42db9ae6338e8302dfdb" class="calibre">
+        <section class="calibre1">
+
+                            <header class="calibre1">
+                    </header><h1 class="header-title" id="calibre_pb_0">Getting started with filters and parameter sharing</h1>
+                
+            
+            <article class="calibre1">
+                
+<p class="calibre3">Let's introduce the most important part of convolutional networks: convolutional layers. In a convolutional layer, we have blocks that convolve over the input data (like a sliding window). This technique shares parameters for each block in such a way that it can detect a feature within the block across the whole input data. The size of a block is called the kernel size or filter size. Summarized, the convolutional layer extracts local features within the total feature set. This is illustrated with an image as input data in the following figure:</p>
+<div class="cdpaligncenter"><img src="../images/00030.jpeg" class="calibre61"/></div>
+<div class="mce-root1">Figure 3.1: An example of a convolutional block with kernel size 3 x 3 and filter depth 2 (red and green) on a 9 x 6 x 1 input image</div>
+<p class="calibre3">The input data can contain multiple different features, so this trick can be applied multiple times. This is called the number of filters or filter depth. Simply said, if we use a convolutional layer with five filters on image data, the convolutional block tries to learn five different features in the images, for example the facial features such as the nose, eyes, mouth, ears, and eyebrows. Although, these features are never explicitly specified, the network tries to learn valuable features itself.</p>
+<div class="packt_tip">For convolutional neural networks, it's advised to use an increasing number of filters, for example double the number of filters for each convolutional layer: 32, 64, and 128.</div>
+<p class="calibre3">In the following recipe, we will implement a convolutional neural network to classify the MNIST images that we used in the previous chapter.</p>
+
+
+            </article>
+
+            
+        </section>
+    </body></html>

@@ -1,0 +1,27 @@
+<?xml version='1.0' encoding='utf-8'?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+  <head>
+    <title>Experiment with hidden layers and hidden units</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <link href="../stylesheet.css" rel="stylesheet" type="text/css"/>
+<link href="../page_styles.css" rel="stylesheet" type="text/css"/>
+</head>
+  <body id="1P71O0-5e1e3ce63feb42db9ae6338e8302dfdb" class="calibre">
+        <section class="calibre1">
+
+                            <header class="calibre1">
+                    </header><h1 class="header-title" id="calibre_pb_0">Experiment with hidden layers and hidden units</h1>
+                
+            
+            <article class="calibre1">
+                
+<p class="calibre3">The most commonly used layers in general neural networks are fully-connected layers. In fully-connected layers, the units in two successive layers are all pairwise connected. However, the units within a layer don't share any connections. As stated before, the connections between the layers are also called trainable parameters. The weights of these connections are trained by the network. The more connections, the more parameters and the more complex patterns can be modeled. Most state-of-the-art models have 100+ million parameters. However, a deep neural network with many layers and units takes more time to train. Also, with extremely deep models the time to infer predictions takes significantly longer (which can be problematic in a real-time environment). In the following chapters, we will introduce other popular layer types that are specific to their network types. </p>
+<p class="calibre3">Picking the correct number of hidden layers and hidden units can be important. When using too few nodes, the model won't be able to pick up all the signals, resulting in a low accuracy and poor predictive performance (underfitting). Using too many nodes, the model will tend to overfit on the training data (see regularization for techniques to prevent overfitting) and won't be able to generalize well. Therefore, we always have to look at the performance on the validation data to find the right balance. In the next recipe, we will show an example of overfitting and output the number of trainable parameters.</p>
+<div class="packt_infobox">Deep FNNs perform well if there is a lot of high dimensional training data available. For simple classification or regression tasks, often a single-layer neural network performs best.</div>
+
+
+            </article>
+
+            
+        </section>
+    </body></html>

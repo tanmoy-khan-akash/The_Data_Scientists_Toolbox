@@ -1,0 +1,51 @@
+<?xml version='1.0' encoding='utf-8'?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+  <head>
+    <title>How to do it...</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <link href="../stylesheet.css" rel="stylesheet" type="text/css"/>
+<link href="../page_styles.css" rel="stylesheet" type="text/css"/>
+</head>
+  <body id="3R0OI0-5e1e3ce63feb42db9ae6338e8302dfdb" class="calibre">
+        <section class="calibre1">
+
+                            <header class="calibre1">
+                    </header><h1 class="header-title" id="calibre_pb_0">How to do it...</h1>
+                
+            
+            <article class="calibre1">
+                
+<ol class="calibre17">
+<li value="1" class="calibre15">First, we start with loading the libraries, as follows:</li>
+</ol>
+<pre class="calibre23">import os<br class="calibre24"/>import glob<br class="calibre24"/>import tensorflow as tf</pre>
+<ol start="2" class="calibre17">
+<li value="2" class="calibre15">Because our task is slightly more complicated than outputting the predicted class, we need to define a function that extracts the values from different layers:</li>
+</ol>
+<pre class="calibre23">def extract_layers(vgg_layer3_out, vgg_layer4_out, <br class="calibre24"/>vgg_layer7_out, n_classes):<br class="calibre24"/>    decode_layer1_preskip0 = tf.layers.conv2d_transpose(vgg_layer7_out, <br class="calibre24"/>512, (2, 2), (2, 2), name='decode_layer1_preskip0')<br class="calibre24"/>    decode_layer1_preskip1 = tf.layers.conv2d(vgg_layer4_out, <br class="calibre24"/>512, (1, 1), (1, 1), name='decode_layer1_preskip1')<br class="calibre24"/>    decode_layer1_out = tf.add(decode_layer1_preskip0, <br class="calibre24"/>decode_layer1_preskip1, name='decode_layer1_out')<br class="calibre24"/>    decode_layer2_preskip0 = tf.layers.conv2d_transpose<br class="calibre24"/>(decode_layer1_out, 256, (2, 2), (2, 2), name='decode_layer2_preskip0')<br class="calibre24"/>    decode_layer2_preskip1 = tf.layers.conv2d<br class="calibre24"/>(vgg_layer3_out, 256, (1, 1), (1, 1), name='decode_layer2_preskip1')<br class="calibre24"/>    decode_layer2_out = tf.add(decode_layer2_preskip0, <br class="calibre24"/>decode_layer2_preskip1, name='decode_layer2_out')<br class="calibre24"/>    decode_layer3_out = tf.layers.conv2d_transpose<br class="calibre24"/>(decode_layer2_out, 128, (2, 2), (2, 2), name='decode_layer3_out')<br class="calibre24"/>    decode_layer4_out = tf.layers.conv2d_transpose<br class="calibre24"/>(decode_layer3_out, 64, (2, 2), (2, 2), <br class="calibre24"/>name='decode_layer4_out')<br class="calibre24"/>    decode_layer5_out = tf.layers.conv2d_transpose<br class="calibre24"/>(decode_layer4_out, n_classes, (2, 2), (2, 2), name='fcn_out')<br class="calibre24"/>    return decode_layer5_out</pre>
+<ol start="3" class="calibre17">
+<li value="3" class="calibre15">To make efficient use of our memory, we will only load images with a batch generator function defined as follows:</li>
+</ol>
+<pre class="calibre23">def batch_generator(batch_size):<br class="calibre24"/>    image_paths = glob(os.path.join(data_path, 'image_2', '*.png'))<br class="calibre24"/>    label_paths = {<br class="calibre24"/>        re.sub(r'_(lane|road)_', '_', os.path.basename(path)): path<br class="calibre24"/>        for path in glob(os.path.join(data_path, <br class="calibre24"/>        'gt_image_2', '*_road_*.png'))}<br class="calibre24"/>    background_color = np.array([255, 0, 0])<br class="calibre24"/><br class="calibre24"/>    random.shuffle(image_paths)<br class="calibre24"/>    for batch_i in range(0, len(image_paths), batch_size):<br class="calibre24"/>        images = []<br class="calibre24"/>        gt_images = []<br class="calibre24"/>        for image_file in image_paths[batch_i:batch_i + batch_size]:<br class="calibre24"/>            gt_image_file = label_paths[os.path.basename(image_file)]<br class="calibre24"/><br class="calibre24"/>            image = scipy.misc.imresize(scipy.misc.imread(image_file), image_shape)<br class="calibre24"/>            gt_image = scipy.misc.imresize(scipy.misc.imread<br class="calibre24"/>            (gt_image_file), image_shape)<br class="calibre24"/><br class="calibre24"/>            gt_bg = np.all(gt_image == background_color, axis=2)<br class="calibre24"/>            gt_bg = gt_bg.reshape(*gt_bg.shape, 1)<br class="calibre24"/>            gt_image = np.concatenate((gt_bg, np.invert(gt_bg)), axis=2)<br class="calibre24"/><br class="calibre24"/>            images.append(image)<br class="calibre24"/>            gt_images.append(gt_image)<br class="calibre24"/><br class="calibre24"/>        yield np.array(images), np.array(gt_images)</pre>
+<ol start="4" class="calibre17">
+<li value="4" class="calibre15">Let's set our hyperparameters:</li>
+</ol>
+<pre class="calibre23">n_classes = 2<br class="calibre24"/>image_shape = (160, 576)<br class="calibre24"/>n_epochs = 23<br class="calibre24"/>batch_size = 16</pre>
+<ol start="5" class="calibre17">
+<li value="5" class="calibre15">Now, we start training our model:</li>
+</ol>
+<pre class="calibre23">with tf.Session() as sess:<br class="calibre24"/>    tf.saved_model.loader.load(sess, path, path)<br class="calibre24"/>    vgg_image_input = sess.graph.get_tensor_by_name('image_input:0')<br class="calibre24"/>    vgg_keep_prob = sess.graph.get_tensor_by_name('keep_prob:0')<br class="calibre24"/>    vgg_layer3_out = sess.graph.get_tensor_by_name('layer3_out:0')<br class="calibre24"/>    vgg_layer4_out = sess.graph.get_tensor_by_name('layer4_out:0')<br class="calibre24"/>    vgg_layer7_out = sess.graph.get_tensor_by_name('layer7_out:0')<br class="calibre24"/>    <br class="calibre24"/>    temp = set(tf.global_variables())<br class="calibre24"/>    out_layer = layers(vgg_layer3_out, vgg_layer4_out, <br class="calibre24"/>    vgg_layer7_out, num_classes)<br class="calibre24"/>    softmax = tf.nn.softmax(out_layer, name='softmax')<br class="calibre24"/>    logits = tf.reshape(out_layer, (-1, num_classes), name='logits')<br class="calibre24"/>    labels = tf.reshape(correct_label, (-1, num_classes))<br class="calibre24"/>    cross_entropy_loss = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits<br class="calibre24"/>    (logits=logits, labels=labels))<br class="calibre24"/>    train_op = tf.train.AdamOptimizer(learning_rate).minimize(cross_entropy_loss)<br class="calibre24"/><br class="calibre24"/>    sess.run(tf.variables_initializer(set(tf.global_variables()) - temp))<br class="calibre24"/>    for i in range(n_epochs):<br class="calibre24"/>        batches = batch_generator(batch_size)<br class="calibre24"/>        epoch_loss = 0<br class="calibre24"/>        epoch_size = 0<br class="calibre24"/>        for batch_input, batch_label in batches:<br class="calibre24"/>            _, loss = sess.run([train_op, cross_entropy_loss], <br class="calibre24"/>           feed_dict={input_image: batch_input,<br class="calibre24"/>                                                                          correct_label: batch_label,<br class="calibre24"/>keep_prob: 0.5,<br class="calibre24"/>                                                                          learning_rate: 1e-4})<br class="calibre24"/>            epoch_loss += loss * len(batch_input)<br class="calibre24"/>            epoch_size += len(batch_input)<br class="calibre24"/>        print("Loss at epoch {}: {}".format(i, epoch_loss/epoch_size))</pre>
+<ol start="6" class="calibre17">
+<li value="6" class="calibre15">Finally, let's output the predicted segmentations:</li>
+</ol>
+<pre class="calibre23">for image_file in glob(os.path.join(data_path, 'image_2', '*.png')): <br class="calibre24"/>    image = scipy.misc.imresize(scipy.misc.imread(image_file), image_shape)<br class="calibre24"/><br class="calibre24"/>    pred_softmax = sess.run(<br class="calibre24"/>        [tf.nn.softmax(logits)],<br class="calibre24"/>        {keep_prob: 1.0, image_pl: [image]})<br class="calibre24"/>    pred_softmax = pred_softmax[0][:, 1].reshape(image_shape[0], image_shape[1])<br class="calibre24"/>    segmentation = (pred_softmax &gt; 0.5).reshape(image_shape[0], image_shape[1], 1)<br class="calibre24"/>    mask = np.dot(segmentation, np.array([[0, 255, 0, 127]]))<br class="calibre24"/>    mask = scipy.misc.toimage(mask, mode="RGBA")<br class="calibre24"/>    street_im = scipy.misc.toimage(image)<br class="calibre24"/>    street_im.paste(mask, box=None, mask=mask)</pre>
+<p class="calibre3">In the following figure, we can see the output of our model:</p>
+<p class="cdpaligncenter1"><img src="../images/00067.jpeg" class="calibre62"/></p>
+<div class="mce-root1">Figure 7.2A: Example of a predicted segmented road</div>
+
+
+            </article>
+
+            
+        </section>
+    </body></html>

@@ -1,0 +1,68 @@
+<?xml version='1.0' encoding='utf-8'?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+  <head>
+    <title>How to do it...</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <link href="../stylesheet.css" rel="stylesheet" type="text/css"/>
+<link href="../page_styles.css" rel="stylesheet" type="text/css"/>
+</head>
+  <body id="1MBG20-5e1e3ce63feb42db9ae6338e8302dfdb" class="calibre">
+        <section class="calibre1">
+
+                            <header class="calibre1">
+                    </header><h1 class="header-title" id="calibre_pb_0">How to do it...</h1>
+                
+            
+            <article class="calibre1">
+                
+<ol class="calibre17">
+<li class="calibre15" value="1">We start by import the libraries as follows:</li>
+</ol>
+<pre class="calibre23">import numpy as np <br class="calibre24"/>import pandas as pd<br class="calibre24"/>from sklearn.model_selection import train_test_split<br class="calibre24"/><br class="calibre24"/>from keras.models import Sequential<br class="calibre24"/>from keras.layers import Dense<br class="calibre24"/>from keras.callbacks import EarlyStopping, ModelCheckpoint<br class="calibre24"/>from keras.optimizers import Adam<br class="calibre24"/><br class="calibre24"/>from sklearn.preprocessing import StandardScaler<br class="calibre24"/><br class="calibre24"/>SEED = 2017</pre>
+<ol start="2" class="calibre17">
+<li value="2" class="calibre15">Load dataset:</li>
+</ol>
+<pre class="calibre23">data = pd.read_csv('Data/winequality-red.csv', sep=';')<br class="calibre24"/>y = data['quality']<br class="calibre24"/>X = data.drop(['quality'], axis=1)</pre>
+<ol start="3" class="calibre17">
+<li value="3" class="calibre15">Split data for training and testing:</li>
+</ol>
+<pre class="calibre23">X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=SEED)</pre>
+<ol start="4" class="calibre17">
+<li value="4" class="calibre15">Print average quality and first rows of training set:</li>
+</ol>
+<pre class="calibre23">print('Average quality training set: {:.4f}'.format(y_train.mean()))<br class="calibre24"/>X_train.head()</pre>
+<p class="calibre45">In the following screenshot, we can see an example of the output of the training data:</p>
+<div class="cdpaligncenter"><img src="../images/00018.jpeg" class="calibre46"/></div>
+<div class="mce-root1">Figure 2-8: Training data</div>
+<ol start="5" class="calibre17">
+<li value="5" class="calibre15">An important next step is to normalize the input data:</li>
+</ol>
+<pre class="calibre23">scaler = StandardScaler().fit(X_train)<br class="calibre24"/>X_train = pd.DataFrame(scaler.transform(X_train))<br class="calibre24"/>X_test = pd.DataFrame(scaler.transform(X_test))</pre>
+<ol start="6" class="calibre17">
+<li value="6" class="calibre15">Determine baseline predictions:</li>
+</ol>
+<pre class="calibre23"># Predict the mean quality of the training data for each validation input<br class="calibre24"/>print('MSE:', np.mean((y_test - ([y_train.mean()] * y_test.shape[0])) ** 2).round(4))<br class="calibre24"/>## MSE: 0.594</pre>
+<ol start="7" class="calibre17">
+<li value="7" class="calibre15">Now, let's build our neural network by defining the network architecture:</li>
+</ol>
+<pre class="calibre23">model = Sequential()<br class="calibre24"/># First hidden layer with 100 hidden units<br class="calibre24"/>model.add(Dense(200, input_dim=X_train.shape[1], activation='relu')) <br class="calibre24"/># Second hidden layer with 50 hidden units<br class="calibre24"/>model.add(Dense(25, activation='relu'))<br class="calibre24"/># Output layer<br class="calibre24"/>model.add(Dense(1, activation='linear'))<br class="calibre24"/># Set optimizer<br class="calibre24"/>opt = Adam()<br class="calibre24"/># Compile model<br class="calibre24"/>model.compile(loss='mse', optimizer=opt, metrics=['accuracy'])</pre>
+<ol start="8" class="calibre17">
+<li value="8" class="calibre15">Let's define the callback for early stopping and saving the best model:</li>
+</ol>
+<pre class="calibre23">callbacks = [<br class="calibre24"/>             EarlyStopping(monitor='val_acc', patience=20, verbose=2),<br class="calibre24"/>             ModelCheckpoint('checkpoints/multi_layer_best_model.h5', monitor='val_acc', save_best_only=True, verbose=0)<br class="calibre24"/>            ]</pre>
+<ol start="9" class="calibre17">
+<li value="9" class="calibre15">Run the model with a batch size of 64, 5,000 epochs, and a validation split of 20%:</li>
+</ol>
+<pre class="calibre23">batch_size = 64<br class="calibre24"/>n_epochs = 5000<br class="calibre24"/>model.fit(X_train.values, y_train, batch_size=batch_size, epochs=n_epochs, validation_split=0.2,     <br class="calibre24"/>             verbose=2,<br class="calibre24"/>             callbacks=callbacks)</pre>
+<ol start="10" class="calibre17">
+<li value="10" class="calibre15">We can now print the performance on the test set after loading the optimal weights:</li>
+</ol>
+<pre class="calibre23">best_model = model<br class="calibre24"/>best_model.load_weights('checkpoints/multi_layer_best_model.h5')<br class="calibre24"/>best_model.compile(loss='mse', optimizer='adam', metrics=['accuracy'])<br class="calibre24"/><br class="calibre24"/># Evaluate on test set<br class="calibre24"/>score = best_model.evaluate(X_test.values, y_test, verbose=0)<br class="calibre24"/>print('Test accuracy: %.2f%%' % (score[1]*100))<br class="calibre24"/><br class="calibre24"/>## Test accuracy: 66.25% <br class="calibre24"/>## Benchmark accuracy on dataset 62.4%</pre>
+<div class="mce-root3">With a small dataset, it's advisable to retrain on the complete training set (without validation set) and increase the number of epochs proportional to the additional data. Another option, is to use cross-validation and average the results when making predictions.  </div>
+
+
+            </article>
+
+            
+        </section>
+    </body></html>

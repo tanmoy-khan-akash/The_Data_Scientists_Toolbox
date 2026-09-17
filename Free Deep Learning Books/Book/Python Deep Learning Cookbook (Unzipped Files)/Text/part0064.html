@@ -1,0 +1,55 @@
+<?xml version='1.0' encoding='utf-8'?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+  <head>
+    <title>How to do it...</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <link href="../stylesheet.css" rel="stylesheet" type="text/css"/>
+<link href="../page_styles.css" rel="stylesheet" type="text/css"/>
+</head>
+  <body id="1T1400-5e1e3ce63feb42db9ae6338e8302dfdb" class="calibre">
+        <section class="calibre1">
+
+                            <header class="calibre1">
+                    </header><h1 class="header-title" id="calibre_pb_0">How to do it...</h1>
+                
+            
+            <article class="calibre1">
+                
+<ol class="calibre17">
+<li value="1" class="calibre15">Import the necessary libraries with the following code:</li>
+</ol>
+<pre class="calibre23">import numpy as np<br class="calibre24"/>from matplotlib import pyplot as plt<br class="calibre24"/>import scipy.io<br class="calibre24"/><br class="calibre24"/>from keras.models import Sequential<br class="calibre24"/>from keras.layers.core import Dense<br class="calibre24"/>from keras.optimizers import Adam</pre>
+<ol start="2" class="calibre17">
+<li value="2" class="calibre15">Load the dataset and extract the data we need:</li>
+</ol>
+<pre class="calibre23">mat = scipy.io.loadmat('./data/train_32x32.mat')<br class="calibre24"/>mat = mat['X']<br class="calibre24"/>b, h, d, n = mat.shape</pre>
+<ol start="3" class="calibre17">
+<li value="3" class="calibre15">Preprocess the data:</li>
+</ol>
+<pre class="calibre23"># Grayscale<br class="calibre24"/>img_gray = np.zeros(shape =(n, b * h))<br class="calibre24"/><br class="calibre24"/>def rgb2gray(rgb):    <br class="calibre24"/>    return np.dot(rgb[...,:3], [0.299, 0.587, 0.114])<br class="calibre24"/><br class="calibre24"/>for i in range(n):<br class="calibre24"/>    #Convert to greyscale<br class="calibre24"/>    img = rgb2gray(mat[:,:,:,i])<br class="calibre24"/>    img = img.reshape(1, 1024)<br class="calibre24"/>    img_gray[i,:] = img<br class="calibre24"/><br class="calibre24"/># Normalize<br class="calibre24"/>X_train = img_gray/255.</pre>
+<ol start="4" class="calibre17">
+<li value="4" class="calibre15">Next, let's define the autoencoder network architecture:</li>
+</ol>
+<pre class="calibre23">img_size = X_train.shape[1]<br class="calibre24"/>model = Sequential()<br class="calibre24"/>model.add(Dense(256, input_dim=img_size, activation='relu'))<br class="calibre24"/>model.add(Dense(128, activation='relu'))<br class="calibre24"/>model.add(Dense(64, activation='relu'))<br class="calibre24"/>model.add(Dense(32, activation='relu'))<br class="calibre24"/><br class="calibre24"/>model.add(Dense(64, activation='relu'))<br class="calibre24"/>model.add(Dense(128, activation='relu'))<br class="calibre24"/>model.add(Dense(256, activation='relu'))<br class="calibre24"/>model.add(Dense(img_size, activation='sigmoid'))<br class="calibre24"/><br class="calibre24"/>opt = Adam()<br class="calibre24"/>model.compile(loss='binary_crossentropy', optimizer=opt)</pre>
+<ol start="5" class="calibre17">
+<li value="5" class="calibre15">Now, we can train the autencoder:</li>
+</ol>
+<pre class="calibre23">n_epochs = 100<br class="calibre24"/>batch_size = 512<br class="calibre24"/><br class="calibre24"/>model.fit(X_train, X_train, epochs=n_epochs, batch_size=batch_size, shuffle=True, validation_split=0.2)</pre>
+<ol start="6" class="calibre17">
+<li value="6" class="calibre15">We want to see how our autoencoder performs on the training set:</li>
+</ol>
+<pre class="calibre55">   pred = model.predict(X_train)</pre>
+<ol start="7" class="calibre17">
+<li value="7" class="calibre15">Let's plot some of the original images and their decoded versions:</li>
+</ol>
+<pre class="calibre23">n = 5<br class="calibre24"/>plt.figure(figsize=(15, 5))<br class="calibre24"/>for i in range(n):<br class="calibre24"/>    # display original<br class="calibre24"/>    ax = plt.subplot(2, n, i + 1)<br class="calibre24"/>    plt.imshow(mat[i].reshape(32, 32), cmap='gray')<br class="calibre24"/><br class="calibre24"/>    ax = plt.subplot(2, n, i + 1 + n)<br class="calibre24"/>    plt.imshow(pred[i].reshape(32, 32), cmap='gray')<br class="calibre24"/>plt.show()</pre>
+<div class="cdpaligncenter"><img src="../images/00024.jpeg" class="calibre56"/></div>
+<div class="mce-root1">Figure 2.14: Example input and output of an autoencoder network for house numbers</div>
+<div class="packt_tip"><span class="calibre30">In <a target="_blank" href="part0073.html#25JP20-5e1e3ce63feb42db9ae6338e8302dfdb" class="calibre51">Chapter 3</a>, <em class="calibre52">Convolutional Neural Networks</em></span>, <span class="calibre30">we</span> <span class="calibre30">will show you how to implement a convolutional autoencoder for the SVHN dataset.</span></div>
+
+
+            </article>
+
+            
+        </section>
+    </body></html>

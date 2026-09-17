@@ -1,0 +1,73 @@
+<?xml version='1.0' encoding='utf-8'?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+  <head>
+    <title>How to do it...</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <link href="../stylesheet.css" rel="stylesheet" type="text/css"/>
+<link href="../page_styles.css" rel="stylesheet" type="text/css"/>
+</head>
+  <body id="2E6E40-5e1e3ce63feb42db9ae6338e8302dfdb" class="calibre">
+        <section class="calibre1">
+
+                            <header class="calibre1">
+                    </header><h1 class="header-title" id="calibre_pb_0">How to do it...</h1>
+                
+            
+            <article class="calibre1">
+                
+<ol class="calibre17">
+<li value="1" class="calibre15">Import all necessary libraries as follows:</li>
+</ol>
+<pre class="calibre23">import glob<br class="calibre24"/>import numpy as np<br class="calibre24"/>import cv2<br class="calibre24"/>from matplotlib import pyplot as plt<br class="calibre24"/>from sklearn.model_selection import train_test_split<br class="calibre24"/><br class="calibre24"/>from keras.utils import np_utils<br class="calibre24"/>from keras.models import Sequential<br class="calibre24"/>from keras.layers.core import Dense, Dropout, Activation, Flatten, Lambda<br class="calibre24"/>from keras.optimizers import Adam<br class="calibre24"/>from keras.callbacks import EarlyStopping<br class="calibre24"/>from keras.layers import Conv2D, MaxPooling2D<br class="calibre24"/><br class="calibre24"/>SEED = 2017</pre>
+<ol start="2" class="calibre17">
+<li value="2" class="calibre15">Let's start with loading the filenames and outputting the training set sizes:</li>
+</ol>
+<pre class="calibre23"># Specify data directory and extract all file names for both classes<br class="calibre24"/>DATA_DIR = 'Data/PetImages/'<br class="calibre24"/>cats = glob.glob(DATA_DIR + "Cat/*.jpg")<br class="calibre24"/>dogs = glob.glob(DATA_DIR + "Dog/*.jpg")<br class="calibre24"/><br class="calibre24"/>print('#Cats: {}, #Dogs: {}'.format(len(cats), len(dogs)))<br class="calibre24"/># #Cats: 12500, #Dogs: 12500</pre>
+<ol start="3" class="calibre17">
+<li value="3" class="calibre15">To get a better understanding of the dataset, let's plot three examples of each class:</li>
+</ol>
+<pre class="calibre23">n_examples = 3<br class="calibre24"/>plt.figure(figsize=(15, 15))<br class="calibre24"/>i = 1<br class="calibre24"/>for _ in range(n_examples):<br class="calibre24"/>    image_cat = cats[np.random.randint(len(cats))]<br class="calibre24"/>    img_cat = cv2.imread(image_cat)<br class="calibre24"/>    img_cat = cv2.cvtColor(img_cat, cv2.COLOR_BGR2RGB)<br class="calibre24"/>    plt.subplot(3, 2, i)<br class="calibre24"/>    _ = plt.imshow(img_cat)<br class="calibre24"/>    i += 1<br class="calibre24"/>    image_dog = dogs[np.random.randint(len(dogs))]<br class="calibre24"/>    img_dog = cv2.imread(image_dog)<br class="calibre24"/>    img_dog = cv2.cvtColor(img_dog, cv2.COLOR_BGR2RGB)<br class="calibre24"/>    plt.subplot(3, 2, i)<br class="calibre24"/>    i += 1<br class="calibre24"/>    _ = plt.imshow(img_dog)<br class="calibre24"/>plt.show()</pre>
+<div class="cdpaligncenter"><img src="../images/00035.jpeg" class="calibre64"/></div>
+<div class="mce-root1">Figure 3.6: Example images of the labels cat and dog</div>
+<ol start="4" class="calibre17">
+<li value="4" class="calibre15">Let's split the dataset in a training and validation set as follows:</li>
+</ol>
+<pre class="calibre23">dogs_train, dogs_val, cats_train, cats_val = train_test_split(dogs, cats, test_size=0.2, random_state=SEED)</pre>
+<ol start="5" class="calibre17">
+<li value="5" class="calibre15">The training set is relatively large; we will be using a batch generator so that we don't have to load all images in memory:</li>
+</ol>
+<pre class="calibre23">def batchgen(cats, dogs, batch_size, img_size=50):<br class="calibre24"/>    # Create empty numpy arrays<br class="calibre24"/>    batch_images = np.zeros((batch_size, img_size, img_size, 3))<br class="calibre24"/>    batch_label = np.zeros(batch_size)<br class="calibre24"/><br class="calibre24"/>    # Custom batch generator <br class="calibre24"/>    while 1:<br class="calibre24"/>        n = 0<br class="calibre24"/>        while n &lt; batch_size:<br class="calibre24"/>            # Randomly pick a dog or cat image<br class="calibre24"/>            if np.random.randint(2) == 1:<br class="calibre24"/>                i = np.random.randint(len(dogs))<br class="calibre24"/>                img = cv2.imread(dogs[i])<br class="calibre24"/>                if img is None:<br class="calibre24"/>                    break<br class="calibre24"/>                img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)<br class="calibre24"/>                # The images have different dimensions, <br class="calibre24"/>                # we resize all to 100x100<br class="calibre24"/>                img = cv2.resize(img, (img_size, img_size),<br class="calibre24"/>                 interpolation = cv2.INTER_AREA)<br class="calibre24"/>                y = 1<br class="calibre24"/><br class="calibre24"/>            else:<br class="calibre24"/>                   <br class="calibre24"/>                img = cv2.imread(cats[i])<br class="calibre24"/>                if img is None:<br class="calibre24"/>                    break<br class="calibre24"/>                img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)<br class="calibre24"/>                img = cv2.resize(img, (img_size, img_size),<br class="calibre24"/>                interpolation = cv2.INTER_AREA)<br class="calibre24"/>                y = 0<br class="calibre24"/>        <br class="calibre24"/>            batch_images[n] = img<br class="calibre24"/>            batch_label[n] = y<br class="calibre24"/>            n+=1<br class="calibre24"/>        yield batch_images, batch_label</pre>
+<ol start="6" class="calibre17">
+<li value="6" class="calibre15">Next, we define a function that creates a model given parameters for the stride and padding:</li>
+</ol>
+<pre class="calibre23">def create_model(stride=1, padding='same', img_size=100):<br class="calibre24"/>    # Define architecture    <br class="calibre24"/>    model = Sequential()<br class="calibre24"/>    model.add(Lambda(lambda x: (x / 255.) - 0.5,<br class="calibre24"/>    input_shape=(img_size, img_size, 3)))<br class="calibre24"/>    model.add(Conv2D(32, (3, 3), activation='relu',<br class="calibre24"/>    padding=padding, strides=stride))<br class="calibre24"/>    model.add(Conv2D(32, (3, 3), activation='relu',<br class="calibre24"/>    padding=padding, strides=stride))<br class="calibre24"/>    model.add(MaxPooling2D(pool_size=(2,2)))<br class="calibre24"/>    model.add(Dropout(0.5))<br class="calibre24"/>    model.add(Conv2D(64, (3, 3), activation='relu',<br class="calibre24"/>    padding=padding, strides=stride))<br class="calibre24"/>    model.add(Conv2D(64, (3, 3), activation='relu',<br class="calibre24"/>    padding=padding, strides=stride))<br class="calibre24"/>    <br class="calibre24"/>    model.add(Dropout(0.5))<br class="calibre24"/>    model.add(Flatten())<br class="calibre24"/>    model.add(Dense(64, activation='relu'))<br class="calibre24"/>    model.add(Dropout(0.5))<br class="calibre24"/>    model.add(Dense(1, activation='sigmoid'))<br class="calibre24"/>    <br class="calibre24"/>    opt = Adam(0.001)<br class="calibre24"/>        model.compile(loss='binary_crossentropy', optimizer=opt,<br class="calibre24"/>        metrics=['binary_accuracy'])<br class="calibre24"/>    <br class="calibre24"/>    return model</pre>
+<ol start="7" class="calibre17">
+<li value="7" class="calibre15">Now we can define a model for each setting, and we extract the number of trainable parameters:</li>
+</ol>
+<pre class="calibre23">img_size = 100<br class="calibre24"/><br class="calibre24"/>models = []<br class="calibre24"/>for stride in [1, 2]:<br class="calibre24"/>    for padding in ['same', 'valid']:<br class="calibre24"/>        model = create_model(stride, padding, img_size)<br class="calibre24"/>        pars = model.count_params()<br class="calibre24"/>        models.append(dict({'setting': '{}_{}'.format(stride,<br class="calibre24"/>                     padding), <br class="calibre24"/>                'model': model,<br class="calibre24"/>                'parameters': pars<br class="calibre24"/>                }))</pre>
+<ol start="8" class="calibre17">
+<li value="8" class="calibre15">To output the scheme of a model, you can use the following:</li>
+</ol>
+<pre class="calibre23">models[0]['model'].summary()</pre>
+<ol start="9" class="calibre17">
+<li value="9" class="calibre15">To use early stopping, we define a callback as follows:</li>
+</ol>
+<pre class="calibre23">callbacks = [EarlyStopping(monitor='val_binary_accuracy', <br class="calibre24"/>patience=5)]        </pre>
+<ol start="10" class="calibre17">
+<li value="10" class="calibre15">In the next step, we will train our models and store the results:</li>
+</ol>
+<pre class="calibre23">batch_size = 512<br class="calibre24"/>n_epochs = 500<br class="calibre24"/>validation_steps = round((len(dogs_val)+len(cats_val))/batch_size)<br class="calibre24"/>steps_per_epoch = round((len(dogs_train)+len(cats_train))/batch_size)<br class="calibre24"/><br class="calibre24"/>train_generator = batchgen(dogs_train, cats_train, batch_size, img_size)<br class="calibre24"/>val_generator = batchgen(dogs_val, cats_val, batch_size, img_size)<br class="calibre24"/><br class="calibre24"/>history = []<br class="calibre24"/>for i in range(len(models)):<br class="calibre24"/>    print(models[i])<br class="calibre24"/>    history.append(<br class="calibre24"/>        models[i]['model'].<br class="calibre24"/>        fit_generator(train_generator,<br class="calibre24"/>        steps_per_epoch=steps_per_epoch, epochs=n_epochs,<br class="calibre24"/>        validation_data=val_generator, <br class="calibre24"/>        validation_steps=validation_steps,<br class="calibre24"/>        callbacks=callbacks<br class="calibre24"/>                           )<br class="calibre24"/>    )</pre>
+<ol start="11" class="calibre17">
+<li value="11" class="calibre15">Let's visualize the results:</li>
+</ol>
+<pre class="calibre23">for i in range(len(models)):<br class="calibre24"/>    plt.plot(range(len(history[i].history['val_binary_accuracy'])), history[i].history['val_binary_accuracy'], label=models[i]['setting'])<br class="calibre24"/>    print('Max accuracy model {}: {}'.format(models[i]['setting'], max(history[i].history['val_binary_accuracy'])))<br class="calibre24"/>plt.title('Accuracy on the validation set')<br class="calibre24"/>plt.xlabel('epochs')<br class="calibre24"/>plt.ylabel('accuracy')<br class="calibre24"/>plt.legend()<br class="calibre24"/>plt.show()</pre>
+<div class="cdpaligncenter"><img src="../images/00036.jpeg" class="calibre65"/></div>
+<div class="mce-root1"><span>Figure 3.7: Performance comparison with different settings for padding and strides</span></div>
+<p class="calibre3">By using a stride of 2, the number of trainable parameters are reduced significantly (from 10,305,697 to 102,561 when using padding). For this dataset, it shows that there is no performance loss by using a stride &gt; 1. This is expected, because we use (resized) 100 x 100 x 3 images as input. Skipping a pixel in each direction shouldn't influence the performance too much.</p>
+
+
+            </article>
+
+            
+        </section>
+    </body></html>

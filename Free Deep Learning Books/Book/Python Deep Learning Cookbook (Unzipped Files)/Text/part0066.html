@@ -1,0 +1,65 @@
+<?xml version='1.0' encoding='utf-8'?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+  <head>
+    <title>How to do it...</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <link href="../stylesheet.css" rel="stylesheet" type="text/css"/>
+<link href="../page_styles.css" rel="stylesheet" type="text/css"/>
+</head>
+  <body id="1UU540-5e1e3ce63feb42db9ae6338e8302dfdb" class="calibre">
+        <section class="calibre1">
+
+                            <header class="calibre1">
+                    </header><h1 class="header-title" id="calibre_pb_0">How to do it...</h1>
+                
+            
+            <article class="calibre1">
+                
+<ol class="calibre17">
+<li value="1" class="calibre15">Load the libraries with the following code:</li>
+</ol>
+<pre class="calibre23">import numpy as np<br class="calibre24"/>from matplotlib import pyplot as plt<br class="calibre24"/>from sklearn.metrics import confusion_matrix<br class="calibre24"/><br class="calibre24"/>from keras.datasets import mnist<br class="calibre24"/>from keras.models import Sequential<br class="calibre24"/>from keras.layers import Dense, Dropout<br class="calibre24"/>from keras.optimizers import Adam<br class="calibre24"/>from keras.callbacks import EarlyStopping</pre>
+<ol start="2" class="calibre17">
+<li value="2" class="calibre15">Import the MNIST dataset and create an imbalanced dataset with <kbd class="calibre12">9s</kbd> and <kbd class="calibre12">4s</kbd>:</li>
+</ol>
+<p class="calibre3"></p>
+<pre class="calibre23">(X_train, y_train), (X_test, y_test) = mnist.load_data()<br class="calibre24"/># Extract all 9s and 100 examples of 4s<br class="calibre24"/>y_train_9 = y_train[y_train == 9]<br class="calibre24"/>y_train_4 = y_train[y_train == 4][:100]<br class="calibre24"/>X_train_9 = X_train[y_train == 9]<br class="calibre24"/>X_train_4 = X_train[y_train == 4][:100]<br class="calibre24"/>X_train = np.concatenate((X_train_9, X_train_4), axis=0)<br class="calibre24"/>y_train = np.concatenate((y_train_9, y_train_4), axis=0)<br class="calibre24"/><br class="calibre24"/>y_test_9 = y_test[y_test == 9]<br class="calibre24"/>y_test_4 = y_test[y_test == 4]<br class="calibre24"/>X_test_9 = X_test[y_test == 9]<br class="calibre24"/>X_test_4 = X_test[y_test == 4]<br class="calibre24"/>X_test = np.concatenate((X_test_9, X_test_4), axis=0)<br class="calibre24"/>y_test = np.concatenate((y_test_9, y_test_4), axis=0)</pre>
+<ol start="3" class="calibre17">
+<li value="3" class="calibre15">Normalize and flatten the data:</li>
+</ol>
+<pre class="calibre23">X_train = X_train.astype('float32')/255.<br class="calibre24"/>X_test = X_test.astype('float32')/255.<br class="calibre24"/>X_train = X_train.reshape(len(X_train), np.prod(X_train.shape[1:]))<br class="calibre24"/>X_test = X_test.reshape(len(X_test), np.prod(X_test.shape[1:]))</pre>
+<ol start="4" class="calibre17">
+<li value="4" class="calibre15">Turn the targets into a binary classification problem and print the counts:</li>
+</ol>
+<pre class="calibre23">y_train_binary = y_train == 9<br class="calibre24"/>y_test_binary = y_test == 9<br class="calibre24"/>print(np.unique(y_train_binary, return_counts=True))</pre>
+<ol start="5" class="calibre17">
+<li value="5" class="calibre15">Define the network architecture and compile:</li>
+</ol>
+<pre class="calibre23">model = Sequential()<br class="calibre24"/>model.add(Dense(512, input_dim=X_train.shape[1], activation='relu'))<br class="calibre24"/>model.add(Dropout(0.75))<br class="calibre24"/>model.add(Dense(512, activation='relu'))<br class="calibre24"/>model.add(Dropout(0.75))<br class="calibre24"/>model.add(Dense(128, activation='relu'))<br class="calibre24"/>model.add(Dropout(0.75))<br class="calibre24"/>model.add(Dense(128, activation='relu'))<br class="calibre24"/>model.add(Dense(1, activation='sigmoid'))<br class="calibre24"/><br class="calibre24"/>opt = Adam()<br class="calibre24"/>model.compile(loss='binary_crossentropy', optimizer=opt, metrics=['binary_accuracy'])</pre>
+<ol start="6" class="calibre17">
+<li class="calibre15" value="6">We will create a callback function to use early stopping:</li>
+</ol>
+<pre class="calibre33">callbacks = [EarlyStopping(monitor='val_loss', patience=5)]</pre>
+<ol start="7" class="calibre17">
+<li value="7" class="calibre15">Define the loss weights per class:</li>
+</ol>
+<pre class="calibre23">class_weight_equal = {False : 1., True: 1}<br class="calibre24"/>class_weight_imbalanced = {False : 100, True: 1}</pre>
+<ol start="8" class="calibre17">
+<li value="8" class="calibre15">Train the model with equal weights for both classes:</li>
+</ol>
+<pre class="calibre23">n_epochs = 1000<br class="calibre24"/>batch_size = 512<br class="calibre24"/>validation_split = 0.01<br class="calibre24"/><br class="calibre24"/>model.fit(X_train, y_train_binary, epochs=n_epochs, <br class="calibre24"/>batch_size=batch_size, shuffle=True, validation_split=validation_split, class_weight=class_weight_equal,<br class="calibre24"/>          callbacks=callbacks, verbose=0<br class="calibre24"/>)</pre>
+<ol start="9" class="calibre17">
+<li value="9" class="calibre15">Test on the test set and output the confusion matrix:</li>
+</ol>
+<pre class="calibre23">preds_equal = model.predict(X_test)<br class="calibre24"/>confusion_matrix(y_test_binary, np.round(preds_equal), labels=[True, False])<br class="calibre24"/><br class="calibre24"/>#array([[1009, 0],<br class="calibre24"/># [ 982, 0]])</pre>
+<ol start="10" class="calibre17">
+<li value="10" class="calibre15">Next, we train with imbalanced weights and test on the test set:</li>
+</ol>
+<pre class="calibre23">model.compile(loss='binary_crossentropy', optimizer='rmsprop', metrics=['binary_accuracy'])<br class="calibre24"/><br class="calibre24"/>model.fit(X_train, y_train_binary, epochs=n_epochs, <br class="calibre24"/>          batch_size=batch_size, shuffle=True, validation_split=validation_split, class_weight=class_weight_imbalanced,<br class="calibre24"/>          callbacks=callbacks, verbose=0<br class="calibre24"/>         )<br class="calibre24"/><br class="calibre24"/>preds_imbalanced = model.predict(X_test)<br class="calibre24"/>confusion_matrix(y_test_binary, np.round(preds_imbalanced), labels=[True, False])<br class="calibre24"/><br class="calibre24"/>#array([[1009, 3],<br class="calibre24"/># [ 546, 436]])</pre>
+
+
+            </article>
+
+            
+        </section>
+    </body></html>

@@ -1,0 +1,87 @@
+<?xml version='1.0' encoding='utf-8'?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+  <head>
+    <title>Experimenting with different optimizers</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <link href="../stylesheet.css" rel="stylesheet" type="text/css"/>
+<link href="../page_styles.css" rel="stylesheet" type="text/css"/>
+</head>
+  <body id="1VSLM0-5e1e3ce63feb42db9ae6338e8302dfdb" class="calibre">
+        <section class="calibre1">
+
+                            <header class="calibre1">
+                    </header><h1 class="header-title" id="calibre_pb_0">Experimenting with different optimizers</h1>
+                
+            
+            <article class="calibre1">
+                
+<p class="calibre3">The most popular and well known optimizer is <strong class="calibre5">Stochastic Gradient Descent</strong> (<strong class="calibre5">SGD</strong>). This technique is widely used in other machine learning models as well. SGD is a method to find minima or maxima by iteration. There are many popular variants of SGD that try to speed up convergence and less tuning by using an adaptive learning rate. The following table is an overview of the most commonly used optimizers in deep learning:</p>
+<table class="calibre57">
+<tbody class="calibre8">
+<tr class="calibre9">
+<td class="calibre10"><strong class="calibre2">Optimizer</strong></td>
+<td class="calibre10"><strong class="calibre2">Hyperparameters</strong></td>
+<td class="calibre10"><strong class="calibre2">Comments</strong></td>
+</tr>
+<tr class="calibre9">
+<td class="calibre10"><strong class="calibre2">SGD</strong></td>
+<td class="calibre10">Learning rate, decay</td>
+<td class="calibre10">
+<p class="calibre3">+ Learning rate directly impacts performance (smaller learning rate avoids local minima)</p>
+<p class="calibre3">- Requires more manual tuning</p>
+<p class="calibre3">- Slow convergence</p>
+</td>
+</tr>
+<tr class="calibre9">
+<td class="calibre10"><strong class="calibre2">AdaGrad</strong></td>
+<td class="calibre10"><span class="calibre1">Learning rate, epsilon, decay</span></td>
+<td class="calibre10">
+<p class="calibre3">+ Adaptive learning rate for all parameters (well suited for sparse data)</p>
+<p class="calibre3">- Learning rate becomes too small and stops learning</p>
+</td>
+</tr>
+<tr class="calibre9">
+<td class="calibre10"><strong class="calibre2">AdaDelta</strong></td>
+<td class="calibre10"><span class="calibre1">Learning rate, rho, epsilon, decay</span></td>
+<td class="calibre10">
+<p class="calibre3">+ Faster convergence at start</p>
+<p class="calibre3">- Slows down near minimum</p>
+</td>
+</tr>
+<tr class="calibre9">
+<td class="calibre10"><strong class="calibre2">Adam</strong></td>
+<td class="calibre10"><span class="calibre1">Learning rate, beta 1, beta 2</span><span class="calibre1">, epsilon, decay</span></td>
+<td class="calibre10">+ Adaptive learning rate and momentum for all parameters</td>
+</tr>
+<tr class="calibre9">
+<td class="calibre10"><strong class="calibre2">RMSprop</strong></td>
+<td class="calibre10">Learning rate, rho, epsilon, decay</td>
+<td class="calibre10">+- Similar to AdaDelta, but better for nonconvex problems</td>
+</tr>
+<tr class="calibre9">
+<td class="calibre10"><strong class="calibre2">Momentum</strong></td>
+<td class="calibre10"><span class="calibre1">Learning rate, momentum, decay</span></td>
+<td class="calibre10">
+<p class="calibre3">+ Faster convergence</p>
+<p class="calibre3">+ Decreases movement in wrong direction</p>
+<p class="calibre3"><span>- Oscillate around the minimum if momentum is too big</span></p>
+</td>
+</tr>
+<tr class="calibre9">
+<td class="calibre10"><strong class="calibre2">Nesterov Accelerated Gradient</strong> <strong class="calibre2">(NAG</strong>)</td>
+<td class="calibre10"><span class="calibre1">Learning rate, momentum, decay</span></td>
+<td class="calibre10">
+<p class="calibre3">+- Similar to momentum, but slows down earlier</p>
+<p class="calibre3"> </p>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="calibre3">The choice of the optimizer is arbitrary and largely depends on the users ability to tune the optimizer. There is no best solution that performs best for all problems. SGD gives the user the ability to avoid local optima by picking a small learning rate, but the downside is that the training time takes significantly longer. In the following recipe, we will train our network with different optimizers and compare the results.</p>
+
+
+            </article>
+
+            
+        </section>
+    </body></html>

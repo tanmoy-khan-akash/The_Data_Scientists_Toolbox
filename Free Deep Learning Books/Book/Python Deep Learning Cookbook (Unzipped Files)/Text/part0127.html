@@ -1,0 +1,54 @@
+<?xml version='1.0' encoding='utf-8'?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+  <head>
+    <title>How to do it...</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <link href="../stylesheet.css" rel="stylesheet" type="text/css"/>
+<link href="../page_styles.css" rel="stylesheet" type="text/css"/>
+</head>
+  <body id="3P3NE0-5e1e3ce63feb42db9ae6338e8302dfdb" class="calibre">
+        <section class="calibre1">
+
+                            <header class="calibre1">
+                    </header><h1 class="header-title" id="calibre_pb_0">How to do it...</h1>
+                
+            
+            <article class="calibre1">
+                
+<ol class="calibre17">
+<li value="1" class="calibre15">We start by importing all libraries, as follows:</li>
+</ol>
+<pre class="calibre23">import numpy as np<br class="calibre24"/>import cv2<br class="calibre24"/>import matplotlib.pyplot as plt<br class="calibre24"/>import glob<br class="calibre24"/><br class="calibre24"/>from keras.layers import Input, merge, Conv2D, MaxPooling2D, UpSampling2D, Dropout, Cropping2D, merge<br class="calibre24"/>from keras.optimizers import Adam<br class="calibre24"/>from keras.callbacks import ModelCheckpoint, LearningRateScheduler<br class="calibre24"/>from keras import backend as K<br class="calibre24"/>from keras.models import Model</pre>
+<ol start="2" class="calibre17">
+<li value="2" class="calibre15">Then, we need to store all the training filenames:</li>
+</ol>
+<pre class="calibre23">import os<br class="calibre24"/>filenames = []<br class="calibre24"/>for path, subdirs, files in os.walk('Data/1obj'):<br class="calibre24"/>    for name in files:<br class="calibre24"/>        if 'src_color' in path:<br class="calibre24"/>            filenames.append(os.path.join(path, name))<br class="calibre24"/>            <br class="calibre24"/>print('# Training images: {}'.format(len(filenames)))</pre>
+<ol start="3" class="calibre17">
+<li value="3" class="calibre15">Let's plot some example training images and their masks:</li>
+</ol>
+<pre class="calibre23">n_examples = 3<br class="calibre24"/>for i in range(n_examples):<br class="calibre24"/>    plt.subplot(2, 2, 1)<br class="calibre24"/>    image = cv2.imread(filenames[i])<br class="calibre24"/>    image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)<br class="calibre24"/>    plt.imshow(image)<br class="calibre24"/><br class="calibre24"/>    plt.subplot(2, 2, 2)<br class="calibre24"/>    mask_file = filenames[i].replace('src_color', 'human_seg')<br class="calibre24"/>    mask = cv2.imread(glob.glob(mask_file[:-4]+'*')[0])<br class="calibre24"/>    ret, mask = cv2.threshold(mask, 0, 255, cv2.THRESH_BINARY_INV)<br class="calibre24"/>    mask = mask[:,:,0]<br class="calibre24"/>    plt.imshow((mask), cmap='gray')<br class="calibre24"/><br class="calibre24"/>    plt.show()</pre>
+<div class="mce-root1"><img src="../images/00066.jpeg" class="calibre92"/></div>
+<div class="mce-root1">Figure 7.1A: Example training images and their masks</div>
+<ol start="4" class="calibre17">
+<li value="4" class="calibre15">To determine the performance of our network and loss function, we will be using the <kbd class="calibre12">dice</kbd> coefficient. We need to implement these as functions to be able to compile them with our Keras model:</li>
+</ol>
+<pre class="calibre23">def dice_coef(y_true, y_pred, smooth=0.9):<br class="calibre24"/>    y_true_f = K.flatten(y_true)<br class="calibre24"/>    y_pred_f = K.flatten(y_pred)<br class="calibre24"/>    intersection = K.sum(y_true_f * y_pred_f)<br class="calibre24"/>    return (2. * intersection + smooth) / (K.sum(y_true_f) + K.sum(y_pred_f) + smooth)<br class="calibre24"/><br class="calibre24"/><br class="calibre24"/>def dice_coef_loss(y_true, y_pred):<br class="calibre24"/>    return -dice_coef(y_true, y_pred)</pre>
+<ol start="5" class="calibre17">
+<li value="5" class="calibre15">Next, we define our U-net model's architecture:</li>
+</ol>
+<pre class="calibre23">img_rows = 240<br class="calibre24"/>img_cols = 240<br class="calibre24"/>img_channels = 3<br class="calibre24"/><br class="calibre24"/>inputs = Input((img_rows, img_cols, img_channels))<br class="calibre24"/><br class="calibre24"/>conv1 = Conv2D(64, 3, activation = 'relu', padding = 'same',<br class="calibre24"/>kernel_initializer = 'he_normal')(inputs)<br class="calibre24"/>conv1 = Conv2D(64, 3, activation = 'relu', padding = 'same',<br class="calibre24"/>kernel_initializer = 'he_normal')(conv1)<br class="calibre24"/>pool1 = MaxPooling2D(pool_size=(2, 2))(conv1)<br class="calibre24"/><br class="calibre24"/>conv2 = Conv2D(128, 3, activation = 'relu', padding = 'same',<br class="calibre24"/>kernel_initializer = 'he_normal')(pool1)<br class="calibre24"/>conv2 = Conv2D(128, 3, activation = 'relu', padding = 'same',<br class="calibre24"/>kernel_initializer = 'he_normal')(conv2)<br class="calibre24"/>pool2 = MaxPooling2D(pool_size=(2, 2))(conv2)<br class="calibre24"/><br class="calibre24"/>conv3 = Conv2D(256, 3, activation = 'relu', padding = 'same',<br class="calibre24"/>kernel_initializer = 'he_normal')(pool2)<br class="calibre24"/>conv3 = Conv2D(256, 3, activation = 'relu', padding = 'same',<br class="calibre24"/>kernel_initializer = 'he_normal')(conv3)<br class="calibre24"/>pool3 = MaxPooling2D(pool_size=(2, 2))(conv3)<br class="calibre24"/><br class="calibre24"/><br class="calibre24"/>conv4 = Conv2D(512, 3, activation = 'relu', padding = 'same',<br class="calibre24"/>kernel_initializer = 'he_normal')(pool3)<br class="calibre24"/>conv4 = Conv2D(512, 3, activation = 'relu', padding = 'same',<br class="calibre24"/>kernel_initializer = 'he_normal')(conv4)<br class="calibre24"/>drop4 = Dropout(0.5)(conv4)<br class="calibre24"/>pool4 = MaxPooling2D(pool_size=(2, 2))(drop4)<br class="calibre24"/><br class="calibre24"/>conv5 = Conv2D(1024, 3, activation = 'relu', padding = 'same',<br class="calibre24"/>kernel_initializer = 'he_normal')(pool4)<br class="calibre24"/>conv5 = Conv2D(1024, 3, activation = 'relu', padding = 'same',<br class="calibre24"/>kernel_initializer = 'he_normal')(conv5)<br class="calibre24"/>drop5 = Dropout(0.5)(conv5)<br class="calibre24"/><br class="calibre24"/>up6 = Conv2D(512, 2, activation = 'relu', padding = 'same',<br class="calibre24"/>kernel_initializer = 'he_normal')(UpSampling2D(size = (2,2))(drop5))<br class="calibre24"/>merge6 = merge([drop4,up6], mode = 'concat', concat_axis = 3)<br class="calibre24"/>conv6 = Conv2D(512, 3, activation = 'relu', padding = 'same',<br class="calibre24"/>kernel_initializer = 'he_normal')(merge6)<br class="calibre24"/>conv6 = Conv2D(512, 3, activation = 'relu', padding = 'same',<br class="calibre24"/>kernel_initializer = 'he_normal')(conv6)<br class="calibre24"/><br class="calibre24"/>up7 = Conv2D(256, 2, activation = 'relu', padding = 'same', <br class="calibre24"/>kernel_initializer = 'he_normal')(UpSampling2D(size = (2,2))(conv6))<br class="calibre24"/>merge7 = merge([conv3,up7], mode = 'concat', concat_axis = 3)<br class="calibre24"/>conv7 = Conv2D(256, 3, activation = 'relu', padding = 'same',<br class="calibre24"/>kernel_initializer = 'he_normal')(merge7)<br class="calibre24"/>conv7 = Conv2D(256, 3, activation = 'relu', padding = 'same',<br class="calibre24"/>kernel_initializer = 'he_normal')(conv7)<br class="calibre24"/><br class="calibre24"/>up8 = Conv2D(128, 2, activation = 'relu', padding = 'same',<br class="calibre24"/>kernel_initializer = 'he_normal')(UpSampling2D(size = (2,2))(conv7))<br class="calibre24"/>merge8 = merge([conv2,up8], mode = 'concat', concat_axis = 3)<br class="calibre24"/>conv8 = Conv2D(128, 3, activation = 'relu', padding = 'same',<br class="calibre24"/>kernel_initializer = 'he_normal')(merge8)<br class="calibre24"/>conv8 = Conv2D(128, 3, activation = 'relu', padding = 'same', <br class="calibre24"/>kernel_initializer = 'he_normal')(conv8)<br class="calibre24"/><br class="calibre24"/>up9 = Conv2D(64, 2, activation = 'relu', padding = 'same', <br class="calibre24"/>kernel_initializer = 'he_normal')(UpSampling2D(size = (2,2))(conv8))<br class="calibre24"/>merge9 = merge([conv1,up9], mode = 'concat', concat_axis = 3)<br class="calibre24"/>conv9 = Conv2D(64, 3, activation = 'relu', padding = 'same', <br class="calibre24"/>kernel_initializer = 'he_normal')(merge9)<br class="calibre24"/>conv9 = Conv2D(64, 3, activation = 'relu', padding = 'same', <br class="calibre24"/>kernel_initializer = 'he_normal')(conv9)<br class="calibre24"/>conv9 = Conv2D(2, 3, activation = 'relu', padding = 'same', <br class="calibre24"/>kernel_initializer = 'he_normal')(conv9)<br class="calibre24"/>conv10 = Conv2D(1, 1, activation = 'sigmoid')(conv9)<br class="calibre24"/><br class="calibre24"/>model = Model(input = inputs, output = conv10)<br class="calibre24"/><br class="calibre24"/>opt = Adam()<br class="calibre24"/>model.compile(optimizer = opt, loss=dice_coef_loss, metrics = [dice_coef])<br class="calibre24"/>model.summary()</pre>
+<ol start="6" class="calibre17">
+<li value="6" class="calibre15">Let's load our training data:</li>
+</ol>
+<pre class="calibre23">X = np.ndarray((len(filenames), img_rows, img_cols , img_channels), <br class="calibre24"/>dtype=np.uint8)<br class="calibre24"/>y = np.ndarray((len(filenames), img_rows, img_cols , 1), <br class="calibre24"/>dtype=np.uint8)<br class="calibre24"/>i=0<br class="calibre24"/>for image in filenames:<br class="calibre24"/>    img = cv2.imread(image)<br class="calibre24"/>    img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)<br class="calibre24"/>    img = cv2.resize(img, (240,240))<br class="calibre24"/>    mask_file = image.replace('src_color', 'human_seg')<br class="calibre24"/>    label = cv2.imread(glob.glob(mask_file[:-4]+'*')[0], 0)<br class="calibre24"/>    ret, label = cv2.threshold(label, 0, 255, cv2.THRESH_BINARY_INV)<br class="calibre24"/>    label = cv2.resize(img, (240, 240))<br class="calibre24"/>    label = label[:,:,0].reshape((240, 240, 1))<br class="calibre24"/>    img = np.array([img/255.])<br class="calibre24"/>    label = np.array([label])<br class="calibre24"/>    X[i] = img<br class="calibre24"/>    y[i] = label<br class="calibre24"/>    i+=1</pre>
+<ol start="7" class="calibre17">
+<li value="7" class="calibre15">Finally, we can start training our model, as follows:</li>
+</ol>
+<pre class="calibre23">n_epochs = 1<br class="calibre24"/>batch_size = 1<br class="calibre24"/>history = model.fit(X, y, batch_size=batch_size, epochs=10, verbose=1, shuffle=True, validation_split=0.1)</pre>
+
+
+            </article>
+
+            
+        </section>
+    </body></html>

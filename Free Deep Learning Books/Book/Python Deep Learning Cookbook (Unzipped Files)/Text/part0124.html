@@ -1,0 +1,72 @@
+<?xml version='1.0' encoding='utf-8'?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+  <head>
+    <title>How to do it...</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <link href="../stylesheet.css" rel="stylesheet" type="text/css"/>
+<link href="../page_styles.css" rel="stylesheet" type="text/css"/>
+</head>
+  <body id="3M85O0-5e1e3ce63feb42db9ae6338e8302dfdb" class="calibre">
+        <section class="calibre1">
+
+                            <header class="calibre1">
+                    </header><h1 class="header-title" id="calibre_pb_0">How to do it...</h1>
+                
+            
+            <article class="calibre1">
+                
+<ol class="calibre17">
+<li value="1" class="calibre15">Let's import the libraries first:</li>
+</ol>
+<pre class="calibre23">import numpy as np<br class="calibre24"/>import pandas as pd<br class="calibre24"/>import glob<br class="calibre24"/>import cv2<br class="calibre24"/>import matplotlib.pyplot as plt<br class="calibre24"/><br class="calibre24"/>from sklearn.preprocessing import LabelBinarizer<br class="calibre24"/>from sklearn.model_selection import train_test_split<br class="calibre24"/>from sklearn.metrics import accuracy_score<br class="calibre24"/><br class="calibre24"/>from keras.models import Sequential, load_model<br class="calibre24"/>from keras.layers import Dense, Dropout, Activation, Flatten, Conv2D, MaxPooling2D, Lambda, Cropping2D<br class="calibre24"/>from keras.utils import np_utils<br class="calibre24"/>from keras import backend as K<br class="calibre24"/>from keras.callbacks import EarlyStopping<br class="calibre24"/>from keras import optimizers</pre>
+<ol start="2" class="calibre17">
+<li value="2" class="calibre15">Load the dataset and plot the first rows of the CSV:</li>
+</ol>
+<pre class="calibre23">DATA_DIR = 'Data/object-detection-crowdai/'<br class="calibre24"/>labels = pd.read_csv(DATA_DIR + 'labels.csv', usecols=[0,1,2,3,4,5])<br class="calibre24"/># We will only localize Trucks<br class="calibre24"/>labels = labels[labels.Label == 'Truck']<br class="calibre24"/># We only use images were one Truck is annotated<br class="calibre24"/>labels = labels[~labels.Frame.isin(labels.Frame[labels.Frame.duplicated()].values)]<br class="calibre24"/>labels.columns=['xmin', 'ymin', 'xmax', 'ymax', 'Frame', 'Label']<br class="calibre24"/>labels[30:50]</pre>
+<ol start="3" class="calibre17">
+<li value="3" class="calibre15">To understand the dataset, let's plot some example images and their accompanying bounding boxes:</li>
+</ol>
+<pre class="calibre23">image_list = ['1479498416965787036.jpg',<br class="calibre24"/>              '1479498541974858765.jpg']<br class="calibre24"/><br class="calibre24"/>plt.figure(figsize=(15,15))<br class="calibre24"/>i=1<br class="calibre24"/>for image in image_list:<br class="calibre24"/>    plt.subplot(len(image_list), len(image_list), i)<br class="calibre24"/>    img_info = labels[labels.Frame == image]<br class="calibre24"/>    img = cv2.imread(DATA_DIR + image)<br class="calibre24"/>    img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)<br class="calibre24"/>    print(img.shape)<br class="calibre24"/>    cv2.rectangle(img, (img_info.xmin, img_info.ymin),(img_info.xmax, img_info.ymax), (255, 0 , 255), 4)<br class="calibre24"/>    print(img_info)<br class="calibre24"/>    plt.imshow(img)<br class="calibre24"/>    i+=1<br class="calibre24"/>plt.show()</pre>
+<div class="cdpaligncenter"><img src="../images/00064.jpeg" class="calibre90"/></div>
+<div class="mce-root1">Figure 7.11: Example images and their bounding boxes</div>
+<ol start="4" class="calibre17">
+<li value="4" class="calibre15">Next, we output some statistics about the dataset:</li>
+</ol>
+<pre class="calibre23">X_train = labels.iloc[:1970]<br class="calibre24"/>X_val = labels.iloc[2000:]<br class="calibre24"/>print(X_train.shape)<br class="calibre24"/>print(X_val.shape)</pre>
+<ol start="5" class="calibre17">
+<li value="5" class="calibre15">The images included in this dataset are frames of a video, so we should be careful while splitting the data for training and validation (to prevent data leakage). Most images have overlap:</li>
+</ol>
+<pre class="calibre23">image_list = ['1479502622732414408.jpg',<br class="calibre24"/>            '1479502623247392322.jpg',<br class="calibre24"/>            '1479502623755460204.jpg',<br class="calibre24"/>            '1479502623247392322.jpg',<br class="calibre24"/>            '1479502625253159017.jpg']<br class="calibre24"/>n_images = len(image_list)<br class="calibre24"/><br class="calibre24"/>plt.figure(figsize=(15,15))<br class="calibre24"/>for i in range(n_images):<br class="calibre24"/>    plt.subplot(n_images, n_images, i+1)<br class="calibre24"/>    plt.title("{0}".format(image_list[i]))<br class="calibre24"/>    img = cv2.imread(DATA_DIR + 'object-detection-crowdai/' <br class="calibre24"/>    + image_list[i])<br class="calibre24"/>    img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)<br class="calibre24"/>    plt.axis('off')<br class="calibre24"/>    plt.imshow(img)<br class="calibre24"/>    plt.tight_layout() <br class="calibre24"/>plt.show()</pre>
+<div class="cdpaligncenter"><img src="../images/00065.jpeg" class="calibre91"/></div>
+<div class="mce-root1">Figure 7.12: Many images in the dataset show overlap</div>
+<ol start="6" class="calibre17">
+<li value="6" class="calibre15">Therefore, we will make our training and validation split time-based:</li>
+</ol>
+<pre class="calibre33">X_train = labels.iloc[:1970] # We've picked this frame because the car makes a right turn<br class="calibre24"/>X_val = labels.iloc[2000:]<br class="calibre24"/>print(X_train.shape)<br class="calibre24"/>print(X_val.shape)</pre>
+<ol start="7" class="calibre17">
+<li value="7" class="calibre15">We need to implement a custom function for the metric <strong class="calibre5">Intersection Over Union</strong> (<strong class="calibre5">IOU</strong>). We do this as follows:</li>
+</ol>
+<pre class="calibre23">def IOU_calc(y_true, y_pred, smooth=0.9):<br class="calibre24"/>    y_true_f = K.flatten(y_true)<br class="calibre24"/>    y_pred_f = K.flatten(y_pred)<br class="calibre24"/>    intersection = K.sum(y_true_f * y_pred_f)<br class="calibre24"/>    return 2*(intersection + smooth) / (K.sum(y_true_f) + K.sum(y_pred_f) + smooth)</pre>
+<ol start="8" class="calibre17">
+<li value="8" class="calibre15">Now, let's define the architecture of our model:</li>
+</ol>
+<pre class="calibre23">img_rows = 200<br class="calibre24"/>img_cols = 200<br class="calibre24"/>img_channels = 3<br class="calibre24"/><br class="calibre24"/>model = Sequential()<br class="calibre24"/>model.add(Lambda(lambda x: (x / 255.) - 0.5, input_shape=(img_rows, img_cols, img_channels)))<br class="calibre24"/>model.add(Conv2D(16, (5, 5), activation='relu', padding='same'))<br class="calibre24"/>model.add(MaxPooling2D(pool_size=(2,2)))<br class="calibre24"/>model.add(Conv2D(32, (5, 5), activation='relu', padding='same'))<br class="calibre24"/>model.add(MaxPooling2D(pool_size=(2,2)))<br class="calibre24"/>model.add(Conv2D(64, (3, 3), activation='relu', padding='same'))<br class="calibre24"/>model.add(MaxPooling2D(pool_size=(2,2)))<br class="calibre24"/>model.add(Flatten())<br class="calibre24"/>model.add(Dense(256, activation='relu'))<br class="calibre24"/>model.add(Dropout(0.5))<br class="calibre24"/>model.add(Dense(4, activation='sigmoid'))<br class="calibre24"/><br class="calibre24"/># Define optimizer and compile<br class="calibre24"/>opt = optimizers.Adam(lr=1e-8)<br class="calibre24"/>model.compile(optimizer=opt, loss='mse', metrics=[IOU_calc])<br class="calibre24"/>model.summary()</pre>
+<ol start="9" class="calibre17">
+<li value="9" class="calibre15">To make sure the training data fits in memory, we can use a batch generator:</li>
+</ol>
+<pre class="calibre23">def batchgen(x, y, batch_size, transform=False):<br class="calibre24"/>    # Create empty numpy arrays<br class="calibre24"/>    images = np.zeros((batch_size, img_rows, img_cols, img_channels))<br class="calibre24"/>    class_id = np.zeros((batch_size, 4))#len(y[0])))<br class="calibre24"/><br class="calibre24"/>    while 1:<br class="calibre24"/>        for n in range(batch_size):<br class="calibre24"/>            i = np.random.randint(len(x))<br class="calibre24"/>            <br class="calibre24"/>            x_ = x.Frame.iloc[i]<br class="calibre24"/>            x_ = cv2.imread(DATA_DIR + image)<br class="calibre24"/>            x_ = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)<br class="calibre24"/>            <br class="calibre24"/>            x_min = (x.iloc[i].xmin * (img_cols/1920)) / img_cols<br class="calibre24"/>            x_max = (x.iloc[i].xmax * (img_cols/1920)) / img_cols<br class="calibre24"/>            y_min = (x.iloc[i].ymin * (img_rows/1200)) / img_rows<br class="calibre24"/>            y_max = (x.iloc[i].ymax * (img_rows/1200)) / img_rows<br class="calibre24"/>            y_ = (x_min, y_min, x_max, y_max)            <br class="calibre24"/>            x_ = cv2.resize(x_, (img_cols, img_rows))<br class="calibre24"/>            images[n] = x_<br class="calibre24"/>            class_id[n] = y_<br class="calibre24"/>            yield images, class_id</pre>
+<ol start="10" class="calibre17">
+<li value="10" class="calibre15">To make sure our model doesn't overfit on the training data, we will be using <kbd class="calibre12">EarlyStopping</kbd>:</li>
+</ol>
+<pre class="calibre23">callbacks = [EarlyStopping(monitor='val_IOU_calc', patience=10, verbose=0)]</pre>
+<ol start="11" class="calibre17">
+<li value="11" class="calibre15">We can now train our model and store the training results in history:</li>
+</ol>
+<pre class="calibre23">batch_size = 64<br class="calibre24"/>n_epochs = 1000<br class="calibre24"/>steps_per_epoch = 512<br class="calibre24"/>val_steps = len(X_val)<br class="calibre24"/><br class="calibre24"/>train_generator = batchgen(X_train, _, batch_size, True)<br class="calibre24"/>val_generator = batchgen(X_val, _, batch_size, False)<br class="calibre24"/><br class="calibre24"/>history = model.fit_generator(train_generator, <br class="calibre24"/>                               steps_per_epoch=steps_per_epoch, <br class="calibre24"/>                               epochs=n_epochs, <br class="calibre24"/>                               validation_data=val_generator,<br class="calibre24"/>                               validation_steps = val_steps,<br class="calibre24"/>                              callbacks=callbacks<br class="calibre24"/>                             )</pre>
+
+
+            </article>
+
+            
+        </section>
+    </body></html>
