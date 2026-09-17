@@ -1,0 +1,42 @@
+<?xml version='1.0' encoding='utf-8'?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+  <head>
+    <title>Fine-tune learned embeddings from GloVe</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <link href="../stylesheet.css" rel="stylesheet" type="text/css"/>
+<link href="../page_styles.css" rel="stylesheet" type="text/css"/>
+</head>
+  <body class="calibre">
+        <section>
+
+            <header>
+                </header><h1 class="header-title" id="calibre_pb_0">Fine-tune learned embeddings from GloVe</h1>
+            
+
+            <article>
+                
+<p class="calibre1">Fine tuning using pre-trained GloVe embeddings is very similar to fine tuning using pre-trained word2vec embeddings. In fact, all of the code, except for the block that builds the weight matrix for the embedding layer, is identical. Since we have already seen this code twice, I will just focus on the block of code that builds the weight matrix from the GloVe embeddings.</p>
+<p class="calibre1">GloVe embeddings come in various flavors. We use the model pre-trained on 6 billion tokens from the English Wikipedia and the gigaword corpus. The vocabulary size for the model is about 400,000, and the download provides vectors of dimensions 50, 100, 200, and 300. We will use embeddings from the 300 dimensional model.</p>
+<p class="calibre1">The only thing we need to change in the code for the previous example is to replace the block that instantiated a word2vec model and loaded the embedding matrix using the following block of code. If we use a model with vector size other than 300, then we also need to update <kbd class="calibre12">EMBED_SIZE</kbd>.</p>
+<p class="calibre1">The vectors are provided in space-delimited text format, so the first step is to read the code into a dictionary, <kbd class="calibre12">word2emb</kbd>. This is analogous to the line instantiating the Word2Vec model in our previous example:</p>
+<pre class="calibre21">
+GLOVE_MODEL = "../data/glove.6B.300d.txt"<br class="title-page-name"/>word2emb = {}<br class="title-page-name"/>fglove = open(GLOVE_MODEL, "rb")<br class="title-page-name"/>for line in fglove:<br class="title-page-name"/>    cols = line.strip().split()<br class="title-page-name"/>    word = cols[0]<br class="title-page-name"/>    embedding = np.array(cols[1:], dtype="float32")<br class="title-page-name"/>    word2emb[word] = embedding<br class="title-page-name"/>fglove.close()
+</pre>
+<p class="calibre1">We then instantiate an embedding weight matrix of size (<kbd class="calibre12">vocab_sz</kbd> and <kbd class="calibre12">EMBED_SIZE</kbd>) and populate the vectors from the <kbd class="calibre12">word2emb</kbd> dictionary. Vectors for words that are found in the vocabulary but not in the GloVe model remain set to all zeros:</p>
+<pre class="calibre21">
+embedding_weights = np.zeros((vocab_sz, EMBED_SIZE))<br class="title-page-name"/>for word, index in word2index.items():<br class="title-page-name"/>    try:<br class="title-page-name"/>        embedding_weights[index, :] = word2emb[word]<br class="title-page-name"/>    except KeyError:<br class="title-page-name"/>        pass
+</pre>
+<p class="calibre1">The full code for this program can be found in <kbd class="calibre12">finetune_glove_embeddings.py</kbd> in the book's code repository on GitHub. The output of the run is shown as follows:</p>
+<div class="CDPAlignCenter"><img class="image-border75" src="../images/00149.jpeg"/></div>
+<p class="calibre1">This gives us 99.1% accuracy in 10 epochs, which is almost as good as the results we got from fine-tuning the network using word2vec <kbd class="calibre12">embedding_weights</kbd>.</p>
+<p class="calibre1">The source code for this example can be found in <kbd class="calibre12">finetune_glove_embeddings.py</kbd> in the source code download for this chapter.</p>
+
+
+            </article>
+
+            <footer class="calibre4">
+                
+            </footer>
+
+        </section>
+    </body></html>

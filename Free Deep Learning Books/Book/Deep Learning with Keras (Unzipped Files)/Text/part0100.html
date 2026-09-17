@@ -1,0 +1,36 @@
+<?xml version='1.0' encoding='utf-8'?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+  <head>
+    <title>Utilizing Keras built-in VGG-16 net module</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <link href="../stylesheet.css" rel="stylesheet" type="text/css"/>
+<link href="../page_styles.css" rel="stylesheet" type="text/css"/>
+</head>
+  <body class="calibre">
+        <section>
+
+            <header>
+                </header><h1 class="header-title" id="calibre_pb_0">Utilizing Keras built-in VGG-16 net module</h1>
+            
+
+            <article>
+                
+<p class="calibre1">Keras applications are pre-built and pre-trained deep learning models. Weights are downloaded automatically when instantiating a model and stored at <kbd class="calibre12">~/.keras/models/</kbd>. Using built-in code is very easy:</p>
+<pre class="calibre21">
+from keras.models import Model<br class="title-page-name"/>from keras.preprocessing import image<br class="title-page-name"/>from keras.optimizers import SGD<br class="title-page-name"/>from keras.applications.vgg16 import VGG16<br class="title-page-name"/>import matplotlib.pyplot as plt<br class="title-page-name"/>import numpy as np<br class="title-page-name"/>import cv2<br class="title-page-name"/><br class="title-page-name"/># prebuild model with pre-trained weights on imagenet<br class="title-page-name"/>model = VGG16(weights='imagenet', include_top=True)<br class="title-page-name"/>sgd = SGD(lr=0.1, decay=1e-6, momentum=0.9, nesterov=True)<br class="title-page-name"/>model.compile(optimizer=sgd, loss='categorical_crossentropy')<br class="title-page-name"/><br class="title-page-name"/># resize into VGG16 trained images' format<br class="title-page-name"/>im = cv2.resize(cv2.imread('steam-locomotive.jpg'), (224, 224))<br class="title-page-name"/>im = np.expand_dims(im, axis=0)<br class="title-page-name"/><br class="title-page-name"/># predict<br class="title-page-name"/>out = model.predict(im)<br class="title-page-name"/>plt.plot(out.ravel())<br class="title-page-name"/>plt.show()<br class="title-page-name"/>print np.argmax(out)<br class="title-page-name"/>#this should print 820 for steaming train
+</pre>
+<p class="calibre1">Now, let us consider a train:</p>
+<div class="CDPAlignCenter"><img class="image-border10" src="../images/00117.jpeg"/></div>
+<p class="calibre1">It's like the ones my grandfather drove. If we run the code, we get result <kbd class="calibre12">820</kbd>, which is the image net code for <em class="calibre11">steaming train</em>. Equally important is the fact that all the other classes have very weak support, as shown in the following graph:</p>
+<div class="CDPAlignCenter"><img class="image-border53" src="../images/00118.jpeg"/></div>
+<p class="calibre1">To conclude this section, note that VGG-16 is only one of the modules that are pre-built in Keras. A full list of pre-trained Keras models is available at: <a href="https://keras.io/applications/" target="_blank" class="calibre6">https://keras.io/applications/</a>.</p>
+
+
+            </article>
+
+            <footer class="calibre4">
+                
+            </footer>
+
+        </section>
+    </body></html>

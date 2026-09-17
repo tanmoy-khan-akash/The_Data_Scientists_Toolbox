@@ -1,0 +1,86 @@
+<?xml version='1.0' encoding='utf-8'?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+  <head>
+    <title>LeNet code in Keras</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <link href="../stylesheet.css" rel="stylesheet" type="text/css"/>
+<link href="../page_styles.css" rel="stylesheet" type="text/css"/>
+</head>
+  <body class="calibre">
+        <section>
+
+            <header>
+                </header><h1 class="header-title" id="calibre_pb_0">LeNet code in Keras</h1>
+            
+
+            <article>
+                
+<p class="calibre1">To define LeNet code, we use a convolutional 2D module, which is:</p>
+<pre class="calibre21">
+keras.<span>layers.convolutional.Conv2D(filters, kernel_size, </span><span>padding=</span><span>'valid'</span>)
+</pre>
+<p class="calibre1">Here, <kbd class="calibre12">filters</kbd> is the number of convolution kernels to use (for example, the dimensionality of the output), <kbd class="calibre12">kernel_size</kbd> is a<span>n integer or tuple/list of two integers, specifying the width and height of the 2D convolution window (can be a single integer to specify the same value for all spatial dimensions)</span>, and <kbd class="calibre12">padding='same'</kbd> means that padding is used. There are two options: <kbd class="calibre12">padding='valid'</kbd> means that the convolution is only computed where the input and the filter fully overlap, and therefore the output is smaller than the input, while <kbd class="calibre12">padding='same'</kbd> means that we have an output that is the <em class="calibre11">same</em> size as the input, for which the area around the input is padded with zeros.</p>
+<p class="calibre1">In addition, we use a <kbd class="calibre12">MaxPooling2D</kbd> module:</p>
+<pre class="calibre21">
+keras.layers.pooling.MaxPooling2D(pool_size=(2, 2), strides=(2, 2))
+</pre>
+<p class="calibre1">Here, <kbd class="calibre12">pool_size=(2, 2)</kbd> is a tuple of two integers representing the factors by which the image is vertically and horizontally downscaled. So <em class="calibre11">(2, 2)</em> will halve the image in each dimension, and <kbd class="calibre12">strides=(2, 2)</kbd> is the stride used for processing.</p>
+<p class="calibre1">Now, let us review the code. First we import a number of modules:</p>
+<pre class="calibre21">
+from keras import backend as K<br class="title-page-name"/>from keras.models import Sequential<br class="title-page-name"/>from keras.layers.convolutional import Conv2D<br class="title-page-name"/>from keras.layers.convolutional import MaxPooling2D<br class="title-page-name"/>from keras.layers.core import Activation<br class="title-page-name"/>from keras.layers.core import Flatten<br class="title-page-name"/>from keras.layers.core import Dense<br class="title-page-name"/>from keras.datasets import mnist<br class="title-page-name"/>from keras.utils import np_utils<br class="title-page-name"/>from keras.optimizers import SGD, RMSprop, Adam<br class="title-page-name"/>import numpy as np<br class="title-page-name"/>import matplotlib.pyplot as plt
+</pre>
+<p class="calibre1">Then we define the LeNet network:</p>
+<pre class="calibre21">
+#define the ConvNet<br class="title-page-name"/>class LeNet:<br class="title-page-name"/>    @staticmethod<br class="title-page-name"/>    def build(input_shape, classes):<br class="title-page-name"/>         model = Sequential()<br class="title-page-name"/>         # CONV =&gt; RELU =&gt; POOL
+</pre>
+<p class="calibre1">We have a first convolutional stage with ReLU activations followed by a max-pooling. Our net will learn 20 convolutional filters, each one of which has a size of 5 x 5. The output dimension is the same one of the input shape, so it will be 28 x 28. Note that since the <kbd class="calibre12">Convolution2D</kbd> is the first stage of our pipeline, we are also required to define its <kbd class="calibre12">input_shape</kbd>. The max-pooling operation implements a sliding window that slides over the layer and takes the maximum of each region with a step of two pixels vertically and horizontally:</p>
+<pre class="calibre21">
+model.add(Convolution2D(20, kernel_size=5, padding="same",<br class="title-page-name"/>input_shape=input_shape))<br class="title-page-name"/>model.add(Activation("relu"))<br class="title-page-name"/>model.add(MaxPooling2D(pool_size=(2, 2), strides=(2, 2)))<br class="title-page-name"/># CONV =&gt; RELU =&gt; POOL
+</pre>
+<p class="calibre1">Then a second convolutional stage with ReLU activations follows, again by a max-pooling. In this case, we increase the number of convolutional filters learned to 50 from the previous 20. Increasing the number of filters in deeper layers is a common technique used in deep learning:</p>
+<pre class="calibre21">
+model.add(Conv2D(50, kernel_size=5, border_mode="same"))<br class="title-page-name"/>model.add(Activation("relu"))<br class="title-page-name"/>model.add(MaxPooling2D(pool_size=(2, 2), strides=(2, 2)))
+</pre>
+<p class="calibre1">Then we have a pretty standard flattening and a dense network of 500 neurons, followed by a softmax classifier with 10 classes:</p>
+<pre class="calibre21">
+# Flatten =&gt; RELU layers<br class="title-page-name"/>model.add(Flatten())<br class="title-page-name"/>model.add(Dense(500))<br class="title-page-name"/>model.add(Activation("relu"))<br class="title-page-name"/># a softmax classifier<br class="title-page-name"/>model.add(Dense(classes))<br class="title-page-name"/>model.add(Activation("softmax"))<br class="title-page-name"/>return model
+</pre>
+<p class="calibre1">Congratulations, You have just defined the first deep learning network! Let's see how it looks visually:</p>
+<div class="CDPAlignCenter"><img class="image-border37" src="../images/00093.jpeg"/></div>
+<p class="calibre1">Now we need some additional code for training the network, but this is very similar to what we have already described in <a target="_blank" href="part0022.html" class="calibre6">Chapter 1</a>, <em class="calibre11">Neural Network Foundations</em>. This time, we also show the code for printing the loss:</p>
+<pre class="calibre21">
+# network and training<br class="title-page-name"/>NB_EPOCH = 20<br class="title-page-name"/>BATCH_SIZE = 128<br class="title-page-name"/>VERBOSE = 1<br class="title-page-name"/>OPTIMIZER = Adam()<br class="title-page-name"/>VALIDATION_SPLIT=0.2<br class="title-page-name"/>IMG_ROWS, IMG_COLS = 28, 28 # input image dimensions<br class="title-page-name"/>NB_CLASSES = 10 # number of outputs = number of digits<br class="title-page-name"/>INPUT_SHAPE = (1, IMG_ROWS, IMG_COLS)<br class="title-page-name"/># data: shuffled and split between train and test sets<br class="title-page-name"/>(X_train, y_train), (X_test, y_test) = mnist.load_data()<br class="title-page-name"/>k.set_image_dim_ordering("th")<br class="title-page-name"/># consider them as float and normalize<br class="title-page-name"/>X_train = X_train.astype('float32')<br class="title-page-name"/>X_test = X_test.astype('float32')<br class="title-page-name"/>X_train /= 255<br class="title-page-name"/>X_test /= 255<br class="title-page-name"/># we need a 60K x [1 x 28 x 28] shape as input to the CONVNET<br class="title-page-name"/>X_train = X_train[:, np.newaxis, :, :]<br class="title-page-name"/>X_test = X_test[:, np.newaxis, :, :]<br class="title-page-name"/>print(X_train.shape[0], 'train samples')<br class="title-page-name"/>print(X_test.shape[0], 'test samples')<br class="title-page-name"/># convert class vectors to binary class matrices<br class="title-page-name"/>y_train = np_utils.to_categorical(y_train, NB_CLASSES)<br class="title-page-name"/>y_test = np_utils.to_categorical(y_test, NB_CLASSES)<br class="title-page-name"/># initialize the optimizer and model<br class="title-page-name"/>model = LeNet.build(input_shape=INPUT_SHAPE, classes=NB_CLASSES)<br class="title-page-name"/>model.compile(loss="categorical_crossentropy", optimizer=OPTIMIZER,<br class="title-page-name"/>metrics=["accuracy"])<br class="title-page-name"/>history = model.fit(X_train, y_train,<br class="title-page-name"/>batch_size=BATCH_SIZE, epochs=NB_EPOCH,<br class="title-page-name"/>verbose=VERBOSE, validation_split=VALIDATION_SPLIT)<br class="title-page-name"/>score = model.evaluate(X_test, y_test, verbose=VERBOSE)<br class="title-page-name"/>print("Test score:", score[0])<br class="title-page-name"/>print('Test accuracy:', score[1])<br class="title-page-name"/># list all data in history<br class="title-page-name"/>print(history.history.keys())<br class="title-page-name"/># summarize history for accuracy<br class="title-page-name"/>plt.plot(history.history['acc'])<br class="title-page-name"/>plt.plot(history.history['val_acc'])<br class="title-page-name"/>plt.title('model accuracy')<br class="title-page-name"/>plt.ylabel('accuracy')<br class="title-page-name"/>plt.xlabel('epoch')<br class="title-page-name"/>plt.legend(['train', 'test'], loc='upper left')<br class="title-page-name"/>plt.show()<br class="title-page-name"/># summarize history for loss<br class="title-page-name"/>plt.plot(history.history['loss'])<br class="title-page-name"/>plt.plot(history.history['val_loss'])<br class="title-page-name"/>plt.title('model loss')<br class="title-page-name"/>plt.ylabel('loss')<br class="title-page-name"/>plt.xlabel('epoch')<br class="title-page-name"/>plt.legend(['train', 'test'], loc='upper left')<br class="title-page-name"/>plt.show()
+</pre>
+<p class="calibre1">Now let's run the code. As you can see, the time had a significant increase and each iteration in our deep net now takes ~134 seconds against ~1-2 seconds for the net defined in <a target="_blank" href="part0022.html" class="calibre6">Chapter 1</a>, <em class="calibre11">Neural Network Foundations</em>. However, the accuracy has reached a new peak at 99.06%:</p>
+<div class="CDPAlignCenter"><img class="image-border38" src="../images/00094.jpeg"/></div>
+<p class="calibre1">Let's plot the model accuracy and the model loss, and we understand that we can train in only 4 - 5 iterations to achieve a similar accuracy of 99.2%:</p>
+<table class="a2">
+<tbody class="calibre8">
+<tr class="calibre9">
+<td class="calibre10">
+<div class="CDPAlignCenter"><img class="image-border39" src="../images/00095.jpeg"/></div>
+</td>
+<td class="calibre10">
+<div class="CDPAlignCenter"><img class="image-border40" src="../images/00096.jpeg"/></div>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="calibre1"><br class="title-page-name"/>
+<br class="title-page-name"/>
+In the following screenshot, we show the final accuracy achieved by our model:</p>
+<div class="CDPAlignCenter"><img class="image-border10" src="../images/00097.jpeg"/></div>
+<p class="calibre1">Let's see some of the MNIST images just to understand how good the number 99.2% is! For instance, there are many ways in which humans write a 9, one of them appearing in the following diagram. The same holds for 3, 7, 4, and 5. The number <strong class="calibre3">1</strong> in this diagram is so difficult to recognize that probably even a human will have issues with it:</p>
+<div class="CDPAlignCenter"><img class="image-border41" src="../images/00098.jpeg"/></div>
+<p class="calibre1">We can summarize all the progress made so far with our different models in the following graph. Our simple net started with an accuracy of <span>92.22%</span>, which means that about 8 handwritten characters out of 100 are not correctly recognized. Then, we gained 7% with the deep learning architecture by reaching an accuracy of <span>99.20%</span>, which means that about 1 handwritten character out of 100 is incorrectly recognized:</p>
+<div class="CDPAlignCenter"><img class="image-border42" src="../images/00099.jpeg"/></div>
+
+
+            </article>
+
+            <footer class="calibre4">
+                
+            </footer>
+
+        </section>
+    </body></html>

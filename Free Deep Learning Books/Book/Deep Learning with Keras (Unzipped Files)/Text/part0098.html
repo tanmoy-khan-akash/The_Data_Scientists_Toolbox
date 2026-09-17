@@ -1,0 +1,34 @@
+<?xml version='1.0' encoding='utf-8'?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+  <head>
+    <title>Very deep convolutional networks for large-scale image recognition</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <link href="../stylesheet.css" rel="stylesheet" type="text/css"/>
+<link href="../page_styles.css" rel="stylesheet" type="text/css"/>
+</head>
+  <body class="calibre">
+        <section>
+
+            <header>
+                </header><h1 class="header-title" id="calibre_pb_0">Very deep convolutional networks for large-scale image recognition</h1>
+            
+
+            <article>
+                
+<p class="calibre1">In 2014, an interesting contribution for image recognition was presented (for more information refer to: <span><em class="calibre11">Very Deep Convolutional Networks for Large-Scale Image Recognition</em>, by K. Simonyan and A. Zisserman,</span> <span>2014</span>). The paper shows that, <em class="calibre11">a significant improvement on the prior-art configurations can be achieved by pushing the depth to 16-19 weight layers</em>. One model in the paper denoted as <em class="calibre11">D</em> or VGG-16 has 16 deep layers. An implementation in Java Caffe (<a href="http://caffe.berkeleyvision.org/" target="_blank" class="calibre6">http://caffe.berkeleyvision.org/</a>) has been used for training the model on the ImageNet ILSVRC-2012 (<a href="http://image-net.org/challenges/LSVRC/2012/" target="_blank" class="calibre6">http://image-net.org/challenges/LSVRC/2012/</a>) dataset, which includes images of 1,000 classes and is split into three sets: training (1.3 million images), validation (50,000 images), and testing (100,000 images). Each image is (224 x 224) on three channels. The model achieves 7.5% top 5 error on ILSVRC-2012-val and 7.4% top 5 error on ILSVRC-2012-test.</p>
+<p class="calibre1">According to the ImageNet site:</p>
+<p class="calibre1">The goal of this competition is to estimate the content of photographs for the purpose of retrieval and automatic annotation using a subset of the large hand-labeled ImageNet dataset (10 million labeled images depicting 10,000 + object categories) as training. Test images will be presented with no initial annotation—no segmentation or labels—and algorithms will have to produce labelings specifying what objects are present in the images.</p>
+<p class="calibre1">The weights learned by the model implemented in Caffe have been directly converted in Keras (for more information refer to: <a href="https://gist.github.com/baraldilorenzo/07d7802847aaad0a35d3" target="_blank" class="calibre6">https://gist.github.com/baraldilorenzo/07d7802847aaad0a35d3</a>) and can be used for preloading into the Keras model, which is implemented next as described in the paper:</p>
+<pre class="calibre21">
+from keras.models import Sequential<br class="title-page-name"/>from keras.layers.core import Flatten, Dense, Dropout<br class="title-page-name"/>from keras.layers.convolutional import Conv2D, MaxPooling2D, ZeroPadding2D<br class="title-page-name"/>from keras.optimizers import SGD<br class="title-page-name"/>import cv2, numpy as np<br class="title-page-name"/><br class="title-page-name"/># define a VGG16 network<br class="title-page-name"/>def VGG_16(weights_path=None):<br class="title-page-name"/>model = Sequential()<br class="title-page-name"/>model.add(ZeroPadding2D((1,1),input_shape=(3,224,224)))<br class="title-page-name"/>model.add(Conv2D(64, (3, 3), activation='relu'))<br class="title-page-name"/>model.add(ZeroPadding2D((1,1)))<br class="title-page-name"/>model.add(Conv2D(64, (3, 3), activation='relu'))<br class="title-page-name"/>model.add(MaxPooling2D((2,2), strides=(2,2)))<br class="title-page-name"/>model.add(ZeroPadding2D((1,1)))<br class="title-page-name"/>model.add(Conv2D(128, (3, 3), activation='relu'))<br class="title-page-name"/>model.add(ZeroPadding2D((1,1)))<br class="title-page-name"/>model.add(Conv2D(128, (3, 3), activation='relu'))<br class="title-page-name"/>model.add(MaxPooling2D((2,2), strides=(2,2)))<br class="title-page-name"/>model.add(ZeroPadding2D((1,1)))<br class="title-page-name"/>model.add(Conv2D(256, (3, 3), activation='relu'))<br class="title-page-name"/>model.add(ZeroPadding2D((1,1)))<br class="title-page-name"/>model.add(Conv2D(256, (3, 3), activation='relu'))<br class="title-page-name"/>model.add(ZeroPadding2D((1,1)))<br class="title-page-name"/>model.add(Conv2D(256, (3, 3), activation='relu'))<br class="title-page-name"/>model.add(MaxPooling2D((2,2), strides=(2,2)))<br class="title-page-name"/>model.add(ZeroPadding2D((1,1)))<br class="title-page-name"/>model.add(Conv2D(512, (3, 3), activation='relu'))<br class="title-page-name"/>model.add(ZeroPadding2D((1,1)))<br class="title-page-name"/>model.add(Conv2D(512, (3, 3), activation='relu'))<br class="title-page-name"/>model.add(ZeroPadding2D((1,1)))<br class="title-page-name"/>model.add(Conv2D(512, (3, 3), activation='relu'))<br class="title-page-name"/>model.add(MaxPooling2D((2,2), strides=(2,2)))<br class="title-page-name"/>model.add(ZeroPadding2D((1,1)))<br class="title-page-name"/>model.add(Conv2D(512, (3, 3), activation='relu'))<br class="title-page-name"/>model.add(ZeroPadding2D((1,1)))<br class="title-page-name"/>model.add(Conv2D(512, (3, 3), activation='relu'))<br class="title-page-name"/>model.add(ZeroPadding2D((1,1)))<br class="title-page-name"/>model.add(Conv2D(512, (3, 3), activation='relu'))<br class="title-page-name"/>model.add(MaxPooling2D((2,2), strides=(2,2)))<br class="title-page-name"/>model.add(Flatten())<br class="title-page-name"/>#top layer of the VGG net<br class="title-page-name"/>model.add(Dense(4096, activation='relu'))<br class="title-page-name"/>model.add(Dropout(0.5))<br class="title-page-name"/>model.add(Dense(4096, activation='relu'))<br class="title-page-name"/>model.add(Dropout(0.5))<br class="title-page-name"/>model.add(Dense(1000, activation='softmax'))<br class="title-page-name"/>if weights_path:<br class="title-page-name"/>model.load_weights(weights_path)<br class="title-page-name"/>return model
+</pre>
+
+
+            </article>
+
+            <footer class="calibre4">
+                
+            </footer>
+
+        </section>
+    </body></html>

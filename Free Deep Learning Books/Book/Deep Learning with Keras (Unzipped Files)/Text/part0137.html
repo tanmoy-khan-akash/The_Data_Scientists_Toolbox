@@ -1,0 +1,87 @@
+<?xml version='1.0' encoding='utf-8'?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+  <head>
+    <title>Stateful LSTM with Keras — predicting electricity consumption</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <link href="../stylesheet.css" rel="stylesheet" type="text/css"/>
+<link href="../page_styles.css" rel="stylesheet" type="text/css"/>
+</head>
+  <body class="calibre">
+        <section>
+
+            <header>
+                </header><h1 class="header-title" id="calibre_pb_0">Stateful LSTM with Keras — predicting electricity consumption</h1>
+            
+
+            <article>
+                
+<p class="calibre1">In this example, we predict electricity consumption for a consumer using a stateful and stateless LSTM network and compare their behaviors. As you will recall, RNNs in Keras are stateless by default. In case of stateful models, the internal states computed after processing a batch of input is reused as initial states for the next batch. In other words, the state computed from element <em class="calibre11">i</em> in a batch will be used as initial state for for the element <em class="calibre11">i</em> in the next batch.</p>
+<p class="calibre1">The dataset we will use is the electricity load diagram dataset from the UCI Machine Learning Repository (<a href="https://archive.ics.uci.edu/ml/datasets/ElectricityLoadDiagrams20112014" target="_blank" class="calibre6">https://archive.ics.uci.edu/ml/datasets/ElectricityLoadDiagrams20112014</a>), and contains consumption information about 370 customers, taken at 15 minute intervals over a four year period from 2011 to 2014. We randomly choose customer number 250 for our example.</p>
+<p class="calibre1">One thing to remember is that most problems can be solved with stateless RNNs, so if you do use a stateful RNN, make sure you need it. Typically, you would need it when the data has a periodic component. If you think a bit, you will realize that electricity consumption is periodic. Consumption tends to be higher during the day than at night. Let us extract the consumption data for customer number 250 and plot the first 10 days of data. Finally we also save it to a binary NumPy file for our next step:</p>
+<pre class="calibre21">
+import numpy as np<br class="title-page-name"/>import matplotlib.pyplot as plt<br class="title-page-name"/>import os<br class="title-page-name"/>import re<br class="title-page-name"/><br class="title-page-name"/>DATA_DIR = "../data"<br class="title-page-name"/><br class="title-page-name"/>fld = open(os.path.join(DATA_DIR, "LD2011_2014.txt"), "rb")<br class="title-page-name"/>data = []<br class="title-page-name"/>cid = 250<br class="title-page-name"/>for line in fld:<br class="title-page-name"/>    if line.startswith(""";"):<br class="title-page-name"/>        continue<br class="title-page-name"/>    cols = [float(re.sub(",", ".", x)) for x in <br class="title-page-name"/>                line.strip().split(";")[1:]]<br class="title-page-name"/>    data.append(cols[cid])<br class="title-page-name"/>fld.close()<br class="title-page-name"/><br class="title-page-name"/>NUM_ENTRIES = 1000<br class="title-page-name"/>plt.plot(range(NUM_ENTRIES), data[0:NUM_ENTRIES])<br class="title-page-name"/>plt.ylabel("electricity consumption")<br class="title-page-name"/>plt.xlabel("time (1pt = 15 mins)")<br class="title-page-name"/>plt.show()<br class="title-page-name"/><br class="title-page-name"/>np.save(os.path.join(DATA_DIR, "LD_250.npy"), np.array(data))
+</pre>
+<p class="calibre1">The output of the preceding example is as follow:</p>
+<div class="CDPAlignCenter"><img class="image-border10" src="../images/00170.jpeg"/></div>
+<p class="calibre1">As you can see, there is clearly a daily periodic trend. So the problem is a good candidate for a stateful model. Also, based on our observation, a <kbd class="calibre12">BATCH_SIZE</kbd> of <kbd class="calibre12">96</kbd> (number of 15 minute readings over 24 hours) seems appropriate.</p>
+<p class="calibre1">We will show the code for the stateless version of the model simultaneously with the one for the stateful version. Most of the code is identical for both versions, so we will look at both versions simultaneously. I will point out the differences in the code as they arise.</p>
+<p class="calibre1">First, as usual, we import the necessary libraries and classes:</p>
+<pre class="calibre21">
+from keras.layers.core import Dense<br class="title-page-name"/>from keras.layers.recurrent import LSTM<br class="title-page-name"/>from keras.models import Sequential<br class="title-page-name"/>from sklearn.preprocessing import MinMaxScaler<br class="title-page-name"/>import numpy as np<br class="title-page-name"/>import math<br class="title-page-name"/>import os
+</pre>
+<p class="calibre1">Next we load the data for customer 250 into a long array of size (<kbd class="calibre12">140256</kbd>) from the saved NumPy binary file and rescale it to the range <em class="calibre11">(0, 1)</em>. Finally, we reshape the input to three dimensions as needed by our network:</p>
+<pre class="calibre21">
+DATA_DIR = "../data"<br class="title-page-name"/><br class="title-page-name"/>data = np.load(os.path.join(DATA_DIR, "LD_250.npy"))<br class="title-page-name"/>data = data.reshape(-1, 1)<br class="title-page-name"/>scaler = MinMaxScaler(feature_range=(0, 1), copy=False)<br class="title-page-name"/>data = scaler.fit_transform(data)
+</pre>
+<p class="calibre1">Within each batch, the model will take a sequence of 15 minute readings and predict the next one. The length of the input sequence is given by the <kbd class="calibre12">NUM_TIMESTEPS</kbd> variable in the code. Based on some experimentation, we get a value of <kbd class="calibre12">NUM_TIMESTEPS</kbd> as <kbd class="calibre12">20</kbd>, that is, each input row will be a sequence of length <kbd class="calibre12">20</kbd>, and the output will have length <kbd class="calibre12">1</kbd>. The next step rearranges the input array into <kbd class="calibre12">X</kbd> and <kbd class="calibre12">Y</kbd> tensors of shapes <kbd class="calibre12">(None, 4)</kbd> and <kbd class="calibre12">(None, 1)</kbd>. Finally, we reshape the input tensor <kbd class="calibre12">X</kbd> to three dimensions as required by the network:</p>
+<pre class="calibre21">
+X = np.zeros((data.shape[0], NUM_TIMESTEPS))<br class="title-page-name"/>Y = np.zeros((data.shape[0], 1))<br class="title-page-name"/>for i in range(len(data) - NUM_TIMESTEPS - 1):<br class="title-page-name"/>    X[i] = data[i:i + NUM_TIMESTEPS].T<br class="title-page-name"/>    Y[i] = data[i + NUM_TIMESTEPS + 1]<br class="title-page-name"/><br class="title-page-name"/># reshape X to three dimensions (samples, timesteps, features)<br class="title-page-name"/>X = np.expand_dims(X, axis=2)
+</pre>
+<p class="calibre1">We then split our <kbd class="calibre12">X</kbd> and <kbd class="calibre12">Y</kbd> tensors into a 70-30 training test split. Since we are working with time series, we just choose a split point and cut the data into two parts, rather than using the <kbd class="calibre12">train_test_split</kbd> function, which also shuffles the data:</p>
+<pre class="calibre21">
+sp = int(0.7 * len(data))<br class="title-page-name"/>Xtrain, Xtest, Ytrain, Ytest = X[0:sp], X[sp:], Y[0:sp], Y[sp:]<br class="title-page-name"/>print(Xtrain.shape, Xtest.shape, Ytrain.shape, Ytest.shape)
+</pre>
+<p class="calibre1">First we define our stateless model. We also set the values of <kbd class="calibre12">BATCH_SIZE</kbd> and <kbd class="calibre12">NUM_TIMESTEPS</kbd>, as we discussed previously. Our LSTM output size is given by <kbd class="calibre12">HIDDEN_SIZE</kbd>, another hyperparameter that is usually arrived at through experimentation. Here, we just set it to <kbd class="calibre12">10</kbd> since our objective is to compare two networks:</p>
+<pre class="calibre21">
+NUM_TIMESTEPS = 20<br class="title-page-name"/>HIDDEN_SIZE = 10<br class="title-page-name"/>BATCH_SIZE = 96 # 24 hours (15 min intervals)<br class="title-page-name"/><br class="title-page-name"/># stateless<br class="title-page-name"/>model = Sequential()<br class="title-page-name"/>model.add(LSTM(HIDDEN_SIZE, input_shape=(NUM_TIMESTEPS, 1), <br class="title-page-name"/>    return_sequences=False))<br class="title-page-name"/>model.add(Dense(1))
+</pre>
+<p class="calibre1">The corresponding definition for the stateful model is very similar, as you can see as follows. In the LSTM constructor, you need to set <kbd class="calibre12">stateful=True</kbd>, and instead of <kbd class="calibre12">input_shape</kbd> where the batch size is determined at runtime, you need to set <kbd class="calibre12">batch_input_shape</kbd> explicitly with the batch size. You also need to ensure that your training and test data sizes are perfect multiples of your batch size. We will see how to do that later when we look at the training code:</p>
+<pre class="calibre21">
+# stateful<br class="title-page-name"/>model = Sequential()<br class="title-page-name"/>model.add(LSTM(HIDDEN_SIZE, stateful=True,<br class="title-page-name"/>    batch_input_shape=(BATCH_SIZE, NUM_TIMESTEPS, 1), <br class="title-page-name"/>    return_sequences=False))<br class="title-page-name"/>model.add(Dense(1))
+</pre>
+<p class="calibre1">Next we compile the model, which is the same for both stateless and stateful RNNs. Notice that our metric here is mean squared error instead of our usual accuracy. This is because this is really a regression problem; we are interested in knowing how far off our predictions are with respect to the labels rather than knowing whether our prediction matched the label. You can find a full list of Keras built-in metrics on the Keras metrics page:</p>
+<pre class="calibre21">
+model.compile(loss="mean_squared_error", optimizer="adam",<br class="title-page-name"/>    metrics=["mean_squared_error"])
+</pre>
+<p class="calibre1">To train the stateless model, we can use the one liner that we have probably become very familiar with by now:</p>
+<pre class="calibre21">
+BATCH_SIZE = 96 # 24 hours (15 min intervals)<br class="title-page-name"/><br class="title-page-name"/># stateless<br class="title-page-name"/>model.fit(Xtrain, Ytrain, epochs=NUM_EPOCHS, batch_size=BATCH_SIZE,<br class="title-page-name"/>    validation_data=(Xtest, Ytest),<br class="title-page-name"/>    shuffle=False)
+</pre>
+<p class="calibre1">The corresponding code for the stateful model is shown as follows. There are three things to be aware of here.</p>
+<p class="calibre1">First, you should select a batch size that reflects the periodicity of your data. This is because stateful RNNs align the states from each batch to the next, so selecting the right batch size allows the network to learn faster.</p>
+<p class="calibre1">Once you set the batch size, the size of your training and test sets needs to be exact multiples of your batch size. We have ensured this below by truncating the last few records from both our training and test sets.</p>
+<p class="calibre1">The second thing is that you need to fit the model manually, training the model in a loop for the required number of epochs. Each iteration trains the model for one epoch, and the state is retained across multiple batches. After each epoch, the state of the model needs to be reset manually.</p>
+<p class="calibre1">The third thing is that the data should be fed in sequence. By default, Keras will shuffle the rows within each batch, which will destroy the alignment we need for the stateful RNN to learn effectively. This is done by setting <kbd class="calibre12">shuffle=False</kbd> in the call to <kbd class="calibre12">model.fit()</kbd>:</p>
+<pre class="calibre21">
+BATCH_SIZE = 96 # 24 hours (15 min intervals)<br class="title-page-name"/><br class="title-page-name"/># stateful<br class="title-page-name"/># need to make training and test data to multiple of BATCH_SIZE<br class="title-page-name"/>train_size = (Xtrain.shape[0] // BATCH_SIZE) * BATCH_SIZE<br class="title-page-name"/>test_size = (Xtest.shape[0] // BATCH_SIZE) * BATCH_SIZE<br class="title-page-name"/>Xtrain, Ytrain = Xtrain[0:train_size], Ytrain[0:train_size]<br class="title-page-name"/>Xtest, Ytest = Xtest[0:test_size], Ytest[0:test_size]<br class="title-page-name"/>print(Xtrain.shape, Xtest.shape, Ytrain.shape, Ytest.shape)<br class="title-page-name"/>for i in range(NUM_EPOCHS):<br class="title-page-name"/>    print("Epoch {:d}/{:d}".format(i+1, NUM_EPOCHS))<br class="title-page-name"/>    model.fit(Xtrain, Ytrain, batch_size=BATCH_SIZE, epochs=1,<br class="title-page-name"/>        validation_data=(Xtest, Ytest),<br class="title-page-name"/>        shuffle=False)<br class="title-page-name"/>    model.reset_states()
+</pre>
+<p class="calibre1">Finally, we evaluate the model against the test data and print out the scores:</p>
+<pre class="calibre21">
+score, _ = model.evaluate(Xtest, Ytest, batch_size=BATCH_SIZE)<br class="title-page-name"/>rmse = math.sqrt(score)<br class="title-page-name"/>print("MSE: {:.3f}, RMSE: {:.3f}".format(score, rmse))
+</pre>
+<p class="calibre1">The output for the stateless model, run over five epochs, is as follows:</p>
+<div class="CDPAlignCenter"><img class="image-border87" src="../images/00171.jpeg"/></div>
+<p class="calibre1">The corresponding output for the stateful model, also run in a loop five times for one epoch each time, is as follows. Notice the result of the truncating operation in the second line:</p>
+<div class="CDPAlignCenter"><img class="image-border88" src="../images/00172.jpeg"/></div>
+<p class="calibre1">As you can see, the stateful model produces results that are slightly better than the stateless model. In absolute terms, since we have scaled our data to the <em class="calibre11">(0, 1)</em> range, this means that the stateless model has about 6.2% error rate and the stateful model has a 5.9% error rate, or conversely, they are about 93.8% and 94.1% accurate respectively. In relative terms, therefore, our stateful model outperforms the stateless model by a slight margin.</p>
+<p class="calibre1">The source code for this example is provided in the files <kbd class="calibre12">econs_data.py</kbd> that parses the dataset, and <kbd class="calibre12">econs_stateful.py</kbd> that defines and trains the stateless and stateful models, available from the code download for this chapter.</p>
+
+
+            </article>
+
+            <footer class="calibre4">
+                
+            </footer>
+
+        </section>
+    </body></html>

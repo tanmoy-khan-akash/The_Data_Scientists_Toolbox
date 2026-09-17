@@ -1,0 +1,75 @@
+<?xml version='1.0' encoding='utf-8'?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+  <head>
+    <title>Using third-party implementations of word2vec</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <link href="../stylesheet.css" rel="stylesheet" type="text/css"/>
+<link href="../page_styles.css" rel="stylesheet" type="text/css"/>
+</head>
+  <body class="calibre">
+        <section>
+
+            <header>
+                </header><h1 class="header-title" id="calibre_pb_0">Using third-party implementations of word2vec</h1>
+            
+
+            <article>
+                
+<p class="calibre1">We have covered word2vec extensively over the past few sections. At this point, you understand how the skip-gram and CBOW models work and how to build your own implementation of these models using Keras. However, third-party implementations of word2vec are readily available, and unless your use case is very complex or different, it makes sense to just use one such implementation instead of rolling your own.</p>
+<p class="calibre1">The gensim library provides an implementation of word2vec. Even though this is a book about Keras and not gensim, we include a discussion on this because Keras does not provide any support for word2vec, and integrating the gensim implementation into Keras code is very common practice.</p>
+<div class="packtinfobox">Installation of gensim is fairly simple and described in detail on the gensim installation page (<a href="https://radimrehurek.com/gensim/install.html" target="_blank" class="calibre56">https://radimrehurek.com/gensim/install.html</a>). </div>
+<p class="calibre1">The following code shows how to build a word2vec model using gensim and train it with the text from the text8 corpus, available for download at: <a href="http://mattmahoney.net/dc/text8.zip" class="calibre6">http://mattmahoney.net/dc/text8.zip</a>. The text8 corpus is a file containing about 17 million words derived from Wikipedia text. Wikipedia text was cleaned to remove markup, punctuation, and non-ASCII text, and the first 100 million characters of this cleaned text became the text8 corpus. This corpus is commonly used as an example for word2vec because it is quick to train and produces good results. First we set up the imports as usual:</p>
+<pre class="calibre21">
+from gensim.models import KeyedVectors<br class="title-page-name"/>import logging<br class="title-page-name"/>import os
+</pre>
+<p class="calibre1">We then read in the words from the text8 corpus, and split up the words into sentences of 50 words each. The gensim library provides a built-in text8 handler that does something similar. Since we want to illustrate how to generate a model with any (preferably large) corpus that may or may not fit into memory, we will show you how to generate these sentences using a Python generator.</p>
+<p class="calibre1">The <kbd class="calibre12">Text8Sentences</kbd> class will generate sentences of <kbd class="calibre12">maxlen</kbd> words each from the text8 file. In this case, we do ingest the entire file into memory, but when traversing through directories of files, generators allows us to load parts of the data into memory at a time, process them, and yield them to the caller:</p>
+<pre class="calibre21">
+class Text8Sentences(object):<br class="title-page-name"/>  def __init__(self, fname, maxlen):<br class="title-page-name"/>    self.fname = fname<br class="title-page-name"/>    self.maxlen = maxlen<br class="title-page-name"/>      <br class="title-page-name"/>  def __iter__(self):<br class="title-page-name"/>    with open(os.path.join(DATA_DIR, "text8"), "rb") as ftext:<br class="title-page-name"/>      text = ftext.read().split(" ")<br class="title-page-name"/>      sentences, words = [], []<br class="title-page-name"/>      for word in text:<br class="title-page-name"/>        if len(words) &gt;= self.maxlen:<br class="title-page-name"/>          yield words<br class="title-page-name"/>          words = []<br class="title-page-name"/>          words.append(word)<br class="title-page-name"/>          yield words
+</pre>
+<p class="calibre1">We then set up the caller code. The gensim word2vec uses Python logging to report on progress, so we first enable it. The next line declares an instance of the <kbd class="calibre12">Text8Sentences</kbd> class, and the line after that trains the model with the sentences from the dataset. We have chosen the size of the embedding vectors to be <kbd class="calibre12">300</kbd>, and we only consider words that appear a minimum of 30 times in the corpus. The default window size is <kbd class="calibre12">5</kbd>, so we will consider the words <em class="calibre11">w<sub class="calibre22">i-5</sub></em>, <em class="calibre11">w<sub class="calibre22">i-4</sub></em>, <em class="calibre11">w<sub class="calibre22">i-3</sub></em>, <em class="calibre11">w<sub class="calibre22">i-2</sub></em>, <em class="calibre11">w<sub class="calibre22">i-1</sub></em>, <em class="calibre11">w<sub class="calibre22">i+1</sub></em>, <em class="calibre11">w<sub class="calibre22">i+2</sub></em>, <em class="calibre11">w<sub class="calibre22">i+3</sub></em>, <em class="calibre11">w<sub class="calibre22">i+4</sub></em>, and <em class="calibre11">w<sub class="calibre22">i+5</sub></em> as the context for word <em class="calibre11">w<sub class="calibre22">i</sub></em>. By default, the word2vec model created is CBOW, but you can change that by setting <kbd class="calibre12">sg=1</kbd> in the parameters:</p>
+<pre class="calibre21">
+logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO)<br class="title-page-name"/><br class="title-page-name"/>DATA_DIR = "../data/"<br class="title-page-name"/>sentences = Text8Sentences(os.path.join(DATA_DIR, "text8"), 50)<br class="title-page-name"/>model = word2vec.Word2Vec(sentences, size=300, min_count=30)
+</pre>
+<p class="calibre1">The word2vec implementation will make two passes over the data, first to generate a vocabulary and then to build the actual model. You can see its progress on the console as it runs:</p>
+<div class="CDPAlignCenter"><img class="image-border71" src="../images/00144.jpeg"/></div>
+<p class="calibre1">Once the model is created, we should normalize the resulting vectors. According to the documentation, this saves lots of memory. Once the model is trained, we can optionally save it to disk:</p>
+<pre class="calibre21">
+model.init_sims(replace=True)<br class="title-page-name"/>model.save("word2vec_gensim.bin")
+</pre>
+<p class="calibre1">The saved model can be brought back into memory using the following call:</p>
+<pre class="calibre21">
+model = Word2Vec.load("word2vec_gensim.bin")
+</pre>
+<p class="calibre1">We can now query the model to find all the words it knows about:</p>
+<pre class="calibre21">
+<strong class="calibre3">&gt;&gt;&gt; model.vocab.keys()[0:10]</strong><br class="title-page-name"/><strong class="calibre3">['homomorphism',<br class="title-page-name"/>'woods',<br class="title-page-name"/>'spiders',<br class="title-page-name"/>'hanging',<br class="title-page-name"/>'woody',<br class="title-page-name"/>'localized',<br class="title-page-name"/>'sprague',<br class="title-page-name"/>'originality',<br class="title-page-name"/>'alphabetic',<br class="title-page-name"/>'hermann']</strong>
+</pre>
+<p class="calibre1">We can find the actual vector embedding for a given word:</p>
+<pre class="calibre21">
+&gt;&gt;&gt; model["woman"]<br class="title-page-name"/> array([ -3.13099056e-01, -1.85702944e+00, 1.18816841e+00,<br class="title-page-name"/> -1.86561719e-01, -2.23673001e-01, 1.06527400e+00,<br class="title-page-name"/> &amp;mldr;<br class="title-page-name"/> 4.31755871e-01, -2.90115297e-01, 1.00955181e-01,<br class="title-page-name"/> -5.17173052e-01, 7.22485244e-01, -1.30940580e+00], dtype=”float32”)
+</pre>
+<p class="calibre1">We can also find words that are most similar to a certain word:</p>
+<pre class="calibre21">
+<strong class="calibre3">&gt;&gt;&gt; model.most_similar("woman")<br class="title-page-name"/> [('child', 0.7057571411132812),<br class="title-page-name"/> ('girl', 0.702182412147522),<br class="title-page-name"/> ('man', 0.6846336126327515),<br class="title-page-name"/> ('herself', 0.6292711496353149),<br class="title-page-name"/> ('lady', 0.6229539513587952),<br class="title-page-name"/> ('person', 0.6190367937088013),<br class="title-page-name"/> ('lover', 0.6062309741973877),<br class="title-page-name"/> ('baby', 0.5993420481681824),<br class="title-page-name"/> ('mother', 0.5954475402832031),<br class="title-page-name"/> ('daughter', 0.5871444940567017)]</strong>
+</pre>
+<p class="calibre1">We can provide hints for finding word similarity. For example, the following command returns the top 10 words that are like <kbd class="calibre12">woman</kbd> and <kbd class="calibre12">king</kbd> but unlike <kbd class="calibre12">man</kbd>:</p>
+<pre class="calibre21">
+<strong class="calibre3">&gt;&gt;&gt; model.most_similar(positive=['woman', 'king'], negative=['man'], topn=10)<br class="title-page-name"/> [('queen', 0.6237582564353943),<br class="title-page-name"/> ('prince', 0.5638638734817505),<br class="title-page-name"/> ('elizabeth', 0.5557916164398193),<br class="title-page-name"/> ('princess', 0.5456407070159912),<br class="title-page-name"/> ('throne', 0.5439794063568115),<br class="title-page-name"/> ('daughter', 0.5364126563072205),<br class="title-page-name"/> ('empress', 0.5354889631271362),<br class="title-page-name"/> ('isabella', 0.5233952403068542),<br class="title-page-name"/> ('regent', 0.520746111869812),<br class="title-page-name"/> ('matilda', 0.5167444944381714)]</strong>
+</pre>
+<p class="calibre1">We can also find similarities between individual words. To give a feel of how the positions of the words in the embedding space correlates with their semantic meanings, let us look at the following word pairs:</p>
+<pre class="calibre21">
+<strong class="calibre3">&gt;&gt;&gt; model.similarity("girl", "woman")<br class="title-page-name"/> 0.702182479574<br class="title-page-name"/> &gt;&gt;&gt; model.similarity("girl", "man")<br class="title-page-name"/> 0.574259909834<br class="title-page-name"/> &gt;&gt;&gt; model.similarity("girl", "car")<br class="title-page-name"/> 0.289332921793<br class="title-page-name"/> &gt;&gt;&gt; model.similarity("bus", "car")<br class="title-page-name"/> 0.483853497748</strong>
+</pre>
+<p class="calibre1">As you can see, <kbd class="calibre12">girl</kbd> and <kbd class="calibre12">woman</kbd> are more similar than <kbd class="calibre12">girl</kbd> and <kbd class="calibre12">man</kbd>, and <kbd class="calibre12">car</kbd> and <kbd class="calibre12">bus</kbd> are more similar than <kbd class="calibre12">girl</kbd> and <kbd class="calibre12">car</kbd>. This agrees very nicely with our human intuition about these words.</p>
+<p class="calibre1">The source code for the example can be found in <kbd class="calibre12">word2vec_gensim.py</kbd> in the source code download.</p>
+
+
+            </article>
+
+            <footer class="calibre4">
+                
+            </footer>
+
+        </section>
+    </body></html>

@@ -1,0 +1,81 @@
+<?xml version='1.0' encoding='utf-8'?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+  <head>
+    <title>The skip-gram word2vec model</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <link href="../stylesheet.css" rel="stylesheet" type="text/css"/>
+<link href="../page_styles.css" rel="stylesheet" type="text/css"/>
+</head>
+  <body class="calibre">
+        <section>
+
+            <header>
+                </header><h1 class="header-title" id="calibre_pb_0">The skip-gram word2vec model</h1>
+            
+
+            <article>
+                
+<p class="calibre1">The skip-gram model is trained to predict the surrounding words given the current word. To understand how the skip-gram word2vec model works, consider the following example sentence:</p>
+<p class="calibre1"><em class="calibre11">I love green eggs and ham.</em></p>
+<p class="calibre1">Assuming a window size of three, this sentence can be broken down into the following sets of (context, word) pairs:</p>
+<p class="calibre1"><em class="calibre11">([I, green], love)</em><br class="title-page-name"/>
+<em class="calibre11">([love, eggs], green)</em><br class="title-page-name"/>
+<em class="calibre11">([green, and], eggs)</em><br class="title-page-name"/>
+<em class="calibre11">...</em></p>
+<p class="calibre1">Since the skip-gram model predicts a context word given the center word, we can convert the preceding dataset to one of (input, output) pairs. That is, given an input word, we expect the skip-gram model to predict the output word:</p>
+<p class="calibre1"><em class="calibre11">(love, I), (love, green), (green, love), (green, eggs), (eggs, green), (eggs, and), ...</em></p>
+<p class="calibre1">We can also generate additional negative samples by pairing each input word with some random word in the vocabulary. For example:</p>
+<p class="calibre1"><em class="calibre11">(love, Sam), (love, zebra), (green, thing), ...</em></p>
+<p class="calibre1">Finally, we generate positive and negative examples for our classifier:</p>
+<p class="calibre1"><em class="calibre11">((love, I), 1), ((love, green), 1), ..., ((love, Sam), 0), ((love, zebra), 0), ...</em></p>
+<p class="calibre1">We can now train a classifier that takes in a word vector and a context vector and learns to predict one or zero depending on whether it sees a positive or negative sample. The deliverables from this trained network are the weights of the word embedding layer (the gray box in the following figure):</p>
+<div class="CDPAlignCenter"><img class="image-border69" src="../images/00140.jpeg"/></div>
+<p class="calibre1">The skip-gram model can be built in Keras as follows. Assume that the vocabulary size is set at <kbd class="calibre12">5000</kbd>, the output embedding size is <kbd class="calibre12">300</kbd>, and the window size is <kbd class="calibre12">1</kbd>. A window size of one means that the context for a word is the words immediately to the left and right. We first take care of the imports and set our variables to their initial values:</p>
+<pre class="calibre21">
+from keras.layers import Merge<br class="title-page-name"/>from keras.layers.core import Dense, Reshape<br class="title-page-name"/>from keras.layers.embeddings import Embedding<br class="title-page-name"/>from keras.models import Sequential<br class="title-page-name"/><br class="title-page-name"/>vocab_size = 5000<br class="title-page-name"/>embed_size = 300
+</pre>
+<p class="calibre1">We then create a sequential model for the word. The input to this model is the word ID in the vocabulary. The embedding weights are initially set to small random values. During training, the model will update these weights using backpropagation. The next layer reshapes the input to the embedding size:</p>
+<pre class="calibre21">
+word_model = Sequential()<br class="title-page-name"/>word_model.add(Embedding(vocab_size, embed_size,<br class="title-page-name"/>                         embeddings_initializer="glorot_uniform",<br class="title-page-name"/>                         input_length=1))<br class="title-page-name"/>word_model.add(Reshape((embed_size, )))
+</pre>
+<p class="calibre1">The other model that we need is a sequential model for the context words. For each of our skip-gram pairs, we have a single context word corresponding to the target word, so this model is identical to the word model:</p>
+<pre class="calibre21">
+context_model = Sequential()<br class="title-page-name"/>context_model.add(Embedding(vocab_size, embed_size,<br class="title-page-name"/>                  embeddings_initializer="glorot_uniform",<br class="title-page-name"/>                  input_length=1))<br class="title-page-name"/>context_model.add(Reshape((embed_size,)))
+</pre>
+<p class="calibre1">The outputs of the two models are each a vector of size (<kbd class="calibre12">embed_size</kbd>). These outputs are merged into one using a dot product and fed into a dense layer, which has a single output wrapped in a sigmoid activation layer. You have seen the sigmoid activation function in <a target="_blank" href="part0022.html" class="calibre6">Chapter 1</a>, <em class="calibre11">Neural Network Foundations</em>. As you will recall, it modulates the output so numbers higher than 0.5 tend rapidly to 1 and flatten out, and numbers lower than 0.5 tend rapidly to 0 and also flatten out:</p>
+<pre class="calibre21">
+model = Sequential()<br class="title-page-name"/>model.add(Merge([word_model, context_model], mode="dot"))<br class="title-page-name"/>model.add(Dense(1, init="glorot_uniform", activation="sigmoid"))<br class="title-page-name"/>model.compile(loss="mean_squared_error", optimizer="adam")
+</pre>
+<p class="calibre1">The loss function used is the <kbd class="calibre12">mean_squared_error</kbd>; the idea is to minimize the dot product for positive examples and maximize it for negative examples. If you recall, the dot product multiplies corresponding elements of two vectors and sums up the result—this causes similar vectors to have higher dot products than dissimilar vectors, since the former has more overlapping elements.</p>
+<p class="calibre1">Keras provides a convenience function to extract skip-grams for a text that has been converted to a list of word indices. Here is an example of using this function to extract the first 10 of 56 skip-grams generated (both positive and negative).</p>
+<p class="calibre1">We first declare the necessary imports and the text to be analyzed:</p>
+<pre class="calibre21">
+from keras.preprocessing.text import *<br class="title-page-name"/>from keras.preprocessing.sequence import skipgrams<br class="title-page-name"/><br class="title-page-name"/>text = "I love green eggs and ham ."
+</pre>
+<p class="calibre1">The next step is to declare the <kbd class="calibre12">tokenizer</kbd> and run the text against it. This will produce a list of word tokens:</p>
+<pre class="calibre21">
+tokenizer = Tokenizer()<br class="title-page-name"/>tokenizer.fit_on_texts([text])
+</pre>
+<p class="calibre1">The <kbd class="calibre12">tokenizer</kbd> creates a dictionary mapping each unique word to an integer ID and makes it available in the <kbd class="calibre12">word_index</kbd> attribute. We extract this and create a two-way lookup table:</p>
+<pre class="calibre21">
+word2id = tokenizer.word_index<br class="title-page-name"/>id2word = {v:k for k, v in word2id.items()}
+</pre>
+<p class="calibre1">Finally, we convert our input list of words to a list of IDs and pass it to the <kbd class="calibre12">skipgrams</kbd> function. We then print the first 10 of the 56 (pair, label) skip-gram tuples generated:</p>
+<pre class="calibre21">
+wids = [word2id[w] for w in text_to_word_sequence(text)]<br class="title-page-name"/>pairs, labels = skipgrams(wids, len(word2id))<br class="title-page-name"/><span>print(len(pairs), len(labels))</span><br class="title-page-name"/>for i in range(10):<br class="title-page-name"/>    print("({:s} ({:d}), {:s} ({:d})) -&gt; {:d}".format(<br class="title-page-name"/>          id2word[pairs[i][0]], pairs[i][0], <br class="title-page-name"/>          id2word[pairs[i][1]], pairs[i][1], <br class="title-page-name"/>          labels[i]))
+</pre>
+<p class="calibre1">The results from the code is shown below. Note that your results may be different since the skip-gram method randomly samples the results from the pool of possibilities for the positive examples. Additionally, the process of negative sampling, used for generating the negative examples, consists of randomly pairing up arbitrary tokens from the text. As the size of the input text increases, this is more likely to pick up unrelated word pairs. In our example, since our text is very short, there is a chance that it can end up generating positive examples as well.</p>
+<pre class="calibre21">
+<strong class="calibre3">(and (1), ham (3)) -&gt; 0<br class="title-page-name"/>(green (6), i (4)) -&gt; 0<br class="title-page-name"/>(love (2), i (4)) -&gt; 1<br class="title-page-name"/>(and (1), love (2)) -&gt; 0<br class="title-page-name"/>(love (2), eggs (5)) -&gt; 0<br class="title-page-name"/>(ham (3), ham (3)) -&gt; 0<br class="title-page-name"/>(green (6), and (1)) -&gt; 1<br class="title-page-name"/>(eggs (5), love (2)) -&gt; 1<br class="title-page-name"/>(i (4), ham (3)) -&gt; 0<br class="title-page-name"/>(and (1), green (6)) -&gt; 1<br class="title-page-name"/></strong>
+</pre>
+<p class="calibre1">The code for this example can be found in <kbd class="calibre12">skipgram_example.py</kbd> in the source code download for the chapter.</p>
+
+
+            </article>
+
+            <footer class="calibre4">
+                
+            </footer>
+
+        </section>
+    </body></html>

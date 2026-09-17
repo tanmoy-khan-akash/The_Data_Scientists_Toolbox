@@ -1,0 +1,44 @@
+<?xml version='1.0' encoding='utf-8'?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+  <head>
+    <title>Additional Deep Learning Models</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <link href="../stylesheet.css" rel="stylesheet" type="text/css"/>
+<link href="../page_styles.css" rel="stylesheet" type="text/css"/>
+</head>
+  <body class="calibre">
+        <section>
+
+            <header>
+                </header><h1 class="header-title" id="calibre_pb_0">Additional Deep Learning Models</h1>
+            
+
+            <article>
+                
+<p class="calibre1">So far, most of the discussion has been focused around different models that do classification. These models are trained using object features and their labels to predict labels for hitherto unseen objects. The models also had a fairly simple architecture, all the ones we have seen so far have a linear pipeline modeled by the Keras sequential API.</p>
+<p class="calibre1">In this chapter, we will focus on more complex architectures where the pipelines are not necessarily linear. Keras provides the functional API to deal with these sorts of architectures. We will learn how to define our networks using the functional API in this chapter. Note that the functional API can be used to build linear architectures as well.</p>
+<p class="calibre1">The simplest extension of classification networks are regression networks. The two broad subcategories under supervised machine learning are classification and regression. Instead of predicting a category, the network now predicts a continuous value. You saw an example of a regression network when we discussed stateless versus stateful RNNs. Many regression problems can be solved using classification models with very little effort. We will see an example of such a network to predict atmospheric benzene in this chapter.</p>
+<p class="calibre1">Yet another class of models deal with learning the structure of the data from unlabeled data. These are called <strong class="calibre3">unsupervised</strong> (or more correctly, self-supervised) models. They are similar to classification models, but the labels are available implicitly within the data. We have already seen examples of this kind of model; for example, the CBOW and skip-gram word2vec models are self-supervised models. Autoencoders are another example of this type of model. We will learn about autoencoders and describe an example that builds compact vector representations of sentences.</p>
+<p class="calibre1">We will then look at how to compose the networks we have seen so far into larger computation graphs. These graphs are often built to achieve some custom objective that is not achievable by a sequential model alone, and may have multiple inputs and outputs and connections to external components. We will see an example of composing such a network for question answering.</p>
+<p class="calibre1">We then take a detour to look at the Keras backend API, and how we can use this API to build custom components to extend Keras' functionality.</p>
+<p class="calibre1">Going back to models for unlabeled data, another class of models that don't require labels are generative models. These models are trained using a set of existing objects and attempt to learn the distribution these objects come from. Once the distribution is learned, we can draw samples from this distribution that look like the original training data. We have seen an example of this where we trained a character RNN model to generate text similar to <em class="calibre11">Alice in Wonderland</em> in the previous chapter. The idea is already covered, so we won't cover this particular aspect of generative models here. However, we will look at how we can leverage the idea of a trained network learning the data distribution to create interesting visual effects using a VGG-16 network pre-trained on ImageNet data.</p>
+<p class="calibre1">To summarize, we will learn the following topics in this chapter:</p>
+<ul class="calibre15">
+<li class="calibre16">The Keras functional API</li>
+<li class="calibre16">Regression networks</li>
+<li class="calibre16">Autoencoders for unsupervised learning</li>
+<li class="calibre16">Composing complex networks with the functional API</li>
+<li class="calibre16">Customizing Keras</li>
+<li class="calibre16">Generative networks</li>
+</ul>
+<p class="calibre1">Let's get started.</p>
+
+
+            </article>
+
+            <footer class="calibre4">
+                
+            </footer>
+
+        </section>
+    </body></html>

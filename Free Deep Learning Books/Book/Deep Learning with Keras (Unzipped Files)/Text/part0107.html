@@ -1,0 +1,41 @@
+<?xml version='1.0' encoding='utf-8'?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+  <head>
+    <title>Deep convolutional generative adversarial networks</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <link href="../stylesheet.css" rel="stylesheet" type="text/css"/>
+<link href="../page_styles.css" rel="stylesheet" type="text/css"/>
+</head>
+  <body class="calibre">
+        <section>
+
+            <header>
+                </header><h1 class="header-title" id="calibre_pb_0">Deep convolutional generative adversarial networks</h1>
+            
+
+            <article>
+                
+<p class="calibre1">The <strong class="calibre3">deep convolutional generative adversarial networks</strong> (<strong class="calibre3">DCGAN</strong>) are introduced in the paper: <em class="calibre11">Unsupervised Representation Learning with Deep Convolutional Generative Adversarial Networks</em>, by A. Radford, L. Metz, and S. Chintala, arXiv: 1511.06434, 2015. The generator uses a 100-dimensional, uniform distribution space, <em class="calibre11">Z,</em> which is then projected into a smaller space by a series of vis-a-vis convolution operations. An example is shown in the following figure:</p>
+<div class="CDPAlignCenter"><img class="image-border61" src="../images/00128.jpeg"/></div>
+<p class="calibre1">A DCGAN generator can be described by the following Keras code; it is also described by one implementation, available at: <a href="https://github.com/jacobgil/keras-dcgan" target="_blank" class="calibre6">https://github.com/jacobgil/keras-dcgan</a>:</p>
+<pre class="calibre21">
+def generator_model():<br class="title-page-name"/>    model = Sequential()<br class="title-page-name"/>    model.add(Dense(input_dim=100, output_dim=1024))<br class="title-page-name"/>    model.add(Activation('tanh'))<br class="title-page-name"/>    model.add(Dense(128*7*7))<br class="title-page-name"/>    model.add(BatchNormalization())<br class="title-page-name"/>    model.add(Activation('tanh'))<br class="title-page-name"/>    model.add(Reshape((128, 7, 7), input_shape=(128*7*7,)))<br class="title-page-name"/>    model.add(UpSampling2D(size=(2, 2)))<br class="title-page-name"/>    model.add(Convolution2D(64, 5, 5, border_mode='same'))<br class="title-page-name"/>    model.add(Activation('tanh'))<br class="title-page-name"/>    model.add(UpSampling2D(size=(2, 2)))<br class="title-page-name"/>    model.add(Convolution2D(1, 5, 5, border_mode='same'))<br class="title-page-name"/>    model.add(Activation('tanh'))<br class="title-page-name"/>    return model
+</pre>
+<p class="calibre1">Note that the code runs with Keras 1.x syntax. However, it is possible to run it with Keras 2.0 thanks to the Keras legacy interfaces. In this case a few warnings are reported as shown in the following figure:</p>
+<div class="CDPAlignCenter"><img class="image-border10" src="../images/00129.jpeg"/></div>
+<p class="calibre1">Now let’s see the code. The first dense layer takes a vector of 100 dimensions as input and it produces 1,024 dimensions with the activation function <kbd class="calibre12">tanh</kbd> as the output<em class="calibre11">.</em> We assume that the input is sampled from a uniform distribution in <em class="calibre11">[-1, 1]</em>. The next dense layer produces data of 128 x 7 x 7 in the output using batch normalization (for more information refer to <em class="calibre11">Batch Normalization: Accelerating Deep Network Training by Reducing Internal Covariate Shift</em>, by S. Ioffe and C. Szegedy, arXiv: 1502.03167, 2014), a technique that can help stabilize learning by normalizing the input to each unit to zero mean and unit variance<em class="calibre11">. </em>Batch normalization has been empirically proven to accelerate the training in many situations, reduce the problems of poor initialization, and more generally produce more accurate results. There is also a <kbd class="calibre12">Reshape()</kbd> module that produces data of 127 x 7 x 7 (127 channels, 7 width, and 7 height), <kbd class="calibre12">dim_ordering</kbd> to <kbd class="calibre12">tf</kbd>, and a <kbd class="calibre12">UpSampling()</kbd> module that produces a repetition of each one into a 2 x 2 square. After that, we have a convolutional layer producing 64 filters on 5 x 5 convolutional kernels with the activation <kbd class="calibre12">tanh</kbd><em class="calibre11">,</em> followed by a new <kbd class="calibre12">UpSampling()</kbd> and a final convolution with one filter, and on 5 x 5 convolutional kernels with the activation <kbd class="calibre12">tanh</kbd><em class="calibre11">.</em> Notice that this ConvNet has no pooling operations. The discriminator can be described with the following code:</p>
+<pre class="calibre21">
+def discriminator_model():<br class="title-page-name"/>    model = Sequential()<br class="title-page-name"/>    model.add(Convolution2D(64, 5, 5, border_mode='same',<br class="title-page-name"/>    input_shape=(1, 28, 28)))<br class="title-page-name"/>    model.add(Activation('tanh'))<br class="title-page-name"/>    model.add(MaxPooling2D(pool_size=(2, 2)))<br class="title-page-name"/>    model.add(Convolution2D(128, 5, 5))<br class="title-page-name"/>    model.add(Activation('tanh'))<br class="title-page-name"/>    model.add(MaxPooling2D(pool_size=(2, 2)))<br class="title-page-name"/>    model.add(Flatten())<br class="title-page-name"/>    model.add(Dense(1024))<br class="title-page-name"/>    model.add(Activation('tanh'))<br class="title-page-name"/>    model.add(Dense(1))<br class="title-page-name"/>    model.add(Activation('sigmoid'))<br class="title-page-name"/>    return model
+</pre>
+<p class="calibre1">The code takes a standard MNIST image with the shape <kbd class="calibre12">(1, 28, 28)</kbd> and applies a convolution with 64 filters of size 5 x 5 with <kbd class="calibre12">tanh</kbd> as the activation function. This is followed by a max-pooling operation of size 2 x 2 and by a further convolution max-pooling operation. The last two stages are dense, with the final one being the prediction for forgery, which consists of only one neuron with a <kbd class="calibre12">sigmoid</kbd> activation function. For a chosen number of epochs, the generator and discriminator are in turn trained by using <kbd class="calibre12">binary_crossentropy</kbd> as loss function. At each epoch, the generator makes a number of predictions (for example, it creates forged MNIST images) and the discriminator tries to learn after mixing the prediction with real MNIST images. After 32 epochs, the generator learns to forge this set of handwritten numbers. No one has programmed the machine to write but it has learned how to write numbers that are indistinguishable from the ones written by humans. Note that training GANs could be very difficult because it is necessary to find the equilibrium between two players. If you are interested in this topic, I'd advise you to have a look at a series of tricks collected by practitioners (<a href="https://github.com/soumith/ganhacks" target="_blank" class="calibre6">https://github.com/soumith/ganhacks</a>):</p>
+<div class="CDPAlignCenter1"><img class="image-border62" src="../images/00130.jpeg"/></div>
+
+
+            </article>
+
+            <footer class="calibre4">
+                
+            </footer>
+
+        </section>
+    </body></html>

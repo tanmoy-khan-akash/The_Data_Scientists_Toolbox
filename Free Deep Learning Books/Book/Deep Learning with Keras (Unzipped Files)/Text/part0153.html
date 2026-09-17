@@ -1,0 +1,68 @@
+<?xml version='1.0' encoding='utf-8'?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+  <head>
+    <title>Keras example — style transfer</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <link href="../stylesheet.css" rel="stylesheet" type="text/css"/>
+<link href="../page_styles.css" rel="stylesheet" type="text/css"/>
+</head>
+  <body class="calibre">
+        <section>
+
+            <header>
+                </header><h1 class="header-title" id="calibre_pb_0">Keras example — style transfer</h1>
+            
+
+            <article>
+                
+<p class="calibre1">An extension of deep dreaming was described in this paper (for more information refer to: <span><em class="calibre11">Image Style Transfer Using Convolutional Neural Networks</em>, by L. A. Gatys, A. S. Ecker, and M. Bethge, Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition, 2016</span>), which showed that trained neural networks, such as the VGG-16, learn both content and style, and these two can be manipulated independently. Thus an image of an object (content) could be styled to look like a painting by combining it with the image of a painting (style).</p>
+<p class="calibre1">Let us start, as usual, by importing our libraries:</p>
+<pre class="calibre21">
+from keras.applications import vgg16<br class="title-page-name"/>from keras import backend as K<br class="title-page-name"/>from scipy.misc import imresize<br class="title-page-name"/>import matplotlib.pyplot as plt<br class="title-page-name"/>import numpy as np<br class="title-page-name"/>import os
+</pre>
+<p class="calibre1">Our example will demonstrate styling our image of a cat with this image of a reproduction of Claude Monet's <em class="calibre11">The Japanese Bridge</em> by Rosalind Wheeler (<a href="https://goo.gl/0VXC39" target="_blank" class="calibre6">https://goo.gl/0VXC39</a>):</p>
+<pre class="calibre21">
+DATA_DIR = "../data"<br class="title-page-name"/>CONTENT_IMAGE_FILE = os.path.join(DATA_DIR, "cat.jpg")<br class="title-page-name"/>STYLE_IMAGE_FILE = os.path.join(DATA_DIR, "JapaneseBridgeMonetCopy.jpg")<br class="title-page-name"/>RESIZED_WH = 400<br class="title-page-name"/><br class="title-page-name"/>content_img_value = imresize(plt.imread(CONTENT_IMAGE_FILE), (RESIZED_WH, RESIZED_WH))<br class="title-page-name"/>style_img_value = imresize(plt.imread(STYLE_IMAGE_FILE), (RESIZED_WH, RESIZED_WH))<br class="title-page-name"/><br class="title-page-name"/>plt.subplot(121)<br class="title-page-name"/>plt.title("content")<br class="title-page-name"/>plt.imshow(content_img_value)<br class="title-page-name"/><br class="title-page-name"/>plt.subplot(122)<br class="title-page-name"/>plt.title("style")<br class="title-page-name"/>plt.imshow(style_img_value)<br class="title-page-name"/><br class="title-page-name"/>plt.show()
+</pre>
+<p class="calibre1">The output of the preceding example is as follows:</p>
+<div class="CDPAlignCenter"><img class="image-border10" src="../images/00201.jpeg"/></div>
+<p class="calibre1">As previously, we declare our two functions to convert back and forth from the image and the four-dimensional tensor that the CNN expects:</p>
+<pre class="calibre21">
+def preprocess(img):<br class="title-page-name"/>    img4d = img.copy()<br class="title-page-name"/>    img4d = img4d.astype("float64")<br class="title-page-name"/>    if K.image_dim_ordering() == "th":<br class="title-page-name"/>        # (H, W, C) -&gt; (C, H, W)<br class="title-page-name"/>        img4d = img4d.transpose((2, 0, 1))<br class="title-page-name"/>    img4d = np.expand_dims(img4d, axis=0)<br class="title-page-name"/>    img4d = vgg16.preprocess_input(img4d)<br class="title-page-name"/>    return img4d<br class="title-page-name"/><br class="title-page-name"/>def deprocess(img4d):<br class="title-page-name"/>    img = img4d.copy()<br class="title-page-name"/>    if K.image_dim_ordering() == "th":<br class="title-page-name"/>        # (B, C, H, W)<br class="title-page-name"/>        img = img.reshape((img4d.shape[1], img4d.shape[2], img4d.shape[3]))<br class="title-page-name"/>        # (C, H, W) -&gt; (H, W, C)<br class="title-page-name"/>        img = img.transpose((1, 2, 0))<br class="title-page-name"/>    else:<br class="title-page-name"/>        # (B, H, W, C)<br class="title-page-name"/>        img = img.reshape((img4d.shape[1], img4d.shape[2], img4d.shape[3]))<br class="title-page-name"/>    img[:, :, 0] += 103.939<br class="title-page-name"/>    img[:, :, 1] += 116.779<br class="title-page-name"/>    img[:, :, 2] += 123.68<br class="title-page-name"/>    # BGR -&gt; RGB<br class="title-page-name"/>    img = img[:, :, ::-1]<br class="title-page-name"/>    img = np.clip(img, 0, 255).astype("uint8")<br class="title-page-name"/>    return img
+</pre>
+<p class="calibre1">We declare tensors to hold the content image and the style image, and another tensor to hold the combined image. The content and style images are then concatenated into a single input tensor. The input tensor will be fed to the pre-trained VGG-16 network:</p>
+<pre class="calibre21">
+content_img = K.variable(preprocess(content_img_value))<br class="title-page-name"/>style_img = K.variable(preprocess(style_img_value))<br class="title-page-name"/>if K.image_dim_ordering() == "th":<br class="title-page-name"/>    comb_img = K.placeholder((1, 3, RESIZED_WH, RESIZED_WH))<br class="title-page-name"/>else:<br class="title-page-name"/>    comb_img = K.placeholder((1, RESIZED_WH, RESIZED_WH, 3))<br class="title-page-name"/><br class="title-page-name"/># concatenate images into single input<br class="title-page-name"/>input_tensor = K.concatenate([content_img, style_img, comb_img], axis=0)
+</pre>
+<p class="calibre1">We instantiate an instance of a pre-trained VGG-16 network, pre-trained with the ImageNet data, and with the fully connected layers excluded:</p>
+<pre class="calibre21">
+model = vgg16.VGG16(input_tensor=input_tensor, weights="imagenet", include_top=False)
+</pre>
+<p class="calibre1">As previously, we construct a layer dictionary to map the layer name to the output layer of the trained VGG-16 network:</p>
+<pre class="calibre21">
+layer_dict = {layer.name : layer.output for layer in model.layers}
+</pre>
+<p class="calibre1">The next block defines the code for computing the <kbd class="calibre12">content_loss</kbd>, the <kbd class="calibre12">style_loss</kbd>, and the <kbd class="calibre12">variational_loss</kbd>. Finally, we define our loss as a linear combination of these three losses:</p>
+<pre class="calibre21">
+def content_loss(content, comb):<br class="title-page-name"/>    return K.sum(K.square(comb - content))<br class="title-page-name"/><br class="title-page-name"/>def gram_matrix(x):<br class="title-page-name"/>    if K.image_dim_ordering() == "th":<br class="title-page-name"/>        features = K.batch_flatten(x)<br class="title-page-name"/>    else:<br class="title-page-name"/>        features = K.batch_flatten(K.permute_dimensions(x, (2, 0, 1)))<br class="title-page-name"/>    gram = K.dot(features, K.transpose(features))<br class="title-page-name"/>    return gram<br class="title-page-name"/><br class="title-page-name"/>def style_loss_per_layer(style, comb):<br class="title-page-name"/>    S = gram_matrix(style)<br class="title-page-name"/>    C = gram_matrix(comb)<br class="title-page-name"/>    channels = 3<br class="title-page-name"/>    size = RESIZED_WH * RESIZED_WH<br class="title-page-name"/>    return K.sum(K.square(S - C)) / (4 * (channels ** 2) * (size ** 2))<br class="title-page-name"/><br class="title-page-name"/>def style_loss():<br class="title-page-name"/>    stl_loss = 0.0<br class="title-page-name"/>    for i in range(NUM_LAYERS):<br class="title-page-name"/>        layer_name = "block{:d}_conv1".format(i+1)<br class="title-page-name"/>        layer_features = layer_dict[layer_name]<br class="title-page-name"/>        style_features = layer_features[1, :, :, :]<br class="title-page-name"/>        comb_features = layer_features[2, :, :, :]<br class="title-page-name"/>        stl_loss += style_loss_per_layer(style_features, comb_features)<br class="title-page-name"/>    return stl_loss / NUM_LAYERS<br class="title-page-name"/><br class="title-page-name"/>def variation_loss(comb):<br class="title-page-name"/>    if K.image_dim_ordering() == "th":<br class="title-page-name"/>        dx = K.square(comb[:, :, :RESIZED_WH-1, :RESIZED_WH-1] - <br class="title-page-name"/>                      comb[:, :, 1:, :RESIZED_WH-1])<br class="title-page-name"/>        dy = K.square(comb[:, :, :RESIZED_WH-1, :RESIZED_WH-1] - <br class="title-page-name"/>                      comb[:, :, :RESIZED_WH-1, 1:])<br class="title-page-name"/>    else:<br class="title-page-name"/>        dx = K.square(comb[:, :RESIZED_WH-1, :RESIZED_WH-1, :] - <br class="title-page-name"/>                      comb[:, 1:, :RESIZED_WH-1, :])<br class="title-page-name"/>        dy = K.square(comb[:, :RESIZED_WH-1, :RESIZED_WH-1, :] - <br class="title-page-name"/>                      comb[:, :RESIZED_WH-1, 1:, :])<br class="title-page-name"/>     return K.sum(K.pow(dx + dy, 1.25))<br class="title-page-name"/><br class="title-page-name"/>CONTENT_WEIGHT = 0.1<br class="title-page-name"/>STYLE_WEIGHT = 5.0<br class="title-page-name"/>VAR_WEIGHT = 0.01<br class="title-page-name"/>NUM_LAYERS = 5<br class="title-page-name"/><br class="title-page-name"/>c_loss = content_loss(content_img, comb_img)<br class="title-page-name"/>s_loss = style_loss()<br class="title-page-name"/>v_loss = variation_loss(comb_img)<br class="title-page-name"/>loss = (CONTENT_WEIGHT * c_loss) + (STYLE_WEIGHT * s_loss) + (VAR_WEIGHT * v_loss)
+</pre>
+<p class="calibre1">Here the content loss is the root mean square distance (also known as <strong class="calibre3">L2 distance</strong>) between the features of the content image extracted from the target layer and the combination image. Minimizing this has the effect of keeping the styled image close to the original one.</p>
+<p class="calibre1">The style loss is the L2 distance between the gram matrices of the base image representation and the style image. A gram matrix of a matrix <em class="calibre11">M</em> is the transpose of <em class="calibre11">M</em> multiplied by <em class="calibre11">M</em>, that is, <em class="calibre11">MT * M</em>. This loss measures how often features appear together in the content image representation and the style image. One practical implication of this is that the content and style matrices must be square.</p>
+<p class="calibre1">The total variation loss measures the difference between neighboring pixels. Minimizing this has the effect that neighboring pixels will be similar so the final image is smooth rather than <em class="calibre11">jumpy</em>.</p>
+<p class="calibre1">We calculate the gradient and the loss function, and run our network in reverse for five iterations:</p>
+<pre class="calibre21">
+grads = K.gradients(loss, comb_img)[0]<br class="title-page-name"/>f = K.function([comb_img], [loss, grads])<br class="title-page-name"/><br class="title-page-name"/>NUM_ITERATIONS = 5<br class="title-page-name"/>LEARNING_RATE = 0.001<br class="title-page-name"/><br class="title-page-name"/>content_img4d = preprocess(content_img_value)<br class="title-page-name"/>for i in range(NUM_ITERATIONS):<br class="title-page-name"/>    print("Epoch {:d}/{:d}".format(i+1, NUM_ITERATIONS))<br class="title-page-name"/>    loss_value, grads_value = f([content_img4d])<br class="title-page-name"/>    content_img4d += grads_value * LEARNING_RATE <br class="title-page-name"/>    plt.imshow(deprocess(content_img4d))<br class="title-page-name"/>    plt.show()
+</pre>
+<p class="calibre1">The output from the last two iterations is shown as follows. As you can see, it has picked up the impressionistic fuzziness and even the texture of the canvas in the final images:</p>
+<div class="CDPAlignCenter"><img class="image-border10" src="../images/00202.jpeg"/></div>
+<div class="CDPAlignCenter"><img class="image-border10" src="../images/00203.jpeg"/></div>
+
+
+            </article>
+
+            <footer class="calibre4">
+                
+            </footer>
+
+        </section>
+    </body></html>

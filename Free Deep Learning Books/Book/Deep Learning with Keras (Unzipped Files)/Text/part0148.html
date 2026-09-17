@@ -1,0 +1,31 @@
+<?xml version='1.0' encoding='utf-8'?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+  <head>
+    <title>Customizing Keras</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <link href="../stylesheet.css" rel="stylesheet" type="text/css"/>
+<link href="../page_styles.css" rel="stylesheet" type="text/css"/>
+</head>
+  <body class="calibre">
+        <section>
+
+            <header>
+                </header><h1 class="header-title" id="calibre_pb_0">Customizing Keras</h1>
+            
+
+            <article>
+                
+<p class="calibre1">Just as composing our basic building blocks into larger architectures enables us to build interesting deep learning models, sometimes we need to look at the other end of the spectrum. Keras has a lot of functionality built in already, so it is very likely that you can build all your models with the provided components and not feel the need for customization at all. In case you do need customization, Keras has you covered.</p>
+<p class="calibre1">As you will recall, Keras is a high level API that delegates to either a TensorFlow or Theano backend for the computational heavy lifting. Any code you build for your customization will call out to one of these backends. In order to keep your code portable across the two backends, your custom code should use the Keras backend API (<a href="https://keras.io/backend/" target="_blank" class="calibre6">https://keras.io/backend/</a>), which provides a set of functions that act like a facade over your chosen backend. Depending on the backend selected, the call to the backend facade will translate to the appropriate TensorFlow or Theano call. The full list of functions available and their detailed descriptions can be found on the Keras backend page.</p>
+<p class="calibre1">In addition to portability, using the backend API also results in more maintainable code, since Keras code is generally more high-level and compact compared to equivalent TensorFlow or Theano code. In the unlikely case that you do need to switch to using the backend directly, your Keras components can be used directly inside TensorFlow (not Theano though) code as described in this Keras blog (<a href="https://blog.keras.io/keras-as-a-simplified-interface-to-tensorflow-tutorial.html" target="_blank" class="calibre6">https://blog.keras.io/keras-as-a-simplified-interface-to-tensorflow-tutorial.html</a>).</p>
+<p class="calibre1">Customizing Keras typically means writing your own custom layer or custom distance function. In this section, we will demonstrate how to build some simple Keras layers. You will see more examples of using the backend functions to build other custom Keras components, such as objectives (loss functions), in subsequent sections.</p>
+
+
+            </article>
+
+            <footer class="calibre4">
+                
+            </footer>
+
+        </section>
+    </body></html>

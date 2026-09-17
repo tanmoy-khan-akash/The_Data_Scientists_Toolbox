@@ -1,0 +1,39 @@
+<?xml version='1.0' encoding='utf-8'?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+  <head>
+    <title>Recurrent Neural Network — RNN</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <link href="../stylesheet.css" rel="stylesheet" type="text/css"/>
+<link href="../page_styles.css" rel="stylesheet" type="text/css"/>
+</head>
+  <body class="calibre">
+        <section>
+
+            <header>
+                </header><h1 class="header-title" id="calibre_pb_0">Recurrent Neural Network — RNN</h1>
+            
+
+            <article>
+                
+<p class="calibre1">In <a target="_blank" href="part0083.html" class="calibre6">Chapter 3</a>, <em class="calibre11">Deep Learning with ConvNets</em>, we learned about <strong class="calibre3">convolutional neural networks</strong> (CNN) and saw how they exploit the spatial geometry of their input. For example, CNNs apply convolution and pooling operations in one dimension for audio and text data along the time dimension, in two dimensions for images along the (height x width) dimensions and in three dimensions, for videos along the (height x width x time) dimensions.</p>
+<p class="calibre1">In this chapter, we will learn about <strong class="calibre3">recurrent neural networks</strong> (<strong class="calibre3">RNN</strong>), a class of neural networks that exploit the sequential nature of their input. Such inputs could be text, speech, time series, and anything else where the occurrence of an element in the sequence is dependent on the elements that appeared before it. For example, the next word in the sentence <em class="calibre11">the dog...</em> is more likely to be <em class="calibre11">barks</em> than <em class="calibre11">car</em>, therefore, given such a sequence, an RNN is more likely to predict <em class="calibre11">barks</em> than <em class="calibre11">car</em>.</p>
+<p class="calibre1">An RNN can be thought of as a graph of RNN cells, where each cell performs the same operation on every element in the sequence. RNNs are very flexible and have been used to solve problems such as speech recognition, language modeling, machine translation, sentiment analysis, and image captioning, to name a few. RNNs can be adapted to different types of problems by rearranging the way the cells are arranged in the graph. We will see some examples of these configurations and how they are used to solve specific problems.</p>
+<p class="calibre1">We will also learn about a major limitation of the SimpleRNN cell, and how two variants of the SimpleRNN cell—<strong class="calibre3">long short term memory</strong> (<strong class="calibre3">LSTM</strong>) and <strong class="calibre3">gated recurrent unit</strong> (<strong class="calibre3">GRU</strong>)—overcome this limitation. Both LSTM and GRU are drop-in replacements for the SimpleRNN cell, so just replacing the RNN cell with one of these variants can often result in a major performance improvement in your network. While LSTM and GRU are not the only variants, it has been shown empirically (for more information refer to the articles: <em class="calibre11">An Empirical Exploration of Recurrent Network Architectures</em>, by R. Jozefowicz, W. Zaremba, and I. Sutskever, JMLR, 2015 and <em class="calibre11">LSTM: A Search Space Odyssey</em>, by K. Greff, arXiv:1503.04069, 2015) that they are the best choices for most sequence problems.</p>
+<p class="calibre1">Finally, we will also learn about some tips to improve the performance of our RNNs and when and how to apply them.</p>
+<p class="calibre1">In this chapter, we will cover the following topics:</p>
+<ul class="calibre15">
+<li class="calibre16">SimpleRNN cell</li>
+<li class="calibre16">Basic RNN implementation in Keras in generating text</li>
+<li class="calibre16">RNN topologies</li>
+<li class="calibre16">LSTM, GRU, and other RNN variants</li>
+</ul>
+
+
+            </article>
+
+            <footer class="calibre4">
+                
+            </footer>
+
+        </section>
+    </body></html>

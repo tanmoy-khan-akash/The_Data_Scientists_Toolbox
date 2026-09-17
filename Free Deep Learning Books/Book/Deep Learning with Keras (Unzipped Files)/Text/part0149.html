@@ -1,0 +1,39 @@
+<?xml version='1.0' encoding='utf-8'?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+  <head>
+    <title>Keras example — using the lambda layer</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <link href="../stylesheet.css" rel="stylesheet" type="text/css"/>
+<link href="../page_styles.css" rel="stylesheet" type="text/css"/>
+</head>
+  <body class="calibre">
+        <section>
+
+            <header>
+                </header><h1 class="header-title" id="calibre_pb_0">Keras example — using the lambda layer</h1>
+            
+
+            <article>
+                
+<p class="calibre1">Keras provides a lambda layer; it can wrap a function of your choosing. For example, if you wanted to build a layer that squares its input tensor element-wise, you can say simply:</p>
+<pre class="calibre21">
+model.add(lambda(lambda x: x ** 2))
+</pre>
+<p class="calibre1">You can also wrap functions within a lambda layer. For example, if you want to build a custom layer that computes the element-wise euclidean distance between two input tensors, you would define the function to compute the value itself, as well as one that returns the output shape from this function, like so:</p>
+<pre class="calibre21">
+def euclidean_distance(vecs):<br class="title-page-name"/>    x, y = vecs<br class="title-page-name"/>    return K.sqrt(K.sum(K.square(x - y), axis=1, keepdims=True))<br class="title-page-name"/><br class="title-page-name"/>def euclidean_distance_output_shape(shapes):<br class="title-page-name"/>    shape1, shape2 = shapes<br class="title-page-name"/>    return (shape1[0], 1)
+</pre>
+<p class="calibre1">You can then call these functions using the lambda layer shown as follows:</p>
+<pre class="calibre21">
+lhs_input = Input(shape=(VECTOR_SIZE,))<br class="title-page-name"/>lhs = dense(1024, kernel_initializer="glorot_uniform", activation="relu")(lhs_input)<br class="title-page-name"/><br class="title-page-name"/>rhs_input = Input(shape=(VECTOR_SIZE,))<br class="title-page-name"/>rhs = dense(1024, kernel_initializer="glorot_uniform", activation="relu")(rhs_input)<br class="title-page-name"/><br class="title-page-name"/>sim = lambda(euclidean_distance, output_shape=euclidean_distance_output_shape)([lhs, rhs])
+</pre>
+
+
+            </article>
+
+            <footer class="calibre4">
+                
+            </footer>
+
+        </section>
+    </body></html>

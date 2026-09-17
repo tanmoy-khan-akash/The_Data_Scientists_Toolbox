@@ -1,0 +1,32 @@
+<?xml version='1.0' encoding='utf-8'?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+  <head>
+    <title>Other RNN variants</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <link href="../stylesheet.css" rel="stylesheet" type="text/css"/>
+<link href="../page_styles.css" rel="stylesheet" type="text/css"/>
+</head>
+  <body class="calibre">
+        <section>
+
+            <header>
+                </header><h1 class="header-title" id="calibre_pb_0">Other RNN variants</h1>
+            
+
+            <article>
+                
+<p class="calibre1">We will round up this chapter by looking at some more variants of the RNN cell. RNN is an area of active research and many researchers have suggested variants for specific purposes.</p>
+<p class="calibre1">One popular LSTM variant is adding <em class="calibre11">peephole connections</em>, which means that the gate layers are allowed to peek at the cell state. This was introduced by Gers and Schmidhuber (for more information refer to the article: <span><em class="calibre11">Learning Precise Timing with LSTM Recurrent Networks</em>, by F. A. Gers, N. N. Schraudolph, and J. Schmidhuber, Journal of Machine Learning Research, pp. 115-43</span>) in 2002.</p>
+<p class="calibre1">Another LSTM variant, that ultimately led to the GRU, is to use coupled forget and output gates. Decisions about what information to forget and what to acquire are made together, and the new information replaces the forgotten information.</p>
+<p class="calibre1">Keras provides only the three basic variants, namely the SimpleRNN, LSTM, and GRU layers. However, that isn't necessarily a problem. Gref conducted an experimental survey (for more information refer to the article: <span><em class="calibre11">LSTM: A Search Space Odyssey</em>, by K. Greff, arXiv:1503.04069, 2015</span>) of many LSTM variants, and concluded that none of the variants improved significantly over the standard LSTM architecture. So the components provided in Keras are usually sufficient to solve most problems.</p>
+<p class="calibre1">In case you do need the capability to construct your own layer, you can build custom Keras layers. We will look at how to build a custom layer in the next chapter. There is also an open source framework called recurrent shop (<a href="https://github.com/datalogai/recurrentshop" target="_blank" class="calibre6">https://github.com/datalogai/recurrentshop</a>) that allows you to build complex recurrent neural networks with Keras.</p>
+
+
+            </article>
+
+            <footer class="calibre4">
+                
+            </footer>
+
+        </section>
+    </body></html>

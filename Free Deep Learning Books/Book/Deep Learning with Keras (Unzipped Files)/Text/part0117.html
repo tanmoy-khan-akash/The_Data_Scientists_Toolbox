@@ -1,0 +1,43 @@
+<?xml version='1.0' encoding='utf-8'?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+  <head>
+    <title>Extracting word2vec embeddings from the model</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <link href="../stylesheet.css" rel="stylesheet" type="text/css"/>
+<link href="../page_styles.css" rel="stylesheet" type="text/css"/>
+</head>
+  <body class="calibre">
+        <section>
+
+            <header>
+                </header><h1 class="header-title" id="calibre_pb_0">Extracting word2vec embeddings from the model</h1>
+            
+
+            <article>
+                
+<p class="calibre1">As noted previously, even though both word2vec models can be reduced to a classification problem, we are not really interested in the classification problem itself. Rather, we are interested in the side effect of this classification process, that is, the weight matrix that transforms a word from the vocabulary to its dense, low-dimensional distributed representation.</p>
+<p class="calibre1">There are many examples of how these distributed representations exhibit often surprising syntactic and semantic information. For example, as shown in the following figure from Tomas Mikolov's presentation at NIPS 2013 (for more information refer to the article: <span><em class="calibre11">Learning Representations of Text using Neural Networks</em>, by T. Mikolov, I. Sutskever, K. Chen, G. S. Corrado, J. Dean, Q. Le, and T. Strohmann, NIPS 2013</span>), vectors connecting words that have similar meanings but opposite genders are approximately parallel in the reduced 2D space, and we can often get very intuitive results by doing arithmetic with the word vectors. The presentation provides many other examples.</p>
+<div class="CDPAlignCenter"><img class="image-border10" src="../images/00142.jpeg"/></div>
+<p class="calibre1">Intuitively, the training process imparts enough information to the internal encoding to predict an output word that occurs in the context of an input word. So points representing words shift in this space to be nearer to words with which it co-occurs. This causes similar words to clump together. Words that co-occur with these similar words also clump together in a similar way. As a result, vectors connecting points representing semantically related points tend to exhibit these regularities in the distributed representation.</p>
+<p class="calibre1">Keras provides a way to extract weights from trained models. For the skip-gram example, the embedding weights can be extracted as follows:</p>
+<pre class="calibre21">
+merge_layer = model.layers[0]<br class="title-page-name"/>word_model = merge_layer.layers[0]<br class="title-page-name"/>word_embed_layer = word_model.layers[0]<br class="title-page-name"/>weights = word_embed_layer.get_weights()[0]
+</pre>
+<p class="calibre1">Similarly, the embedding weights for the CBOW example can be extracted using the following one-liner:</p>
+<pre class="calibre21">
+weights = model.layers[0].get_weights()[0]
+</pre>
+<p class="calibre1">In both cases, the shape of the weights matrix is <kbd class="calibre12">vocab_size</kbd> and <kbd class="calibre12">embed_size</kbd>. In order to compute the distributed representation for a word in the vocabulary, you will need to construct a one-hot vector by setting the position of the word index to one in a zero vector of size (<kbd class="calibre12">vocab_size</kbd>) and multiply it with the matrix to get the embedding vector of size (<kbd class="calibre12">embed_size</kbd>).</p>
+<p class="calibre1">A visualization of word embeddings from work done by Christopher Olah (for more information refer to the article: <span><em class="calibre11">Document Embedding with Paragraph Vectors</em>, by Andrew M. Dai, Christopher Olah, and Quoc V. Le, arXiv:1507.07998, 2015</span>) is shown as follows. This is a visualization of word embeddings reduced to two dimensions and visualized with T-SNE. The words forming entity types were chosen using WordNet synset clusters. As you can see, points corresponding to similar entity types tend to cluster together:</p>
+<div class="CDPAlignCenter"><img class="image-border70" src="../images/00143.jpeg"/></div>
+<p class="calibre1">The source code for the example can be found in <kbd class="calibre12">keras_skipgram.py</kbd> in the source code download.</p>
+
+
+            </article>
+
+            <footer class="calibre4">
+                
+            </footer>
+
+        </section>
+    </body></html>

@@ -1,0 +1,39 @@
+<?xml version='1.0' encoding='utf-8'?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+  <head>
+    <title>Vanishing and exploding gradients</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <link href="../stylesheet.css" rel="stylesheet" type="text/css"/>
+<link href="../page_styles.css" rel="stylesheet" type="text/css"/>
+</head>
+  <body class="calibre">
+        <section>
+
+            <header>
+                </header><h1 class="header-title" id="calibre_pb_0">Vanishing and exploding gradients</h1>
+            
+
+            <article>
+                
+<p class="calibre1">Just like traditional neural networks, training the RNN also involves backpropagation. The difference in this case is that since the parameters are shared by all time steps, the gradient at each output depends not only on the current time step, but also on the previous ones. This process is called <strong class="calibre3">backpropagation through time</strong> (<strong class="calibre3">BPTT</strong>) (for more information refer to the article: <span><em class="calibre11">Learning Internal Representations by Backpropagating errors</em>, by G. E. Hinton, D. E. Rumelhart, and R. J. Williams, Parallel Distributed Processing: Explorations in the Microstructure of Cognition 1, 1985</span>):</p>
+<div class="CDPAlignCenter"><img class="image-border10" src="../images/00156.jpeg"/></div>
+<p class="calibre1">Consider the small three layer RNN shown in the preceding diagram. During the forward propagation (shown by the solid lines), the network produces predictions that are compared to the labels to compute a loss <em class="calibre11">L<sub class="calibre22">t</sub></em> at each time step. During backpropagation (shown by dotted lines), the gradients of the loss with respect to the parameters <em class="calibre11">U</em>, <em class="calibre11">V</em>, and <em class="calibre11">W</em> are computed at each time step and the parameters are updated with the sum of the gradients.</p>
+<p class="calibre1">The following equation shows the gradient of the loss with respect to <em class="calibre11">W</em>, the matrix that encodes weights for the long term dependencies. We focus on this part of the update because it is the cause of the vanishing and exploding gradient problem. The other two gradients of the loss with respect to the matrices <em class="calibre11">U</em> and <em class="calibre11">V</em> are also summed up across all time steps in a similar way:</p>
+<div class="CDPAlignCenter"><img src="../images/00157.jpeg" class="calibre61"/></div>
+<p class="calibre1">Let us now look at what happens to the gradient of the loss at the last time step (<em class="calibre11">t=3</em>). As you can see, this gradient can be decomposed to a product of three sub gradients using the chain rule. The gradient of the hidden state <em class="calibre11">h2</em> with respect to <em class="calibre11">W</em> can be further decomposed as the sum of the gradient of each hidden state with respect to the previous one. Finally, each gradient of the hidden state with respect to the previous one can be further decomposed as the product of gradients of the current hidden state against the previous one:</p>
+<div class="CDPAlignCenter"><img src="../images/00158.jpeg" class="calibre62"/></div>
+<p class="calibre1">Similar calculations are done to compute the gradient of losses <em class="calibre11">L<sub class="calibre22">1</sub></em> and <em class="calibre11">L<sub class="calibre22">2</sub></em> (at time steps 1 and 2) with respect to <em class="calibre11">W</em> and to sum them into the gradient update for <em class="calibre11">W</em>. We will not explore the math further in this book. If you want to do so on your own, this WILDML blog post (<a href="https://goo.gl/l06lbX" target="_blank" class="calibre6">https://goo.gl/l06lbX</a>) has a very good explanation of BPTT, including more detailed derivations of the mathematics behind the process.</p>
+<p class="calibre1">For our purposes, the final form of the gradient in the equation above tells us why RNNs have the problem of vanishing and exploding gradients. Consider the case where the individual gradients of a hidden state with respect to the previous one is less than one. As we backpropagate across multiple time steps, the product of gradients get smaller and smaller, leading to the problem of vanishing gradients. Similarly, if the gradients are larger than one, the products get larger and larger, leading to the problem of exploding gradients.</p>
+<p class="calibre1">The effect of vanishing gradients is that the gradients from steps that are far away do not contribute anything to the learning process, so the RNN ends up not learning long range dependencies. Vanishing gradients can happen for traditional neural networks as well, it is just more visible in case of RNNs, since RNNs tend to have many more layers (time steps) over which back propagation must occur.</p>
+<p class="calibre1">Exploding gradients are more easily detectable, the gradients will become very large and then turn into <strong class="calibre3">not a number</strong> (<strong class="calibre3">NaN</strong>) and the training process will crash. Exploding gradients can be controlled by clipping them at a predefined threshold as discussed in the paper: <span><em class="calibre11">On the Difficulty of Training Recurrent Neural Networks</em>, by R. Pascanu, T. Mikolov, and Y. Bengio, ICML, Pp 1310-1318, 2013.</span></p>
+<p class="calibre1">While there are a few approaches to minimize the problem of vanishing gradients, such as proper initialization of the <em class="calibre11">W</em> matrix, using a ReLU instead of <em class="calibre11">tanh</em> layers, and pre-training the layers using unsupervised methods, the most popular solution is to use the LSTM or GRU architectures. These architectures have been designed to deal with the vanishing gradient problem and learn long term dependencies more effectively. We will learn more about LSTM and GRU architectures later in this chapter.</p>
+
+
+            </article>
+
+            <footer class="calibre4">
+                
+            </footer>
+
+        </section>
+    </body></html>

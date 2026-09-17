@@ -1,0 +1,35 @@
+<?xml version='1.0' encoding='utf-8'?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+  <head>
+    <title>Bidirectional RNNs</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <link href="../stylesheet.css" rel="stylesheet" type="text/css"/>
+<link href="../page_styles.css" rel="stylesheet" type="text/css"/>
+</head>
+  <body class="calibre">
+        <section>
+
+            <header>
+                </header><h1 class="header-title" id="calibre_pb_0">Bidirectional RNNs</h1>
+            
+
+            <article>
+                
+<p class="calibre1">At a given time step <em class="calibre11">t</em>, the output of the RNN is dependent on the outputs at all previous time steps. However, it is entirely possible that the output is also dependent on the future outputs as well. This is especially true for applications such as NLP, where the attributes of the word or phrase we are trying to predict may be dependent on the context given by the entire enclosing sentence, not just the words that came before it. Bidirectional RNNs also help a network architecture place equal emphasis on the beginning and end of the sequence, and increase the data available for training.</p>
+<p class="calibre1">Bidirectional RNNs are two RNNs stacked on top of each other, reading the input in opposite directions. So in our example, one RNN will read the words left to right and the other RNN will read the words right to left. The output at each time step will be based on the hidden state of both RNNs.</p>
+<p class="calibre1">Keras provides support for bidirectional RNNs through a bidirectional wrapper layer. For example, for our POS tagging example, we could make our LSTMs bidirectional simply by wrapping them with this Bidirectional wrapper, as shown in the model definition code as follows:</p>
+<pre class="calibre21">
+from keras.layers.wrappers import Bidirectional<br class="title-page-name"/><br class="title-page-name"/>model = Sequential()<br class="title-page-name"/>model.add(Embedding(s_vocabsize, EMBED_SIZE,<br class="title-page-name"/>input_length=MAX_SEQLEN))<br class="title-page-name"/>model.add(SpatialDropout1D(Dropout(0.2)))<br class="title-page-name"/>model.add(Bidirectional(LSTM(HIDDEN_SIZE, dropout=0.2, recurrent_dropout=0.2)))<br class="title-page-name"/>model.add(RepeatVector(MAX_SEQLEN))<br class="title-page-name"/>model.add(Bidirectional(LSTM(HIDDEN_SIZE, return_sequences=True)))<br class="title-page-name"/>model.add(TimeDistributed(Dense(t_vocabsize)))<br class="title-page-name"/>model.add(Activation("softmax"))
+</pre>
+<p class="calibre1">This gives us performance comparable to the unidirectional LSTM example shown as follows:</p>
+<div class="CDPAlignCenter1"><img class="image-border86" src="../images/00169.jpeg"/></div>
+
+
+            </article>
+
+            <footer class="calibre4">
+                
+            </footer>
+
+        </section>
+    </body></html>

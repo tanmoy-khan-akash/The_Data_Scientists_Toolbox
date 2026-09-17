@@ -1,0 +1,71 @@
+<?xml version='1.0' encoding='utf-8'?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+  <head>
+    <title>Keras regression example — predicting benzene levels in the air</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <link href="../stylesheet.css" rel="stylesheet" type="text/css"/>
+<link href="../page_styles.css" rel="stylesheet" type="text/css"/>
+</head>
+  <body class="calibre">
+        <section>
+
+            <header>
+                </header><h1 class="header-title" id="calibre_pb_0">Keras regression example — predicting benzene levels in the air</h1>
+            
+
+            <article>
+                
+<p class="calibre1">In this example, we will predict the concentration of benzene in the atmosphere given some other variables such as concentrations of carbon monoxide, nitrous oxide, and so on in the atmosphere as well as temperature and relative humidity. The dataset we will use is the air quality dataset from the UCI Machine Learning Repository (<a href="https://archive.ics.uci.edu/ml/datasets/Air+Quality" target="_blank" class="calibre6">https://archive.ics.uci.edu/ml/datasets/Air+Quality</a>). The dataset contains 9,358 instances of hourly averaged readings from an array of five metal oxide chemical sensors. The sensor array was located in a city in Italy, and the recordings were made from March 2004 to February 2005.</p>
+<p class="calibre1">As usual, first we import all our necessary libraries:</p>
+<pre class="calibre21">
+from keras.layers import Input<br class="title-page-name"/>from keras.layers.core import dense<br class="title-page-name"/>from keras.models import Model<br class="title-page-name"/>from sklearn.preprocessing import StandardScaler<br class="title-page-name"/>import matplotlib.pyplot as plt<br class="title-page-name"/>import numpy as np<br class="title-page-name"/>import os<br class="title-page-name"/>import pandas as pd
+</pre>
+<p class="calibre1">The dataset is provided as a CSV file. We load the input data into a Pandas (for more information refer to: <a href="http://pandas.pydata.org/" target="_blank" class="calibre6">http://pandas.pydata.org/</a>) data frame. Pandas is a popular data analysis library built around data frames, a concept borrowed from the R language. We use Pandas here to read the dataset for two reasons. First, the dataset contains empty fields where they could not be recorded for some reason. Second, the dataset uses commas for decimal points, a custom common in some European countries. Pandas has built-in support to handle both situations, along with a few other conveniences, as we will see soon:</p>
+<pre class="calibre21">
+DATA_DIR = "../data"<br class="title-page-name"/>AIRQUALITY_FILE = os.path.join(DATA_DIR, "AirQualityUCI.csv")<br class="title-page-name"/><br class="title-page-name"/>aqdf = pd.read_csv(AIRQUALITY_FILE, sep=";", decimal=",", header=0)<br class="title-page-name"/><br class="title-page-name"/># remove first and last 2 cols <br class="title-page-name"/>del aqdf["Date"]<br class="title-page-name"/>del aqdf["Time"]<br class="title-page-name"/>del aqdf["Unnamed: 15"]<br class="title-page-name"/>del aqdf["Unnamed: 16"]<br class="title-page-name"/><br class="title-page-name"/># fill NaNs in each column with the mean value<br class="title-page-name"/>aqdf = aqdf.fillna(aqdf.mean())<br class="title-page-name"/><br class="title-page-name"/>Xorig = aqdf.as_matrix()
+</pre>
+<p class="calibre1">The preceding example removes the first two columns, which contains the observation date and time, and the last two columns which seem to be spurious. Next we replace the empty fields with the average value for the column. Finally, we export the data frame as a matrix for downstream use.</p>
+<p class="calibre1">One thing to note is that each column of the data has different scales since they measure different quantities. For example, the concentration of tin oxide is in the 1,000 range, while non-methanic hydrocarbons is in the 100 range. In many situations our features are homogeneous so scaling is not an issue, but in cases like this it is generally a good practice to scale the data. Scaling here consists of subtracting from each column the mean of the column and dividing by its standard deviation:</p>
+<div class="CDPAlignCenter"><img src="../images/00175.jpeg" class="calibre64"/></div>
+<p class="calibre1">To do this, we use the <kbd class="calibre12">StandardScaler</kbd> class provided by the <kbd class="calibre12">scikit-learn</kbd> library, shown as follows. We store the mean and standard deviations because we will need this later when reporting results or predicting against new data. Our target variable is the fourth column in our input dataset, so we split this scaled data into input variables <kbd class="calibre12">X</kbd> and target variable <kbd class="calibre12">y</kbd>:</p>
+<pre class="calibre21">
+scaler = StandardScaler()<br class="title-page-name"/>Xscaled = scaler.fit_transform(Xorig)<br class="title-page-name"/># store these off for predictions with unseen data<br class="title-page-name"/>Xmeans = scaler.mean_<br class="title-page-name"/>Xstds = scaler.scale_<br class="title-page-name"/><br class="title-page-name"/>y = Xscaled[:, 3]<br class="title-page-name"/>X = np.delete(Xscaled, 3, axis=1)
+</pre>
+<p class="calibre1">We then split the data into the first 70% for training and the last 30% for testing. This gives us 6,549 records for training and 2,808 records for testing:</p>
+<pre class="calibre21">
+train_size = int(0.7 * X.shape[0])<br class="title-page-name"/>Xtrain, Xtest, ytrain, ytest = X[0:train_size], X[train_size:], <br class="title-page-name"/>    y[0:train_size], y[train_size:]
+</pre>
+<p class="calibre1">Next we define our network. This is a simple two layer dense network that takes a vector of 12 features as input and outputs a scaled prediction. The hidden dense layer has eight neurons. We initialize weight matrices for both dense layers with a specific initialization scheme called <em class="calibre11">glorot uniform</em>. For a full list of initialization schemes, please refer to the Keras initializations here: <a href="https://keras.io/initializers/" target="_blank" class="calibre6">https://keras.io/initializers/</a>. The loss function used is mean squared error (<kbd class="calibre12">mse</kbd>) and the optimizer is <kbd class="calibre12">adam</kbd>:</p>
+<pre class="calibre21">
+readings = Input(shape=(12,))<br class="title-page-name"/>x = dense(8, activation="relu", kernel_initializer="glorot_uniform")(readings)<br class="title-page-name"/>benzene = dense(1, kernel_initializer="glorot_uniform")(x)<br class="title-page-name"/><br class="title-page-name"/>model = Model(inputs=[readings], outputs=[benzene])<br class="title-page-name"/>model.compile(loss="mse", optimizer="adam")
+</pre>
+<p class="calibre1">We train this model for 20 epochs and batch size of 10:</p>
+<pre class="calibre21">
+NUM_EPOCHS = 20<br class="title-page-name"/>BATCH_SIZE = 10<br class="title-page-name"/><br class="title-page-name"/>history = model.fit(Xtrain, ytrain, batch_size=BATCH_SIZE, epochs=NUM_EPOCHS,<br class="title-page-name"/>    validation_split=0.2)
+</pre>
+<p class="calibre1">This results in a model that has a mean squared error of 0.0003 (approximately 2% RMSE) on the training set and 0.0016 (approximately 4% RMSE) on the validation set, as shown in the logs of the training step here:</p>
+<div class="CDPAlignCenter"><img class="image-border89" src="../images/00176.jpeg"/></div>
+<p class="calibre1">We also look at some values of benzene concentrations that were originally recorded and compare them to those predicted by our model. Both actual and predicted values are rescaled from their scaled <em class="calibre11">z</em>-values to actual values:</p>
+<pre class="calibre21">
+ytest_ = model.predict(Xtest).flatten()<br class="title-page-name"/>for i in range(10):<br class="title-page-name"/>    label = (ytest[i] * Xstds[3]) + Xmeans[3]<br class="title-page-name"/>    prediction = (ytest_[i] * Xstds[3]) + Xmeans[3]<br class="title-page-name"/>    print("Benzene Conc. expected: {:.3f}, predicted: {:.3f}".format(label, prediction))
+</pre>
+<p class="calibre1">The side-by-side comparison shows that the predictions are quite close to the actual values:</p>
+<pre class="calibre21">
+<span>Benzene Conc. expected: 4.600, predicted: 5.254<br class="title-page-name"/>Benzene Conc. expected: 5.500, predicted: 4.932<br class="title-page-name"/>Benzene Conc. expected: 6.500, predicted: 5.664<br class="title-page-name"/>Benzene Conc. expected: 10.300, predicted: 8.482<br class="title-page-name"/>Benzene Conc. expected: 8.900, predicted: 6.705<br class="title-page-name"/>Benzene Conc. expected: 14.000, predicted: 12.928<br class="title-page-name"/>Benzene Conc. expected: 9.200, predicted: 7.128<br class="title-page-name"/>Benzene Conc. expected: 8.200, predicted: 5.983<br class="title-page-name"/>Benzene Conc. expected: 7.200, predicted: 6.256<br class="title-page-name"/>Benzene Conc. expected: 5.500, predicted: 5.184</span>
+</pre>
+<p class="calibre1">Finally, we graph the actual values against the predictions for our entire test set. Once more, we see that the network predicts values that are very close to the expected values:</p>
+<pre class="calibre21">
+plt.plot(np.arange(ytest.shape[0]), (ytest * Xstds[3]) / Xmeans[3], <br class="title-page-name"/>    color="b", label="actual")<br class="title-page-name"/>plt.plot(np.arange(ytest_.shape[0]), (ytest_ * Xstds[3]) / Xmeans[3], <br class="title-page-name"/>    color="r", alpha=0.5, label="predicted")<br class="title-page-name"/>plt.xlabel("time")<br class="title-page-name"/>plt.ylabel("C6H6 concentrations")<br class="title-page-name"/>plt.legend(loc="best")<br class="title-page-name"/>plt.show()
+</pre>
+<p class="calibre1">The output of the preceding example is as follows:</p>
+<div class="CDPAlignCenter"><img class="image-border10" src="../images/00177.jpeg"/></div>
+
+
+            </article>
+
+            <footer class="calibre4">
+                
+            </footer>
+
+        </section>
+    </body></html>

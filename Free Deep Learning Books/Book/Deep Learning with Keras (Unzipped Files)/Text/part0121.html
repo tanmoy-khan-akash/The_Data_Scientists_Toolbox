@@ -1,0 +1,67 @@
+<?xml version='1.0' encoding='utf-8'?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+  <head>
+    <title>Learn embeddings from scratch</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <link href="../stylesheet.css" rel="stylesheet" type="text/css"/>
+<link href="../page_styles.css" rel="stylesheet" type="text/css"/>
+</head>
+  <body class="calibre">
+        <section>
+
+            <header>
+                </header><h1 class="header-title" id="calibre_pb_0">Learn embeddings from scratch</h1>
+            
+
+            <article>
+                
+<p class="calibre1">In this example, we will train a one-dimensional <strong class="calibre3">convolutional neural network</strong> (<strong class="calibre3">CNN</strong>) to classify sentences as either positive or negative. You have already seen how to classify images using two-dimensional CNNs in <a target="_blank" href="part0083.html" class="calibre6">Chapter 3</a>, <em class="calibre11">Deep Learning with ConvNets</em>. Recall that CNNs exploit spatial structure in images by enforcing local connectivity between neurons of adjacent layers.</p>
+<p class="calibre1">Words in sentences exhibit linear structure in the same way as images exhibit spatial structure. Traditional (non-deep learning) NLP approaches to language modeling involve creating word <em class="calibre11">n</em>-grams (<a href="https://en.wikipedia.org/wiki/N-gram" class="calibre6">https://en.wikipedia.org/wiki/N-gram</a><a href="https://en.wikipedia.org/wiki/N-gram" target="_blank" class="calibre6">)</a> to exploit this linear structure inherent among words. One-dimensional CNNs do something similar, learning convolution filters that operate on sentences a few words at a time, and max pooling the results to create a vector that represents the most important ideas in the sentence.</p>
+<p class="calibre1">There is another class of neural network, called <strong class="calibre3">recurrent neural network</strong> (<strong class="calibre3">RNN</strong>), which is specially designed to handle sequence data, including text, which is a sequence of words. The processing in RNNs is different from that in a CNN. We will learn about RNNs in a future chapter.</p>
+<p class="calibre1">In our example network, the input text is converted to a sequence of word indices. Note that we have used the <strong class="calibre3">natural language toolkit</strong> (<strong class="calibre3">NLTK</strong>) to parse the text into sentences and words. We could also have used regular expressions to do this, but the statistical models supplied by NLTK are more powerful at parsing than regular expressions. If you are working with word embeddings, it is very likely that you are also working with NLP, in which case you would have NLTK installed already.</p>
+<div class="packtinfobox">This link (<a href="http://www.nltk.org/install.html" target="_blank" class="calibre56">http://www.nltk.org/install.html</a>) has information to help you install NLTK on your machine. You will also need to install NLTK data, which is some trained corpora that comes standard with NLTK. Installation instructions for NLTK data are available here: <a href="http://www.nltk.org/data.html" target="_blank" class="calibre56">http://www.nltk.org/data.html</a>.</div>
+<p class="calibre1">The sequence of word indices is fed into an array of embedding layers of a set size (in our case, the number of words in the longest sentence). The embedding layer is initialized by default to random values. The output of the embedding layer is connected to a 1D convolutional layer that convolves (in our example) word trigrams in 256 different ways (essentially, it applies different learned linear combinations of weights on the word embeddings). These features are then pooled into a single pooled word by a global max pooling layer. This vector (256) is then input to a dense layer, which outputs a vector (2). A softmax activation will return a pair of probabilities, one corresponding to positive sentiment and another corresponding to negative sentiment. The network is shown in the following figure:</p>
+<div class="CDPAlignCenter"><img class="image-border73" src="../images/00147.jpeg"/></div>
+<p class="CDPAlignLeft1">Let us look at how to code this up using Keras. First we declare our imports. Right after the constants, you will notice that I set the <kbd class="calibre12">random.seed</kbd> value to <kbd class="calibre12">42</kbd>. This is because we want consistent results between runs. Since the initializations of the weight matrices are random, differences in initialization can lead to differences in output, so this is a way to control that:</p>
+<pre class="calibre21">
+from keras.layers.core import Dense, Dropout, SpatialDropout1D<br class="title-page-name"/>from keras.layers.convolutional import Conv1D<br class="title-page-name"/>from keras.layers.embeddings import Embedding<br class="title-page-name"/>from keras.layers.pooling import GlobalMaxPooling1D<br class="title-page-name"/>from kera<br class="title-page-name"/>s.models import Sequential<br class="title-page-name"/>from keras.preprocessing.sequence import pad_sequences<br class="title-page-name"/>from keras.utils import np_utils<br class="title-page-name"/>from sklearn.model_selection import train_test_split<br class="title-page-name"/>import collections<br class="title-page-name"/>import matplotlib.pyplot as plt<br class="title-page-name"/>import nltk<br class="title-page-name"/>import numpy as np<br class="title-page-name"/><br class="title-page-name"/>np.random.seed(42)
+</pre>
+<p class="calibre1">We declare our constants. For all subsequent examples in this chapter, we will classify sentences from the UMICH SI650 sentiment classification competition on Kaggle. The dataset has around 7,000 sentences, and is labeled <em class="calibre11">1</em> for positive and <em class="calibre11">0</em> for negative. The <kbd class="calibre12">INPUT_FILE</kbd> defines the path to this file of sentences and labels. The format of the file is a sentiment label (<em class="calibre11">0</em> or <em class="calibre11">1</em>) followed by a tab, followed by a sentence.</p>
+<p class="calibre1">The <kbd class="calibre12">VOCAB_SIZE</kbd> setting indicates that we will consider only the top 5,000 tokens in the text. The <kbd class="calibre12">EMBED_SIZE</kbd> setting is the size of the embedding that will be generated by the embedding layer in the network. <kbd class="calibre12">NUM_FILTERS</kbd> is the number of convolution filters we will train for our convolution layer, and <kbd class="calibre12">NUM_WORDS</kbd> is the size of each filter, that is, how many words we will convolve at a time. The <kbd class="calibre12">BATCH_SIZE</kbd> and <kbd class="calibre12">NUM_EPOCHS</kbd> is the number of records to feed the network each time and how many times we will run through the entire dataset during training:</p>
+<pre class="calibre21">
+INPUT_FILE = "../data/umich-sentiment-train.txt"<br class="title-page-name"/>VOCAB_SIZE = 5000<br class="title-page-name"/>EMBED_SIZE = 100<br class="title-page-name"/>NUM_FILTERS = 256<br class="title-page-name"/>NUM_WORDS = 3<br class="title-page-name"/>BATCH_SIZE = 64<br class="title-page-name"/>NUM_EPOCHS = 20
+</pre>
+<p class="calibre1">In the next block, we first read our input sentences and construct our vocabulary out of the most frequent words in the corpus. We then use this vocabulary to convert our input sentences into a list of word indices:</p>
+<pre class="calibre21">
+counter = collections.Counter()<br class="title-page-name"/>fin = open(INPUT_FILE, "rb")<br class="title-page-name"/>maxlen = 0<br class="title-page-name"/>for line in fin:<br class="title-page-name"/>    _, sent = line.strip().split("t")<br class="title-page-name"/>    words = [x.lower() for x in   nltk.word_tokenize(sent)]<br class="title-page-name"/>    if len(words) &gt; maxlen:<br class="title-page-name"/>        maxlen = len(words)<br class="title-page-name"/>    for word in words:<br class="title-page-name"/>        counter[word] += 1<br class="title-page-name"/>fin.close()<br class="title-page-name"/><br class="title-page-name"/>word2index = collections.defaultdict(int)<br class="title-page-name"/>for wid, word in enumerate(counter.most_common(VOCAB_SIZE)):<br class="title-page-name"/>    word2index[word[0]] = wid + 1<br class="title-page-name"/>vocab_size = len(word2index) + 1<br class="title-page-name"/>index2word = {v:k for k, v in word2index.items()}
+</pre>
+<p class="calibre1">We pad each of our sentences to predetermined length <kbd class="calibre12">maxlen</kbd> (in this case the number of words in the longest sentence in the training set). We also convert our labels to categorical format using a Keras utility function. The last two steps are a standard workflow for handling text input that we will see again and again:</p>
+<pre class="calibre21">
+xs, ys = [], []<br class="title-page-name"/>fin = open(INPUT_FILE, "rb")<br class="title-page-name"/>for line in fin:<br class="title-page-name"/>    label, sent = line.strip().split("t")<br class="title-page-name"/>    ys.append(int(label))<br class="title-page-name"/>    words = [x.lower() for x in nltk.word_tokenize(sent)]<br class="title-page-name"/>    wids = [word2index[word] for word in words]<br class="title-page-name"/>    xs.append(wids)<br class="title-page-name"/>fin.close()<br class="title-page-name"/>X = pad_sequences(xs, maxlen=maxlen)<br class="title-page-name"/>Y = np_utils.to_categorical(ys)
+</pre>
+<p class="calibre1">Finally, we split up our data into a <em class="calibre11">70/30</em> training and test set. The data is now in a form ready to be fed into the network:</p>
+<pre class="calibre21">
+Xtrain, Xtest, Ytrain, Ytest = train_test_split(X, Y, test_size=0.3, random_state=42)
+</pre>
+<p class="calibre1">We define the network that we described earlier in this section:</p>
+<pre class="calibre21">
+model = Sequential()<br class="title-page-name"/>model.add(Embedding(vocab_size, EMBED_SIZE, input_length=maxlen)<br class="title-page-name"/>model.add(SpatialDropout1D(Dropout(0.2)))<br class="title-page-name"/>model.add(Conv1D(filters=NUM_FILTERS, kernel_size=NUM_WORDS,<br class="title-page-name"/>activation="relu"))<br class="title-page-name"/>model.add(GlobalMaxPooling1D())<br class="title-page-name"/>model.add(Dense(2, activation="softmax"))
+</pre>
+<p class="calibre1">We then compile the model. Since our target is binary (positive or negative) we choose <kbd class="calibre12">categorical_crossentropy</kbd> as our loss function. For the optimizer, we choose <kbd class="calibre12">adam</kbd>. We then train the model using our training set, using a batch size of 64 and training for 20 epochs:</p>
+<pre class="calibre21">
+model.compile(loss="categorical_crossentropy", optimizer="adam",<br class="title-page-name"/>              metrics=["accuracy"])<br class="title-page-name"/>history = model.fit(Xtrain, Ytrain, batch_size=BATCH_SIZE,<br class="title-page-name"/>                    epochs=NUM_EPOCHS,<br class="title-page-name"/>                    validation_data=(Xtest, Ytest))
+</pre>
+<p class="calibre1">The output from the code looks as follows:</p>
+<div class="CDPAlignCenter"><img class="image-border74" src="../images/00148.jpeg"/></div>
+<p class="calibre1">As you can see, the network gives us 98.6% accuracy on the test set.</p>
+<p class="calibre1">The source code for this example can be found in <kbd class="calibre12">learn_embedding_from_scratch.py</kbd> in the source code download for the chapter.</p>
+
+
+            </article>
+
+            <footer class="calibre4">
+                
+            </footer>
+
+        </section>
+    </body></html>

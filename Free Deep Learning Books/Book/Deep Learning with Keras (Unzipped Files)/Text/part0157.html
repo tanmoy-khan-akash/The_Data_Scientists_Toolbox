@@ -1,0 +1,33 @@
+<?xml version='1.0' encoding='utf-8'?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+  <head>
+    <title>Maximizing future rewards</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <link href="../stylesheet.css" rel="stylesheet" type="text/css"/>
+<link href="../page_styles.css" rel="stylesheet" type="text/css"/>
+</head>
+  <body class="calibre">
+        <section>
+
+            <header>
+                </header><h1 class="header-title" id="calibre_pb_0">Maximizing future rewards</h1>
+            
+
+            <article>
+                
+<p class="calibre1">As an agent, our objective is to maximize the total reward from each game. The total reward can be represented as follows:</p>
+<div class="CDPAlignCenter"><img src="../images/00206.jpeg" class="calibre64"/></div>
+<p class="calibre1">In order to maximize the total reward, the agent should try to maximize the total reward from any time point <em class="calibre11">t</em> in the game. The total reward at time step <em class="calibre11">t</em> is given by <em class="calibre11">R<sub class="calibre22">t</sub></em> and is represented as:</p>
+<div class="CDPAlignCenter"><img src="../images/00207.jpeg" class="calibre64"/></div>
+<p class="calibre1">However, it is harder to predict the value of the rewards the further we go into the future. In order to take this into consideration, our agent should try to maximize the total discounted future reward at time <em class="calibre11">t</em> instead. This is done by discounting the reward at each future time step by a factor γ over the previous time step. If γ is <em class="calibre11">0</em>, then our network does not consider future rewards at all, and if γ is <em class="calibre11">1</em>, then our network is completely deterministic. A good value for γ is around <em class="calibre11">0.9</em>. Factoring the equation allows us to express the total discounted future reward at a given time step recursively as the sum of the current reward and the total discounted future reward at the next time step:</p>
+<div class="CDPAlignCenter"><img src="../images/00208.jpeg" class="calibre64"/></div>
+
+
+            </article>
+
+            <footer class="calibre4">
+                
+            </footer>
+
+        </section>
+    </body></html>

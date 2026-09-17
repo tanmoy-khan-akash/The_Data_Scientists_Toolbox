@@ -1,0 +1,35 @@
+<?xml version='1.0' encoding='utf-8'?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+  <head>
+    <title>RNN topologies</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <link href="../stylesheet.css" rel="stylesheet" type="text/css"/>
+<link href="../page_styles.css" rel="stylesheet" type="text/css"/>
+</head>
+  <body class="calibre">
+        <section>
+
+            <header>
+                </header><h1 class="header-title" id="calibre_pb_0">RNN topologies</h1>
+            
+
+            <article>
+                
+<p class="calibre1">The APIs for MLP and CNN architectures are limited. Both architectures accept a fixed-size tensor as input and produce a fixed-size tensor as output; and they perform the transformation from input to output in a fixed number of steps given by the number of layers in the model. RNNs don't have this limitation—you can have sequences in the input, the output, or both. This means that RNNs can be arranged in many ways to solve specific problems.</p>
+<p class="calibre1">As we have learned, RNNs combine the input vector with the previous state vector to produce a new state vector. This can be thought of as similar to running a program with some inputs and some internal variables. Thus RNNs can be thought of as essentially describing computer programs. In fact, it has been shown that RNNs are turing complete (<span>for more information refer to the article: <em class="calibre11">On the Computational Power of Neural Nets</em>, by H. T. Siegelmann and E. D. Sontag, proceedings of the fifth annual workshop on computational learning theory, ACM, 1992.</span>) in the sense that given the proper weights, they can simulate arbitrary programs.</p>
+<p class="calibre1">This property of being able to work with sequences gives rise to a number of common topologies, some of which we'll discuss, as follows:</p>
+<div class="CDPAlignCenter"><img class="image-border79" src="../images/00155.jpeg"/></div>
+<p class="calibre1">All these different topologies derive from the same basic structure shown in the preceding diagram. In this basic topology, all input sequences are of the same length and an output is produced at each time step. We have already seen an example of this with our character level RNN for generating words in <em class="calibre11">Alice in Wonderland</em>.</p>
+<p class="calibre1">Another example of a many to many RNN could be a machine translation network shown as <strong class="calibre3">(b)</strong>, part of a general family of networks called sequence-to-sequence (for more information refer to: <span><em class="calibre11">Grammar as a Foreign Language</em>, by O. Vinyals, Advances in Neural Information Processing Systems, 2015</span>). These take in a sequence and produces another sequence. In the case of machine translation, the input could be a sequence of English words in a sentence and the output could be the words in a translated Spanish sentence. In the case of a model that uses sequence-to-sequence to do <strong class="calibre3">part-of-speech</strong> (<strong class="calibre3">POS</strong>) tagging, the input could be the words in a sentence and the output could be the corresponding POS tags. It differs from the previous topology in that at certain time steps there is no input and at others there is no output. We will see an example of such a network later in this chapter.</p>
+<p class="calibre1">Other variants are the one-to-many network shown as <strong class="calibre3">(c)</strong>, an example of which could be an image captioning network (for more information refer to the article: <span><em class="calibre11">Deep Visual-Semantic Alignments for Generating Image Descriptions</em>, by A. Karpathy, and F. Li, Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition, 2015.</span>), where the input is an image and the output a sequence of words.</p>
+<p class="calibre1">Similarly, an example of a many-to-one network as shown in <strong class="calibre3">(d)</strong> could be a network that does sentiment analysis of sentences, where the input is a sequence of words and the output is a positive or negative sentiment (<span>for more information refer to the article: <em class="calibre11">Recursive Deep Models for Semantic Compositionality over a Sentiment Treebank</em>, by R. Socher, Proceedings of the Conference on Empirical Methods in Natural Language Processing (EMNLP). Vol. 1631, 2013</span>). We will see an (much simplified compared to the cited model) example of this topology as well later in the chapter.</p>
+
+
+            </article>
+
+            <footer class="calibre4">
+                
+            </footer>
+
+        </section>
+    </body></html>

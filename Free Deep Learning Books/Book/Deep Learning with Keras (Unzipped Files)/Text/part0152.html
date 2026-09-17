@@ -1,0 +1,86 @@
+<?xml version='1.0' encoding='utf-8'?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+  <head>
+    <title>Keras example — deep dreaming</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <link href="../stylesheet.css" rel="stylesheet" type="text/css"/>
+<link href="../page_styles.css" rel="stylesheet" type="text/css"/>
+</head>
+  <body class="calibre">
+        <section>
+
+            <header>
+                </header><h1 class="header-title" id="calibre_pb_0">Keras example — deep dreaming</h1>
+            
+
+            <article>
+                
+<p class="calibre1">In this example, we will look at a slightly different generative network. We will see how to take a pre-trained convolutional network and use it to generate new objects in an image. Networks trained to discriminate between images learn enough about the images to generate them as well. This was first demonstrated by Alexander Mordvintsev of Google and described in this Google Research blog post (<a href="https://research.googleblog.com/2015/06/inceptionism-going-deeper-into-neural.html" target="_blank" class="calibre6">https://research.googleblog.com/2015/06/inceptionism-going-deeper-into-neural.html</a>). It was originally called <em class="calibre11">inceptionalism</em> but the term <em class="calibre11">deep dreaming</em> became more popular to describe the technique.</p>
+<p class="calibre1">Deep dreaming takes the backpropagated gradient activations and adds it back to the image, running the same process over and over in a loop. The network optimizes the loss function in the process, but we get to see how it does so in the input image (three channels) rather than in a high dimensional hidden layer that cannot easily be visualized.</p>
+<p class="calibre1">There are many variations to this basic strategy, each of which leads to new and interesting effects. Some variations are blurring, adding constraints on the total activations, decaying the gradient, infinitely zooming into the image by cropping and scaling, adding jitter by randomly moving the image around, and so on. In our example, we will show the simplest approach—we will optimize the gradient of the mean of the selected layer's activation for each of the pooling layers of a pre-trained VGG-16 and observe the effect on our input image.</p>
+<p class="calibre1">First, as usual, we will declare our imports:</p>
+<pre class="calibre21">
+from keras import backend as K<br class="title-page-name"/>from keras.applications import vgg16<br class="title-page-name"/>from keras.layers import Input<br class="title-page-name"/>import matplotlib.pyplot as plt<br class="title-page-name"/>import numpy as np<br class="title-page-name"/>import os
+</pre>
+<p class="calibre1">Next we will load up our input image. This image may be familiar to you from blog posts about deep learning. The original image is from here (<a href="https://www.flickr.com/photos/billgarrett-newagecrap/14984990912" target="_blank" class="calibre6">https://www.flickr.com/photos/billgarrett-newagecrap/14984990912</a>):</p>
+<pre class="calibre21">
+DATA_DIR = "../data"<br class="title-page-name"/>IMAGE_FILE = os.path.join(DATA_DIR, "cat.jpg")<br class="title-page-name"/>img = plt.imread(IMAGE_FILE)<br class="title-page-name"/>plt.imshow(img)
+</pre>
+<p class="calibre1">The output of the preceding example is as follows:</p>
+<div class="CDPAlignCenter"><img class="image-border98" src="../images/00188.jpeg"/></div>
+<p class="calibre1">Next we define a pair of functions to preprocess and deprocess the image to and from a four-dimensional representation suitable for input to a pre-trained VGG-16 network:</p>
+<pre class="calibre21">
+def preprocess(img):<br class="title-page-name"/>    img4d = img.copy()<br class="title-page-name"/>    img4d = img4d.astype("float64")<br class="title-page-name"/>    if K.image_dim_ordering() == "th":<br class="title-page-name"/>        # (H, W, C) -&gt; (C, H, W)<br class="title-page-name"/>        img4d = img4d.transpose((2, 0, 1))<br class="title-page-name"/>        img4d = np.expand_dims(img4d, axis=0)<br class="title-page-name"/>        img4d = vgg16.preprocess_input(img4d)<br class="title-page-name"/>    return img4d<br class="title-page-name"/><br class="title-page-name"/>def deprocess(img4d):<br class="title-page-name"/>    img = img4d.copy()<br class="title-page-name"/>    if K.image_dim_ordering() == "th":<br class="title-page-name"/>        # (B, C, H, W)<br class="title-page-name"/>        img = img.reshape((img4d.shape[1], img4d.shape[2],         img4d.shape[3]))<br class="title-page-name"/>        # (C, H, W) -&gt; (H, W, C)<br class="title-page-name"/>        img = img.transpose((1, 2, 0))<br class="title-page-name"/>    else:<br class="title-page-name"/>        # (B, H, W, C)<br class="title-page-name"/>        img = img.reshape((img4d.shape[1], img4d.shape[2], img4d.shape[3]))<br class="title-page-name"/>    img[:, :, 0] += 103.939<br class="title-page-name"/>    img[:, :, 1] += 116.779<br class="title-page-name"/>    img[:, :, 2] += 123.68<br class="title-page-name"/>    # BGR -&gt; RGB<br class="title-page-name"/>    img = img[:, :, ::-1]<br class="title-page-name"/>    img = np.clip(img, 0, 255).astype("uint8")<br class="title-page-name"/>return img
+</pre>
+<p class="calibre1">These two functions are inverses of each other, that is, passing the image through <kbd class="calibre12">preprocess</kbd> and then through <kbd class="calibre12">deprocess</kbd> will return the original image.</p>
+<p class="calibre1">Next, we load up our pre-trained VGG-16 network. This network has been pre-trained on ImageNet data and is available from the Keras distribution. You already learned how to work with pre-trained models in <a target="_blank" href="part0083.html" class="calibre6">Chapter 3</a>, <em class="calibre11">Deep Learning with ConvNets</em>. We select the version whose fully connected layers have been removed already. Apart from saving us the trouble of having to remove them ourselves, this also allows us to pass in any shape of image, since the reason we need to specify the image width and height in our input is because this determines the size of the weight matrices in the fully connected layers. Because CNN transformations are local in nature, the size of the image doesn't affect the sizes of the weight matrices for the convolutional and pooling layers. So the only constraint on image size is that it must be constant within the batch:</p>
+<pre class="calibre21">
+img_copy = img.copy()<br class="title-page-name"/>print("Original image shape:", img.shape)<br class="title-page-name"/>p_img = preprocess(img_copy)<br class="title-page-name"/>batch_shape = p_img.shape<br class="title-page-name"/>dream = Input(batch_shape=batch_shape)<br class="title-page-name"/>model = vgg16.VGG16(input_tensor=dream, weights="imagenet", include_top=False)
+</pre>
+<p class="calibre1">We will need to refer to the CNN's layer objects by name in our following calculations, so let us construct a dictionary. We also need to understand the layer naming convention, so we dump it out:</p>
+<pre class="calibre21">
+layer_dict = {layer.name : layer for layer in model.layers}<br class="title-page-name"/>print(layer_dict)
+</pre>
+<p class="calibre1">The output of the preceding example is as follows:</p>
+<pre class="calibre21">
+<span>{'block1_conv1': &lt;keras.layers.convolutional.Convolution2D at 0x11b847690&gt;,<br class="title-page-name"/> 'block1_conv2': &lt;keras.layers.convolutional.Convolution2D at 0x11b847f90&gt;,<br class="title-page-name"/> 'block1_pool': &lt;keras.layers.pooling.MaxPooling2D at 0x11c45db90&gt;,<br class="title-page-name"/> 'block2_conv1': &lt;keras.layers.convolutional.Convolution2D at 0x11c45ddd0&gt;,<br class="title-page-name"/> 'block2_conv2': &lt;keras.layers.convolutional.Convolution2D at 0x11b88f810&gt;,<br class="title-page-name"/> 'block2_pool': &lt;keras.layers.pooling.MaxPooling2D at 0x11c2d2690&gt;,<br class="title-page-name"/> 'block3_conv1': &lt;keras.layers.convolutional.Convolution2D at 0x11c47b890&gt;,<br class="title-page-name"/> 'block3_conv2': &lt;keras.layers.convolutional.Convolution2D at 0x11c510290&gt;,<br class="title-page-name"/> 'block3_conv3': &lt;keras.layers.convolutional.Convolution2D at 0x11c4afa10&gt;,<br class="title-page-name"/> 'block3_pool': &lt;keras.layers.pooling.MaxPooling2D at 0x11c334a10&gt;,<br class="title-page-name"/> 'block4_conv1': &lt;keras.layers.convolutional.Convolution2D at 0x11c345b10&gt;,<br class="title-page-name"/> 'block4_conv2': &lt;keras.layers.convolutional.Convolution2D at 0x11c345950&gt;,<br class="title-page-name"/> 'block4_conv3': &lt;keras.layers.convolutional.Convolution2D at 0x11d52c910&gt;,<br class="title-page-name"/> 'block4_pool': &lt;keras.layers.pooling.MaxPooling2D at 0x11d550c90&gt;,<br class="title-page-name"/> 'block5_conv1': &lt;keras.layers.convolutional.Convolution2D at 0x11d566c50&gt;,<br class="title-page-name"/> 'block5_conv2': &lt;keras.layers.convolutional.Convolution2D at 0x11d5b1910&gt;,<br class="title-page-name"/> 'block5_conv3': &lt;keras.layers.convolutional.Convolution2D at 0x11d5b1710&gt;,<br class="title-page-name"/> 'block5_pool': &lt;keras.layers.pooling.MaxPooling2D at 0x11fd68e10&gt;,<br class="title-page-name"/> 'input_1': &lt;keras.engine.topology.InputLayer at 0x11b847410&gt;}</span>
+</pre>
+<p class="calibre1">We then compute the loss at each of the five pooling layers and compute the gradient of the mean activation for three steps each. The gradient is added back to the image and the image displayed at each of the pooling layers for each step:</p>
+<pre class="calibre21">
+num_pool_layers = 5<br class="title-page-name"/>num_iters_per_layer = 3<br class="title-page-name"/>step = 100<br class="title-page-name"/><br class="title-page-name"/>for i in range(num_pool_layers):<br class="title-page-name"/>    # identify each pooling layer<br class="title-page-name"/>    layer_name = "block{:d}_pool".format(i+1)<br class="title-page-name"/>    # build loss function that maximizes the mean activation in layer<br class="title-page-name"/>    layer_output = layer_dict[layer_name].output<br class="title-page-name"/>    loss = K.mean(layer_output)<br class="title-page-name"/>    # compute gradient of image wrt loss and normalize<br class="title-page-name"/>    grads = K.gradients(loss, dream)[0]<br class="title-page-name"/>    grads /= (K.sqrt(K.mean(K.square(grads))) + 1e-5)<br class="title-page-name"/>    # define function to return loss and grad given input image<br class="title-page-name"/>    f = K.function([dream], [loss, grads])<br class="title-page-name"/>    img_value = p_img.copy()<br class="title-page-name"/>    fig, axes = plt.subplots(1, num_iters_per_layer, figsize=(20, 10))<br class="title-page-name"/>    for it in range(num_iters_per_layer):<br class="title-page-name"/>        loss_value, grads_value = f([img_value])<br class="title-page-name"/>        img_value += grads_value * step <br class="title-page-name"/>        axes[it].imshow(deprocess(img_value))<br class="title-page-name"/>    plt.show()
+</pre>
+<p class="calibre1">The resulting images are shown as follows:</p>
+<div class="CDPAlignCenter"><img class="image-border10" src="../images/00189.jpeg"/></div>
+<div class="CDPAlignCenter"><img class="image-border10" src="../images/00190.jpeg"/></div>
+<div class="CDPAlignCenter"><img class="image-border10" src="../images/00191.jpeg"/></div>
+<div class="CDPAlignCenter"><img class="image-border10" src="../images/00192.jpeg"/></div>
+<div class="CDPAlignCenter"><img class="image-border10" src="../images/00193.jpeg"/></div>
+<p class="calibre1">As you can see, the process of deep dreaming amplifies the effect of the gradient on the chosen layer, resulting in images that are quite surreal. Later layers backpropagate gradients that result in more distortion, reflecting their larger receptive fields and their capacity to recognize more complex features.</p>
+<p class="calibre1">To convince ourselves that a trained network really learns a representation of the various categories of the image it was trained on, let us consider a completely random image, shown next, and pass it through the pre-trained network:</p>
+<pre class="calibre21">
+img_noise = np.random.randint(100, 150, size=(227, 227, 3), dtype=np.uint8)<br class="title-page-name"/>plt.imshow(img_noise)
+</pre>
+<p class="calibre1">The output of the preceding example is as follows:</p>
+<div class="CDPAlignCenter"><img class="image-border99" src="../images/00194.jpeg"/></div>
+<p class="calibre1">Passing this image through the preceding code results in very specific patterns at each layer, as shown next, showing that the network is trying to find a structure in the random data:</p>
+<div class="CDPAlignCenter"><img class="image-border100" src="../images/00195.jpeg"/></div>
+<div class="CDPAlignCenter"><img class="image-border100" src="../images/00196.jpeg"/></div>
+<div class="CDPAlignCenter"><img class="image-border100" src="../images/00197.jpeg"/></div>
+<div class="CDPAlignCenter"><img class="image-border100" src="../images/00198.jpeg"/></div>
+<div class="CDPAlignCenter"><img class="image-border100" src="../images/00199.jpeg"/></div>
+<p class="calibre1">We can repeat our experiment with the noise image as input and compute the loss from a single filter instead of taking the mean across all the filters. The filter we choose is for the ImageNet label African elephant (<kbd class="calibre12">24</kbd>). Thus, we replace the value of the loss in the previous code with the following. So instead of computing the mean across all filters, we calculate the loss as the output of the filter representing the African elephant class:</p>
+<pre class="calibre21">
+loss = layer_output[:, :, :, 24]
+</pre>
+<p class="calibre1">We get back what looks very much like repeating images of the trunk of an elephant in the <kbd class="calibre12">block4_pool</kbd> output, as shown here:</p>
+<div class="CDPAlignCenter1"><img class="image-border101" src="../images/00200.jpeg"/></div>
+
+
+            </article>
+
+            <footer class="calibre4">
+                
+            </footer>
+
+        </section>
+    </body></html>

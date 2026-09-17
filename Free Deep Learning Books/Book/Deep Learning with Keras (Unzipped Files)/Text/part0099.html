@@ -1,0 +1,33 @@
+<?xml version='1.0' encoding='utf-8'?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+  <head>
+    <title>Recognizing cats with a VGG-16 net</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <link href="../stylesheet.css" rel="stylesheet" type="text/css"/>
+<link href="../page_styles.css" rel="stylesheet" type="text/css"/>
+</head>
+  <body class="calibre">
+        <section>
+
+            <header>
+                </header><h1 class="header-title" id="calibre_pb_0">Recognizing cats with a VGG-16 net</h1>
+            
+
+            <article>
+                
+<p class="calibre1">Now let us test the image of a <img src="../images/00115.jpeg" class="calibre53"/>:</p>
+<pre class="calibre21">
+im = cv2.resize(cv2.imread('cat.jpg'), (224, 224)).astype(np.float32)<br class="title-page-name"/>im = im.transpose((2,0,1))<br class="title-page-name"/>im = np.expand_dims(im, axis=0)<br class="title-page-name"/><br class="title-page-name"/># Test pretrained model<br class="title-page-name"/>model = VGG_16('/Users/gulli/Keras/codeBook/code/data/vgg16_weights.h5')<br class="title-page-name"/>optimizer = SGD()<br class="title-page-name"/>model.compile(optimizer=optimizer, loss='categorical_crossentropy')<br class="title-page-name"/>out = model.predict(im)<br class="title-page-name"/>print np.argmax(out)
+</pre>
+<p class="calibre1">When the code is executed, the class <kbd class="calibre12">285</kbd> is returned, which corresponds (for more information refer to: <a href="https://gist.github.com/yrevar/942d3a0ac09ec9e5eb3a" target="_blank" class="calibre6">https://gist.github.com/yrevar/942d3a0ac09ec9e5eb3a</a>) to Egyptian cat:</p>
+<div class="CDPAlignCenter"><img class="image-border52" src="../images/00116.jpeg"/></div>
+
+
+            </article>
+
+            <footer class="calibre4">
+                
+            </footer>
+
+        </section>
+    </body></html>

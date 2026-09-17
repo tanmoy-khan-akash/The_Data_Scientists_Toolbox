@@ -1,0 +1,38 @@
+<?xml version='1.0' encoding='utf-8'?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+  <head>
+    <title>SimpleRNN cells</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <link href="../stylesheet.css" rel="stylesheet" type="text/css"/>
+<link href="../page_styles.css" rel="stylesheet" type="text/css"/>
+</head>
+  <body class="calibre">
+        <section>
+
+            <header>
+                </header><h1 class="header-title" id="calibre_pb_0">SimpleRNN cells</h1>
+            
+
+            <article>
+                
+<p class="calibre1">Traditional multilayer perceptron neural networks make the assumption that all inputs are independent of each other. This assumption breaks down in the case of sequence data. You have already seen the example in the previous section where the first two words in the sentence affect the third. The same idea is true of speech—if we are having a conversation in a noisy room, I can make reasonable guesses about a word I may not have understood based on the words I have heard so far. Time series data, such as stock prices or weather, also exhibit a dependence on past data, called the secular trend.</p>
+<p class="calibre1">RNN cells incorporate this dependence by having a hidden state, or memory, that holds the essence of what has been seen so far. The value of the hidden state at any point in time is a function of the value of the hidden state at the previous time step and the value of the input at the current time step, that is:</p>
+<div class="CDPAlignCenter"><img src="../images/00151.jpeg" class="calibre59"/></div>
+<p class="calibre1"><em class="calibre11">h<sub class="calibre22">t</sub></em> and <em class="calibre11">h<sub class="calibre22">t-1</sub></em> are the values of the hidden states at the time steps <em class="calibre11">t</em> and <em class="calibre11">t-1</em> respectively, and <em class="calibre11">x<sub class="calibre22">t</sub></em> is the value of the input at time <em class="calibre11">t</em>. Notice that the equation is recursive, that is, <em class="calibre11">h<sub class="calibre22">t-1</sub></em> can be represented in terms of <em class="calibre11">h<sub class="calibre22">t-2</sub></em> and <em class="calibre11">x<sub class="calibre22">t-1</sub></em>, and so on, until the beginning of the sequence. This is how RNNs encode and incorporate information from arbitrarily long sequences.</p>
+<p class="calibre1">We can also represent the RNN cell graphically as shown in the following diagram on the left. At time <em class="calibre11">t</em>, the cell has an input <em class="calibre11">x<sub class="calibre22">t</sub></em> and an output <em class="calibre11">y<sub class="calibre22">t</sub></em>. Part of the output <em class="calibre11">y<sub class="calibre22">t</sub></em> (the hidden state <em class="calibre11">h<sub class="calibre22">t</sub></em>) is fed back into the cell for use at a later time step <em class="calibre11">t+1</em>. Just as a traditional neural network's parameters are contained in its weight matrix, the RNN's parameters are defined by three weight matrices <em class="calibre11">U</em>, <em class="calibre11">V</em>, and <em class="calibre11">W</em>, corresponding to the input, output, and hidden state respectively:</p>
+<div class="CDPAlignCenter"><img class="image-border77" src="../images/00152.jpeg"/></div>
+<p class="calibre1">Another way to look at an RNN to <em class="calibre11">unroll</em> it, as shown in the preceding diagram on the right. Unrolling means that we draw the network out for the complete sequence. The network shown here is a three-layer RNN, suitable for processing three element sequences. Notice that the weight matrices <em class="calibre11">U</em>, <em class="calibre11">V</em>, and <em class="calibre11">W</em> are shared across the steps. This is because we are applying the same operation on different inputs at each time step. Being able to share these weight vectors across all the time steps greatly reduces the number of parameters that the RNN needs to learn.</p>
+<p class="calibre1">We can also describe the computations within an RNN in terms of equations. The internal state of the RNN at a time <em class="calibre11">t</em> is given by the value of the hidden vector <em class="calibre11">h<sub class="calibre22">t</sub></em>, which is the sum of the product of the weight matrix <em class="calibre11">W</em> and the hidden state <em class="calibre11">h<sub class="calibre22">t-1</sub></em> at time <em class="calibre11">t-1</em> and the product of the weight matrix <em class="calibre11">U</em> and the input <em class="calibre11">x<sub class="calibre22">t</sub></em> at time <em class="calibre11">t</em>, passed through the <em class="calibre11">tanh</em> nonlinearity. The choice of <em class="calibre11">tanh</em> over other nonlinearities has to do with its second derivative decaying very slowly to zero. This keeps the gradients in the linear region of the activation function and helps combat the vanishing gradient problem. We will learn more about the vanishing gradient problem later in this chapter.</p>
+<p class="calibre1">The output vector <em class="calibre11">y<sub class="calibre22">t</sub></em> at time <em class="calibre11">t</em> is the product of the weight matrix <em class="calibre11">V</em> and the hidden state <em class="calibre11">h<sub class="calibre22">t</sub></em>, with <em class="calibre11">softmax</em> applied to the product so the resulting vector is a set of output probabilities:</p>
+<div class="CDPAlignCenter"><img src="../images/00153.jpeg" class="calibre60"/></div>
+<p class="calibre1">Keras provides the SimpleRNN (for more information refer to: <a href="https://keras.io/layers/recurrent/" target="_blank" class="calibre6">https://keras.io/layers/recurrent/</a>) recurrent layer that incorporates all the logic we have seen so far, as well as the more advanced variants such as LSTM and GRU that we will see later in this chapter, so it is not strictly necessary to understand how they work in order to start building with them. However, an understanding of the structure and equations is helpful when you need to compose your own RNN to solve a given problem.</p>
+
+
+            </article>
+
+            <footer class="calibre4">
+                
+            </footer>
+
+        </section>
+    </body></html>

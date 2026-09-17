@@ -1,0 +1,35 @@
+<?xml version='1.0' encoding='utf-8'?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+  <head>
+    <title>word2vec</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <link href="../stylesheet.css" rel="stylesheet" type="text/css"/>
+<link href="../page_styles.css" rel="stylesheet" type="text/css"/>
+</head>
+  <body class="calibre">
+        <section>
+
+            <header>
+                </header><h1 class="header-title" id="calibre_pb_0">word2vec</h1>
+            
+
+            <article>
+                
+<p class="calibre1">The word2vec group of models was created in 2013 by a team of researchers at Google led by Tomas Mikolov. The models are unsupervised, taking as input a large corpus of text and producing a vector space of words. The dimensionality of the word2vec embedding space is usually lower than the dimensionality of the one-hot embedding space, which is the size of the vocabulary. The embedding space is also more dense compared to the sparse embedding of the one-hot embedding space.</p>
+<p class="calibre1">The two architectures for word2vec are as follows:</p>
+<ul class="calibre15">
+<li class="calibre16"><strong class="calibre3">Continuous Bag Of Words</strong> (<strong class="calibre3">CBOW</strong>)</li>
+<li class="calibre16"><strong class="calibre3">Skip-gram</strong></li>
+</ul>
+<p class="calibre1">In the CBOW architecture, the model predicts the current word given a window of surrounding words. In addition, the order of the context words does not influence the prediction (that is, the bag of words assumption). In the case of skip-gram architecture, the model predicts the surrounding words given the center word. According to the authors, CBOW is faster but skip-gram does a better job at predicting infrequent words.</p>
+<p class="calibre1">An interesting thing to note is that even though word2vec creates embeddings that are used in deep learning NLP models, both flavors of word2vec that we will discuss, which also happens to be the most successful and acknowledged recent models, are shallow neural networks.</p>
+
+
+            </article>
+
+            <footer class="calibre4">
+                
+            </footer>
+
+        </section>
+    </body></html>

@@ -1,0 +1,42 @@
+<?xml version='1.0' encoding='utf-8'?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+  <head>
+    <title>The CBOW word2vec model</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <link href="../stylesheet.css" rel="stylesheet" type="text/css"/>
+<link href="../page_styles.css" rel="stylesheet" type="text/css"/>
+</head>
+  <body class="calibre">
+        <section>
+
+            <header>
+                </header><h1 class="header-title" id="calibre_pb_0">The CBOW word2vec model</h1>
+            
+
+            <article>
+                
+<p class="calibre1">Let us now look at the CBOW word2vec model. Recall that the CBOW model predicts the center word given the context words. Thus, in the first tuple in the following example, the CBOW model needs to predict the output word <em class="calibre11">love</em>, given the context words <em class="calibre11">I</em> and <em class="calibre11">green</em>:</p>
+<p class="calibre1"><em class="calibre11">([I, green], love) ([love, eggs], green) ([green, and], eggs) ...</em></p>
+<p class="calibre1">Like the skip-gram model, the CBOW model is also a classifier that takes the context words as input and predicts the target word. The architecture is somewhat more straightforward than the skip-gram model. The input to the model is the word IDs for the context words. These word IDs are fed into a common embedding layer that is initialized with small random weights. Each word ID is transformed into a vector of size (<kbd class="calibre12">embed_size</kbd>) by the embedding layer. Thus, each row of the input context is transformed into a matrix of size (<kbd class="calibre12">2*window_size</kbd>, <kbd class="calibre12">embed_size</kbd>) by this layer. This is then fed into a lambda layer, which computes an average of all the embeddings. This average is then fed to a dense layer, which creates a dense vector of size (<kbd class="calibre12">vocab_size</kbd>) for each row. The activation function on the dense layer is a softmax, which reports the maximum value on the output vector as a probability. The ID with the maximum probability corresponds to the target word.</p>
+<p class="calibre1">The deliverable for the CBOW model is the weights from the embedding layer shown in gray in the following figure:</p>
+<div class="CDPAlignCenter"><img class="image-border10" src="../images/00141.jpeg"/></div>
+<p class="calibre1">The corresponding Keras code for the model is shown as follows. Once again, assume a vocabulary size of <kbd class="calibre12">5000</kbd>, an embedding size of <kbd class="calibre12">300</kbd>, and a context window size of <kbd class="calibre12">1</kbd>. Our first step is to set up all our imports and these values:</p>
+<pre class="calibre21">
+from keras.models import Sequential<br class="title-page-name"/>from keras.layers.core import Dense, Lambda<br class="title-page-name"/>from keras.layers.embeddings import Embedding<br class="title-page-name"/>import keras.backend as K<br class="title-page-name"/><br class="title-page-name"/>vocab_size = 5000<br class="title-page-name"/>embed_size = 300<br class="title-page-name"/>window_size = 1
+</pre>
+<p class="calibre1">We then construct a sequential model, to which we add an embedding layer whose weights are initialized with small random values. Note that the <kbd class="calibre12">input_length</kbd> of this embedding layer is equal to the number of context words. So each context word is fed into this layer and will update the weights jointly during backpropagation. The output of this layer is a matrix of context word embeddings, which are averaged into a single vector (per row of input) by the lambda layer. Finally, the dense layer will convert each row into a dense vector of size (<kbd class="calibre12">vocab_size</kbd>). The target word is the one whose ID has the maximum value in the dense output vector:</p>
+<pre class="calibre21">
+model = Sequential()<br class="title-page-name"/>model.add(Embedding(input_dim=vocab_size, output_dim=embed_size, <br class="title-page-name"/>                    embeddings_initializer='glorot_uniform',<br class="title-page-name"/>                    input_length=window_size*2))<br class="title-page-name"/>model.add(Lambda(lambda x: K.mean(x, axis=1), output_shape=  (embed_size,)))<br class="title-page-name"/>model.add(Dense(vocab_size, kernel_initializer='glorot_uniform', activation='softmax'))<br class="title-page-name"/><br class="title-page-name"/>model.compile(loss='categorical_crossentropy', optimizer="adam")
+</pre>
+<p class="calibre1">The loss function used here is <kbd class="calibre12">categorical_crossentropy</kbd>, which is a common choice for cases where there are two or more (in our case, <kbd class="calibre12">vocab_size</kbd>) categories.</p>
+<p class="calibre1">The source code for the example can be found in the <kbd class="calibre12">keras_cbow.py</kbd> file in the source code download for the chapter.</p>
+
+
+            </article>
+
+            <footer class="calibre4">
+                
+            </footer>
+
+        </section>
+    </body></html>

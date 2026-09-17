@@ -1,0 +1,43 @@
+<?xml version='1.0' encoding='utf-8'?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+  <head>
+    <title>Some GAN applications</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <link href="../stylesheet.css" rel="stylesheet" type="text/css"/>
+<link href="../page_styles.css" rel="stylesheet" type="text/css"/>
+</head>
+  <body class="calibre">
+        <section>
+
+            <header>
+                </header><h1 class="header-title" id="calibre_pb_0">Some GAN applications</h1>
+            
+
+            <article>
+                
+<p class="calibre1">We have seen that the generator learns how to forge data. This means that it learns how to create new synthetic data, which is created by the network, that looks real and like it was created by humans. Before going into details of some GAN code, I'd like to share the results of a recent paper: <em class="calibre11">StackGAN: Text to Photo-Realistic Image Synthesis with Stacked Generative Adversarial Networks</em>, by Han Zhang, Tao Xu, Hongsheng Li, Shaoting Zhang, Xiaolei Huang, Xiaogang Wang, and Dimitris Metaxas (the code is available online at: <a href="https://github.com/hanzhanggit/StackGAN" target="_blank" class="calibre6">https://github.com/hanzhanggit/StackGAN</a>).<br class="title-page-name"/>
+Here, a GAN has been used to synthesize forged images starting from a text description. The results are impressive. The first column is the real image in the test set, and the rest of the columns contain images generated from the same text description by <span>Stage-I</span> and <span>Stage-II</span> of StackGAN. More examples are available on YouTube (<a href="https://www.youtube.com/watch?v=SuRyL5vhCIM&amp;feature=youtu.be" target="_blank" class="calibre6">https://www.youtube.com/watch?v=SuRyL5vhCIM&amp;feature=youtu.be</a>):</p>
+<p class="calibre1"><img class="image-border31" src="../images/00122.jpeg"/><br class="title-page-name"/>
+<img class="image-border31" src="../images/00123.jpeg"/></p>
+<p class="calibre1">Now let us see how a GAN can learn to <em class="calibre11">forge</em> the MNIST dataset. In this case, there is a combination of GAN and ConvNets (for more information refer to: <em class="calibre11">Unsupervised Representation Learning with Deep Convolutional Generative Adversarial Networks</em>, by A. Radford, L. Metz, and S. Chintala, arXiv: 1511.06434, 2015) used for the generator and the discriminator networks. At the beginning, the generator creates nothing understandable, but after a few iterations, synthetic forged numbers are progressively clearer and clearer. In the following image, the panels are ordered by increasing training epochs, and you can see the quality improving among panels:</p>
+<div class="CDPAlignCenter"><img class="image-border57" src="../images/00124.jpeg"/></div>
+<p class="calibre1">The following image represents the forged handwritten numbers as the number of iterations increases:</p>
+<div class="CDPAlignCenter"><img class="image-border58" src="../images/00125.jpeg"/></div>
+<p class="calibre1">The following image represents the forged handwritten numbers at the hand of computation. The results are virtually indistinguishable from the original:</p>
+<div class="CDPAlignCenter"><img class="image-border59" src="../images/00126.jpeg"/></div>
+<p class="calibre1">One of the coolest uses of GAN is arithmetic on faces in the generator's vector <em class="calibre11">Z</em>. In other words, if we stay in the space of synthetic forged images, it is possible to see things like this:</p>
+<p class="packtfigure"><em class="calibre11">[smiling woman] - [neutral woman] + [neutral man] = [smiling man]</em></p>
+<p class="CDPAlignLeft1">Or like this:</p>
+<p class="packtfigure"><em class="calibre11">[man with glasses] - [man without glasses] + [woman without glasses] = [woman with glasses]</em></p>
+<p class="calibre1">The next image is taken from the article, <em class="calibre11">Unsupervised Representation Learning with Deep Convolutional Generative Adversarial Networks</em>, by A. Radford, L. Metz, and S. Chintala, arXiv: 1511.06434, November, 2015:</p>
+<p class="calibre1"><img class="image-border60" src="../images/00127.jpeg"/></p>
+
+
+            </article>
+
+            <footer class="calibre4">
+                
+            </footer>
+
+        </section>
+    </body></html>

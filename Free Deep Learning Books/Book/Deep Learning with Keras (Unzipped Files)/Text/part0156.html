@@ -1,0 +1,33 @@
+<?xml version='1.0' encoding='utf-8'?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+  <head>
+    <title>Reinforcement learning</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <link href="../stylesheet.css" rel="stylesheet" type="text/css"/>
+<link href="../page_styles.css" rel="stylesheet" type="text/css"/>
+</head>
+  <body class="calibre">
+        <section>
+
+            <header>
+                </header><h1 class="header-title" id="calibre_pb_0">Reinforcement learning</h1>
+            
+
+            <article>
+                
+<p class="calibre1">Our objective is to build a neural network to play the game of catch. Each game starts with a ball being dropped from a random position from the top of the screen. The objective is to move a paddle at the bottom of the screen using the left and right arrow keys to catch the ball by the time it reaches the bottom. As games go, this is quite simple. At any point in time, the state of this game is given by the <em class="calibre11">(x, y)</em> coordinates of the ball and paddle. Most arcade games tend to have many more moving parts, so a general solution is to provide the entire current game screen image as the state. The following screenshot shows four consecutive screenshots of our catch game:</p>
+<div class="CDPAlignCenter"><img class="image-border10" src="../images/00204.jpeg"/></div>
+<p class="calibre1">Astute readers might note that our problem could be modeled as a classification problem, where the input to the network are the game screen images and the output is one of three actions--move left, stay, or move right. However, this would require us to provide the network with training examples, possibly from recordings of games played by experts. An alternative and simpler approach might be to build a network and have it play the game repeatedly, giving it feedback based on whether it succeeds in catching the ball or not. This approach is also more intuitive and is closer to the way humans and animals learn.</p>
+<p class="calibre1">The most common way to represent such a problem is through a <strong class="calibre3">markov decision process</strong> (<strong class="calibre3">MDP</strong>). Our game is the environment within which the agent is trying to learn. The state of the environment at time step <em class="calibre11">t</em> is given by <em class="calibre11">s<sub class="calibre22">t</sub></em> (and contains the location of the ball and paddle). The agent can perform certain actions (such as moving the paddle left or right). These actions can sometimes result in a reward <em class="calibre11">r<sub class="calibre22">t</sub></em>, which can be positive or negative (such as an increase or decrease in the score). Actions change the environment and can lead to a new state <em class="calibre11">s<sub class="calibre22">t+1</sub></em>, where the agent can perform another action <em class="calibre11">a<sub class="calibre22">t+1</sub></em>, and so on. The set of states, actions and rewards, together with the rules for transitioning from one state to the other, make up a markov decision process. A single game is one episode of this process, and is represented by a finite sequence of states, actions, and rewards:</p>
+<div class="CDPAlignCenter"><img src="../images/00205.jpeg" class="calibre65"/></div>
+<p class="calibre1">Since, this is a markov decision process, the probability of state <em class="calibre11">s<sub class="calibre22">t+1</sub></em> depends only on current state <em class="calibre11">s<sub class="calibre22">t</sub></em> and action <em class="calibre11">a<sub class="calibre22">t</sub></em>.</p>
+
+
+            </article>
+
+            <footer class="calibre4">
+                
+            </footer>
+
+        </section>
+    </body></html>

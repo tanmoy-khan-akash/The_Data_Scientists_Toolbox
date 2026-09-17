@@ -1,0 +1,95 @@
+<?xml version='1.0' encoding='utf-8'?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+  <head>
+    <title>Keras adversarial GANs for forging MNIST</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <link href="../stylesheet.css" rel="stylesheet" type="text/css"/>
+<link href="../page_styles.css" rel="stylesheet" type="text/css"/>
+</head>
+  <body class="calibre">
+        <section>
+
+            <header>
+                </header><h1 class="header-title" id="calibre_pb_0">Keras adversarial GANs for forging MNIST</h1>
+            
+
+            <article>
+                
+<p class="calibre1">Keras adversarial (<a href="https://github.com/bstriner/keras-adversarial" target="_blank" class="calibre6">https://github.com/bstriner/keras-adversarial</a>) is an open source Python package for building GANs developed by Ben Striner (<a href="https://github.com/bstriner" target="_blank" class="calibre6">https://github.com/bstriner</a> and <a href="https://github.com/bstriner/keras-adversarial/blob/master/LICENSE.txt" target="_blank" class="calibre6">https://github.com/bstriner/keras-adversarial/blob/master/LICENSE.txt</a>). Since Keras just recently moved to 2.0, I suggest downloading latest Keras adversarial package:</p>
+<pre class="calibre21">
+<strong class="calibre3">git clone --depth=50 --branch=master https://github.com/bstriner/keras-adversarial.git</strong>
+</pre>
+<p class="calibre1">And install <kbd class="calibre12">setup.py</kbd>:</p>
+<pre class="calibre21">
+<strong class="calibre3">python setup.py install</strong>
+</pre>
+<p class="calibre1">Note that compatibility with Keras 2.0 is tracked in this issue<a href="https://github.com/bstriner/keras-adversarial/issues/11" class="calibre6"> https://github.com/bstriner/keras-adversarial/issues/11</a>.</p>
+<p class="calibre1"> If the generator <em class="calibre11">G</em> and the discriminator <em class="calibre11">D</em> are based on the same model, <em class="calibre11">M,</em> then they can be combined into an adversarial model; it uses the same input, <em class="calibre11">M</em>, but separates targets and metrics for <em class="calibre11">G</em> and <em class="calibre11">D</em>. The library has the following API call:</p>
+<pre class="calibre21">
+adversarial_model = AdversarialModel(base_model=M,<br class="title-page-name"/>    player_params=[generator.trainable_weights, discriminator.trainable_weights],<br class="title-page-name"/>    player_names=["generator", "discriminator"])
+</pre>
+<p class="calibre1">If the generator <em class="calibre11">G</em> and the discriminator <em class="calibre11">D</em> are based on the two different models, then it is possible to use this API call:</p>
+<pre class="calibre21">
+adversarial_model = AdversarialModel(player_models=[gan_g, gan_d],<br class="title-page-name"/>    player_params=[generator.trainable_weights, discriminator.trainable_weights],<br class="title-page-name"/>    player_names=["generator", "discriminator"])
+</pre>
+<p class="calibre1">Let's see an example of a computation with MNIST:</p>
+<pre class="calibre21">
+import matplotlib as mpl<br class="title-page-name"/># This line allows mpl to run with no DISPLAY defined<br class="title-page-name"/>mpl.use('Agg')
+</pre>
+<p class="calibre1">Let us see the open source code (<a href="https://github.com/bstriner/keras-adversarial/blob/master/examples/example_gan_convolutional.py" target="_blank" class="calibre6">https://github.com/bstriner/keras-adversarial/blob/master/examples/example_gan_convolutional.py</a>). Note that the code uses the syntax of Keras 1.x, but it also runs on the top of Keras 2.x thanks to a convenient set of utility functions contained in <kbd class="calibre12">legacy.py</kbd>. The code for <kbd class="calibre12">legacy.py</kbd> is reported in <a target="_blank" href="part0165.html" class="calibre6">Appendix</a>, <em class="calibre11">Conclusion</em>, and is available at <a href="https://github.com/bstriner/keras-adversarial/blob/master/keras_adversarial/legacy.py" class="calibre6">https://github.com/bstriner/keras-adversarial/blob/master/keras_adversarial/legacy.py</a>.</p>
+<p class="calibre1">First, the open source example imports a number of modules. We have seen all of them previously, with the exception of LeakyReLU, a special version of ReLU that allows a small gradient when the unit is not active. Experimentally, it has been shown that LeakyReLU can improve the performance of GANs (for more information refer to: <em class="calibre11">Empirical Evaluation of Rectified Activations in Convolutional Network</em>, by B. Xu, N. Wang, T. Chen, and M. Li, arXiv:1505.00853, 2014) in a number of situations:</p>
+<pre class="calibre21">
+from keras.layers import Dense, Reshape, Flatten, Dropout, LeakyReLU,<br class="title-page-name"/>    Input, Activation, BatchNormalization<br class="title-page-name"/>from keras.models import Sequential, Model<br class="title-page-name"/>from keras.layers.convolutional import Convolution2D, UpSampling2D<br class="title-page-name"/>from keras.optimizers import Adam<br class="title-page-name"/>from keras.regularizers import l1, l1l2<br class="title-page-name"/>from keras.datasets import mnist<br class="title-page-name"/><br class="title-page-name"/>import pandas as pd<br class="title-page-name"/>import numpy as np
+</pre>
+<p class="calibre1">Then, specific modules for GANs are imported:</p>
+<pre class="calibre21">
+from keras_adversarial import AdversarialModel, ImageGridCallback,<br class="title-page-name"/>    simple_gan, gan_targets<br class="title-page-name"/>from keras_adversarial import AdversarialOptimizerSimultaneous,<br class="title-page-name"/>    normal_latent_sampling, AdversarialOptimizerAlternating<br class="title-page-name"/>from image_utils import dim_ordering_fix, dim_ordering_input,<br class="title-page-name"/>    dim_ordering_reshape, dim_ordering_unfix
+</pre>
+<p class="calibre1">Adversarial models train for multiplayer games. Given a base model with <em class="calibre11">n</em> targets and <em class="calibre11">k</em> players, create a model with <em class="calibre11">n*k</em> targets, where each player optimizes loss on that player's targets. In addition, <kbd class="calibre12">simple_gan</kbd> generates a GAN with the given <kbd class="calibre12">gan_targets</kbd>. Note that in the library, the labels for generator and discriminator are opposite; intuitively, this is a standard practice for GANs:</p>
+<pre class="calibre21">
+def gan_targets(n):<br class="title-page-name"/>    """<br class="title-page-name"/>    Standard training targets [generator_fake, generator_real, discriminator_fake,     <br class="title-page-name"/>    discriminator_real] = [1, 0, 0, 1]<br class="title-page-name"/>    :param n: number of samples<br class="title-page-name"/>    :return: array of targets<br class="title-page-name"/>    """<br class="title-page-name"/>    generator_fake = np.ones((n, 1))<br class="title-page-name"/>    generator_real = np.zeros((n, 1))<br class="title-page-name"/>    discriminator_fake = np.zeros((n, 1))<br class="title-page-name"/>    discriminator_real = np.ones((n, 1))<br class="title-page-name"/>    return [generator_fake, generator_real, discriminator_fake, discriminator_real]
+</pre>
+<p class="calibre1">The example defines the generator in a similar way to what we have seen previously. However, in this case, we use the functional syntax—each module in our pipeline is simply passed as input to the following module. So, the first module is dense, initialized by using <kbd class="calibre12">glorot_normal</kbd>. This initialization uses Gaussian noise scaled by the sum of the inputs plus outputs from the node. The same kind of initialization is used for all of the other modules. The <kbd class="calibre12">mode=2</kbd> parameter in <kbd class="calibre12">BatchNormlization</kbd> function produces feature-wise normalization based on per-batch statistics. Experimentally, this produces better results:</p>
+<pre class="calibre21">
+def model_generator():<br class="title-page-name"/>    nch = 256<br class="title-page-name"/>    g_input = Input(shape=[100])<br class="title-page-name"/>    H = Dense(nch * 14 * 14, init='glorot_normal')(g_input)<br class="title-page-name"/>    H = BatchNormalization(mode=2)(H)<br class="title-page-name"/>    H = Activation('relu')(H)<br class="title-page-name"/>    H = dim_ordering_reshape(nch, 14)(H)<br class="title-page-name"/>    H = UpSampling2D(size=(2, 2))(H)<br class="title-page-name"/>    H = Convolution2D(int(nch / 2), 3, 3, border_mode='same', <br class="title-page-name"/>        init='glorot_uniform')(H)<br class="title-page-name"/>    H = BatchNormalization(mode=2, axis=1)(H)<br class="title-page-name"/>    H = Activation('relu')(H)<br class="title-page-name"/>    H = Convolution2D(int(nch / 4), 3, 3, border_mode='same', <br class="title-page-name"/>        init='glorot_uniform')(H)<br class="title-page-name"/>    H = BatchNormalization(mode=2, axis=1)(H)<br class="title-page-name"/>    H = Activation('relu')(H)<br class="title-page-name"/>    H = Convolution2D(1, 1, 1, border_mode='same', init='glorot_uniform')(H)<br class="title-page-name"/>    g_V = Activation('sigmoid')(H)<br class="title-page-name"/>    return Model(g_input, g_V)
+</pre>
+<p class="calibre1">The discriminator is very similar to the one defined previously in this chapter. The only major difference is the adoption of <kbd class="calibre12">LeakyReLU</kbd>:</p>
+<pre class="calibre21">
+def model_discriminator(input_shape=(1, 28, 28), dropout_rate=0.5):<br class="title-page-name"/>    d_input = dim_ordering_input(input_shape, name="input_x")<br class="title-page-name"/>    nch = 512<br class="title-page-name"/>    H = Convolution2D(int(nch / 2), 5, 5, subsample=(2, 2),<br class="title-page-name"/>        border_mode='same', activation='relu')(d_input)<br class="title-page-name"/>    H = LeakyReLU(0.2)(H)<br class="title-page-name"/>    H = Dropout(dropout_rate)(H)<br class="title-page-name"/>    H = Convolution2D(nch, 5, 5, subsample=(2, 2),<br class="title-page-name"/>        border_mode='same', activation='relu')(H)<br class="title-page-name"/>    H = LeakyReLU(0.2)(H)<br class="title-page-name"/>    H = Dropout(dropout_rate)(H)<br class="title-page-name"/>    H = Flatten()(H)<br class="title-page-name"/>    H = Dense(int(nch / 2))(H)<br class="title-page-name"/>    H = LeakyReLU(0.2)(H)<br class="title-page-name"/>    H = Dropout(dropout_rate)(H)<br class="title-page-name"/>    d_V = Dense(1, activation='sigmoid')(H)<br class="title-page-name"/>    return Model(d_input, d_V)
+</pre>
+<p class="calibre1">Then, two simple functions for loading and normalizing MNIST data are defined:</p>
+<pre class="calibre21">
+def mnist_process(x):<br class="title-page-name"/>    x = x.astype(np.float32) / 255.0<br class="title-page-name"/>    return x<br class="title-page-name"/><br class="title-page-name"/>def mnist_data():<br class="title-page-name"/>    (xtrain, ytrain), (xtest, ytest) = mnist.load_data()<br class="title-page-name"/>    return mnist_process(xtrain), mnist_process(xtest)
+</pre>
+<p class="calibre1">As a next step, the GAN is defined as a combination of generator and discriminator in a joint GAN model. Note that the weights are initialized with <kbd class="calibre12">normal_latent_sampling</kbd>, which samples from a normal Gaussian distribution:</p>
+<pre class="calibre21">
+if __name__ == "__main__":<br class="title-page-name"/>    # z in R^100<br class="title-page-name"/>    latent_dim = 100<br class="title-page-name"/>    # x in R^{28x28}<br class="title-page-name"/>    input_shape = (1, 28, 28)<br class="title-page-name"/>    # generator (z -&gt; x)<br class="title-page-name"/>    generator = model_generator()<br class="title-page-name"/>    # discriminator (x -&gt; y)<br class="title-page-name"/>    discriminator = model_discriminator(input_shape=input_shape)<br class="title-page-name"/>    # gan (x - &gt; yfake, yreal), z generated on GPU<br class="title-page-name"/>    gan = simple_gan(generator, discriminator, normal_latent_sampling((latent_dim,)))<br class="title-page-name"/>    # print summary of models<br class="title-page-name"/>    generator.summary()<br class="title-page-name"/>    discriminator.summary()<br class="title-page-name"/>    gan.summary()
+</pre>
+<p class="calibre1">After this, the example creates our GAN and it compiles the model trained using the <kbd class="calibre12">Adam</kbd> optimizer, with <kbd class="calibre12">binary_crossentropy</kbd> used as a loss function:</p>
+<pre class="calibre21">
+# build adversarial model<br class="title-page-name"/>model = AdversarialModel(base_model=gan,<br class="title-page-name"/>    player_params=[generator.trainable_weights, discriminator.trainable_weights],<br class="title-page-name"/>    player_names=["generator", "discriminator"])<br class="title-page-name"/>model.adversarial_compile(adversarial_optimizer=AdversarialOptimizerSimultaneous(),<br class="title-page-name"/>    player_optimizers=[Adam(1e-4, decay=1e-4), Adam(1e-3, decay=1e-4)],<br class="title-page-name"/>    loss='binary_crossentropy')
+</pre>
+<p class="calibre1">The generator for creating new images that look like real ones is defined. Each epoch will generate a new forged image during training that looks like the original:</p>
+<pre class="calibre21">
+def generator_sampler():<br class="title-page-name"/>    zsamples = np.random.normal(size=(10 * 10, latent_dim))<br class="title-page-name"/>    gen = dim_ordering_unfix(generator.predict(zsamples))<br class="title-page-name"/>    return gen.reshape((10, 10, 28, 28))<br class="title-page-name"/><br class="title-page-name"/>generator_cb = ImageGridCallback(<br class="title-page-name"/>    "output/gan_convolutional/epoch-{:03d}.png",generator_sampler)<br class="title-page-name"/>xtrain, xtest = mnist_data()<br class="title-page-name"/>xtrain = dim_ordering_fix(xtrain.reshape((-1, 1, 28, 28)))<br class="title-page-name"/>xtest = dim_ordering_fix(xtest.reshape((-1, 1, 28, 28)))<br class="title-page-name"/>y = gan_targets(xtrain.shape[0])<br class="title-page-name"/>ytest = gan_targets(xtest.shape[0])<br class="title-page-name"/>history = model.fit(x=xtrain, y=y,<br class="title-page-name"/>validation_data=(xtest, ytest), callbacks=[generator_cb], nb_epoch=100,<br class="title-page-name"/>    batch_size=32)<br class="title-page-name"/>df = pd.DataFrame(history.history)<br class="title-page-name"/>df.to_csv("output/gan_convolutional/history.csv")<br class="title-page-name"/>generator.save("output/gan_convolutional/generator.h5")<br class="title-page-name"/>discriminator.save("output/gan_convolutional/discriminator.h5")
+</pre>
+<p class="calibre1">Note that <kbd class="calibre12">dim_ordering_unfix</kbd> is utility function for supporting different image ordering defined in <kbd class="calibre12">image_utils.py</kbd>, as follows:</p>
+<pre class="calibre21">
+def dim_ordering_fix(x):<br class="title-page-name"/>    if K.image_dim_ordering() == 'th':<br class="title-page-name"/>        return x<br class="title-page-name"/>    else:<br class="title-page-name"/>        return np.transpose(x, (0, 2, 3, 1))
+</pre>
+<p class="calibre1">Now let's run the code and see the loss for the generator and discriminator. In the following screenshot, we see a dump of the networks for the discriminator and the generator:</p>
+<div class="CDPAlignCenter"><img class="image-border63" src="../images/00131.jpeg"/></div>
+<p class="calibre1">The following screenshot, shows the number of sample used for training and for validation:</p>
+<div class="CDPAlignCenter"><img class="image-border64" src="../images/00132.jpeg"/></div>
+<p class="calibre1">After 5-6 iterations, we already have acceptable artificial images generated and the computer has learned how to reproduce handwritten characters, as shown in the following image:</p>
+<div class="CDPAlignCenter1"><img class="image-border65" src="../images/00133.gif"/></div>
+
+
+            </article>
+
+            <footer class="calibre4">
+                
+            </footer>
+
+        </section>
+    </body></html>

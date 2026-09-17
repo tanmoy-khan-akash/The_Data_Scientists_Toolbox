@@ -1,0 +1,30 @@
+<?xml version='1.0' encoding='utf-8'?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+  <head>
+    <title>Experience replay, or the value of experience</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <link href="../stylesheet.css" rel="stylesheet" type="text/css"/>
+<link href="../page_styles.css" rel="stylesheet" type="text/css"/>
+</head>
+  <body class="calibre">
+        <section>
+
+            <header>
+                </header><h1 class="header-title" id="calibre_pb_0">Experience replay, or the value of experience</h1>
+            
+
+            <article>
+                
+<p class="calibre1">Based on the equations that represent the Q-value for a state action pair <em class="calibre11">(s<sub class="calibre22">t</sub>, a<sub class="calibre22">t</sub>)</em> in terms of the current reward <em class="calibre11">r<sub class="calibre22">t</sub></em> and the discounted maximum Q-value for the next time step <em class="calibre11">(s<sub class="calibre22">t+1</sub>, a<sub class="calibre22">t+1</sub>)</em>, our strategy would logically be to train the network to predict the best next state <em class="calibre11">s'</em> given the current state <em class="calibre11">(s, a, r)</em>. It turns out that this tends to drive the network into a local minimum. The reason for this is that consecutive training samples tend to be very similar.</p>
+<p class="calibre1">To counter this, during game play, we collect all the previous moves <em class="calibre11">(s, a, r, s')</em> into a large fixed size queue called the <strong class="calibre3">replay memory</strong>. The replay memory represents the experience of the network. When training the network, we generate random batches from the replay memory instead of the most recent (batch of) transactions. Since the batches are composed of random experience tuples <em class="calibre11">(s, a, r, s')</em> that are out of order, the network trains better and avoids getting stuck in local minima.</p>
+<p class="calibre1">Experiences could be collected from human gameplay as well instead of (or in addition to) from previous moves during game play by the network. Yet another approach is to collect experiences by running the network in <em class="calibre11">observation</em> mode for a while in the beginning, when it generates completely random actions (<img src="../images/00214.jpeg" class="calibre67"/><em class="calibre11"> = 1</em>) and extracts the reward and next state from the game and collects them into its experience replay queue.</p>
+
+
+            </article>
+
+            <footer class="calibre4">
+                
+            </footer>
+
+        </section>
+    </body></html>

@@ -1,0 +1,60 @@
+<?xml version='1.0' encoding='utf-8'?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+  <head>
+    <title>Very deep inception-v3 net used for transfer learning</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <link href="../stylesheet.css" rel="stylesheet" type="text/css"/>
+<link href="../page_styles.css" rel="stylesheet" type="text/css"/>
+</head>
+  <body class="calibre">
+        <section>
+
+            <header>
+                </header><h1 class="header-title" id="calibre_pb_0">Very deep inception-v3 net used for transfer learning</h1>
+            
+
+            <article>
+                
+<p class="calibre1">Transfer learning is a very powerful deep learning technique which has more applications in different domains. The intuition is very simple and can be explained with an analogy. Suppose you want to learn a new language, say Spanish; then it could be useful to start from what you already know in a different language, say English.</p>
+<p class="calibre1">Following this line of thinking, computer vision researchers now commonly use pre-trained CNNs to generate representations for novel tasks, where the dataset may not be large enough to train an entire CNN from scratch. Another common tactic is to take the pre-trained ImageNet network and then to fine-tune the entire network to the novel task.</p>
+<p class="calibre1">Inception-v3 net is a very deep ConvNet developed by Google. Keras implements the full network described in the following diagram and it comes pre-trained on ImageNet. The default input size for this model is 299 x 299 on three channels:</p>
+<div class="CDPAlignCenter"><img class="image-border54" src="../images/00119.jpeg"/></div>
+<p class="calibre1">This skeleton example is inspired by a scheme available at: <a href="https://keras.io/applications/" target="_blank" class="calibre6">https://keras.io/applications/</a>. We suppose to have a training dataset <em class="calibre11">D</em> in a domain, different from ImageNet. <em class="calibre11">D</em> has 1,024 features in input and 200 categories in output. Let us see a code fragment:</p>
+<pre class="calibre21">
+from keras.applications.inception_v3 import InceptionV3<br class="title-page-name"/>from keras.preprocessing import image<br class="title-page-name"/>from keras.models import Model<br class="title-page-name"/>from keras.layers import Dense, GlobalAveragePooling2D<br class="title-page-name"/>from keras import backend as K<br class="title-page-name"/><br class="title-page-name"/># create the base pre-trained model<br class="title-page-name"/>base_model = InceptionV3(weights='imagenet', include_top=False)
+</pre>
+<p class="calibre1">We use a trained inception-v3; we do not include the top model because we want to fine-tune on <em class="calibre11">D</em>. The top level is a dense layer with 1,024 inputs and where the last output level is a softmax dense layer with 200 classes of output. <kbd class="calibre12">x = GlobalAveragePooling2D()(x)</kbd> is used to convert the input to the correct shape for the dense layer to handle. In fact, <kbd class="calibre12">base_model.output</kbd> tensor has the shape <em class="calibre11">(samples, channels, rows, cols)</em> for <kbd class="calibre12">dim_ordering="th"</kbd> or <em class="calibre11">(samples, rows, cols, channels)</em> for <kbd class="calibre12">dim_ordering="tf"</kbd> but dense needs them as <em class="calibre11">(samples, channels)</em> and <kbd class="calibre12">GlobalAveragePooling2D</kbd> averages across <em class="calibre11">(rows, cols)</em>. So if you look at the last four layers (where <kbd class="calibre12">include_top=True</kbd>), you see these shapes:</p>
+<pre class="calibre21">
+# layer.name, layer.input_shape, layer.output_shape<br class="title-page-name"/>('mixed10', [(None, 8, 8, 320), (None, 8, 8, 768), (None, 8, 8, 768), (None, 8, 8, 192)], (None, 8, 8, 2048))<br class="title-page-name"/>('avg_pool', (None, 8, 8, 2048), (None, 1, 1, 2048))<br class="title-page-name"/>('flatten', (None, 1, 1, 2048), (None, 2048))<br class="title-page-name"/>('predictions', (None, 2048), (None, 1000))
+</pre>
+<p class="calibre1">When you do <kbd class="calibre12">include_top=False,</kbd> you are removing the last three layers and exposing the <kbd class="calibre12">mixed10</kbd> layer, so the <kbd class="calibre12">GlobalAveragePooling2D</kbd> layer converts the <em class="calibre11">(None, 8, 8, 2048)</em> to <em class="calibre11">(None, 2048)</em>, where each element in the <em class="calibre11">(None, 2048)</em> tensor is the average value for each corresponding <em class="calibre11">(8, 8)</em> subtensor in the <em class="calibre11">(None, 8, 8, 2048)</em> tensor:</p>
+<pre class="calibre21">
+<em class="calibre11"># add a global spatial average pooling layer<br class="title-page-name"/></em>x = base_model.output<br class="title-page-name"/>x = GlobalAveragePooling2D()(x)<em class="calibre11"># let's add a fully-connected layer as first layer<br class="title-page-name"/></em>x = Dense(1024, activation='relu')(x)<em class="calibre11"># and a logistic layer with 200 classes as last layer<br class="title-page-name"/></em>predictions = Dense(200, activation='softmax')(x)<em class="calibre11"># model to train<br class="title-page-name"/></em>model = Model(input=base_model.input, output=predictions)
+</pre>
+<p class="calibre1">All the convolutional levels are pre-trained, so we freeze them during the training of the full model:</p>
+<pre class="calibre21">
+<em class="calibre11"># that is, freeze all convolutional InceptionV3 layers<br class="title-page-name"/></em><strong class="calibre3">for</strong> layer <strong class="calibre3">in</strong> base_model.layers: layer.trainable = <strong class="calibre3">False</strong>
+</pre>
+<p class="calibre1">The model is then compiled and trained for a few epochs so that the top layers are trained:</p>
+<pre class="calibre21">
+<em class="calibre11"># compile the model (should be done *after* setting layers to non-trainable)<br class="title-page-name"/></em>model.compile(optimizer='rmsprop', loss='categorical_crossentropy')<br class="title-page-name"/><br class="title-page-name"/><em class="calibre11"># train the model on the new data for a few epochs</em> model.fit_generator(...)
+</pre>
+<p class="calibre1">Then we freeze the top layers in inception and fine-tune some inception layer. In this example, we decide to freeze the first 172 layers (an hyperparameter to tune):</p>
+<pre class="calibre21">
+<em class="calibre11"># we chose to train the top 2 inception blocks, that is, we will freeze<br class="title-page-name"/><br class="title-page-name"/></em><em class="calibre11"># the first 172 layers and unfreeze the rest: <br class="title-page-name"/></em><strong class="calibre3">for</strong> layer <strong class="calibre3">in</strong> <br class="title-page-name"/>model.layers[:172]: layer.trainable = <strong class="calibre3">False <br class="title-page-name"/></strong><strong class="calibre3">for</strong> layer <strong class="calibre3">in</strong> <br class="title-page-name"/>model.layers[172:]: layer.trainable = <strong class="calibre3">True</strong>
+</pre>
+<p class="calibre1">The model is then recompiled for fine-tune optimization. We need to recompile the model for these modifications to take effect:</p>
+<pre class="calibre21">
+<em class="calibre11"># we use SGD with a low learning rate<br class="title-page-name"/></em><strong class="calibre3">from</strong> keras.optimizers<br class="title-page-name"/><strong class="calibre3">import</strong> SGD<br class="title-page-name"/>model.compile(optimizer=SGD(lr=0.0001, momentum=0.9), loss='categorical_crossentropy')<br class="title-page-name"/><br class="title-page-name"/><em class="calibre11"># we train our model again (this time fine-tuning the top 2 inception blocks)<br class="title-page-name"/></em><em class="calibre11"># alongside the top Dense layers<br class="title-page-name"/></em>model.fit_generator(...)
+</pre>
+<p class="calibre1">Now we have a new deep network that reuses the standard Inception-v3 network, but it is trained on a new domain <em class="calibre11">D</em> via transfer learning. Of course, there are many parameters to fine-tune for achieving good accuracy. However, we are now reusing a very large pre-trained network as a starting point via transfer learning. In doing so, we can save the need to train on our machines by reusing what is already available in Keras.</p>
+
+
+            </article>
+
+            <footer class="calibre4">
+                
+            </footer>
+
+        </section>
+    </body></html>

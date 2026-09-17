@@ -1,0 +1,34 @@
+<?xml version='1.0' encoding='utf-8'?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+  <head>
+    <title>The road ahead</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <link href="../stylesheet.css" rel="stylesheet" type="text/css"/>
+<link href="../page_styles.css" rel="stylesheet" type="text/css"/>
+</head>
+  <body class="calibre">
+        <section>
+
+            <header>
+                </header><h1 class="header-title" id="calibre_pb_0">The road ahead</h1>
+            
+
+            <article>
+                
+<p class="calibre1">In January 2016, DeepMind announced the release of AlphaGo (<span>for more information refer to: </span><span><em class="calibre11">Mastering the Game of Go with Deep Neural Networks and Tree Search</em>, by D. Silver, Nature 529.7587, pp. 484-489, 2016</span>), a neural network to play the game of Go. Go is regarded as a very challenging game for AIs to play, mainly because at any point in the game, there are an average of approximately <em class="calibre11">10<sup class="calibre66">170</sup></em> possible (<span>for more information refer to: <a href="http://ai-depot.com/LogicGames/Go-Complexity.html" target="_blank" class="calibre6">http://ai-depot.com/LogicGames/Go-Complexity.html</a></span>) moves (compared with approximately <em class="calibre11">10<sup class="calibre66">50</sup></em> for chess). Hence determining the best move using brute force methods is computationally infeasible. At the time of publication, AlphaGo had already won 5-0 in a 5-game competition against the current European Go champion, Fan Hui. This was the first time that any computer program had defeated a human player at Go. Subsequently, in March 2016, AlphaGo won 4-1 against Lee Sedol, the world's second professional Go player.</p>
+<p class="calibre1">There were several notable new ideas that went into AlphaGo. First, it was trained using a combination of supervised learning from human expert games and reinforcement learning by playing one copy of AlphaGo against another. You have seen applications of both these ideas in previous chapters.</p>
+<p class="calibre1">Second, AlphaGo was composed of a value network and a policy network. During each move, AlphaGo uses Monte Carlo simulation, a process used to predict the probability of different outcomes in the future in the presence of random variables, to imagine many alternative games starting from the current position. The value network is used to reduce the depth of the tree search to estimate win/loss probability without having to compute all the way to the end of the game, sort of like an intuition about how good the move is. The policy network is used to reduce the breadth of the search by guiding the search towards actions that promise the maximum immediate reward (or Q-value). For a more detailed description, please refer to the blog post: <span><em class="calibre11">AlphaGo: Mastering the ancient game of Go with Machine Learning</em>, Google Research Blog, 2016.</span></p>
+<p class="calibre1">While AlphaGo was a major improvement over the original DeepMind network, it was still playing a game where all the players can see all the game pieces, that is, they are still games of perfect information. In January, 2017, researchers at Carnegie Mellon University announced Libratus (for more information refer to: <span><em class="calibre11">AI Takes on Top Poker Players</em>, by T. Revel, New Scientist 223.3109, pp. 8, 2017</span>), an AI that plays Poker. Simultaneously, another group comprised of researchers from the University of Alberta, Charles University of Prague, and Czech Technical University (also from Prague), have proposed the DeepStack architecture (<span>for more information refer to: <em class="calibre11">DeepStack: Expert-Level Artificial Intelligence in No-Limit Poker</em>, by M. Moravaak, arXiv:1701.01724, 2017</span>) to do the same thing. Poker is a game of imperfect information, since a player cannot see the opponent's cards. So, in addition to learning how to play the game, the Poker playing AI also needs to develop an intuition about the opponent's game play.</p>
+<p class="calibre1">Rather than use a built-in strategy for its intuition, Libratus has an algorithm that computes this strategy by trying to achieve a balance between risk and reward, also known as the Nash equilibrium. From January 11, 2017 to January 31, 2017, Libratus was pitted against four top human Poker players (<span>for more information refer to: <em class="calibre11">Upping the Ante: Top Poker Pros Face Off vs. Artificial Intelligence</em>, Carnegie Mellon University, January 2017</span>), and beat them resoundingly.</p>
+<p class="calibre1">DeepStack's intuition is trained using reinforcement learning, using examples generated from random Poker situations. It has played 33 professional Poker players from 17 countries and has a win rating that makes it an <em class="calibre11">order of magnitude</em> better than a good player rating (<span>for more information refer to: <em class="calibre11">The Uncanny Intuition of Deep Learning to Predict Human Behavior</em>, by C. E. Perez, Medium corporation, Intuition Machine, February 13, 2017</span>).</p>
+<p class="calibre1">As you can see, these are very exciting times indeed. Advances that started with deep learning networks able to play arcade games have led to networks that can effectively read your mind, or at least anticipate (sometimes non-rational) human behavior and win at games of bluffing. The possibilities with deep learning seem to be just limitless.</p>
+
+
+            </article>
+
+            <footer class="calibre4">
+                
+            </footer>
+
+        </section>
+    </body></html>

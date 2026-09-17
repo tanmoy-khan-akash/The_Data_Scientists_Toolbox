@@ -1,0 +1,34 @@
+<?xml version='1.0' encoding='utf-8'?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+  <head>
+    <title>Gated recurrent unit — GRU</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <link href="../stylesheet.css" rel="stylesheet" type="text/css"/>
+<link href="../page_styles.css" rel="stylesheet" type="text/css"/>
+</head>
+  <body class="calibre">
+        <section>
+
+            <header>
+                </header><h1 class="header-title" id="calibre_pb_0">Gated recurrent unit — GRU</h1>
+            
+
+            <article>
+                
+<p class="calibre1">The GRU is a variant of the LSTM and was introduced by K. Cho (for more information refer to: <span><em class="calibre11">Learning Phrase Representations using RNN Encoder-Decoder for Statistical Machine Translation</em>, by K. Cho, arXiv:1406.1078, 2014</span>). It retains the LSTM's resistance to the vanishing gradient problem, but its internal structure is simpler, and therefore is faster to train, since fewer computations are needed to make updates to its hidden state. The gates for a GRU cell are illustrated in the following diagram:</p>
+<div class="CDPAlignCenter"><img class="image-border84" src="../images/00165.jpeg"/></div>
+<p class="calibre1"><span>Instead of the input, forget, and output gates in the LSTM cell, the GRU cell has two gates,<br class="title-page-name"/>
+an update gate</span> <em class="calibre11">z</em>, <span>and a reset gate r.</span> The update gate defines how much previous memory to keep around and the reset gate defines how to combine the new input with the previous memory. There is no persistent cell state distinct from the hidden state as in LSTM. The following equations define the gating mechanism in a GRU:</p>
+<div class="CDPAlignCenter"><img src="../images/00166.jpeg" class="calibre64"/></div>
+<p class="calibre1">According to several empirical evaluations (for more information refer to the articles: <em class="calibre11">An Empirical Exploration of Recurrent Network Architectures</em>, by R. Jozefowicz, W. Zaremba, and I. Sutskever, JMLR, 2015 and <em class="calibre11">Empirical Evaluation of Gated Recurrent Neural Networks on Sequence Modeling</em>, by J. Chung, arXiv:1412.3555. 2014), GRU and LSTM have comparable performance and there is no simple way to recommend one or the other for a specific task. While GRUs are faster to train and need less data to generalize, in situations where there is enough data, an LSTM's greater expressive power may lead to better results. Like LSTMs, GRUs are drop-in replacements for the SimpleRNN cell.</p>
+<p class="calibre1">Keras provides built in implementations of both <kbd class="calibre12">LSTM</kbd> and <kbd class="calibre12">GRU</kbd>, as well as the <kbd class="calibre12">SimpleRNN</kbd> class we saw earlier.</p>
+
+
+            </article>
+
+            <footer class="calibre4">
+                
+            </footer>
+
+        </section>
+    </body></html>

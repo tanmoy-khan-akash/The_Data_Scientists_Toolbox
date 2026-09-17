@@ -1,0 +1,85 @@
+<?xml version='1.0' encoding='utf-8'?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+  <head>
+    <title>LSTM with Keras — sentiment analysis</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <link href="../stylesheet.css" rel="stylesheet" type="text/css"/>
+<link href="../page_styles.css" rel="stylesheet" type="text/css"/>
+</head>
+  <body class="calibre">
+        <section>
+
+            <header>
+                </header><h1 class="header-title" id="calibre_pb_0">LSTM with Keras — sentiment analysis</h1>
+            
+
+            <article>
+                
+<p class="calibre1">Keras provides an LSTM layer that we will use here to construct and train a many-to-one RNN. Our network takes in a sentence (a sequence of words) and outputs a sentiment value (positive or negative). Our training set is a dataset of about 7,000 short sentences from UMICH SI650 sentiment classification competition on Kaggle (<a href="https://inclass.kaggle.com/c/si650winter11" target="_blank" class="calibre6">https://inclass.kaggle.com/c/si650winter11</a>). Each sentence is labeled <em class="calibre11">1</em> or <em class="calibre11">0</em> for positive or negative sentiment respectively, which our network will learn to predict.</p>
+<p class="calibre1">We start with the imports, as usual:</p>
+<pre class="calibre21">
+from keras.layers.core import Activation, Dense, Dropout, SpatialDropout1D<br class="title-page-name"/>from keras.layers.embeddings import Embedding<br class="title-page-name"/>from keras.layers.recurrent import LSTM<br class="title-page-name"/>from keras.models import Sequential<br class="title-page-name"/>from keras.preprocessing import sequence<br class="title-page-name"/>from sklearn.model_selection import train_test_split<br class="title-page-name"/>import collections<br class="title-page-name"/>import matplotlib.pyplot as plt<br class="title-page-name"/>import nltk<br class="title-page-name"/>import numpy as np<br class="title-page-name"/>import os
+</pre>
+<p class="calibre1">Before we start, we want to do a bit of exploratory analysis on the data. Specifically we need to know how many unique words there are in the corpus and how many words are there in each sentence:</p>
+<pre class="calibre21">
+maxlen = 0<br class="title-page-name"/>word_freqs = collections.Counter()<br class="title-page-name"/>num_recs = 0<br class="title-page-name"/>ftrain = open(os.path.join(DATA_DIR, "umich-sentiment-train.txt"), 'rb')<br class="title-page-name"/>for line in ftrain:<br class="title-page-name"/>    label, sentence = line.strip().split("t")<br class="title-page-name"/>    words = nltk.word_tokenize(sentence.decode("ascii", "ignore").lower())<br class="title-page-name"/>    if len(words) &gt; maxlen:<br class="title-page-name"/>        maxlen = len(words)<br class="title-page-name"/>    for word in words:<br class="title-page-name"/>        word_freqs[word] += 1<br class="title-page-name"/>    num_recs += 1<br class="title-page-name"/>ftrain.close()
+</pre>
+<p class="calibre1">Using this, we get the following estimates for our corpus:</p>
+<pre class="calibre21">
+<strong class="calibre3">maxlen : 42</strong><br class="title-page-name"/><strong class="calibre3">len(word_freqs) : 2313</strong>
+</pre>
+<p class="calibre1">Using the number of unique words <kbd class="calibre12">len(word_freqs)</kbd>, we set our vocabulary size to a fixed number and treat all the other words as <strong class="calibre3">out of vocabulary</strong> (<strong class="calibre3">OOV</strong>) words and replace them with the pseudo-word UNK (for unknown). At prediction time, this will allow us to handle previously unseen words as OOV words as well.</p>
+<p class="calibre1">The number of words in the sentence (<kbd class="calibre12">maxlen</kbd>) allows us to set a fixed sequence length and zero pad shorter sentences and truncate longer sentences to that length as appropriate. Even though RNNs handle variable sequence length, this is usually achieved either by padding and truncating as above, or by grouping the inputs in different batches by sequence length. We will use the former approach here. For the latter approach, Keras recommends using batches of size one (for more information refer to: <a href="https://github.com/fchollet/keras/issues/40" target="_blank" class="calibre6">https://github.com/fchollet/keras/issues/40</a>).</p>
+<p class="calibre1">Based on the preceding estimates, we set our <kbd class="calibre12">VOCABULARY_SIZE</kbd> to <kbd class="calibre12">2002</kbd>. This is 2,000 words from our vocabulary plus the UNK pseudo-word and the PAD pseudo word (used for padding sentences to a fixed number of words), in our case 40 given by <kbd class="calibre12">MAX_SENTENCE_LENGTH</kbd>:</p>
+<pre class="calibre21">
+DATA_DIR = "../data"<br class="title-page-name"/><br class="title-page-name"/>MAX_FEATURES = 2000<br class="title-page-name"/>MAX_SENTENCE_LENGTH = 40
+</pre>
+<p class="calibre1">Next we need a pair of lookup tables. Each row of input to the RNN is a sequence of word indices, where the indices are ordered by most frequent to least frequent word in the training set. The two lookup tables allow us to lookup an index given the word and the word given the index. This includes the <kbd class="calibre12">PAD</kbd> and <kbd class="calibre12">UNK</kbd> pseudo-words as well:</p>
+<pre class="calibre21">
+vocab_size = min(MAX_FEATURES, len(word_freqs)) + 2<br class="title-page-name"/>word2index = {x[0]: i+2 for i, x in<br class="title-page-name"/>enumerate(word_freqs.most_common(MAX_FEATURES))}<br class="title-page-name"/>word2index["PAD"] = 0<br class="title-page-name"/>word2index["UNK"] = 1<br class="title-page-name"/>index2word = {v:k for k, v in word2index.items()}
+</pre>
+<p class="calibre1">Next, we convert our input sentences to word index sequences, pad them to the <kbd class="calibre12">MAX_SENTENCE_LENGTH</kbd> words. Since our output label in this case is binary (positive or negative sentiment), we don't need to process the labels:</p>
+<pre class="calibre21">
+X = np.empty((num_recs, ), dtype=list)<br class="title-page-name"/>y = np.zeros((num_recs, ))<br class="title-page-name"/>i = 0<br class="title-page-name"/>ftrain = open(os.path.join(DATA_DIR, "umich-sentiment-train.txt"), 'rb')<br class="title-page-name"/>for line in ftrain:<br class="title-page-name"/>    label, sentence = line.strip().split("t")<br class="title-page-name"/>    words = nltk.word_tokenize(sentence.decode("ascii", "ignore").lower())<br class="title-page-name"/>    seqs = []<br class="title-page-name"/>    for word in words:<br class="title-page-name"/>        if word2index.has_key(word):<br class="title-page-name"/>            seqs.append(word2index[word])<br class="title-page-name"/>        else:<br class="title-page-name"/>            seqs.append(word2index["UNK"])<br class="title-page-name"/>    X[i] = seqs<br class="title-page-name"/>    y[i] = int(label)<br class="title-page-name"/>    i += 1<br class="title-page-name"/>ftrain.close()<br class="title-page-name"/>X = sequence.pad_sequences(X, maxlen=MAX_SENTENCE_LENGTH)
+</pre>
+<p class="calibre1">Finally, we split the training set into a 80-20 training test split:</p>
+<pre class="calibre21">
+Xtrain, Xtest, ytrain, ytest = train_test_split(X, y, test_size=0.2, random_state=42)
+</pre>
+<p class="calibre1">The following diagram shows the structure of our RNN:</p>
+<div class="CDPAlignCenter"><img class="image-border81" src="../images/00161.jpeg"/></div>
+<p class="calibre1">The input for each row is a sequence of word indices. The sequence length is given by <kbd class="calibre12">MAX_SENTENCE_LENGTH</kbd>. The first dimension of the tensor is set to <kbd class="calibre12">None</kbd> to indicate that the batch size (the number of records fed to the network each time) is currently unknown at definition time; it is specified during run time using the <kbd class="calibre12">batch_size</kbd> parameter. So assuming an as-yet undetermined batch size, the shape of the input tensor is <kbd class="calibre12">(None, MAX_SENTENCE_LENGTH, 1)</kbd>. These tensors are fed into an embedding layer of size <kbd class="calibre12">EMBEDDING_SIZE</kbd> whose weights are initialized with small random values and learned during training. This layer will transform the tensor to a shape <kbd class="calibre12">(None,MAX_SENTENCE_LENGTH, EMBEDDING_SIZE)</kbd>. The output of the embedding layer is fed into an LSTM with sequence length <kbd class="calibre12">MAX_SENTENCE_LENGTH</kbd> and output layer size <kbd class="calibre12">HIDDEN_LAYER_SIZE</kbd>, so the output of the LSTM is a tensor of shape <kbd class="calibre12">(None, HIDDEN_LAYER_SIZE, MAX_SENTENCE_LENGTH)</kbd>. By default, the LSTM will output a single tensor of shape <kbd class="calibre12">(None, HIDDEN_LAYER_SIZE)</kbd> at its last sequence (<kbd class="calibre12">return_sequences=False</kbd>). This is fed to a dense layer with output size of <kbd class="calibre12">1</kbd> with a sigmoid activation function, so it will output either <kbd class="calibre12">0</kbd> (negative review) or <kbd class="calibre12">1</kbd> (positive review).</p>
+<p class="calibre1">We compile the model using the binary cross-entropy loss function since it predicts a binary value, and the Adam optimizer, a good general purpose optimizer. Note that the hyperparameters <kbd class="calibre12">EMBEDDING_SIZE</kbd>, <kbd class="calibre12">HIDDEN_LAYER_SIZE</kbd>, <kbd class="calibre12">BATCH_SIZE</kbd> and <kbd class="calibre12">NUM_EPOCHS</kbd> (set as constants as follows) were tuned experimentally over several runs:</p>
+<pre class="calibre21">
+EMBEDDING_SIZE = 128<br class="title-page-name"/>HIDDEN_LAYER_SIZE = 64<br class="title-page-name"/>BATCH_SIZE = 32<br class="title-page-name"/>NUM_EPOCHS = 10<br class="title-page-name"/><br class="title-page-name"/>model = Sequential()<br class="title-page-name"/>model.add(Embedding(vocab_size, EMBEDDING_SIZE,<br class="title-page-name"/>input_length=MAX_SENTENCE_LENGTH))<br class="title-page-name"/>model.add(SpatialDropout1D(Dropout(0.2)))<br class="title-page-name"/>model.add(LSTM(HIDDEN_LAYER_SIZE, dropout=0.2, recurrent_dropout=0.2))<br class="title-page-name"/>model.add(Dense(1))<br class="title-page-name"/>model.add(Activation("sigmoid"))<br class="title-page-name"/><br class="title-page-name"/>model.compile(loss="binary_crossentropy", optimizer="adam",<br class="title-page-name"/>    metrics=["accuracy"])
+</pre>
+<p class="calibre1">We then train the network for <kbd class="calibre12">10</kbd> epochs (<kbd class="calibre12">NUM_EPOCHS</kbd>) and batch size of <kbd class="calibre12">32</kbd> (<kbd class="calibre12">BATCH_SIZE</kbd>). At each epoch we validate the model using the test data:</p>
+<pre class="calibre21">
+history = model.fit(Xtrain, ytrain, batch_size=BATCH_SIZE, epochs=NUM_EPOCHS,<br class="title-page-name"/>    validation_data=(Xtest, ytest))
+</pre>
+<p class="calibre1">The output of this step shows how the loss decreases and accuracy increases over multiple epochs:</p>
+<div class="CDPAlignCenter"><img class="image-border82" src="../images/00162.jpeg"/></div>
+<p class="calibre1">We can also plot the loss and accuracy values over time using the following code:</p>
+<pre class="calibre21">
+plt.subplot(211)<br class="title-page-name"/>plt.title("Accuracy")<br class="title-page-name"/>plt.plot(history.history["acc"], color="g", label="Train")<br class="title-page-name"/>plt.plot(history.history["val_acc"], color="b", label="Validation")<br class="title-page-name"/>plt.legend(loc="best")<br class="title-page-name"/><br class="title-page-name"/>plt.subplot(212)<br class="title-page-name"/>plt.title("Loss")<br class="title-page-name"/>plt.plot(history.history["loss"], color="g", label="Train")<br class="title-page-name"/>plt.plot(history.history["val_loss"], color="b", label="Validation")<br class="title-page-name"/>plt.legend(loc="best")<br class="title-page-name"/><br class="title-page-name"/>plt.tight_layout()<br class="title-page-name"/>plt.show()
+</pre>
+<p class="calibre1">The output of the preceding example is as follows:</p>
+<div class="CDPAlignCenter"><img class="image-border10" src="../images/00163.jpeg"/></div>
+<p class="calibre1">Finally, we evaluate our model against the full test set and print the score and accuracy. We also pick a few random sentences from our test set and print the RNN's prediction, the label and the actual sentence:</p>
+<pre class="calibre21">
+score, acc = model.evaluate(Xtest, ytest, batch_size=BATCH_SIZE)<br class="title-page-name"/>print("Test score: %.3f, accuracy: %.3f" % (score, acc))<br class="title-page-name"/><br class="title-page-name"/>for i in range(5):<br class="title-page-name"/>    idx = np.random.randint(len(Xtest))<br class="title-page-name"/>    xtest = Xtest[idx].reshape(1,40)<br class="title-page-name"/>    ylabel = ytest[idx]<br class="title-page-name"/>    ypred = model.predict(xtest)[0][0]<br class="title-page-name"/>    sent = " ".join([index2word[x] for x in xtest[0].tolist() if x != 0])<br class="title-page-name"/>    print("%.0ft%dt%s" % (ypred, ylabel, sent))
+</pre>
+<p class="calibre1">As you can see from the results, we get back close to 99% accuracy. The predictions the model makes for this particular set match exactly with the labels, although this is not the case for all predictions:</p>
+<div class="CDPAlignCenter"><img class="image-border83" src="../images/00164.jpeg"/></div>
+<p class="calibre1">If you would like to run this code locally, you need to get the data from the Kaggle website.</p>
+<p class="calibre1">The source code for this example is available in the file <kbd class="calibre12">umich_sentiment_lstm.py</kbd> in the code download for this chapter.</p>
+
+
+            </article>
+
+            <footer class="calibre4">
+                
+            </footer>
+
+        </section>
+    </body></html>

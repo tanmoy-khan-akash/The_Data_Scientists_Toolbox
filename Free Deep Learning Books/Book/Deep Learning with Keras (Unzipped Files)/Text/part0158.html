@@ -1,0 +1,38 @@
+<?xml version='1.0' encoding='utf-8'?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+  <head>
+    <title>Q-learning</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <link href="../stylesheet.css" rel="stylesheet" type="text/css"/>
+<link href="../page_styles.css" rel="stylesheet" type="text/css"/>
+</head>
+  <body class="calibre">
+        <section>
+
+            <header>
+                </header><h1 class="header-title" id="calibre_pb_0">Q-learning</h1>
+            
+
+            <article>
+                
+<p class="calibre1">Deep reinforcement learning utilizes a model-free reinforcement learning technique called <strong class="calibre3">Q-learning</strong>. Q-learning can be used to find an optimal action for any given state in a finite markov decision process. Q-learning tries to maximize the value of the Q-function which represents the maximum discounted future reward when we perform action <em class="calibre11">a</em> in state <em class="calibre11">s</em>:</p>
+<div class="CDPAlignCenter"><img src="../images/00209.jpeg" class="calibre64"/></div>
+<p class="calibre1">Once we know the Q-function, the optimal action <em class="calibre11">a</em> at a state <em class="calibre11">s</em> is the one with the highest Q-value. We can then define a policy <em class="calibre11">Ï€(s)</em> that gives us the optimal action at any state:</p>
+<div class="CDPAlignCenter"><img src="../images/00210.jpeg" class="calibre64"/></div>
+<p class="calibre1">We can define the Q-function for a transition point (<em class="calibre11">s<sub class="calibre22">t</sub></em>, <em class="calibre11">a<sub class="calibre22">t</sub></em>, <em class="calibre11">r<sub class="calibre22">t</sub></em>, <em class="calibre11">s<sub class="calibre22">t+1</sub></em>) in terms of the Q-function at the next point (<em class="calibre11">s<sub class="calibre22">t+1</sub></em>, <em class="calibre11">a<sub class="calibre22">t+1</sub></em>, <em class="calibre11">r<sub class="calibre22">t+1</sub></em>, <em class="calibre11">s<sub class="calibre22">t+2</sub></em>) similar to how we did with the total discounted future reward. This equation is known as the <strong class="calibre3">Bellman equation</strong>:</p>
+<div class="CDPAlignCenter"><img src="../images/00211.jpeg" class="calibre64"/></div>
+<p class="calibre1">The Q-function can be approximated using the Bellman equation. You can think of the Q-function as a lookup table (called a <strong class="calibre3">Q-table</strong>) where the states (denoted by <em class="calibre11">s</em>) are rows and actions (denoted by <em class="calibre11">a</em>) are columns, and the elements (denoted by <em class="calibre11">Q(s, a)</em>) are the rewards that you get if you are in the state given by the row and take the action given by the column. The best action to take at any state is the one with the highest reward. We start by randomly initializing the Q-table, then carry out random actions and observe the rewards to update the Q-table iteratively according to the following algorithm:</p>
+<pre class="calibre21">
+initialize Q-table Q<br class="title-page-name"/>observe initial state s<br class="title-page-name"/>repeat<br class="title-page-name"/>   select and carry out action a<br class="title-page-name"/>   observe reward r and move to new state s'<br class="title-page-name"/>   Q(s, a) = Q(s, a) + α(r + γ max_a' Q(s', a') - Q(s, a))<br class="title-page-name"/>   s = s'<br class="title-page-name"/>until game over
+</pre>
+<p class="calibre1">You will realize that the algorithm is basically doing stochastic gradient descent on the Bellman equation, backpropagating the reward through the state space (or episode) and averaging over many trials (or epochs). Here α is the learning rate that determines how much of the difference between the previous Q-value and the discounted new maximum Q-value should be incorporated.</p>
+
+
+            </article>
+
+            <footer class="calibre4">
+                
+            </footer>
+
+        </section>
+    </body></html>

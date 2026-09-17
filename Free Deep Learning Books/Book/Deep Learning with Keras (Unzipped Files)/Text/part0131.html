@@ -1,0 +1,39 @@
+<?xml version='1.0' encoding='utf-8'?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+  <head>
+    <title>Long short term memory — LSTM</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <link href="../stylesheet.css" rel="stylesheet" type="text/css"/>
+<link href="../page_styles.css" rel="stylesheet" type="text/css"/>
+</head>
+  <body class="calibre">
+        <section>
+
+            <header>
+                </header><h1 class="header-title" id="calibre_pb_0">Long short term memory — LSTM</h1>
+            
+
+            <article>
+                
+<p class="calibre1">The LSTM is a variant of RNN that is capable of learning long term dependencies. LSTMs were first proposed by Hochreiter and Schmidhuber and refined by many other researchers. They work well on a large variety of problems and are the most widely used type of RNN.</p>
+<p class="calibre1">We have seen how the SimpleRNN uses the hidden state from the previous time step and the current input in a <em class="calibre11">tanh</em> layer to implement recurrence. LSTMs also implement recurrence in a similar way, but instead of a single <em class="calibre11">tanh</em> layer, there are four layers interacting in a very specific way. The following diagram illustrates the transformations that are applied to the hidden state at time step <em class="calibre11">t</em>:</p>
+<div class="CDPAlignCenter"><img class="image-border80" src="../images/00159.jpeg"/></div>
+<p class="calibre1">The diagram looks complicated, but let us look at it component by component. The line across the top of the diagram is the cell state <em class="calibre11">c</em>, and represents the internal memory of the unit. The line across the bottom is the hidden state, and the <em class="calibre11">i</em>, <em class="calibre11">f</em>, <em class="calibre11">o</em>, and <em class="calibre11">g</em> gates are the mechanism by which the LSTM works around the vanishing gradient problem. During training, the LSTM learns the parameters for these gates.</p>
+<p class="calibre1">In order to gain a deeper understanding of how these gates modulate the LSTM's hidden state, let us consider the equations that show how it calculates the hidden state <em class="calibre11">h<sub class="calibre22">t</sub></em> at time <em class="calibre11">t</em> from the hidden state <em class="calibre11">h<sub class="calibre22">t-1</sub></em> at the previous time step:</p>
+<div class="CDPAlignCenter"><img src="../images/00160.jpeg" class="calibre63"/></div>
+<p class="calibre1">Here <em class="calibre11">i</em>, <em class="calibre11">f</em>, and <em class="calibre11">o</em> are the input, forget, and output gates. They are computed using the same equations but with different parameter matrices. The sigmoid function modulates the output of these gates between zero and one, so the output vector produced can be multiplied element-wise with another vector to define how much of the second vector can pass through the first one.</p>
+<p class="calibre1">The forget gate defines how much of the previous state <em class="calibre11">h<sub class="calibre22">t-1</sub></em> you want to allow to pass through. The input gate defines how much of the newly computed state for the current input <em class="calibre11">x<sub class="calibre22">t</sub></em> you want to let through, and the output gate defines how much of the internal state you want to expose to the next layer. The internal hidden state <em class="calibre11">g</em> is computed based on the current input <em class="calibre11">x<sub class="calibre22">t</sub></em> and the previous hidden state <em class="calibre11">h<sub class="calibre22">t-1</sub></em>. Notice that the equation for <em class="calibre11">g</em> is identical to that for the SimpleRNN cell, but in this case we will modulate the output by the output of the input gate <em class="calibre11">i</em>.</p>
+<p class="calibre1">Given <em class="calibre11">i</em>, <em class="calibre11">f</em>, <em class="calibre11">o</em>, and <em class="calibre11">g</em>, we can now calculate the cell state <em class="calibre11">c<sub class="calibre22">t</sub></em> at time <em class="calibre11">t</em> in terms of <em class="calibre11">c<sub class="calibre22">t-1</sub></em> at time (<em class="calibre11">t-1</em>) multiplied by the forget gate and the state <em class="calibre11">g</em> multiplied by the input gate <em class="calibre11">i</em>. So this is basically a way to combine the previous memory and the new input—setting the forget gate to <em class="calibre11">0</em> ignores the old memory and setting the input gate to <em class="calibre11">0</em> ignores the newly computed state.</p>
+<p class="calibre1">Finally, the hidden state <em class="calibre11">h<sub class="calibre22">t</sub></em> at time <em class="calibre11">t</em> is computed by multiplying the memory <em class="calibre11">c<sub class="calibre22">t</sub></em> with the output gate.</p>
+<p class="calibre1">One thing to realize is that an LSTM is a drop-in replacement for a SimpleRNN cell, the only difference is that LSTMs are resistant to the vanishing gradient problem. You can replace an RNN cell in a network with an LSTM without worrying about any side effects. You should generally see better results along with longer training times.</p>
+<p class="calibre1">If you would like to know more, WILDML blog post has a very detailed explanation of these LSTM gates and how they work. For a more visual explanation, take a look at Christopher Olah's blog post: <em class="calibre11">Understanding LSTMs</em> (<a href="http://colah.github.io/posts/2015-08-Understanding-LSTMs/" target="_blank" class="calibre6">http://colah.github.io/posts/2015-08-Understanding-LSTMs/</a>) where he walks you step by step through these computations, with illustrations at each step.</p>
+
+
+            </article>
+
+            <footer class="calibre4">
+                
+            </footer>
+
+        </section>
+    </body></html>

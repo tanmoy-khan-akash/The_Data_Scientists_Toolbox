@@ -1,0 +1,63 @@
+<?xml version='1.0' encoding='utf-8'?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+  <head>
+    <title>Look up embeddings</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <link href="../stylesheet.css" rel="stylesheet" type="text/css"/>
+<link href="../page_styles.css" rel="stylesheet" type="text/css"/>
+</head>
+  <body class="calibre">
+        <section>
+
+            <header>
+                </header><h1 class="header-title" id="calibre_pb_0">Look up embeddings</h1>
+            
+
+            <article>
+                
+<p class="calibre1">Our final strategy is to look up embeddings from pre-trained networks. The simplest way to do this with the current examples is to just set the <kbd class="calibre12">trainable</kbd> parameter of the embedding layer to <kbd class="calibre12">False</kbd>. This ensures that backpropagation will not update the weights on the embedding layer:</p>
+<pre class="calibre21">
+model.add(Embedding(vocab_sz, EMBED_SIZE, input_length=maxlen,<br class="title-page-name"/>                     weights=[embedding_weights],<br class="title-page-name"/>                     trainable=False))<br class="title-page-name"/>model.add(SpatialDropout1D(Dropout(0.2)))
+</pre>
+<p class="calibre1">Setting this value with the word2vec and GloVe examples gave us accuracies of 98.7% and 98.9% respectively after 10 epochs of training.</p>
+<p class="calibre1">However, in general, this is not how you would use pre-trained embeddings in your code. Typically, it involves preprocessing your dataset to create word vectors by looking up words in one of the pre-trained models, and then using this data to train some other model. The second model would not contain an Embedding layer, and may not even be a deep learning network.</p>
+<p class="calibre1">The following example describes a dense network that takes as its input a vector of size <kbd class="calibre12">100</kbd>, representing a sentence, and outputs a <kbd class="calibre12">1</kbd> or <kbd class="calibre12">0</kbd> for positive or negative sentiment. Our dataset is still the one from the UMICH S1650 sentiment classification competition with around 7,000 sentences.</p>
+<p class="calibre1">As previously, large parts of the code are repeated, so we only explain the parts that are new or otherwise need explanation.<br class="title-page-name"/>
+We begin with the imports, set the random seed for repeatability, and set some constant values. In order to create the 100-dimensional vectors for each sentence, we add up the GloVe 100-dimensional vectors for the words in the sentence, so we choose the <kbd class="calibre12">glove.6B.100d.txt</kbd> file:</p>
+<pre class="calibre21">
+from keras.layers.core import Dense, Dropout, SpatialDropout1D<br class="title-page-name"/>from keras.models import Sequential<br class="title-page-name"/>from keras.preprocessing.sequence import pad_sequences<br class="title-page-name"/>from keras.utils import np_utils<br class="title-page-name"/>from sklearn.model_selection import train_test_split<br class="title-page-name"/>import collections<br class="title-page-name"/>import matplotlib.pyplot as plt<br class="title-page-name"/>import nltk<br class="title-page-name"/>import numpy as np<br class="title-page-name"/><br class="title-page-name"/>np.random.seed(42)<br class="title-page-name"/><br class="title-page-name"/>INPUT_FILE = "../data/umich-sentiment-train.txt"<br class="title-page-name"/>GLOVE_MODEL = "../data/glove.6B.100d.txt"<br class="title-page-name"/>VOCAB_SIZE = 5000<br class="title-page-name"/>EMBED_SIZE = 100<br class="title-page-name"/>BATCH_SIZE = 64<br class="title-page-name"/>NUM_EPOCHS = 10
+</pre>
+<p class="calibre1">The next block reads the sentences and creates a word frequency table. From this, the most common 5,000 tokens are selected and lookup tables (from word to word index and back) are created. In addition, we create a pseudo-token <kbd class="calibre12">_UNK_</kbd> for tokens that do not exist in the vocabulary. Using these lookup tables, we convert each sentence to a sequence of word IDs, padding these sequences so that all sequences are of the same length (the maximum number of words in a sentence in the training set). We also convert the labels to categorical format:</p>
+<pre class="calibre21">
+counter = collections.Counter()<br class="title-page-name"/>fin = open(INPUT_FILE, "rb")<br class="title-page-name"/>maxlen = 0<br class="title-page-name"/>for line in fin:<br class="title-page-name"/>    _, sent = line.strip().split("t")<br class="title-page-name"/>    words = [x.lower() for x in nltk.word_tokenize(sent)]<br class="title-page-name"/>    if len(words) &gt; maxlen:<br class="title-page-name"/>        maxlen = len(words)<br class="title-page-name"/>    for word in words:<br class="title-page-name"/>        counter[word] += 1<br class="title-page-name"/>fin.close()<br class="title-page-name"/><br class="title-page-name"/>word2index = collections.defaultdict(int)<br class="title-page-name"/>for wid, word in enumerate(counter.most_common(VOCAB_SIZE)):<br class="title-page-name"/>     word2index[word[0]] = wid + 1<br class="title-page-name"/>vocab_sz = len(word2index) + 1<br class="title-page-name"/>index2word = {v:k for k, v in word2index.items()}<br class="title-page-name"/>index2word[0] = "_UNK_"<br class="title-page-name"/><br class="title-page-name"/>ws, ys = [], []<br class="title-page-name"/>fin = open(INPUT_FILE, "rb")<br class="title-page-name"/>for line in fin:<br class="title-page-name"/>    label, sent = line.strip().split("t")<br class="title-page-name"/>    ys.append(int(label))<br class="title-page-name"/>    words = [x.lower() for x in nltk.word_tokenize(sent)]<br class="title-page-name"/>    wids = [word2index[word] for word in words]<br class="title-page-name"/>    ws.append(wids)<br class="title-page-name"/>fin.close()<br class="title-page-name"/>W = pad_sequences(ws, maxlen=maxlen)<br class="title-page-name"/>Y = np_utils.to_categorical(ys)
+</pre>
+<p class="calibre1">We load the GloVe vectors into a dictionary. If we wanted to use word2vec here, all we have to do is replace this block with a gensim <kbd class="calibre12">Word2Vec.load_word2vec_format()</kbd> call and replace the following block to look up the word2vec model instead of the <kbd class="calibre12">word2emb</kbd> dictionary:</p>
+<pre class="calibre21">
+word2emb = collections.defaultdict(int)<br class="title-page-name"/>fglove = open(GLOVE_MODEL, "rb")<br class="title-page-name"/>for line in fglove:<br class="title-page-name"/>    cols = line.strip().split()<br class="title-page-name"/>    word = cols[0]<br class="title-page-name"/>    embedding = np.array(cols[1:], dtype="float32")<br class="title-page-name"/>    word2emb[word] = embedding<br class="title-page-name"/>fglove.close()
+</pre>
+<p class="calibre1">The next block looks up the words for each sentence from the word ID matrix <kbd class="calibre12">W</kbd> and populates a matrix <kbd class="calibre12">E</kbd> with the corresponding embedding vector. These embedding vectors are then added to create a sentence vector, which is written back into the <kbd class="calibre12">X</kbd> matrix. The output of this code block is the matrix <kbd class="calibre12">X</kbd> of size (<kbd class="calibre12">num_records</kbd> and <kbd class="calibre12">EMBED_SIZE</kbd>):</p>
+<pre class="calibre21">
+X = np.zeros((W.shape[0], EMBED_SIZE))<br class="title-page-name"/>for i in range(W.shape[0]):<br class="title-page-name"/>    E = np.zeros((EMBED_SIZE, maxlen))<br class="title-page-name"/>    words = [index2word[wid] for wid in W[i].tolist()]<br class="title-page-name"/>    for j in range(maxlen):<br class="title-page-name"/>         E[:, j] = word2emb[words[j]]<br class="title-page-name"/>    X[i, :] = np.sum(E, axis=1)
+</pre>
+<p class="calibre1">We have now preprocessed our data using the pre-trained model and are ready to use it to train and evaluate our final model. Let us split the data into <em class="calibre11">70/30</em> training/test as usual:</p>
+<pre class="calibre21">
+Xtrain, Xtest, Ytrain, Ytest = train_test_split(X, Y, test_size=0.3, random_state=42)
+</pre>
+<p class="calibre1">The network we will train for doing the sentiment analysis task is a simple dense network. We compile it with a categorical cross-entropy loss function and the Adam optimizer, and train it with the sentence vectors that we built out of the pre-trained embeddings. Finally, we evaluate the model on the 30% test set:</p>
+<pre class="calibre21">
+model = Sequential()<br class="title-page-name"/>model.add(Dense(32, input_dim=100, activation="relu"))<br class="title-page-name"/>model.add(Dropout(0.2))<br class="title-page-name"/>model.add(Dense(2, activation="softmax"))<br class="title-page-name"/><br class="title-page-name"/>model.compile(optimizer="adam", loss="categorical_crossentropy", metrics=["accuracy"])<br class="title-page-name"/>history = model.fit(Xtrain, Ytrain, batch_size=BATCH_SIZE,<br class="title-page-name"/>                    epochs=NUM_EPOCHS,<br class="title-page-name"/>                    validation_data=(Xtest, Ytest))<br class="title-page-name"/><br class="title-page-name"/>score = model.evaluate(Xtest, Ytest, verbose=1)<br class="title-page-name"/>print("Test score: {:.3f}, accuracy: {:.3f}".format(score[0], score[1])<kbd class="calibre58">)</kbd>
+</pre>
+<p class="calibre1">The output for the code using GloVe embeddings is shown as follows:</p>
+<div class="CDPAlignCenter"><img class="image-border76" src="../images/00150.jpeg"/></div>
+<p class="calibre1">The dense network gives us 96.5% accuracy on the test set after 10 epochs of training when preprocessed with the 100-dimensional GloVe embeddings. With preprocessed with the word2vec embeddings (300-dimensional fixed) the network gives us 98.5% on the test set.</p>
+<p class="calibre1">The source code for this example can be found in <kbd class="calibre12">transfer_glove_embeddings.py</kbd> (for the GloVe example) and <kbd class="calibre12">transfer_word2vec_embeddings.py</kbd> (for the word2vec example) in the source code download for the chapter.</p>
+
+
+            </article>
+
+            <footer class="calibre4">
+                
+            </footer>
+
+        </section>
+    </body></html>

@@ -1,0 +1,69 @@
+<?xml version='1.0' encoding='utf-8'?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+  <head>
+    <title>Recognizing CIFAR-10 images with deep learning</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <link href="../stylesheet.css" rel="stylesheet" type="text/css"/>
+<link href="../page_styles.css" rel="stylesheet" type="text/css"/>
+</head>
+  <body class="calibre">
+        <section>
+
+            <header>
+                </header><h1 class="header-title" id="calibre_pb_0">Recognizing CIFAR-10 images with deep learning</h1>
+            
+
+            <article>
+                
+<p class="calibre1">The CIFAR-10 dataset contains 60,000 color images of 32 x 32 pixels in 3 channels divided into 10 classes. Each class contains 6,000 images. The training set contains 50,000 images, while the test sets provides 10,000 images. This image taken from the CIFAR repository (<a href="https://www.cs.toronto.edu/~kriz/cifar.html" target="_blank" class="calibre6">https://www.cs.toronto.edu/~kriz/cifar.html</a>) describes a few random examples from the 10 classes:</p>
+<div class="CDPAlignCenter"><img class="image-border44" src="../images/00101.jpeg"/></div>
+<p class="calibre1">The goal is to recognize previously unseen images and assign them to one of the 10 classes. Let us define a suitable deep net.</p>
+<p class="calibre1">First of all we import a number of useful modules, define a few constants, and load the dataset:</p>
+<pre class="calibre21">
+from keras.datasets import cifar10<br class="title-page-name"/>from keras.utils import np_utils<br class="title-page-name"/>from keras.models import Sequential<br class="title-page-name"/>from keras.layers.core import Dense, Dropout, Activation, Flatten<br class="title-page-name"/>from keras.layers.convolutional import Conv2D, MaxPooling2D<br class="title-page-name"/>from keras.optimizers import SGD, Adam, RMSprop<br class="title-page-name"/>import matplotlib.pyplot as plt<br class="title-page-name"/><br class="title-page-name"/># CIFAR_10 is a set of 60K images 32x32 pixels on 3 channels<br class="title-page-name"/>IMG_CHANNELS = 3<br class="title-page-name"/>IMG_ROWS = 32<br class="title-page-name"/>IMG_COLS = 32<br class="title-page-name"/><br class="title-page-name"/>#constant<br class="title-page-name"/>BATCH_SIZE = 128<br class="title-page-name"/>NB_EPOCH = 20<br class="title-page-name"/>NB_CLASSES = 10<br class="title-page-name"/>VERBOSE = 1<br class="title-page-name"/>VALIDATION_SPLIT = 0.2<br class="title-page-name"/>OPTIM = RMSprop()<br class="title-page-name"/><br class="title-page-name"/>#load dataset<br class="title-page-name"/>(X_train, y_train), (X_test, y_test) = cifar10.load_data()<br class="title-page-name"/>print('X_train shape:', X_train.shape)<br class="title-page-name"/>print(X_train.shape[0], 'train samples')<br class="title-page-name"/>print(X_test.shape[0], 'test samples')<br class="title-page-name"/><br class="title-page-name"/>
+</pre>
+<p class="calibre1">Now let's do a one-hot encoding and normalize the images:</p>
+<pre class="calibre21">
+# convert to categorical<br class="title-page-name"/>Y_train = np_utils.to_categorical(y_train, NB_CLASSES)<br class="title-page-name"/>Y_test = np_utils.to_categorical(y_test, NB_CLASSES)<br class="title-page-name"/><br class="title-page-name"/># float and normalization<br class="title-page-name"/>X_train = X_train.astype('float32')<br class="title-page-name"/>X_test = X_test.astype('float32')<br class="title-page-name"/>X_train /= 255<br class="title-page-name"/>X_test /= 255
+</pre>
+<p class="calibre1">Our net will learn 32 convolutional filters, each of which with a 3 x 3 size. The output dimension is the same one of the input shape, so it will be 32 x 32 and activation is ReLU, which is a simple way of introducing non-linearity. After that we have a max-pooling operation with pool size 2 x 2 and a dropout at 25%:</p>
+<pre class="calibre21">
+# network<br class="title-page-name"/>model = Sequential()<br class="title-page-name"/>model.add(Conv2D(32, (3, 3), padding='same',<br class="title-page-name"/>input_shape=(IMG_ROWS, IMG_COLS, IMG_CHANNELS)))<br class="title-page-name"/>model.add(Activation('relu'))<br class="title-page-name"/>model.add(MaxPooling2D(pool_size=(2, 2)))<br class="title-page-name"/>model.add(Dropout(0.25))
+</pre>
+<p class="calibre1">The next stage in the deep pipeline is a dense network with 512 units and ReLU activation followed by a dropout at 50% and by a softmax layer with 10 classes as output, one for each category:</p>
+<pre class="calibre21">
+model.add(Flatten())<br class="title-page-name"/>model.add(Dense(512))<br class="title-page-name"/>model.add(Activation('relu'))<br class="title-page-name"/>model.add(Dropout(0.5))<br class="title-page-name"/>model.add(Dense(NB_CLASSES))<br class="title-page-name"/>model.add(Activation('softmax'))<br class="title-page-name"/>model.summary()
+</pre>
+<p class="calibre1">After defining the network, we can train the model. In this case, we split the data and compute a validation set in addition to the training and testing sets. The training is used to build our models, the validation is used to select the best performing approach, while the test set is to check the performance of our best models on fresh unseen data:</p>
+<pre class="calibre21">
+# train<br class="title-page-name"/>model.compile(loss='categorical_crossentropy', optimizer=OPTIM,<br class="title-page-name"/>metrics=['accuracy'])<br class="title-page-name"/>model.fit(X_train, Y_train, batch_size=BATCH_SIZE,<br class="title-page-name"/>epochs=NB_EPOCH, validation_split=VALIDATION_SPLIT,<br class="title-page-name"/>verbose=VERBOSE)<br class="title-page-name"/>score = model.evaluate(X_test, Y_test,<br class="title-page-name"/>batch_size=BATCH_SIZE, verbose=VERBOSE)<br class="title-page-name"/>print("Test score:", score[0])<br class="title-page-name"/>print('Test accuracy:', score[1])
+</pre>
+<p class="calibre1">In this case we save the architecture of our deep network:</p>
+<pre class="calibre21">
+#save model<br class="title-page-name"/>model_json = model.to_json()<br class="title-page-name"/>open('cifar10_architecture.json', 'w').write(model_json)<br class="title-page-name"/>And the weights learned by our deep network on the training set<br class="title-page-name"/>model.save_weights('cifar10_weights.h5', overwrite=True)
+</pre>
+<p class="calibre1">Let us run the code. Our network reaches a test accuracy of 66.4% with 20 iterations. We also print the accuracy and loss plot, and dump the network with <kbd class="calibre12">model.summary()</kbd>:</p>
+<div class="CDPAlignCenter"><img class="image-border45" src="../images/00102.jpeg"/></div>
+<p class="calibre1">In the following graph, we report the accuracy and the lost achieved by our net on both train and test datasets:</p>
+<table class="a">
+<tbody class="calibre8">
+<tr class="calibre9">
+<td class="calibre10">
+<div class="CDPAlignCenter"><img class="image-border11" src="../images/00103.jpeg"/></div>
+</td>
+<td class="calibre10">
+<div class="CDPAlignCenter"><img class="image-border11" src="../images/00104.jpeg"/></div>
+</td>
+</tr>
+</tbody>
+</table>
+
+
+            </article>
+
+            <footer class="calibre4">
+                
+            </footer>
+
+        </section>
+    </body></html>

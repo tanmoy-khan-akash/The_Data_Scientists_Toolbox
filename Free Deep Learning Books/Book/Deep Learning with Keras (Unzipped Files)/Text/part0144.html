@@ -1,0 +1,35 @@
+<?xml version='1.0' encoding='utf-8'?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+  <head>
+    <title>Unsupervised learning — autoencoders</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <link href="../stylesheet.css" rel="stylesheet" type="text/css"/>
+<link href="../page_styles.css" rel="stylesheet" type="text/css"/>
+</head>
+  <body class="calibre">
+        <section>
+
+            <header>
+                </header><h1 class="header-title" id="calibre_pb_0">Unsupervised learning — autoencoders</h1>
+            
+
+            <article>
+                
+<p class="calibre1">Autoencoders are a class of neural network that attempt to recreate the input as its target using back-propagation. An autoencoder consists of two parts, an encoder and a decoder. The encoder will read the input and compress it to a compact representation, and the decoder will read the compact representation and recreate the input from it. In other words, the autoencoder tries to learn the identity function by minimizing the reconstruction error.</p>
+<p class="calibre1">Even though the identity function does not seem like a very interesting function to learn, the way in which this is done makes it interesting. The number of hidden units in the autoencoder is typically less than the number of input (and output) units. This forces the encoder to learn a compressed representation of the input which the decoder reconstructs. If there is structure in the input data in the form of correlations between input features, then the autoencoder will discover some of these correlations, and end up learning a low dimensional representation of the data similar to that learned using <strong class="calibre3">principal component analysis</strong> (<strong class="calibre3">PCA</strong>).</p>
+<p class="calibre1">Once the autoencoder is trained, we would typically just discard the decoder component and use the encoder component to generate compact representations of the input. Alternatively, we could use the encoder as a feature detector that generates a compact, semantically rich representation of our input and build a classifier by attaching a softmax classifier to the hidden layer.</p>
+<p class="calibre1">The encoder and decoder components of an autoencoder can be implemented using either dense, convolutional, or recurrent networks, depending on the kind of data that is being modeled. For example, dense networks might be a good choice for autoencoders used to build <strong class="calibre3">collaborative filtering</strong> (<strong class="calibre3">CF</strong>) models (for more information refer to the articles: <span><em class="calibre11">AutoRec: Autoencoders Meet Collaborative Filtering</em>, by S. Sedhain, Proceedings of the 24th International Conference on World Wide Web, ACM, 2015 and <em class="calibre11">Wide &amp; Deep Learning for Recommender Systems</em>, by H. Cheng, Proceedings of the 1st Workshop on Deep Learning for Recommender Systems, ACM, 2016</span>), where we learn a compressed model of user preferences based on actual sparse user ratings. Similarly, convolutional neural networks may be appropriate for the use case covered in the article: <em class="calibre11">See: Using Deep Learning to Remove Eyeglasses from Faces</em>, by M. Runfeldt. and recurrent networks a good choice for autoencoders building on text data, such as deep patient (<span>for more information refer to the article: <em class="calibre11">Deep Patient: An Unsupervised Representation to Predict the Future of Patients from the Electronic Health Records</em>, by R. Miotto, Scientific Reports 6, 2016</span>) and skip-thought vectors (<span>(</span><span>for more information refer to the article: </span><span><em class="calibre11">Skip-Thought Vectors</em>, by R. Kiros, Advances in Neural Information Processing Systems, 2015</span>).</p>
+<p class="calibre1">Autoencoders can also be stacked by successively stacking encoders that compress their input to smaller and smaller representations, and stacking decoders in the opposite sequence. Stacked autoencoders have greater expressive power and the successive layers of representations capture a hierarchical grouping of the input, similar to the convolution and pooling operations in convolutional neural networks.</p>
+<p class="calibre1">Stacked autoencoders used to be trained layer by layer. For example, in the network shown next, we would first train layer <em class="calibre11">X</em> to reconstruct layer <em class="calibre11">X'</em> using the hidden layer <em class="calibre11">H1</em> (ignoring <em class="calibre11">H2</em>). We would then train the layer <em class="calibre11">H1</em> to reconstruct layer <em class="calibre11">H1'</em> using the hidden layer <em class="calibre11">H2</em>. Finally, we would stack all the layers together in the configuration shown and fine tune it to reconstruct <em class="calibre11">X'</em> from <em class="calibre11">X</em>. With better activation and regularization functions nowadays, however, it is quite common to train these networks in totality:</p>
+<div class="CDPAlignCenter"><img class="image-border90" src="../images/00178.jpeg"/></div>
+<p class="calibre1">The Keras blog post, <em class="calibre11">Building Autoencoders in Keras</em> (<a href="https://blog.keras.io/building-autoencoders-in-keras.html" target="_blank" class="calibre6">https://blog.keras.io/building-autoencoders-in-keras.html</a>) has great examples of building autoencoders that reconstructs MNIST digit images using fully connected and convolutional neural networks. It also has a good discussion on denoising and variational autoencoders, which we will not cover here.</p>
+
+
+            </article>
+
+            <footer class="calibre4">
+                
+            </footer>
+
+        </section>
+    </body></html>

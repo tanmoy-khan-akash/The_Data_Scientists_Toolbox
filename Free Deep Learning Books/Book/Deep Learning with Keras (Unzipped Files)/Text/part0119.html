@@ -1,0 +1,35 @@
+<?xml version='1.0' encoding='utf-8'?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+  <head>
+    <title>Exploring GloVe</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <link href="../stylesheet.css" rel="stylesheet" type="text/css"/>
+<link href="../page_styles.css" rel="stylesheet" type="text/css"/>
+</head>
+  <body class="calibre">
+        <section>
+
+            <header>
+                </header><h1 class="header-title" id="calibre_pb_0">Exploring GloVe</h1>
+            
+
+            <article>
+                
+<p class="calibre1">The global vectors for word representation, or GloVe, embeddings was created by Jeffrey Pennington, Richard Socher, and Christopher Manning (for more information refer to the article: <span><em class="calibre11">GloVe: Global Vectors for Word Representation</em>, by J. Pennington, R. Socher, and C. Manning, Proceedings of the 2014 Conference on Empirical Methods in Natural Language Processing (EMNLP), Pp. 1532–1543, 2013</span>). The authors describe GloVe as an unsupervised learning algorithm for obtaining vector representations for words. Training is performed on aggregated global word-word co-occurrence statistics from a corpus, and the resulting representations showcase interesting linear substructures of the word vector space.</p>
+<p class="calibre1">GloVe differs from word2vec in that word2vec is a predictive model while GloVe is a count-based model. The first step is to construct a large matrix of (word, context) pairs that co-occur in the training corpus. Each element of this matrix represents how often a word represented by the row co-occurs in the context (usually a sequence of words) represented by the column, as shown in the following figure:</p>
+<div class="CDPAlignCenter"><img class="image-border72" src="../images/00145.jpeg"/></div>
+<p class="calibre1">The GloVe process converts the co-occurrence matrix into a pair of (word, feature) and (feature, context) matrices. This process is known as <strong class="calibre3">matrix factorization</strong> and is done using <strong class="calibre3">stochastic gradient descent</strong> (<strong class="calibre3">SGD</strong>), an iterative numerical method. Rewriting in equation form:</p>
+<div class="CDPAlignCenter"><img src="../images/00146.jpeg" class="calibre57"/></div>
+<p class="calibre1">Here, <em class="calibre11">R</em> is the original co-occurrence matrix. We first populate <em class="calibre11">P</em> and <em class="calibre11">Q</em> with random values and attempt to reconstruct a matrix <em class="calibre11">R'</em> by multiplying them. The difference between the reconstructed matrix <em class="calibre11">R'</em> and the original matrix <em class="calibre11">R</em> tells us how much we need to change the values of <em class="calibre11">P</em> and <em class="calibre11">Q</em> to move <em class="calibre11">R'</em> closer to <em class="calibre11">R</em>, to minimize the reconstruction error. This is repeated multiple times until the SGD converges and the reconstruction error is below a specified threshold. At that point, the (word, feature) matrix is the GloVe embedding. To speed up the process, SGD is often used in parallel mode, as outlined in the <em class="calibre11">HOGWILD!</em> paper.</p>
+<p class="calibre1">One thing to note is that predictive neural network based models such as word2vec and count based models such as GloVe are very similar in intent. Both of them build a vector space where the position of a word is influenced by its neighboring words. Neural network models start with individual examples of word co-occurrences and count based models start with aggregate co-occurrence statistics between all words in the corpus. Several recent papers have demonstrated the correlation between these two types of model.</p>
+<p class="calibre1">We will not cover generation of GloVe vectors in more detail in this book. Even though GloVe generally shows higher accuracy than word2vec and is faster to train if you use parallelization, Python tooling is not as mature as for word2vec. The only tool available to do this as of the time of writing is the GloVe-Python project (<a href="https://github.com/maciejkula/glove-python" target="_blank" class="calibre6">https://github.com/maciejkula/glove-python</a>), which provides a toy implementation for GloVe on Python.</p>
+
+
+            </article>
+
+            <footer class="calibre4">
+                
+            </footer>
+
+        </section>
+    </body></html>

@@ -1,0 +1,31 @@
+<?xml version='1.0' encoding='utf-8'?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+  <head>
+    <title>Regression networks</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <link href="../stylesheet.css" rel="stylesheet" type="text/css"/>
+<link href="../page_styles.css" rel="stylesheet" type="text/css"/>
+</head>
+  <body class="calibre">
+        <section>
+
+            <header>
+                </header><h1 class="header-title" id="calibre_pb_0">Regression networks</h1>
+            
+
+            <article>
+                
+<p class="calibre1">The two major techniques of supervised learning are classification and regression. In both cases, the model is trained with data to predict known labels. In case of classification, these labels are discrete values such as genres of text or image categories. In case of regression, these labels are continuous values, such as stock prices or human intelligence quotients (IQ).</p>
+<p class="calibre1">Most of the examples we have seen show deep learning models being used to perform classification. In this section, we will look at how to perform regression using such a model.</p>
+<p class="calibre1">Recall that classification models have a dense layer with a nonlinear activation at the end, the output dimension of which corresponds to the number of classes the model can predict. Thus, an ImageNet image classification model has a dense (1,000) layer at the end, corresponding to 1,000 ImageNet classes it can predict. Similarly, a sentiment analysis model has a dense layer at the end, corresponding to positive or negative sentiment.</p>
+<p class="calibre1">Regression models also have a dense layer at the end, but with a single output, that is, an output dimension of one, and no nonlinear activation. Thus the dense layer just returns the sum of the activations from the previous layer. In addition, the loss function used is typically <strong class="calibre3">mean squared error</strong> (<strong class="calibre3">MSE</strong>), but some of the other objectives (listed on the Keras objectives page at: <a href="https://keras.io/losses/" target="_blank" class="calibre6">https://keras.io/losses/</a>) can be used as well.</p>
+
+
+            </article>
+
+            <footer class="calibre4">
+                
+            </footer>
+
+        </section>
+    </body></html>

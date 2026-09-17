@@ -1,0 +1,34 @@
+<?xml version='1.0' encoding='utf-8'?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+  <head>
+    <title>Predicting with CIFAR-10</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <link href="../stylesheet.css" rel="stylesheet" type="text/css"/>
+<link href="../page_styles.css" rel="stylesheet" type="text/css"/>
+</head>
+  <body class="calibre">
+        <section>
+
+            <header>
+                </header><h1 class="header-title" id="calibre_pb_0">Predicting with CIFAR-10</h1>
+            
+
+            <article>
+                
+<p class="calibre1">Now let us suppose that we want to use the deep learning model we just trained for CIFAR-10 for a bulk evaluation of images. Since we saved the model and the weights, we do not need to train every time:</p>
+<pre class="calibre21">
+import numpy as np<br class="title-page-name"/>import scipy.misc<br class="title-page-name"/>from keras.models import model_from_json<br class="title-page-name"/>from keras.optimizers import SGD<br class="title-page-name"/><br class="title-page-name"/>#load model<br class="title-page-name"/>model_architecture = 'cifar10_architecture.json'<br class="title-page-name"/>model_weights = 'cifar10_weights.h5'<br class="title-page-name"/>model = model_from_json(open(model_architecture).read())<br class="title-page-name"/>model.load_weights(model_weights)<br class="title-page-name"/><br class="title-page-name"/>#load images<br class="title-page-name"/>img_names = ['cat-standing.jpg', 'dog.jpg']<br class="title-page-name"/>imgs = [np.transpose(scipy.misc.imresize(scipy.misc.imread(img_name), (32, 32)),<br class="title-page-name"/>(1, 0, 2)).astype('float32')<br class="title-page-name"/>for img_name in img_names]<br class="title-page-name"/>imgs = np.array(imgs) / 255<br class="title-page-name"/><br class="title-page-name"/># train<br class="title-page-name"/>optim = SGD()<br class="title-page-name"/>model.compile(loss='categorical_crossentropy', optimizer=optim,<br class="title-page-name"/>metrics=['accuracy'])<br class="title-page-name"/><br class="title-page-name"/># predict<br class="title-page-name"/>predictions = model.predict_classes(imgs)<br class="title-page-name"/>print(predictions)
+</pre>
+<p class="calibre1">Now let us get the prediction for a <img src="../images/00112.jpeg" class="calibre51"/> and for a <img src="../images/00113.jpeg" class="calibre52"/>.</p>
+<p class="calibre1">We get categories <kbd class="calibre12">3</kbd> (cat) and <kbd class="calibre12">5</kbd> (dog) as output, as expected:</p>
+<div class="CDPAlignCenter"><img class="image-border51" src="../images/00114.jpeg"/></div>
+
+
+            </article>
+
+            <footer class="calibre4">
+                
+            </footer>
+
+        </section>
+    </body></html>

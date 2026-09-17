@@ -1,0 +1,33 @@
+<?xml version='1.0' encoding='utf-8'?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+  <head>
+    <title>The deep Q-network as a Q-function</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <link href="../stylesheet.css" rel="stylesheet" type="text/css"/>
+<link href="../page_styles.css" rel="stylesheet" type="text/css"/>
+</head>
+  <body class="calibre">
+        <section>
+
+            <header>
+                </header><h1 class="header-title" id="calibre_pb_0">The deep Q-network as a Q-function</h1>
+            
+
+            <article>
+                
+<p class="calibre1">We know that our Q-function is going to be a neural network, the natural question is: what kind? For our simple example game, each state is represented by four consecutive black and white screen images of size <em class="calibre11">(80, 80)</em>, so the total number of possible states (and the number of rows of our Q-table) is <em class="calibre11">2<sup class="calibre66">80x80x4</sup></em>. Fortunately, many of these states represent impossible or highly improbable pixel combinations. Since convolutional neural networks have local connectivity (that is, each neuron is connected to only a local region of its input), it avoids these impossible or improbable pixel combinations. In addition, neural networks are generally very good at coming up with good features for structured data such as images. Hence a CNN can be used to model a Q-function very effectively.</p>
+<p class="calibre1">The DeepMind paper (for more information refer to: <span><em class="calibre11">Playing Atari with Deep Reinforcement Learning</em>, by V. Mnih, arXiv:1312.5602, 2013.</span>), also uses three layers of convolutions followed by two fully connected layers. Unlike traditional CNNs used for image classification or recognition, there are no pooling layers. This is because pooling layers makes the network less sensitive to the location of specific objects in the image. In case of games this information is likely to be required to compute the reward, and thus cannot be discarded.</p>
+<p class="calibre1">The following diagram, shows the structure of the deep Q-network that is used for our example. It follows the same structure as the original DeepMind paper except for the input and output layer shapes. The shape for each of our inputs is <em class="calibre11">(80, 80, 4)</em>: four black and white consecutive screenshots of the game console, each <em class="calibre11">80</em> x <em class="calibre11">80</em> pixels in size. Our output shape is (<em class="calibre11">3</em>), corresponding to the Q-value for each of three possible actions (move left, stay, move right):</p>
+<div class="CDPAlignCenter"><img class="image-border10" src="../images/00212.jpeg"/></div>
+<p class="calibre1">Since our output are the three Q-values, this is a regression task, and we can optimize this by minimizing the difference of the squared error between the current value of <em class="calibre11">Q(s, a)</em> and its computed value in terms of the sum of the reward and the discounted Q-value <em class="calibre11">Q(s', a')</em> one step into the future. The current value is already known at the beginning of the iteration and the future value is computed based on the reward returned by the environment:</p>
+<div class="CDPAlignCenter"><img src="../images/00213.jpeg" class="calibre64"/></div>
+
+
+            </article>
+
+            <footer class="calibre4">
+                
+            </footer>
+
+        </section>
+    </body></html>

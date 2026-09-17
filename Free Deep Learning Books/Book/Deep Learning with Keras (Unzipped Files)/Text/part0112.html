@@ -1,0 +1,40 @@
+<?xml version='1.0' encoding='utf-8'?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+  <head>
+    <title>Word Embeddings</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <link href="../stylesheet.css" rel="stylesheet" type="text/css"/>
+<link href="../page_styles.css" rel="stylesheet" type="text/css"/>
+</head>
+  <body class="calibre">
+        <section>
+
+            <header>
+                </header><h1 class="header-title" id="calibre_pb_0">Word Embeddings</h1>
+            
+
+            <article>
+                
+<p class="calibre1">Wikipedia defines word embedding as the collective name for a set of language modeling and feature learning techniques in <strong class="calibre3">natural language processing</strong> (<strong class="calibre3">NLP</strong>) where words or phrases from the vocabulary are mapped to vectors of real numbers.</p>
+<p class="calibre1">Word embeddings are a way to transform words in text to numerical vectors so that they can be analyzed by standard machine learning algorithms that require vectors as numerical input.</p>
+<p class="calibre1">You have already learned about one type of word embedding called <strong class="calibre3">one-hot encoding</strong>, in <a target="_blank" href="part0022.html" class="calibre6">Chapter 1</a>, <em class="calibre11">Neural Networks Foundations</em>. One-hot encoding is the most basic embedding approach. To recap, one-hot encoding represents a word in the text by a vector of the size of the vocabulary, where only the entry corresponding to the word is a one and all the other entries are zero.</p>
+<p class="calibre1">A major problem with one-hot encoding is that there is no way to represent the similarity between words. In any given corpus, you would expect words such as (<em class="calibre11">cat</em>, <em class="calibre11">dog</em>), (<em class="calibre11">knife</em>, <em class="calibre11">spoon</em>), and so on to have some similarity. Similarity between vectors is computed using the dot product, which is the sum of element-wise multiplication between vector elements. In the case of one-hot encoded vectors, the dot product between any two words in a corpus is always zero.</p>
+<p class="calibre1">To overcome the limitations of one-hot encoding, the NLP community has borrowed techniques from <strong class="calibre3">information retrieval</strong> (<strong class="calibre3">IR</strong>) to vectorize text using the document as the context. Notable techniques are TF-IDF (<a href="https://en.wikipedia.org/wiki/Tf%E2%80%93idf" target="_blank" class="calibre6">https://en.wikipedia.org/wiki/Tf%E2%80%93idf</a>), <strong class="calibre3">latent semantic analysis</strong> (<strong class="calibre3">LSA</strong>) (<a href="https://en.wikipedia.org/wiki/Latent_semantic_analysis" target="_blank" class="calibre6">https://en.wikipedia.org/wiki/Latent_semantic_analysis</a>), and topic modeling (<a href="https://en.wikipedia.org/wiki/Topic_model" target="_blank" class="calibre6">https://en.wikipedia.org/wiki/Topic_model</a>). However, these representations capture a slightly different document-centric idea of semantic similarity.</p>
+<p class="calibre1">Development of word embedding techniques began in earnest in 2000. Word embedding differs from previous IR-based techniques in that they use words as their context, which leads to a more natural form of semantic similarity from a human understanding perspective. Today, word embedding is the technique of choice for vectorizing text for all kinds of NLP tasks, such as text classification, document clustering, part of speech tagging, named entity recognition, sentiment analysis, and so on.</p>
+<p class="calibre1">In this chapter, we will learn about two specific forms of word embedding, GloVe and word2vec, collectively known as distributed representations of words. These embeddings have proven more effective and have been widely adopted in the deep learning and NLP communities.</p>
+<p class="calibre1">We will also learn different ways in which you can generate your own embeddings in your Keras code, as well as how to use and fine-tune pre-trained word2vec and GloVe models.</p>
+<p class="calibre1">In this chapter, we will cover the following topics:</p>
+<ul class="calibre15">
+<li class="calibre16">Building various distributional representations of words in context</li>
+<li class="calibre16">Building models for leveraging embeddings to perform NLP tasks such as sentence parsing and sentiment analysis</li>
+</ul>
+
+
+            </article>
+
+            <footer class="calibre4">
+                
+            </footer>
+
+        </section>
+    </body></html>

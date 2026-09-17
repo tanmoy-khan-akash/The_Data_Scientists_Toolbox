@@ -1,0 +1,46 @@
+<?xml version='1.0' encoding='utf-8'?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+  <head>
+    <title>Improving the CIFAR-10 performance with data augmentation</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <link href="../stylesheet.css" rel="stylesheet" type="text/css"/>
+<link href="../page_styles.css" rel="stylesheet" type="text/css"/>
+</head>
+  <body class="calibre">
+        <section>
+
+            <header>
+                </header><h1 class="header-title" id="calibre_pb_0">Improving the CIFAR-10 performance with data augmentation</h1>
+            
+
+            <article>
+                
+<p class="calibre1">Another way to improve the performance is to generate more images for our training. The key intuition is that we can take the standard CIFAR training set and augment this set with multiple types of transformations including rotation, rescaling, horizontal/vertical flip, zooming, channel shift, and many more. Let us see the code:</p>
+<pre class="calibre21">
+from keras.preprocessing.image import ImageDataGenerator<br class="title-page-name"/>from keras.datasets import cifar10<br class="title-page-name"/>import numpy as np<br class="title-page-name"/>NUM_TO_AUGMENT=5<br class="title-page-name"/><br class="title-page-name"/>#load dataset<br class="title-page-name"/>(X_train, y_train), (X_test, y_test) = cifar10.load_data()<br class="title-page-name"/><br class="title-page-name"/># augumenting<br class="title-page-name"/>print("Augmenting training set images...")<br class="title-page-name"/>datagen = ImageDataGenerator(<br class="title-page-name"/>rotation_range=40,<br class="title-page-name"/>width_shift_range=0.2,<br class="title-page-name"/>height_shift_range=0.2,<br class="title-page-name"/>zoom_range=0.2,<br class="title-page-name"/>horizontal_flip=True,<br class="title-page-name"/>fill_mode='nearest')
+</pre>
+<p class="calibre1">The <kbd class="calibre12">rotation_range</kbd> is a value in degrees (<kbd class="calibre12">0</kbd> - <kbd class="calibre12">180</kbd>) for randomly rotating pictures. <kbd class="calibre12">width_shift</kbd> and <kbd class="calibre12">height_shift</kbd> are ranges for randomly translating pictures vertically or horizontally. <kbd class="calibre12">zoom_range</kbd> is for randomly zooming pictures. <kbd class="calibre12">horizontal_flip</kbd> is for randomly flipping half of the images horizontally. <kbd class="calibre12">fill_mode</kbd> is the strategy used for filling in new pixels that can appear after a rotation or a shift:</p>
+<pre class="calibre21">
+xtas, ytas = [], []<br class="title-page-name"/>for i in range(X_train.shape[0]):<br class="title-page-name"/>num_aug = 0<br class="title-page-name"/>x = X_train[i] # (3, 32, 32)<br class="title-page-name"/>x = x.reshape((1,) + x.shape) # (1, 3, 32, 32)<br class="title-page-name"/>for x_aug in datagen.flow(x, batch_size=1,<br class="title-page-name"/>save_to_dir='preview', save_prefix='cifar', save_format='jpeg'):<br class="title-page-name"/>if num_aug &gt;= NUM_TO_AUGMENT:<br class="title-page-name"/>break<br class="title-page-name"/>xtas.append(x_aug[0])<br class="title-page-name"/>num_aug += 1
+</pre>
+<p class="calibre1">After augmentation, we will have generated many more training images starting from the standard CIFAR-10 set:</p>
+<div class="CDPAlignCenter"><img class="image-border48" src="../images/00109.jpeg"/></div>
+<p class="calibre1">Now we can apply this intuition directly for training. Using the same ConvNet defined previously we simply generate more augmented images and then we train. For efficiency, the generator runs in parallel to the model. This allows an image augmentation on the CPU and in parallel to training on the GPU. Here is the code:</p>
+<pre class="calibre21">
+#fit the dataget<br class="title-page-name"/>datagen.fit(X_train)<br class="title-page-name"/><br class="title-page-name"/># train<br class="title-page-name"/>history = model.fit_generator(datagen.flow(X_train, Y_train,<br class="title-page-name"/>batch_size=BATCH_SIZE), samples_per_epoch=X_train.shape[0],<br class="title-page-name"/>epochs=NB_EPOCH, verbose=VERBOSE)<br class="title-page-name"/>score = model.evaluate(X_test, Y_test,<br class="title-page-name"/>batch_size=BATCH_SIZE, verbose=VERBOSE)<br class="title-page-name"/>print("Test score:", score[0])<br class="title-page-name"/>print('Test accuracy:', score[1])
+</pre>
+<p class="calibre1">Each iteration is now more expensive because we have more training data. So let us run for 50 iterations only and see that we reach an accuracy of 78.3%:</p>
+<div class="CDPAlignCenter"><img class="image-border49" src="../images/00110.jpeg"/></div>
+<p class="calibre1">The results obtained during our experiments are summarized in the following graph:</p>
+<div class="CDPAlignCenter"><img class="image-border50" src="../images/00111.jpeg"/></div>
+<p class="calibre1">A list of state-of-the-art results for CIFAR-10 is available at: <a href="http://rodrigob.github.io/are_we_there_yet/build/classification_datasets_results.html" target="_blank" class="calibre6">http://rodrigob.github.io/are_we_there_yet/build/classification_datasets_results.html</a>. As of January, 2017, the best result has an accuracy of 96.53%.</p>
+
+
+            </article>
+
+            <footer class="calibre4">
+                
+            </footer>
+
+        </section>
+    </body></html>

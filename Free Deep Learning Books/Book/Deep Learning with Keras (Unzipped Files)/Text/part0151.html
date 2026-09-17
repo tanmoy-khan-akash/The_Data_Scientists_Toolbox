@@ -1,0 +1,30 @@
+<?xml version='1.0' encoding='utf-8'?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+  <head>
+    <title>Generative models</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <link href="../stylesheet.css" rel="stylesheet" type="text/css"/>
+<link href="../page_styles.css" rel="stylesheet" type="text/css"/>
+</head>
+  <body class="calibre">
+        <section>
+
+            <header>
+                </header><h1 class="header-title" id="calibre_pb_0">Generative models</h1>
+            
+
+            <article>
+                
+<p class="calibre1">Generative models are models that learn to create data similar to data it is trained on. We saw one example of a generative model that learns to write prose similar to <em class="calibre11">Alice in Wonderland</em> in <a target="_blank" href="part0126.html" class="calibre6">Chapter 6</a>, <em class="calibre11">Recurrent Neural Network — RNN</em>. In that example, we trained a model to predict the 11th character of text given the first 10 characters. Yet another type of generative model is <strong class="calibre3">generative adversarial models</strong> (<strong class="calibre3">GAN</strong>) that have recently emerged as a very powerful class of models—you saw examples of GANs in <a target="_blank" href="part0104.html" class="calibre6">Chapter 4</a>, <em class="calibre11">Generative Adversarial Networks and WaveNet</em>. The intuition for generative models is that it learns a good internal representation of its training data, and is therefore able to generate similar data during the <em class="calibre11">prediction</em> phase.</p>
+<p class="calibre1">Another perspective on generative models is the probabilistic one. A typical classification or regression network, also called a discriminative model, learns a function that maps the input data <em class="calibre11">X</em> to some label or output <em class="calibre11">y</em>, that is, these models learn the conditional probability <em class="calibre11">P(y|X)</em>. On the other hand, a generative model learns the joint probability and labels simultaneously, that is, <em class="calibre11">P(x, y)</em>. This knowledge can then be used to create probable new <em class="calibre11">(X, y)</em> samples. This gives generative models the ability to explain the underlying structure of input data even when there are no labels. This is a very important advantage in the real world, since unlabeled data is more abundant than labeled data.</p>
+<p class="calibre1">Simple generative models such as the example mentioned above can be extended to audio as well, for example, models that learn to generate and play music. One interesting one is described in the WaveNet paper (for more information refer to: <span><em class="calibre11">WaveNet: A Generative Model for Raw Audio</em>, by A. van den Oord, 2016.</span>) which describes a network built using atrous convolutional layers and provides a Keras implementation on GithHub (<a href="https://github.com/basveeling/wavenet" target="_blank" class="calibre6">https://github.com/basveeling/wavenet</a>).</p>
+
+
+            </article>
+
+            <footer class="calibre4">
+                
+            </footer>
+
+        </section>
+    </body></html>

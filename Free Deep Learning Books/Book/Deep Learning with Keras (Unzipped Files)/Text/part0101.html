@@ -1,0 +1,32 @@
+<?xml version='1.0' encoding='utf-8'?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+  <head>
+    <title>Recycling pre-built deep learning models for extracting features</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <link href="../stylesheet.css" rel="stylesheet" type="text/css"/>
+<link href="../page_styles.css" rel="stylesheet" type="text/css"/>
+</head>
+  <body class="calibre">
+        <section>
+
+            <header>
+                </header><h1 class="header-title" id="calibre_pb_0">Recycling pre-built deep learning models for extracting features</h1>
+            
+
+            <article>
+                
+<p class="calibre1">One very simple idea is to use VGG-16 and, more generally, DCNN, for feature extraction. This code implements the idea by extracting features from a specific layer:</p>
+<pre class="calibre21">
+from keras.applications.vgg16 import VGG16<br class="title-page-name"/>from keras.models import Model<br class="title-page-name"/>from keras.preprocessing import image<br class="title-page-name"/>from keras.applications.vgg16 import preprocess_input<br class="title-page-name"/>import numpy as np<br class="title-page-name"/><br class="title-page-name"/># pre-built and pre-trained deep learning VGG16 model<br class="title-page-name"/>base_model = VGG16(weights='imagenet', include_top=True)<br class="title-page-name"/>for i, layer in enumerate(base_model.layers):<br class="title-page-name"/>     print (i, layer.name, layer.output_shape)<br class="title-page-name"/><br class="title-page-name"/># extract features from block4_pool block<br class="title-page-name"/>model =<br class="title-page-name"/>Model(input=base_model.input, output=base_model.get_layer('block4_pool').output)<br class="title-page-name"/>img_path = 'cat.jpg'<br class="title-page-name"/>img = image.load_img(img_path, target_size=(224, 224))<br class="title-page-name"/>x = image.img_to_array(img)<br class="title-page-name"/>x = np.expand_dims(x, axis=0)<br class="title-page-name"/>x = preprocess_input(x)<br class="title-page-name"/><br class="title-page-name"/># get the features from this block<br class="title-page-name"/>features = model.predict(x)
+</pre>
+<p class="calibre1">Now you might wonder why we want to extract the features from an intermediate layer in a DCNN. The key intuition is that, as the network learns to classify images into categories, each layer learns to identify the features that are necessary to do the final classification. Lower layers identify lower order features such as color and edges, and higher layers compose these lower order feature into higher order features such as shapes or objects. Hence the intermediate layer has the capability to extract important features from an image, and these features are more likely to help in different kinds of classification. This has multiple advantages. First, we can rely on publicly available large-scale training and transfer this learning to novel domains. Second, we can save time for expensive large training. Third, we can provide reasonable solutions even when we don't have a large number of training examples for our domain. We also get a good starting network shape for the task at hand, instead of guessing it.</p>
+
+
+            </article>
+
+            <footer class="calibre4">
+                
+            </footer>
+
+        </section>
+    </body></html>

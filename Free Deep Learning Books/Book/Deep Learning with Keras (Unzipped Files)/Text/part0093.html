@@ -1,0 +1,36 @@
+<?xml version='1.0' encoding='utf-8'?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+  <head>
+    <title>Understanding the power of deep learning</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <link href="../stylesheet.css" rel="stylesheet" type="text/css"/>
+<link href="../page_styles.css" rel="stylesheet" type="text/css"/>
+</head>
+  <body class="calibre">
+        <section>
+
+            <header>
+                </header><h1 class="header-title" id="calibre_pb_0">Understanding the power of deep learning</h1>
+            
+
+            <article>
+                
+<p class="calibre1">Another test that we can run to better understand the power of deep learning and ConvNet is to reduce the size of the training set and observe the consequent decay in performance. One way to do this is to split the training set of 50,000 examples into two different sets:</p>
+<ul class="calibre15">
+<li class="calibre16">The proper training set used for training our model will progressively reduce its size of (5,900, 3,000, 1,800, 600, and 300) examples</li>
+<li class="calibre16">The validation set used to estimate how well our model has been trained will consist of the remaining examples</li>
+</ul>
+<p class="calibre1">Our test set is always fixed and it consists of 10,000 examples.</p>
+<p class="calibre1">With this setup, we compare the just-defined deep learning ConvNet against the first example of neural network defined in <a target="_blank" href="part0022.html" class="calibre6">Chapter 1</a>, <em class="calibre11">Neural Network Foundations</em>. As we can see in the following graph, our deep network always outperforms the simple network and the gap is more and more evident when the number of examples provided for training is progressively reduced. With 5,900 training examples the deep learning net had an accuracy of 96.68% against an accuracy of 85.56% of the simple net. More important, with only 300 training examples our deep learning net still has an accuracy of 72.44% while the simple net shows a significant decay at 48.26%. All the experiments are run for only four training iterations. This confirms the breakthrough progress achieved with deep learning. At first glance this could be surprising from a mathematical point of view because the deep network has many more unknowns (the weights), so one would think we need many more data points. However, preserving the spatial information, adding convolution, pooling, and feature maps is innovation with ConvNets, and this was optimized on millions of years (since this organization has been inspired by the visual cortex):</p>
+<div class="CDPAlignCenter"><img class="image-border43" src="../images/00100.jpeg"/></div>
+<p class="calibre1">A list of state-of-the-art results for MNIST is available at: <a href="http://rodrigob.github.io/are_we_there_yet/build/classification_datasets_results.html" target="_blank" class="calibre6">http://rodrigob.github.io/are_we_there_yet/build/classification_datasets_results.html</a>. As of January, 2017, the best result has an error rate of 0.21%.</p>
+
+
+            </article>
+
+            <footer class="calibre4">
+                
+            </footer>
+
+        </section>
+    </body></html>

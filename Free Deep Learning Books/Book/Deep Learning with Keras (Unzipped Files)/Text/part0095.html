@@ -1,0 +1,51 @@
+<?xml version='1.0' encoding='utf-8'?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+  <head>
+    <title>Improving the CIFAR-10 performance with deeper a network</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <link href="../stylesheet.css" rel="stylesheet" type="text/css"/>
+<link href="../page_styles.css" rel="stylesheet" type="text/css"/>
+</head>
+  <body class="calibre">
+        <section>
+
+            <header>
+                </header><h1 class="header-title" id="calibre_pb_0">Improving the CIFAR-10 performance with deeper a network</h1>
+            
+
+            <article>
+                
+<p class="calibre1">One way to improve the performance is to define a deeper network with multiple convolutional operations. In this example, we have a sequence of modules:</p>
+<div class="CDPAlignCenter"><em class="calibre11">conv+conv+maxpool+dropout+conv+conv+maxpool</em></div>
+<p class="calibre1">Followed by a standard <em class="calibre11">dense+dropout+dense</em>. All the activation functions are ReLU.</p>
+<p class="calibre1">Let us see the code for the new network:</p>
+<pre class="calibre21">
+model = Sequential()<br class="title-page-name"/>model.add(Conv2D(32, (3, 3), padding='same',<br class="title-page-name"/>input_shape=(IMG_ROWS, IMG_COLS, IMG_CHANNELS)))<br class="title-page-name"/>model.add(Activation('relu'))<br class="title-page-name"/>model.add(Conv2D(32, (3, 3), padding='same'))<br class="title-page-name"/>model.add(Activation('relu'))<br class="title-page-name"/>model.add(MaxPooling2D(pool_size=(2, 2)))<br class="title-page-name"/>model.add(Dropout(0.25))<br class="title-page-name"/>model.add(Conv2D(64, (3, 3), padding='same'))<br class="title-page-name"/>model.add(Activation('relu'))<br class="title-page-name"/>model.add(Conv2D(64, 3, 3))<br class="title-page-name"/>model.add(Activation('relu'))<br class="title-page-name"/>model.add(MaxPooling2D(pool_size=(2, 2)))<br class="title-page-name"/>model.add(Dropout(0.25))<br class="title-page-name"/>model.add(Flatten())<br class="title-page-name"/>model.add(Dense(512))<br class="title-page-name"/>model.add(Activation('relu'))<br class="title-page-name"/>model.add(Dropout(0.5))<br class="title-page-name"/>model.add(Dense(NB_CLASSES))<br class="title-page-name"/>model.add(Activation('softmax'))
+</pre>
+<p class="calibre1">Congratulations! You have defined a deeper network. Let us run the code! First we dump the network, then we run for 40 iterations reaching an accuracy of 76.9%:</p>
+<div class="CDPAlignCenter"><img class="image-border46" src="../images/00105.jpeg"/></div>
+<p class="calibre1">In the following screenshot, we will see the accuracy reached after 40 iterations:</p>
+<div class="CDPAlignCenter"><img class="image-border47" src="../images/00106.jpeg"/></div>
+<p class="calibre1">So we have an improvement of 10.5% with respect to the previous simpler deeper network. For the sake of completeness, let us also report the accuracy and loss during training, shown as follows:</p>
+<table class="a">
+<tbody class="calibre8">
+<tr class="calibre9">
+<td class="calibre10">
+<div class="CDPAlignCenter"><img class="image-border11" src="../images/00107.jpeg"/></div>
+</td>
+<td class="calibre10">
+<div class="CDPAlignCenter"><img class="image-border11" src="../images/00108.jpeg"/></div>
+</td>
+</tr>
+</tbody>
+</table>
+
+
+            </article>
+
+            <footer class="calibre4">
+                
+            </footer>
+
+        </section>
+    </body></html>

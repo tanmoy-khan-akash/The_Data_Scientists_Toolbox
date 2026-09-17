@@ -1,0 +1,38 @@
+<?xml version='1.0' encoding='utf-8'?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+  <head>
+    <title>AI Game Playing</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <link href="../stylesheet.css" rel="stylesheet" type="text/css"/>
+<link href="../page_styles.css" rel="stylesheet" type="text/css"/>
+</head>
+  <body class="calibre">
+        <section>
+
+            <header>
+                </header><h1 class="header-title" id="calibre_pb_0">AI Game Playing</h1>
+            
+
+            <article>
+                
+<p class="calibre1">In previous chapters, we looked at supervised learning techniques such as regression and classification, and unsupervised learning techniques such as GANs, autoencoders and generative models. In the case of supervised learning, we train the network with the expected input and output and expect it to predict the output given a new input. In the case of unsupervised learning, we show the network some input and expect it to learn the structure of the data so that it can apply this knowledge to a new input.</p>
+<p class="calibre1">In this chapter, we will learn about reinforcement learning, or more specifically deep reinforcement learning, that is, the application of deep neural networks to reinforcement learning. Reinforcement learning has its roots in behavioral psychology. An agent is trained by rewarding it for correct behavior and punishing it for incorrect behavior. In the context of deep reinforcement learning, a network is shown some input and is given a positive or negative reward based on whether it produces the correct output from that input. Thus, in reinforcement learning, we have sparse and time-delayed labels. Over many iterations, the network learns to produce the correct output.</p>
+<p class="calibre1">The pioneer in the deep reinforcement learning space was a small British company called DeepMind, which in 2013 published a paper (for more information refer to: <span><em class="calibre11">Playing Atari with Deep Reinforcement Learning</em>, by V. Mnih, arXiv:1312.5602, 2013.</span>) describing how a <strong class="calibre3">convolutional neural network</strong> (<strong class="calibre3">CNN</strong>) could be taught to play Atari 2600 video games by showing it screen pixels and giving it a reward when the score increases. The same architecture was used to learn seven different Atari 2600 games, in six of which the model outperformed all previous approaches, and it outperformed a human expert in three.</p>
+<p class="calibre1">Unlike the learning strategies we learned about previously, where each network learns about a single discipline, reinforcement learning seems to be a general learning algorithm that can be applied to a variety of environments; it may even be the first step to general artificial intelligence. DeepMind has since been acquired by Google, and the group has been on the forefront of AI research. A subsequent paper (<span>for more information refer to: <em class="calibre11">Human-Level Control through Deep Reinforcement Learning</em>, by V. Mnih, Nature 518.7540, 2015: 529-533.</span>) was featured in the prestigious Nature journal in 2015, where they applied the same model to 49 different games.</p>
+<p class="calibre1">In this chapter, we will explore the theoretical framework that underlies deep reinforcement learning. We'll then apply this framework to build a network using Keras that learns to play a game of catch. We'll briefly look at some ideas that can make this network better as well as some promising new areas of research in this space.</p>
+<p class="calibre1">To sum up, we will learn the following core concepts around reinforcement learning in this chapter:</p>
+<ul class="calibre15">
+<li class="calibre16">Q-learning</li>
+<li class="calibre16">Exploration versus exploitation</li>
+<li class="calibre16">Experience replay</li>
+</ul>
+
+
+            </article>
+
+            <footer class="calibre4">
+                
+            </footer>
+
+        </section>
+    </body></html>

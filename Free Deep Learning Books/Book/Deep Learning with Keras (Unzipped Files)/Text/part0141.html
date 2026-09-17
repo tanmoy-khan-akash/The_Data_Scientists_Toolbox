@@ -1,0 +1,56 @@
+<?xml version='1.0' encoding='utf-8'?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+  <head>
+    <title>Keras functional API</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <link href="../stylesheet.css" rel="stylesheet" type="text/css"/>
+<link href="../page_styles.css" rel="stylesheet" type="text/css"/>
+</head>
+  <body class="calibre">
+        <section>
+
+            <header>
+                </header><h1 class="header-title" id="calibre_pb_0">Keras functional API</h1>
+            
+
+            <article>
+                
+<p class="calibre1">The Keras functional API defines each layer as a function and provides operators to compose these functions into a larger computational graph. A function is some sort of transformation with a single input and single output. For example, the function <em class="calibre11">y = f(x)</em> defines a function <em class="calibre11">f</em> with input <em class="calibre11">x</em> and output <em class="calibre11">y</em>. Let us consider the simple sequential model from Keras (for more information refer to: <a href="https://keras.io/getting-started/sequential-model-guide/" target="_blank" class="calibre6">https://keras.io/getting-started/sequential-model-guide/</a>):</p>
+<pre class="calibre21">
+from keras.models import Sequential<br class="title-page-name"/>from keras.layers.core import dense, Activation<br class="title-page-name"/><br class="title-page-name"/>model = Sequential([<br class="title-page-name"/>   dense(32, input_dim=784),<br class="title-page-name"/>   Activation("sigmoid"),<br class="title-page-name"/>   dense(10),<br class="title-page-name"/>   Activation("softmax"),<br class="title-page-name"/>])<br class="title-page-name"/><br class="title-page-name"/>model.compile(loss="categorical_crossentropy", optimizer="adam")
+</pre>
+<p class="calibre1">As you can see, the sequential model represents the network as a linear pipeline, or list, of layers. We can also represent the network as the composition of the following nested functions. Here <em class="calibre11">x</em> is the input tensor of shape <em class="calibre11">(None, 784)</em> and <em class="calibre11">y</em> is the output tensor of <em class="calibre11">(None, 10)</em>. Here <em class="calibre11">None</em> refers to the as-yet undetermined batch size:</p>
+<div class="CDPAlignCenter"><img src="../images/00173.jpeg" class="calibre64"/></div>
+<p class="calibre1">Where:</p>
+<div class="CDPAlignCenter"><img src="../images/00174.jpeg" class="calibre64"/></div>
+<p class="calibre1">The network can be redefined using the Keras functional API as follows. Notice how the predictions variable is a composition of the same functions we defined in equation form previously:</p>
+<pre class="calibre21">
+from keras.layers import Input<br class="title-page-name"/>from keras.layers.core import dense<br class="title-page-name"/>from keras.models import Model<br class="title-page-name"/>from keras.layers.core import Activation<br class="title-page-name"/><br class="title-page-name"/>inputs = Input(shape=(784,))<br class="title-page-name"/><br class="title-page-name"/>x = dense(32)(inputs)<br class="title-page-name"/>x = Activation("sigmoid")(x)<br class="title-page-name"/>x = dense(10)(x)<br class="title-page-name"/>predictions = Activation("softmax")(x)<br class="title-page-name"/><br class="title-page-name"/>model = Model(inputs=inputs, outputs=predictions)<br class="title-page-name"/><br class="title-page-name"/>model.compile(loss="categorical_crossentropy", optimizer="adam")
+</pre>
+<p class="calibre1">Since a model is a composition of layers that are also functions, a model is also a function. Therefore, you can treat a trained model as just another layer by calling it on an appropriately shaped input tensor. Thus, if you have built a model that does something useful like image classification, you can easily extend it to work with a sequence of images using Keras's <kbd class="calibre12">TimeDistributed</kbd> wrapper:</p>
+<pre class="calibre21">
+sequence_predictions = TimeDistributed(model)(input_sequences)
+</pre>
+<p class="calibre1">The functional API can be used to define any network that can be defined using the sequential API. In addition, the following types of network can only be defined using the functional API:</p>
+<ul class="calibre15">
+<li class="calibre16">Models with multiple inputs and outputs</li>
+<li class="calibre16">Models composed of multiple submodels</li>
+<li class="calibre16">Models that used shared layers</li>
+</ul>
+<p class="calibre1">Models with multiple inputs and outputs are defined by composing the inputs and outputs separately, as shown in the preceding example, and then passing in an array of input functions and an array of output functions in the input and output parameters of the <kbd class="calibre12">Model</kbd> constructor:</p>
+<pre class="calibre21">
+model = Model(inputs=[input1, input2], outputs=[output1, output2])
+</pre>
+<p class="calibre1">Models with multiple inputs and outputs also generally consist of multiple subnetworks, the results of whose computations are merged into the final result. The merge function provides multiple ways to merge intermediate results such as vector addition, dot product, and concatenation. We will see examples of merging in our question answering example later in this chapter.</p>
+<p class="calibre1">Another good use for the functional API are models that use shared layers. Shared layers are defined once, and referenced in each pipeline where their weights need to be shared.</p>
+<p class="calibre1">We will use the functional API almost exclusively in this chapter, so you will see quite a few examples of its use. The Keras website has many more usage examples for the functional API.</p>
+
+
+            </article>
+
+            <footer class="calibre4">
+                
+            </footer>
+
+        </section>
+    </body></html>

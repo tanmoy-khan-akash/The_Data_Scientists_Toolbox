@@ -1,0 +1,31 @@
+<?xml version='1.0' encoding='utf-8'?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+  <head>
+    <title>What is a GAN?</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <link href="../stylesheet.css" rel="stylesheet" type="text/css"/>
+<link href="../page_styles.css" rel="stylesheet" type="text/css"/>
+</head>
+  <body class="calibre">
+        <section>
+
+            <header>
+                </header><h1 class="header-title" id="calibre_pb_0">What is a GAN?</h1>
+            
+
+            <article>
+                
+<p class="calibre1">The key intuition of GAN can be easily considered as analogous to <em class="calibre11">art forgery</em>, which is the process of creating works of art (<a href="https://en.wikipedia.org/wiki/Art" target="_blank" class="calibre6">https://en.wikipedia.org/wiki/Art</a>) that are falsely credited to other, usually more famous, artists. GANs train two neural nets simultaneously, as shown in the next diagram. The generator <em class="calibre11">G(Z) </em>makes the forgery, and the discriminator <em class="calibre11">D(Y)</em> can judge how realistic the reproductions based on its observations of authentic pieces of arts and copies are. <em class="calibre11">D(Y)</em> takes an input, <em class="calibre11">Y, </em>(for instance, an image) and expresses a vote to judge how real the input is--in general, a value close to zero denotes <em class="calibre11">real</em> and a value close to one denotes <em class="calibre11">forgery</em>. <em class="calibre11">G(Z)</em> takes an input from a random noise, <em class="calibre11">Z</em>, and trains itself to fool <em class="calibre11">D</em> into thinking that whatever <em class="calibre11">G(Z)</em> produces is real. So, the goal of training the discriminator <em class="calibre11">D(Y)</em> is to maximize <em class="calibre11">D(Y)</em> for every image from the true data distribution, and to minimize <em class="calibre11">D(Y</em>) for every image not from the true data distribution. So, <em class="calibre11">G</em> and <em class="calibre11">D</em> play an opposite game; hence the name <em class="calibre11">adversarial training</em>. Note that we train <em class="calibre11">G</em> and <em class="calibre11">D</em> in an alternating manner, where each of their objectives is expressed as a loss function optimized via a gradient descent. The generative model learns how to forge more successfully, and the discriminative model learns how to recognize forgery more successfully. The discriminator network (usually a standard convolutional neural network) tries to classify whether an input image is real or generated. The important new idea is to backpropagate through both the discriminator and the generator to adjust the generator's parameters in such a way that the generator can learn how to fool the the discriminator for an increasing number of situations. At the end, the generator will learn how to produce forged images that are indistinguishable from real ones:</p>
+<div class="CDPAlignCenter"><img class="image-border55" src="../images/00120.jpeg"/></div>
+<p class="calibre1">Of course, GANs require finding the equilibrium in a game with two players. For effective learning it is required that if a player successfully moves downhill in a round of updates, the same update must move the other player downhill too. Think about it! If the forger learns how to fool the judge on every occasion, then the forger himself has nothing more to learn. Sometimes the two players eventually reach an equilibrium, but this is not always guaranteed and the two players can continue playing for a long time. An example of learning from both sides has been provided in the following graph:</p>
+<div class="CDPAlignCenter"><img class="image-border56" src="../images/00121.jpeg"/></div>
+
+
+            </article>
+
+            <footer class="calibre4">
+                
+            </footer>
+
+        </section>
+    </body></html>
