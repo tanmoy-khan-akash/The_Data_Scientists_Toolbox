@@ -1,0 +1,80 @@
+<?xml version='1.0' encoding='utf-8'?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+  <head>
+    <title>Testing different optimizers in Keras</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <link href="../stylesheet.css" rel="stylesheet" type="text/css"/>
+<link href="../page_styles.css" rel="stylesheet" type="text/css"/>
+</head>
+  <body class="calibre">
+        <section>
+
+            <header>
+                </header><h1 class="header-title" id="calibre_pb_0">Testing different optimizers in Keras</h1>
+            
+
+            <article>
+                
+<p class="calibre1">We have defined and used a network; it is useful to start giving an intuition about how networks are trained. Let's focus on one popular training technique known as <strong class="calibre3">gradient descent</strong> (<strong class="calibre3">GD</strong>). Imagine a generic cost function <em class="calibre11">C(w)</em> in one single variable <em class="calibre11">w</em> like in the following graph:</p>
+<div class="CDPAlignCenter"><img class="image-border12" src="../images/00035.jpeg"/></div>
+<p class="calibre1">The gradient descent can be seen as a hiker who aims at climbing down a mountain into a valley. The mountain represents the function <em class="calibre11">C</em>, while the valley represents the minimum <em class="calibre11">C<sub class="calibre22">min</sub></em>. The hiker has a starting point <em class="calibre11">w<sub class="calibre22">0</sub></em>. The hiker moves little by little. At each step <em class="calibre11">r</em>, the gradient is the direction of maximum increase. Mathematically, this direction is the value of the partial derivative <img src="../images/00036.jpeg" class="calibre39"/> evaluated at point <em class="calibre11">w<sub class="calibre22">r</sub></em> reached at step <em class="calibre11">r</em>. Therefore by taking the opposite direction, <img src="../images/00037.jpeg" class="calibre40"/>, the hiker can move towards the valley. At each step, the hiker can decide what the leg length is before the next step. This is the <em class="calibre11">learning rate</em> <img src="../images/00038.jpeg" class="calibre41"/> in gradient descent jargon. Note that if <img src="../images/00039.jpeg" class="calibre42"/> is too small, then the hiker will move slowly. However, if <img src="../images/00039.jpeg" class="calibre42"/> is too high, then the hiker will possibly miss the valley.</p>
+<p class="calibre1">Now you should remember that a sigmoid is a continuous function, and it is possible to compute the derivative. It can be proven that the sigmoid is shown as follows:</p>
+<div class="CDPAlignCenter"><img src="../images/00040.jpeg" class="calibre43"/></div>
+<p class="calibre1">It has the following derivative:</p>
+<div class="CDPAlignCenter"> <img src="../images/00041.jpeg" class="calibre44"/> </div>
+<p class="calibre1">ReLU is not differentiable in <em class="calibre11">0</em>. We can, however, extend the first derivative in <em class="calibre11">0</em> to a function over the whole domain by choosing it to be either <em class="calibre11">0</em> or <em class="calibre11">1</em>. The point-wise derivative of ReLU <img src="../images/00042.jpeg" class="calibre45"/> is as follows:</p>
+<div class="CDPAlignCenter"><img src="../images/00043.jpeg" class="calibre46"/></div>
+<p class="calibre1">Once we have the derivative, it is possible to optimize the nets with a gradient descent technique. Keras uses its backend (either TensorFlow or Theano) for computing the derivative on our behalf so we don't need to worry about implementing or computing it. We just choose the activation function, and Keras computes its derivative on our behalf.</p>
+<p class="calibre1">A neural network is essentially a composition of multiple functions with thousands, and sometimes millions, of parameters. Each network layer computes a function whose error should be minimized in order to improve the accuracy observed during the learning phase. When we discuss backpropagation, we will discover that the minimization game is a bit more complex than our toy example. However, it is still based on the same intuition of descending a valley.</p>
+<p class="calibre1">Keras implements a fast variant of gradient descent known as <strong class="calibre3">stochastic gradient descent</strong> (<strong class="calibre3">SGD</strong>) and two more advanced optimization techniques known as <strong class="calibre3">RMSprop</strong> and <strong class="calibre3">Adam</strong>. RMSprop and Adam include the concept of momentum (a velocity component) in addition to the acceleration component that SGD has. This allows faster convergence at the cost of more computation. A full list of Keras-supported optimizers is at <a href="https://keras.io/optimizers/" target="_blank" class="calibre6">https://keras.io/optimizers/</a>. SGD was our default choice so far. So now let's try the other two. It is very simple, we just need to change few lines:</p>
+<pre class="calibre21">
+from keras.optimizers import RMSprop, Adam<br class="title-page-name"/>...<br class="title-page-name"/>OPTIMIZER = RMSprop() # optimizer,
+</pre>
+<p class="calibre1">That's it. Let's test it as shown in the following screenshot:</p>
+<div class="CDPAlignCenter"><img class="image-border13" src="../images/00044.jpeg"/></div>
+<p class="calibre1">As you can see in the preceding screenshot, RMSprop is faster than SDG since we are able to achieve an accuracy of 97.97% on training, 97.59% on validation, and 97.84% on the test improving SDG with only 20 iterations. For the sake of completeness, let's see how the accuracy and loss change with the number of epochs, as shown in the following graphs:</p>
+<table class="a">
+<tbody class="calibre8">
+<tr class="calibre9">
+<td class="calibre10">
+<div class="CDPAlignCenter"><img class="image-border11" src="../images/00045.jpeg"/></div>
+</td>
+<td class="calibre10">
+<div class="CDPAlignCenter"><img class="image-border11" src="../images/00046.jpeg"/></div>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="calibre1"><br class="title-page-name"/>
+<br class="title-page-name"/>
+OK, let's try the other optimizer, <kbd class="calibre12">Adam()</kbd>. It is pretty simple, as follows:</p>
+<pre class="calibre21">
+OPTIMIZER = Adam() # optimizer
+</pre>
+<p class="calibre1">As we have seen, Adam is slightly better. With Adam, we achieve 98.28% accuracy on training, 98.03% on validation, and 97.93% on the test with 20 iterations, as shown in the following graphs:</p>
+<table class="a">
+<tbody class="calibre8">
+<tr class="calibre9">
+<td class="calibre10">
+<div class="CDPAlignCenter"><img class="image-border11" src="../images/00047.jpeg"/></div>
+</td>
+<td class="calibre10">
+<div class="CDPAlignCenter"><img class="image-border11" src="../images/00048.jpeg"/></div>
+</td>
+</tr>
+</tbody>
+</table>
+<br class="title-page-name"/>
+<p class="calibre1">This is our fifth variant, and remember that our initial baseline was at 92.36%.</p>
+<p class="calibre1">So far, we made progressive improvements; however, the gains are now more and more difficult. Note that we are optimizing with a dropout of 30%. For the sake of completeness, it could be useful to report the accuracy on the test only for other dropout values with <kbd class="calibre12">Adam()</kbd> chosen as optimizer, as shown in the following graph:</p>
+<div class="CDPAlignCenter"><img class="image-border14" src="../images/00049.jpeg"/></div>
+
+
+            </article>
+
+            <footer class="calibre4">
+                
+            </footer>
+
+        </section>
+    </body></html>

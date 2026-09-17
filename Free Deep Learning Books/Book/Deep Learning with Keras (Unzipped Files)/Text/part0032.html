@@ -1,0 +1,86 @@
+<?xml version='1.0' encoding='utf-8'?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+  <head>
+    <title>Defining a simple neural net in Keras</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <link href="../stylesheet.css" rel="stylesheet" type="text/css"/>
+<link href="../page_styles.css" rel="stylesheet" type="text/css"/>
+</head>
+  <body class="calibre">
+        <section>
+
+            <header>
+                </header><h1 class="header-title" id="calibre_pb_0">Defining a simple neural net in Keras</h1>
+            
+
+            <article>
+                
+<p class="calibre1">Here, we use Keras to define a network that recognizes MNIST handwritten digits. We start with a very simple neural network and then progressively improve it.</p>
+<p class="calibre1">Keras provides suitable libraries to load the dataset and split it into training sets <kbd class="calibre12">X_train</kbd><em class="calibre11">,</em> used for fine-tuning our net, and tests set <em class="calibre11"><kbd class="calibre12">X_test</kbd>,</em> used for assessing the performance. Data is converted into <kbd class="calibre12">float32</kbd> for supporting GPU computation and normalized to <em class="calibre11">[0, 1]</em>. In addition, we load the true labels into <kbd class="calibre12">Y_train</kbd> and <kbd class="calibre12">Y_test</kbd> respectively and perform a one-hot encoding on them. Let's see the code:</p>
+<pre class="calibre21">
+from __future__ import print_function<br class="title-page-name"/>import numpy as np<br class="title-page-name"/>from keras.datasets import mnist<br class="title-page-name"/>from keras.models import Sequential<br class="title-page-name"/>from keras.layers.core import Dense, Activation<br class="title-page-name"/>from keras.optimizers import SGD<br class="title-page-name"/>from keras.utils import np_utils<br class="title-page-name"/>np.random.seed(1671) # for reproducibility<br class="title-page-name"/><br class="title-page-name"/># network and training<br class="title-page-name"/>NB_EPOCH = 200<br class="title-page-name"/>BATCH_SIZE = 128<br class="title-page-name"/>VERBOSE = 1<br class="title-page-name"/>NB_CLASSES = 10 # number of outputs = number of digits<br class="title-page-name"/>OPTIMIZER = SGD() # SGD optimizer, explained later in this chapter<br class="title-page-name"/>N_HIDDEN = 128<br class="title-page-name"/>VALIDATION_SPLIT=0.2 # how much TRAIN is reserved for VALIDATION<br class="title-page-name"/><br class="title-page-name"/># data: shuffled and split between train and test sets<br class="title-page-name"/>#<br class="title-page-name"/>(X_train, y_train), (X_test, y_test) = mnist.load_data()<br class="title-page-name"/>#X_train is 60000 rows of 28x28 values --&gt; reshaped in 60000 x 784<br class="title-page-name"/>RESHAPED = 784<br class="title-page-name"/>#<br class="title-page-name"/>X_train = X_train.reshape(60000, RESHAPED)<br class="title-page-name"/>X_test = X_test.reshape(10000, RESHAPED)<br class="title-page-name"/>X_train = X_train.astype('float32')<br class="title-page-name"/>X_test = X_test.astype('float32')<br class="title-page-name"/># normalize<br class="title-page-name"/>#<br class="title-page-name"/>X_train /= 255<br class="title-page-name"/>X_test /= 255<br class="title-page-name"/>print(X_train.shape[0], 'train samples')<br class="title-page-name"/>print(X_test.shape[0], 'test samples')<br class="title-page-name"/># convert class vectors to binary class matrices<br class="title-page-name"/>Y_train = np_utils.to_categorical(y_train, NB_CLASSES)<br class="title-page-name"/>Y_test = np_utils.to_categorical(y_test, NB_CLASSES)
+</pre>
+<p class="calibre1">The input layer has a neuron associated with each pixel in the image for a total of <em class="calibre11">28 x 28 = 784</em> neurons, one for each pixel in the MNIST images.</p>
+<p class="calibre1">Typically, the values associated with each pixel are normalized in the range <em class="calibre11">[0, 1]</em> (which means that the intensity of each pixel is divided by 255, the maximum intensity value). The output is 10 classes, one for each digit.</p>
+<p class="calibre1">The final layer is a single neuron with activation function softmax, which is a generalization of the sigmoid function<em class="calibre11">.</em> Softmax <em class="calibre11">squashes</em> a k-dimensional vector of arbitrary real values into a k-dimensional vector of real values in the range <em class="calibre11">(0, 1)</em>. In our case, it aggregates 10 answers provided by the previous layer with 10 neurons:</p>
+<pre class="calibre21">
+# 10 outputs<br class="title-page-name"/># final stage is softmax<br class="title-page-name"/>model = Sequential()<br class="title-page-name"/>model.add(Dense(NB_CLASSES, input_shape=(RESHAPED,)))<br class="title-page-name"/>model.add(Activation('softmax'))<br class="title-page-name"/>model.summary()
+</pre>
+<p class="calibre1">Once we define the model, we have to compile it so that it can be executed by the Keras backend (either Theano or TensorFlow). There are a few choices to be made during compilation:</p>
+<ul class="calibre15">
+<li class="calibre16">We need to select the <em class="calibre11">optimizer</em> that is the specific algorithm used to update weights while we train our model</li>
+<li class="calibre16">We need to select the <em class="calibre11">objective function</em> that is used by the optimizer to navigate the space of weights (frequently, objective functions are called <em class="calibre11">loss function</em>, and the process of optimization is defined as a process of loss <em class="calibre11">minimization</em>)</li>
+<li class="calibre16">We need to evaluate the trained model</li>
+</ul>
+<p class="calibre1">Some common choices for the objective function (a<span> complete list of Keras objective functions is at </span><a href="https://keras.io/objectives/" class="calibre6">https://keras.io/objectives/</a>) are as follows:</p>
+<ul class="calibre15">
+<li class="calibre16"><strong class="calibre3">MSE</strong>: This is the mean squared error between the predictions and the true values. Mathematically, if <img src="../images/00024.jpeg" class="calibre35"/> is a vector of <em class="calibre11">n</em> predictions, and <em class="calibre11">Y</em> is the vector of <em class="calibre11">n</em> observed values, then they satisfy the following equation:</li>
+</ul>
+<div class="CDPAlignCenter"><img src="../images/00025.gif" class="calibre36"/></div>
+<div class="packtinfobox">These objective functions average all the mistakes made for each prediction, and if the prediction is far from the true value, then this distance is made more evident by the squaring operation.</div>
+<ul class="calibre15">
+<li class="calibre16"><strong class="calibre3">Binary cross-entropy</strong>: This is the binary logarithmic loss. Suppose that our model predicts <em class="calibre11">p</em> while the target is <em class="calibre11">t</em>, then the binary cross-entropy is defined as follows:</li>
+</ul>
+<div class="CDPAlignCenter"><img src="../images/00026.jpeg" class="calibre37"/></div>
+<div class="packtinfobox">This objective function is suitable for binary labels prediction.</div>
+<ul class="calibre15">
+<li class="calibre16"><strong class="calibre3">Categorical cross-entropy</strong>: This is the multiclass logarithmic loss. If the target is <em class="calibre11">t<sub class="calibre22">i,j</sub></em> and the prediction is <em class="calibre11">p<sub class="calibre22">i,j</sub></em>, then the categorical cross-entropy is this:</li>
+</ul>
+<div class="CDPAlignCenter"><img src="../images/00027.jpeg" class="calibre38"/></div>
+<div class="packtinfobox">This objective function is suitable for multiclass labels predictions. It is also the default choice in association with softmax activation.</div>
+<p class="calibre1">Some common choices for metrics (a<span> complete list of Keras metrics is at </span><a href="https://keras.io/metrics/" class="calibre6">https://keras.io/metrics/</a>) are as follows:</p>
+<ul class="calibre15">
+<li class="calibre16"><strong class="calibre3">Accuracy</strong>: This is the proportion of correct predictions with respect to the targets</li>
+<li class="calibre16"><strong class="calibre3">Precision</strong>: This denotes how many selected items are relevant for a multilabel classification</li>
+<li class="calibre16"><strong class="calibre3">Recall</strong>: This denotes how many selected items are relevant for a multilabel classification</li>
+</ul>
+<p class="calibre1">Metrics are similar to objective functions, with the only difference that they are not used for training a model but only for evaluating a model. Compiling a model in Keras is easy:</p>
+<pre class="calibre21">
+model.compile(loss='categorical_crossentropy', optimizer=OPTIMIZER, metrics=['accuracy'])
+</pre>
+<p class="calibre1">Once the model is compiled, it can be then trained with the <kbd class="calibre12">fit()</kbd> function, which specifies a few parameters:</p>
+<ul class="calibre15">
+<li class="calibre16"><kbd class="calibre12">epochs</kbd>: This is the number of times the model is exposed to the training set. At each iteration, the optimizer tries to adjust the weights so that the objective function is minimized.</li>
+<li class="calibre16"><kbd class="calibre12">batch_size</kbd>: This is the number of training instances observed before the optimizer performs a weight update.</li>
+</ul>
+<p class="calibre1">Training a model in Keras is very simple. Suppose we want to iterate for <kbd class="calibre12">NB_EPOCH</kbd> steps:</p>
+<pre class="calibre21">
+history = model.fit(X_train, Y_train,<br class="title-page-name"/>batch_size=BATCH_SIZE, epochs=NB_EPOCH,<br class="title-page-name"/>verbose=VERBOSE, validation_split=VALIDATION_SPLIT)
+</pre>
+<div class="packtinfobox">We reserved part of the training set for validation. The key idea is that we reserve a part of the training data for measuring the performance on the validation while training. This is a good practice to follow for any machine learning task, which we will adopt in all our examples.</div>
+<p class="calibre1">Once the model is trained, we can evaluate it on the test set that contains new unseen examples. In this way, we can get the minimal value reached by the objective function and best value reached by the evaluation metric.</p>
+<p class="calibre1">Note that the training set and the test set are, of course, rigorously separated. There is no point in evaluating a model on an example that has already been used for training. Learning is essentially a process intended to generalize unseen observations and not to memorize what is already known:</p>
+<pre class="calibre21">
+score = model.evaluate(X_test, Y_test, verbose=VERBOSE)<br class="title-page-name"/>print("Test score:", score[0])<br class="title-page-name"/>print('Test accuracy:', score[1])
+</pre>
+<p class="calibre1">So, congratulations, you have just defined your first neural network in Keras. A few lines of code, and your computer is able to recognize handwritten numbers. Let's run the code and see what the performance is.</p>
+
+
+            </article>
+
+            <footer class="calibre4">
+                
+            </footer>
+
+        </section>
+    </body></html>

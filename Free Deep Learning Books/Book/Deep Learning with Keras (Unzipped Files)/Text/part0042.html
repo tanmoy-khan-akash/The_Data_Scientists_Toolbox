@@ -1,0 +1,47 @@
+<?xml version='1.0' encoding='utf-8'?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+  <head>
+    <title>Adopting regularization for avoiding overfitting</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <link href="../stylesheet.css" rel="stylesheet" type="text/css"/>
+<link href="../page_styles.css" rel="stylesheet" type="text/css"/>
+</head>
+  <body class="calibre">
+        <section>
+
+            <header>
+                </header><h1 class="header-title" id="calibre_pb_0">Adopting regularization for avoiding overfitting</h1>
+            
+
+            <article>
+                
+<p class="calibre1">Intuitively, a good machine learning model should achieve low error on training data. Mathematically, this is equivalent to minimizing the loss function on the training data given the machine learning model built. This is expressed by the following formula.:</p>
+<div class="CDPAlignCenter"><img src="../images/00056.jpeg" class="calibre47"/></div>
+<p class="calibre1">However, this might not be enough. A model can become excessively complex in order to capture all the relations inherently expressed by the training data. This increase of complexity might have two negative consequences. First, a complex model might require a significant amount of time to be executed. Second, a complex model can achieve very good performance on training data—because all the inherent relations in trained data are memorized, but not so good performance on validation data—as the model is not able to generalize on fresh unseen data. Again, learning is more about generalization than memorization. The following graph represents a typical loss function decreasing on both validation and training sets. However, a certain point the loss on validation starts to increase because of overfitting:</p>
+<div class="CDPAlignCenter"><img class="image-border21" src="../images/00057.jpeg"/></div>
+<p class="calibre1">As a rule of thumb, if during the training we see that the loss increases on validation, after an initial decrease, then we have a problem of model complexity that overfits training. Indeed, overfitting is the word used in machine learning for concisely describing this phenomenon.</p>
+<p class="calibre1">In order to solve the overfitting problem, we need a way to capture the complexity of a model, that is, how complex a model can be. What could be the solution? Well, a model is nothing more than a vector of weights. Therefore the complexity of a model can be conveniently represented as the number of nonzero weights. In other words, if we have two models, <em class="calibre11">M1</em> and <em class="calibre11">M2</em>, achieving pretty much the same performance in terms of loss function, then we should choose the simplest model that has the minimum number of nonzero weights. We can use a hyperparameter <em class="calibre11">⅄&gt;=0</em> for controlling what the importance of having a simple model is, as in this formula:</p>
+<div class="CDPAlignCenter"><img src="../images/00058.jpeg" class="calibre48"/></div>
+<p class="calibre1">There are three different types of regularizations used in machine learning:</p>
+<ul class="calibre15">
+<li class="calibre16"><strong class="calibre3">L1 regularization</strong> (also known as <strong class="calibre3">lasso</strong>): The complexity of the model is expressed as the sum of the absolute values of the weights</li>
+<li class="calibre16"><strong class="calibre3">L2 regularization</strong> (also known as <strong class="calibre3">ridge</strong>): The complexity of the model is expressed as the sum of the squares of the weights</li>
+<li class="calibre16"><strong class="calibre3">Elastic net regularization</strong>: The complexity of the model is captured by a combination of the two preceding techniques</li>
+</ul>
+<p class="calibre1">Note that the same idea of regularization can be applied independently to the weights, to the model, and to the activation.</p>
+<p class="calibre1">Therefore, playing with regularization can be a good way to increase the performance of a network, in particular when there is an evident situation of overfitting. This set of experiments is left as an exercise for the interested reader.</p>
+<p class="calibre1">Note that Keras supports both l1, l2, and elastic net regularizations. Adding regularization is easy; for instance, here we have a <kbd class="calibre12">l2</kbd> regularizer for kernel (the weight <em class="calibre11">W</em>):</p>
+<pre class="calibre21">
+<span>from</span><span> keras </span><span>import</span><span> regularizers model.add(Dense(</span><span>64</span><span>, input_dim=</span><span>64</span><span>, kernel_regularizer=regularizers.l2(</span><span>0.01</span><span>)</span><span>))</span>
+</pre>
+<p class="calibre1">A full description of the available parameters is available at: <a href="https://keras.io/regularizers/" target="_blank" class="calibre6">https://keras.io/regularizers/</a>.</p>
+
+
+            </article>
+
+            <footer class="calibre4">
+                
+            </footer>
+
+        </section>
+    </body></html>

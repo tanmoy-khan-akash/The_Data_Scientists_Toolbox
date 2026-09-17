@@ -1,0 +1,40 @@
+<?xml version='1.0' encoding='utf-8'?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+  <head>
+    <title>Shared weights and bias</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <link href="../stylesheet.css" rel="stylesheet" type="text/css"/>
+<link href="../page_styles.css" rel="stylesheet" type="text/css"/>
+</head>
+  <body class="calibre">
+        <section>
+
+            <header>
+                </header><h1 class="header-title" id="calibre_pb_0">Shared weights and bias</h1>
+            
+
+            <article>
+                
+<p class="calibre1">Let's suppose that we want to move away from the pixel representation in a row by gaining the ability to detect the same feature independently from the location where it is placed in the input image. A simple intuition is to use the same set of weights and bias for all the neurons in the hidden layers. In this way, each layer will learn a set of position-independent latent features derived from the image.</p>
+<p class="calibre1">Assuming that the input image has shape <em class="calibre11">(256, 256)</em> on three channels with <em class="calibre11">tf</em> (TensorFlow) ordering, this is represented as <em class="calibre11">(256, 256, 3)</em>. Note that with th (Theano) mode, the channel's dimension (the depth) is at index <em class="calibre11">1</em>; in <em class="calibre11">tf</em> (TensoFlow) mode, it is at index <em class="calibre11">3</em>.</p>
+<p class="calibre1">In Keras, if we want to add a convolutional layer with dimensionality of the output 32 and extension of each filter 3 x 3, we will write:</p>
+<pre class="calibre21">
+model = Sequential()<br class="title-page-name"/>model.add(Conv2D(32, (3, 3), input_shape=(256, 256, 3))
+</pre>
+<p class="calibre1">Alternatively, we will write:</p>
+<pre class="calibre21">
+model = Sequential()<br class="title-page-name"/>model.add(Conv2D(32, kernel_size=3, input_shape=(256, 256, 3))
+</pre>
+<p class="calibre1">This means that we are applying a 3 x 3 convolution on a 256 x 256 image with three input channels (or input filters), resulting in 32 output channels (or output filters).</p>
+<p class="calibre1">An example of convolution is provided in the following diagram:</p>
+<div class="CDPAlignCenter"><img class="image-border35" src="../images/00091.jpeg"/></div>
+
+
+            </article>
+
+            <footer class="calibre4">
+                
+            </footer>
+
+        </section>
+    </body></html>

@@ -1,0 +1,41 @@
+<?xml version='1.0' encoding='utf-8'?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+  <head>
+    <title>Installing Keras on Google Cloud ML</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <link href="../stylesheet.css" rel="stylesheet" type="text/css"/>
+<link href="../page_styles.css" rel="stylesheet" type="text/css"/>
+</head>
+  <body class="calibre">
+        <section>
+
+            <header>
+                </header><h1 class="header-title" id="calibre_pb_0">Installing Keras on Google Cloud ML</h1>
+            
+
+            <article>
+                
+<p class="calibre1">Installing Keras on Google Cloud is very simple. First, we can install Google Cloud (for the downloadable file, refer to <a href="https://cloud.google.com/sdk/" target="_blank" class="calibre6">https://cloud.google.com/sdk/</a>)<em class="calibre11">,</em> a command-line interface for Google Cloud Platform; then we can use CloudML, a managed service that enables us to easily build machine, learning models with TensorFlow. Before using Keras, let's use Google Cloud with TensorFlow to train an MNIST example available on GitHub. The code is local and training happens in the cloud:</p>
+<div class="CDPAlignCenter"><img class="image-border10" src="../images/00076.jpeg"/></div>
+<p class="CDPAlignLeft1">In the following screenshot, you can see how to run a training session:</p>
+<div class="CDPAlignCenter"><img class="image-border10" src="../images/00077.jpeg"/></div>
+<p class="calibre1">We can use TensorBoard to show how cross-entropy decreases across iterations:</p>
+<div class="CDPAlignCenter"><img class="image-border10" src="../images/00078.jpeg"/></div>
+<p class="CDPAlignLeft1">In the next screenshot, we see the graph of cross-entropy:</p>
+<div class="CDPAlignCenter"><img class="image-border29" src="../images/00079.jpeg"/></div>
+<p class="calibre1">Now, if we want to use Keras on the top of TensorFlow, we simply download the Keras source from PyPI (for the downloadable file, refer to <a href="https://pypi.Python.org/pypi/Keras/1.2.0" target="_blank" class="calibre6">https://pypi.Python.org/pypi/Keras/1.2.0</a> or later versions) and then directly use Keras as a CloudML package solution, as in the following example:</p>
+<div class="CDPAlignCenter"><img class="image-border30" src="../images/00080.jpeg"/></div>
+<p class="calibre1">Here, <kbd class="calibre12">trainer.task2.py</kbd> is an example script:</p>
+<pre class="calibre21">
+from keras.applications.vgg16 import VGG16<br class="title-page-name"/>from keras.models import Model<br class="title-page-name"/>from keras.preprocessing import image<br class="title-page-name"/>from keras.applications.vgg16 import preprocess_input<br class="title-page-name"/>import numpy as np<br class="title-page-name"/><br class="title-page-name"/># pre-built and pre-trained deep learning VGG16 model<br class="title-page-name"/>base_model = VGG16(weights='imagenet', include_top=True)<br class="title-page-name"/>for i, layer in enumerate(base_model.layers):<br class="title-page-name"/>  print (i, layer.name, layer.output_shape)
+</pre>
+
+
+            </article>
+
+            <footer class="calibre4">
+                
+            </footer>
+
+        </section>
+    </body></html>

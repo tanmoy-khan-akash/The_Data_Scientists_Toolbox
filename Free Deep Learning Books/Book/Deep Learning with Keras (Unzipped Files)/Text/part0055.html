@@ -1,0 +1,55 @@
+<?xml version='1.0' encoding='utf-8'?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+  <head>
+    <title>Configuring Keras</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <link href="../stylesheet.css" rel="stylesheet" type="text/css"/>
+<link href="../page_styles.css" rel="stylesheet" type="text/css"/>
+</head>
+  <body class="calibre">
+        <section>
+
+            <header>
+                </header><h1 class="header-title" id="calibre_pb_0">Configuring Keras</h1>
+            
+
+            <article>
+                
+<p class="calibre1">Keras has a very minimalist configuration file. Let's load it with a <kbd class="calibre12">vi</kbd> session. The parameters are very simple:</p>
+<table class="a1">
+<tbody class="calibre8">
+<tr class="calibre9">
+<td class="calibre10"><strong class="calibre3">Parameters</strong></td>
+<td class="calibre10"><strong class="calibre3">Values</strong></td>
+</tr>
+<tr class="calibre9">
+<td class="calibre10"><kbd class="calibre49">image_dim_ordering</kbd></td>
+<td class="calibre10">Can be either <kbd class="calibre49">tf</kbd> for the TensorFlow image ordering or <kbd class="calibre49">th</kbd> for Theano image ordering</td>
+</tr>
+<tr class="calibre9">
+<td class="calibre10"><kbd class="calibre49">epsilon</kbd></td>
+<td class="calibre10">The <kbd class="calibre49">epsilon</kbd> value used during computation</td>
+</tr>
+<tr class="calibre9">
+<td class="calibre10"><kbd class="calibre49">floatx</kbd></td>
+<td class="calibre10">Can be either <kbd class="calibre49">float32</kbd> or <kbd class="calibre49">float64</kbd></td>
+</tr>
+<tr class="calibre9">
+<td class="calibre10"><kbd class="calibre49">backend</kbd></td>
+<td class="calibre10">Can be either <kbd class="calibre49">tensorflow</kbd> or <kbd class="calibre49">theano</kbd></td>
+</tr>
+</tbody>
+</table>
+<p class="calibre1">The <kbd class="calibre12">image_dim_ordering</kbd> of <kbd class="calibre12">th</kbd> value gives you a somewhat non-intuitive dimension ordering for images (depth, width, and height), instead of (width, height, and depth), for <kbd class="calibre12">tf</kbd>. The following are the default parameters in my machine:</p>
+<div class="CDPAlignCenter"><img class="image-border10" src="../images/00068.jpeg"/></div>
+<div class="packtinfobox">If you install a GPU-enabled TensorFlow version, then Keras will automatically use your configured GPU when TensorFlow is selected as the backend.</div>
+
+
+            </article>
+
+            <footer class="calibre4">
+                
+            </footer>
+
+        </section>
+    </body></html>

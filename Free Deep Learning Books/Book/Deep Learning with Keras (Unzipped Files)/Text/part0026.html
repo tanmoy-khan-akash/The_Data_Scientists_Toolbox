@@ -1,0 +1,31 @@
+<?xml version='1.0' encoding='utf-8'?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+  <head>
+    <title>Problems in training the perceptron and a solution</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <link href="../stylesheet.css" rel="stylesheet" type="text/css"/>
+<link href="../page_styles.css" rel="stylesheet" type="text/css"/>
+</head>
+  <body class="calibre">
+        <section>
+
+            <header>
+                </header><h1 class="header-title" id="calibre_pb_0">Problems in training the perceptron and a solution</h1>
+            
+
+            <article>
+                
+<p class="calibre1">Let's consider a single neuron; what are the best choices for the weight <em class="calibre11">w</em> and the bias <em class="calibre11">b</em>? Ideally, we would like to provide a set of training examples and let the computer adjust the weight and the bias in such a way that the errors produced in the output are minimized. In order to make this a bit more concrete, let's suppose we have a set of images of cats and another separate set of images not containing cats. For the sake of simplicity, assume that each neuron looks at a single input pixel value. While the computer processes these images, we would like our neuron to adjust its weights and bias so that we have fewer and fewer images wrongly recognized as non-cats. This approach seems very intuitive, but it requires that a small change in weights (and/or bias) causes only a small change in outputs.</p>
+<p class="calibre1">If we have a big output jump, we cannot <em class="calibre11">progressively</em> learn (rather than trying things in all possible directions—a process known as exhaustive search—without knowing if we are improving). After all, kids learn little by little. Unfortunately, the perceptron does not show this little-by-little behavior. A perceptron is either <em class="calibre11">0</em> or <em class="calibre11">1</em> and that is a big jump and it will not help it to learn, as shown in the following graph:</p>
+<div class="CDPAlignCenter"><img class="image-border2" src="../images/00009.jpeg"/></div>
+<p class="calibre1">We need something different, smoother. We need a function that progressively changes from <em class="calibre11">0</em> to <em class="calibre11">1</em> with no discontinuity. Mathematically, this means that we need a continuous function that allows us to compute the derivative.</p>
+
+
+            </article>
+
+            <footer class="calibre4">
+                
+            </footer>
+
+        </section>
+    </body></html>

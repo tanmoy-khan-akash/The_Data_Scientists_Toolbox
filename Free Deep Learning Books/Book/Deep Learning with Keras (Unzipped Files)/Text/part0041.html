@@ -1,0 +1,69 @@
+<?xml version='1.0' encoding='utf-8'?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+  <head>
+    <title>Summarizing the experiments run for recognizing handwritten charts</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <link href="../stylesheet.css" rel="stylesheet" type="text/css"/>
+<link href="../page_styles.css" rel="stylesheet" type="text/css"/>
+</head>
+  <body class="calibre">
+        <section>
+
+            <header>
+                </header><h1 class="header-title" id="calibre_pb_0">Summarizing the experiments run for recognizing handwritten charts</h1>
+            
+
+            <article>
+                
+<p class="calibre1">So, let's summarize: with five different variants, we were able to improve our performance from 92.36% to 97.93%. First, we defined a simple layer network in Keras. Then, we improved the performance by adding some hidden layers. After that, we improved the performance on the test set by adding a few random dropouts to our network and by experimenting with different types of optimizers. Current results are summarized in the following table:</p>
+<table class="a">
+<tbody class="calibre8">
+<tr class="calibre9">
+<td class="calibre10"><strong class="calibre3">Model/Accuracy</strong></td>
+<td class="calibre10"><strong class="calibre3">Training</strong></td>
+<td class="calibre10"><strong class="calibre3">Validation</strong></td>
+<td class="calibre10"><strong class="calibre3">Test</strong></td>
+</tr>
+<tr class="calibre9">
+<td class="calibre10"><strong class="calibre3">Simple</strong></td>
+<td class="calibre10">92.36%</td>
+<td class="calibre10">92.37%</td>
+<td class="calibre10">92.22%</td>
+</tr>
+<tr class="calibre9">
+<td class="calibre10"><strong class="calibre3">Two hidden (128)</strong></td>
+<td class="calibre10">94.50%</td>
+<td class="calibre10">94.63%</td>
+<td class="calibre10">94.41%</td>
+</tr>
+<tr class="calibre9">
+<td class="calibre10"><strong class="calibre3">Dropout (30%)</strong></td>
+<td class="calibre10">98.10%</td>
+<td class="calibre10">97.73%</td>
+<td class="calibre10">97.7% (200 epochs)</td>
+</tr>
+<tr class="calibre9">
+<td class="calibre10"><strong class="calibre3">RMSprop</strong></td>
+<td class="calibre10">97.97%</td>
+<td class="calibre10">97.59%</td>
+<td class="calibre10">97.84% (20 epochs)</td>
+</tr>
+<tr class="calibre9">
+<td class="calibre10"><strong class="calibre3">Adam</strong></td>
+<td class="calibre10">98.28%</td>
+<td class="calibre10">98.03%</td>
+<td class="calibre10">97.93% (20 epochs)</td>
+</tr>
+</tbody>
+</table>
+<p class="calibre1">However, the next two experiments did not provide significant improvements. Increasing the number of internal neurons creates more complex models and requires more expensive computations, but it provides only marginal gains. We get the same experience if we increase the number of training epochs. A final experiment consisted in changing the <kbd class="calibre12">BATCH_SIZE</kbd> for our optimizer.</p>
+
+
+            </article>
+
+            <footer class="calibre4">
+                
+            </footer>
+
+        </section>
+    </body></html>

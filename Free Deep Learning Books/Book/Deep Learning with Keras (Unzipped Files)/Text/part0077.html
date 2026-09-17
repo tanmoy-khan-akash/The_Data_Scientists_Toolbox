@@ -1,0 +1,35 @@
+<?xml version='1.0' encoding='utf-8'?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+  <head>
+    <title>Saving and loading the weights and the architecture of a model</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <link href="../stylesheet.css" rel="stylesheet" type="text/css"/>
+<link href="../page_styles.css" rel="stylesheet" type="text/css"/>
+</head>
+  <body class="calibre">
+        <section>
+
+            <header>
+                </header><h1 class="header-title" id="calibre_pb_0">Saving and loading the weights and the architecture of a model</h1>
+            
+
+            <article>
+                
+<p class="calibre1">Model architectures can be easily saved and loaded as follows:</p>
+<pre class="calibre21">
+# save as JSON json_string = model.to_json()<br class="title-page-name"/># save as YAML yaml_string = model.to_yaml() <br class="title-page-name"/># model reconstruction from JSON: from keras.models import model_from_json model = model_from_json(json_string) # model reconstruction from YAML model = model_from_yaml(yaml_string)
+</pre>
+<p class="calibre1">Model parameters (weights) can be easily saved and loaded as follows:</p>
+<pre class="calibre21">
+from keras.models import load_model model.save('my_model.h5')<br class="title-page-name"/># creates a HDF5 file 'my_model.h5' del model<br class="title-page-name"/># deletes the existing model<br class="title-page-name"/># returns a compiled model<br class="title-page-name"/># identical to the previous one model = load_model('my_model.h5')
+</pre>
+
+
+            </article>
+
+            <footer class="calibre4">
+                
+            </footer>
+
+        </section>
+    </body></html>

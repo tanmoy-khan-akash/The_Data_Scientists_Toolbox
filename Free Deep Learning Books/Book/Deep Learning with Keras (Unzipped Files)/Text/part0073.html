@@ -1,0 +1,35 @@
+<?xml version='1.0' encoding='utf-8'?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+  <head>
+    <title>An overview of losses functions</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <link href="../stylesheet.css" rel="stylesheet" type="text/css"/>
+<link href="../page_styles.css" rel="stylesheet" type="text/css"/>
+</head>
+  <body class="calibre">
+        <section>
+
+            <header>
+                </header><h1 class="header-title" id="calibre_pb_0">An overview of losses functions</h1>
+            
+
+            <article>
+                
+<p class="calibre1">Losses functions (or objective functions, <span>or optimization score function; for more information, refer to <a href="https://keras.io/losses/" target="_blank" class="calibre6">https://keras.io/losses/</a>)</span> can be classified into four categories:</p>
+<ul class="calibre15">
+<li class="calibre16">Accuracy which is used for classification problems. There are multiple choices: <kbd class="calibre12">binary_accuracy</kbd> (mean accuracy rate across all predictions for binary classification problems), <kbd class="calibre12">categorical_accuracy</kbd> (mean accuracy rate across all predictions for multiclass classification problems), <kbd class="calibre12">sparse_categorical_accuracy</kbd> (useful for sparse targets), and <kbd class="calibre12">top_k_categorical_accuracy</kbd> (success when the target class is within the <kbd class="calibre12">top_k</kbd> predictions provided).</li>
+<li class="calibre16">Error loss, which measures the difference between the values predicted and the values actually observed. There are multiple choices: <kbd class="calibre12">mse</kbd> (mean square error between predicted and target values), <kbd class="calibre12">rmse</kbd> (root square error between predicted and target values), <kbd class="calibre12">mae</kbd> (mean absolute error between predicted and target values), <kbd class="calibre12">mape</kbd> (mean percentage error between predicted and target values), and <kbd class="calibre12">msle</kbd> (mean squared logarithmic error between predicted and target values).</li>
+<li class="calibre16">Hinge loss, which is generally used for training classifiers. There are two versions: <em class="calibre11">hinge</em> defined as <img src="../images/00088.jpeg" class="calibre50"/> and <em class="calibre11">squared hinge</em> defined as the the squared value of the hinge loss.</li>
+<li class="calibre16">Class loss is used to calculate the cross-entropy for classification problems. There are multiple versions, including binary cross-entropy (for more information, refer to <a href="https://en.wikipedia.org/wiki/Cross_entropy" target="_blank" class="calibre6">https://en.wikipedia.org/wiki/Cross_entropy</a>), and categorical cross-entropy.</li>
+</ul>
+<p class="calibre1">We have seen a few examples of objective functions in <a target="_blank" href="part0022.html" class="calibre6">Chapter 1</a>, <em class="calibre11">Neural Networks Foundations</em>, and more examples will be presented in the next chapters.</p>
+
+
+            </article>
+
+            <footer class="calibre4">
+                
+            </footer>
+
+        </section>
+    </body></html>

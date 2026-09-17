@@ -1,0 +1,30 @@
+<?xml version='1.0' encoding='utf-8'?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+  <head>
+    <title>Local receptive fields</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <link href="../stylesheet.css" rel="stylesheet" type="text/css"/>
+<link href="../page_styles.css" rel="stylesheet" type="text/css"/>
+</head>
+  <body class="calibre">
+        <section>
+
+            <header>
+                </header><h1 class="header-title" id="calibre_pb_0">Local receptive fields</h1>
+            
+
+            <article>
+                
+<p class="calibre1">If we want to preserve spatial information, then it is convenient to represent each image with a matrix of pixels. Then, a simple way to encode the local structure is to connect a submatrix of adjacent input neurons into one single hidden neuron belonging to the next layer. That single hidden neuron represents one local receptive field. Note that this operation is named convolution and it gives the name to this type of network.</p>
+<p class="calibre1">Of course, we can encode more information by having overlapping submatrices. For instance, let's suppose that the size of each single submatrix is 5 x 5 and that those submatrices are used with MNIST images of 28 x 28 pixels. Then we will be able to generate 23 x 23 local receptive field neurons in the next hidden layer. In fact it is possible to slide the submatrices by only 23 positions before touching the borders of the images. In Keras, the size of each single submatrix is called <strong class="calibre3">stride length</strong>, and this is a hyperparameter that can be fine-tuned during the construction of our nets.</p>
+<p class="calibre1">Let's define the feature map from one layer to another layer. Of course, we can have multiple feature maps that learn independently from each hidden layer. For instance, we can start with 28 x 28 input neurons for processing MINST images and then recall <em class="calibre11">k</em> feature maps of size 23 x 23 neurons each (again with a stride of 5 x 5) in the next hidden layer.</p>
+
+
+            </article>
+
+            <footer class="calibre4">
+                
+            </footer>
+
+        </section>
+    </body></html>

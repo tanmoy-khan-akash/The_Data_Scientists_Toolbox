@@ -1,0 +1,35 @@
+<?xml version='1.0' encoding='utf-8'?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+  <head>
+    <title>Using TensorBoard and Keras</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <link href="../stylesheet.css" rel="stylesheet" type="text/css"/>
+<link href="../page_styles.css" rel="stylesheet" type="text/css"/>
+</head>
+  <body class="calibre">
+        <section>
+
+            <header>
+                </header><h1 class="header-title" id="calibre_pb_0">Using TensorBoard and Keras</h1>
+            
+
+            <article>
+                
+<p class="calibre1">Keras provides a callback for saving your training and test metrics, as well as activation histograms for the different layers in your model:</p>
+<pre class="calibre21">
+keras.callbacks.TensorBoard(log_dir='./logs', histogram_freq=0,  <br class="title-page-name"/>write_graph=True, write_images=False)
+</pre>
+<p class="calibre1">Saved data can then be visualized with TensorBoad launched at the command line:</p>
+<pre class="calibre21">
+tensorboard --logdir=/full_path_to_your_logs
+</pre>
+
+
+            </article>
+
+            <footer class="calibre4">
+                
+            </footer>
+
+        </section>
+    </body></html>

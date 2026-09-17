@@ -1,0 +1,43 @@
+<?xml version='1.0' encoding='utf-8'?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+  <head>
+    <title>Regularization</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <link href="../stylesheet.css" rel="stylesheet" type="text/css"/>
+<link href="../page_styles.css" rel="stylesheet" type="text/css"/>
+</head>
+  <body class="calibre">
+        <section>
+
+            <header>
+                </header><h1 class="header-title" id="calibre_pb_0">Regularization</h1>
+            
+
+            <article>
+                
+<p class="calibre1">Regularization is a way to prevent overfitting. We have already seen examples of usage in <a target="_blank" href="part0022.html" class="calibre6">Chapter 1</a>, <em class="calibre11">Neural Networks Foundations</em>. Multiple layers have parameters for regularization.  The following is the list of regularization parameters commonly used for dense, and convolutional modules:</p>
+<ul class="calibre15">
+<li class="calibre16"><kbd class="calibre12">kernel_regularizer</kbd>: Regularizer function applied to the weight matrix</li>
+<li class="calibre16"><kbd class="calibre12">bias_regularizer</kbd>: Regularizer function applied to the bias vector</li>
+<li class="calibre16"><kbd class="calibre12">activity_regularizer</kbd>: Regularizer function applied to the output of the layer (its activation)</li>
+</ul>
+<p class="calibre1">In addition is possible to use Dropout for regularization and that is frequently a very effective choice</p>
+<pre class="calibre21">
+keras.layers.core.Dropout(rate, noise_shape=<span>None</span>, seed=<span>None</span>)
+</pre>
+<p class="calibre1">Where:</p>
+<ul class="calibre15">
+<li class="calibre16"><kbd class="calibre12">rate</kbd>: It is a float between 0 and 1 which represents the fraction of the input units to drop</li>
+<li class="calibre16"><kbd class="calibre12">noise_shape</kbd>: It is a 1D integer tensor which represents the shape of the binary dropout mask that will be multiplied with the input</li>
+<li class="calibre16"><kbd class="calibre12">seed</kbd>: It is a integer which is used use as random seed</li>
+</ul>
+
+
+            </article>
+
+            <footer class="calibre4">
+                
+            </footer>
+
+        </section>
+    </body></html>

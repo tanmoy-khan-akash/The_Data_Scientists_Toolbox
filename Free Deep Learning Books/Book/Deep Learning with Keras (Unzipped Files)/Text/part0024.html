@@ -1,0 +1,38 @@
+<?xml version='1.0' encoding='utf-8'?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+  <head>
+    <title>The first example of Keras code</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <link href="../stylesheet.css" rel="stylesheet" type="text/css"/>
+<link href="../page_styles.css" rel="stylesheet" type="text/css"/>
+</head>
+  <body class="calibre">
+        <section>
+
+            <header>
+                </header><h1 class="header-title" id="calibre_pb_0">The first example of Keras code</h1>
+            
+
+            <article>
+                
+<p class="calibre1">The initial building block of Keras is a model, and the simplest model is called <strong class="calibre3">sequential</strong>. A sequential Keras model is a linear pipeline (a stack) of neural networks layers. This code fragment defines a single layer with <kbd class="calibre12">12</kbd> artificial neurons, and it expects <kbd class="calibre12">8</kbd> input variables (also known as features):</p>
+<pre class="calibre21">
+from keras.models import Sequential<br class="title-page-name"/>model = Sequential()<br class="title-page-name"/>model.add(Dense(12, input_dim=8, kernel_initializer='random_uniform'))
+</pre>
+<p class="calibre1">Each neuron can be initialized with specific weights. Keras provides a few choices, the most common of which are listed as follows:</p>
+<ul class="calibre15">
+<li class="calibre16"><kbd class="calibre12">random_uniform</kbd>: Weights are initialized to uniformly random small values in (<em class="calibre11">-0.05</em>, <em class="calibre11">0.05</em>). <span>In other words, any value within the given interval is equally likely to be drawn.</span></li>
+<li class="calibre16"><kbd class="calibre12">random_normal</kbd>: Weights are initialized according to a Gaussian, with a zero mean and small standard deviation of <em class="calibre11">0.05</em>. For those of you who are not familiar with a Gaussian, think about a symmetric <em class="calibre11">bell curve</em> shape.</li>
+<li class="calibre16"><kbd class="calibre12">zero</kbd>: All weights are initialized to zero.</li>
+</ul>
+<p class="calibre1">A full list is available at <a href="https://keras.io/initializations/" target="_blank" class="calibre6">https://keras.io/initializations/</a>.</p>
+
+
+            </article>
+
+            <footer class="calibre4">
+                
+            </footer>
+
+        </section>
+    </body></html>

@@ -1,0 +1,38 @@
+<?xml version='1.0' encoding='utf-8'?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+  <head>
+    <title>Deep Learning with ConvNets</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <link href="../stylesheet.css" rel="stylesheet" type="text/css"/>
+<link href="../page_styles.css" rel="stylesheet" type="text/css"/>
+</head>
+  <body class="calibre">
+        <section>
+
+            <header>
+                </header><h1 class="header-title" id="calibre_pb_0">Deep Learning with ConvNets</h1>
+            
+
+            <article>
+                
+<p class="calibre1">In previous chapters, we discussed dense nets, in which each layer is fully connected to the adjacent layers. We applied those dense networks to classify the MNIST handwritten characters dataset. In that context, each pixel in the input image is assigned to a neuron for a total of 784 (28 x 28 pixels) input neurons. However, this strategy does not leverage the spatial structure and relations of each image. In particular, this piece of code transforms the bitmap representing each written digit into a flat vector, where the spatial locality is gone:</p>
+<pre class="calibre21">
+#X_train is 60000 rows of 28x28 values --&gt; reshaped in 60000 x 784<br class="title-page-name"/>X_train = X_train.reshape(60000, 784)<br class="title-page-name"/>X_test = X_test.reshape(10000, 784)<br class="title-page-name"/>o
+</pre>
+<p class="calibre1">Convolutional neural networks (also called ConvNet) leverage spatial information and are therefore very well suited for classifying images. These nets use an ad hoc architecture inspired by biological data taken from physiological experiments done on the visual cortex. As discussed, our vision is based on multiple cortex levels, each one recognizing more and more structured information. First, we see single pixels; then from them, we recognize simple geometric forms. And then... more and more sophisticated elements such as objects, faces, human bodies, animals, and so on.</p>
+<p class="calibre1">Convolutional neural networks are indeed fascinating. Over a short period of time, they become a <em class="calibre11">disruptive</em> technology, breaking all the state-of-the-art results in multiple domains, from text, to video, to speech going well beyond the initial image processing domain where they were originally conceived.</p>
+<p class="calibre1">In this chapter, we will cover the following topics:</p>
+<ul class="calibre15">
+<li class="calibre16">Deep convolutional neural networks</li>
+<li class="calibre16">Image classification</li>
+</ul>
+
+
+            </article>
+
+            <footer class="calibre4">
+                
+            </footer>
+
+        </section>
+    </body></html>

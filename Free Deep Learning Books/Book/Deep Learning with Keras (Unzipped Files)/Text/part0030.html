@@ -1,0 +1,31 @@
+<?xml version='1.0' encoding='utf-8'?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+  <head>
+    <title>A real example — recognizing handwritten digits</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <link href="../stylesheet.css" rel="stylesheet" type="text/css"/>
+<link href="../page_styles.css" rel="stylesheet" type="text/css"/>
+</head>
+  <body class="calibre">
+        <section>
+
+            <header>
+                </header><h1 class="header-title" id="calibre_pb_0">A real example — recognizing handwritten digits</h1>
+            
+
+            <article>
+                
+<p class="calibre1">In this section, we will build a network that can recognize handwritten numbers. For achieving this goal, we use MNIST (for more information, refer to <a href="http://yann.lecun.com/exdb/mnist/" target="_blank" class="calibre6">http://yann.lecun.com/exdb/mnist/</a>), a database of handwritten digits made up of a training set of 60,000 examples and a test set of 10,000 examples. The training examples are annotated by humans with the correct answer. For instance, if the handwritten digit is the number three, then three is simply the label associated with that example.</p>
+<p class="calibre1">In machine learning, when a dataset with correct answers is available, we say that we can perform a form of <em class="calibre11">supervised learning</em>. In this case, we can use training examples for tuning up our net. Testing examples also have the correct answer associated with each digit. In this case, however, the idea is to pretend that the label is unknown, let the network do the prediction, and then later on, reconsider the label to evaluate how well our neural network has learned to recognize digits. So, not unsurprisingly, testing examples are just used to test our net.</p>
+<p class="calibre1">Each MNIST image is in gray scale, and it consists of 28 x 28 pixels. A subset of these numbers is represented in the following diagram:</p>
+<div class="CDPAlignCenter"><img class="image-border6" src="../images/00023.jpeg"/></div>
+
+
+            </article>
+
+            <footer class="calibre4">
+                
+            </footer>
+
+        </section>
+    </body></html>

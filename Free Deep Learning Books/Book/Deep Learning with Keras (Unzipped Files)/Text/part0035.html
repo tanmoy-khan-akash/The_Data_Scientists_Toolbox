@@ -1,0 +1,49 @@
+<?xml version='1.0' encoding='utf-8'?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+  <head>
+    <title>Further improving the simple net in Keras with dropout</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <link href="../stylesheet.css" rel="stylesheet" type="text/css"/>
+<link href="../page_styles.css" rel="stylesheet" type="text/css"/>
+</head>
+  <body class="calibre">
+        <section>
+
+            <header>
+                </header><h1 class="header-title" id="calibre_pb_0">Further improving the simple net in Keras with dropout</h1>
+            
+
+            <article>
+                
+<p class="calibre1">Now our baseline is 94.50% on the training set, 94.63% on validation, and 94.41% on the test. A second improvement is very simple. We decide to randomly drop with the dropout probability some of the values propagated inside our internal dense network of hidden layers. In machine learning, this is a well-known form of regularization. Surprisingly enough, this idea of randomly dropping a few values can improve our performance:</p>
+<pre class="calibre21">
+from __future__ import print_function<br class="title-page-name"/>import numpy as np<br class="title-page-name"/>from keras.datasets import mnist<br class="title-page-name"/>from keras.models import Sequential<br class="title-page-name"/>from keras.layers.core import Dense, Dropout, Activation<br class="title-page-name"/>from keras.optimizers import SGD<br class="title-page-name"/>from keras.utils import np_utils<br class="title-page-name"/>np.random.seed(1671) # for reproducibility<br class="title-page-name"/># network and training<br class="title-page-name"/>NB_EPOCH = 250<br class="title-page-name"/>BATCH_SIZE = 128<br class="title-page-name"/>VERBOSE = 1<br class="title-page-name"/>NB_CLASSES = 10 # number of outputs = number of digits<br class="title-page-name"/>OPTIMIZER = SGD() # optimizer, explained later in this chapter<br class="title-page-name"/>N_HIDDEN = 128<br class="title-page-name"/>VALIDATION_SPLIT=0.2 # how much TRAIN is reserved for VALIDATION<br class="title-page-name"/>DROPOUT = 0.3<br class="title-page-name"/># data: shuffled and split between train and test sets<br class="title-page-name"/>(X_train, y_train), (X_test, y_test) = mnist.load_data()<br class="title-page-name"/>#X_train is 60000 rows of 28x28 values --&gt; reshaped in 60000 x 784<br class="title-page-name"/>RESHAPED = 784<br class="title-page-name"/>#<br class="title-page-name"/>X_train = X_train.reshape(60000, RESHAPED)<br class="title-page-name"/>X_test = X_test.reshape(10000, RESHAPED)<br class="title-page-name"/>X_train = X_train.astype('float32')<br class="title-page-name"/>X_test = X_test.astype('float32')<br class="title-page-name"/># normalize<br class="title-page-name"/>X_train /= 255<br class="title-page-name"/>X_test /= 255<br class="title-page-name"/># convert class vectors to binary class matrices<br class="title-page-name"/>Y_train = np_utils.to_categorical(y_train, NB_CLASSES)<br class="title-page-name"/>Y_test = np_utils.to_categorical(y_test, NB_CLASSES)<br class="title-page-name"/># M_HIDDEN hidden layers 10 outputs<br class="title-page-name"/>model = Sequential()<br class="title-page-name"/>model.add(Dense(N_HIDDEN, input_shape=(RESHAPED,)))<br class="title-page-name"/>model.add(Activation('relu'))<br class="title-page-name"/>model.add(Dropout(DROPOUT))<br class="title-page-name"/>model.add(Dense(N_HIDDEN))<br class="title-page-name"/>model.add(Activation('relu'))<br class="title-page-name"/>model.add(Dropout(DROPOUT))<br class="title-page-name"/>model.add(Dense(NB_CLASSES))<br class="title-page-name"/>model.add(Activation('softmax'))<br class="title-page-name"/>model.summary()<br class="title-page-name"/>model.compile(loss='categorical_crossentropy',<br class="title-page-name"/>optimizer=OPTIMIZER,<br class="title-page-name"/>metrics=['accuracy'])<br class="title-page-name"/>history = model.fit(X_train, Y_train,<br class="title-page-name"/>batch_size=BATCH_SIZE, epochs=NB_EPOCH,<br class="title-page-name"/>verbose=VERBOSE, validation_split=VALIDATION_SPLIT)<br class="title-page-name"/>score = model.evaluate(X_test, Y_test, verbose=VERBOSE)<br class="title-page-name"/>print("Test score:", score[0])<br class="title-page-name"/>print('Test accuracy:', score[1])
+</pre>
+<p class="calibre1">Let's run the code for 20 iterations as previously done, and we will see that this net achieves an accuracy of 91.54% on the training, 94.48% on validation, and 94.25% on the test:</p>
+<div class="CDPAlignCenter"><img class="image-border10" src="../images/00031.jpeg"/></div>
+<p class="calibre1">Note that training accuracy should still be above the test accuracy, otherwise we are not training long enough. So let's try to increase significantly the number of epochs up to 250, and we get 98.1% accuracy on training, 97.73% on validation, and 97.7% on the test:</p>
+<div class="CDPAlignCenter"><img class="image-border10" src="../images/00032.jpeg"/></div>
+<p class="calibre1">It is useful to observe how accuracy increases on training and test sets when the number of epochs increases. As you can see in the following graph, these two curves touch at about 250 epochs, and therefore, there is no need to train further after that point:</p>
+<table class="a">
+<tbody class="calibre8">
+<tr class="calibre9">
+<td class="calibre10">
+<div class="CDPAlignCenter"><img class="image-border11" src="../images/00033.jpeg"/></div>
+</td>
+<td class="calibre10">
+<div class="CDPAlignCenter"><img class="image-border11" src="../images/00034.jpeg"/></div>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="calibre1">Note that it has been frequently observed that networks with random dropout in internal hidden layers can generalize better on unseen examples contained in test sets. Intuitively, one can think of this as each neuron becoming more capable because it knows it cannot depend on its neighbors. During testing, there is no dropout, so we are now using all our highly tuned neurons. In short, it is generally a good approach to test how a net performs when some dropout function is adopted.</p>
+
+
+            </article>
+
+            <footer class="calibre4">
+                
+            </footer>
+
+        </section>
+    </body></html>

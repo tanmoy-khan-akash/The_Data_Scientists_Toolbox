@@ -1,0 +1,35 @@
+<?xml version='1.0' encoding='utf-8'?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+  <head>
+    <title>Improving the simple net in Keras with hidden layers</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <link href="../stylesheet.css" rel="stylesheet" type="text/css"/>
+<link href="../page_styles.css" rel="stylesheet" type="text/css"/>
+</head>
+  <body class="calibre">
+        <section>
+
+            <header>
+                </header><h1 class="header-title" id="calibre_pb_0">Improving the simple net in Keras with hidden layers</h1>
+            
+
+            <article>
+                
+<p class="calibre1">We have a baseline accuracy of 92.36% on training, 92.27% on validation, and 92.22% on the test. This is a good starting point, but we can certainly improve it. Let's see how.</p>
+<p class="calibre1">A first improvement is to add additional layers to our network. So, after the input layer, we have a first dense layer with the <kbd class="calibre12">N_HIDDEN</kbd> neurons and an activation function <kbd class="calibre12">relu</kbd>. This additional layer is considered <em class="calibre11">hidden</em> because it is not directly connected to either the input or the output. After the first hidden layer, we have a second hidden layer, again with the <kbd class="calibre12">N_HIDDEN</kbd> neurons, followed by an output layer with 10 neurons, each of which will fire when the relative digit is recognized. The following code defines this new network:</p>
+<pre class="calibre21">
+from __future__ import print_function<br class="title-page-name"/>import numpy as np<br class="title-page-name"/>from keras.datasets import mnist<br class="title-page-name"/>from keras.models import Sequential<br class="title-page-name"/>from keras.layers.core import Dense, Activation<br class="title-page-name"/>from keras.optimizers import SGD<br class="title-page-name"/>from keras.utils import np_utils<br class="title-page-name"/>np.random.seed(1671) # for reproducibility<br class="title-page-name"/># network and training<br class="title-page-name"/>NB_EPOCH = 20<br class="title-page-name"/>BATCH_SIZE = 128<br class="title-page-name"/>VERBOSE = 1<br class="title-page-name"/>NB_CLASSES = 10 # number of outputs = number of digits<br class="title-page-name"/>OPTIMIZER = SGD() # optimizer, explained later in this chapter<br class="title-page-name"/>N_HIDDEN = 128<br class="title-page-name"/>VALIDATION_SPLIT=0.2 # how much TRAIN is reserved for VALIDATION<br class="title-page-name"/># data: shuffled and split between train and test sets<br class="title-page-name"/>(X_train, y_train), (X_test, y_test) = mnist.load_data()<br class="title-page-name"/>#X_train is 60000 rows of 28x28 values --&gt; reshaped in 60000 x 784<br class="title-page-name"/>RESHAPED = 784<br class="title-page-name"/>#<br class="title-page-name"/>X_train = X_train.reshape(60000, RESHAPED)<br class="title-page-name"/>X_test = X_test.reshape(10000, RESHAPED)<br class="title-page-name"/>X_train = X_train.astype('float32')<br class="title-page-name"/>X_test = X_test.astype('float32')<br class="title-page-name"/># normalize<br class="title-page-name"/>X_train /= 255<br class="title-page-name"/>X_test /= 255<br class="title-page-name"/>print(X_train.shape[0], 'train samples')<br class="title-page-name"/>print(X_test.shape[0], 'test samples')<br class="title-page-name"/># convert class vectors to binary class matrices<br class="title-page-name"/>Y_train = np_utils.to_categorical(y_train, NB_CLASSES)<br class="title-page-name"/>Y_test = np_utils.to_categorical(y_test, NB_CLASSES)<br class="title-page-name"/># M_HIDDEN hidden layers<br class="title-page-name"/># 10 outputs<br class="title-page-name"/># final stage is softmax<br class="title-page-name"/>model = Sequential()<br class="title-page-name"/>model.add(Dense(N_HIDDEN, input_shape=(RESHAPED,)))<br class="title-page-name"/>model.add(Activation('relu'))<br class="title-page-name"/>model.add(Dense(N_HIDDEN))<br class="title-page-name"/>model.add(Activation('relu'))<br class="title-page-name"/>model.add(Dense(NB_CLASSES))<br class="title-page-name"/>model.add(Activation('softmax'))<br class="title-page-name"/>model.summary()<br class="title-page-name"/>model.compile(loss='categorical_crossentropy',<br class="title-page-name"/>optimizer=OPTIMIZER,<br class="title-page-name"/>metrics=['accuracy'])<br class="title-page-name"/>history = model.fit(X_train, Y_train,<br class="title-page-name"/>batch_size=BATCH_SIZE, epochs=NB_EPOCH,<br class="title-page-name"/>verbose=VERBOSE, validation_split=VALIDATION_SPLIT)<br class="title-page-name"/>score = model.evaluate(X_test, Y_test, verbose=VERBOSE)<br class="title-page-name"/>print("Test score:", score[0])<br class="title-page-name"/>print('Test accuracy:', score[1])
+</pre>
+<p class="calibre1">Let's run the code and see which result we get with this multilayer network. Not bad. By adding two hidden layers, we reached 94.50% on the training set, 94.63% on validation, and 94.41% on the test. This means that we gained an additional 2.2% accuracy on the test with respect to the previous network. However, we dramatically reduced the number of iterations from 200 to 20. That's good, but we want more.</p>
+<p class="calibre1">If you want, you can play by yourself and see what happens if you add only one hidden layer instead of two, or if you add more than two layers. I leave this experiment as an exercise. The following screenshot shows the output of the preceding example:</p>
+<div class="CDPAlignCenter"><img class="image-border9" src="../images/00030.jpeg"/></div>
+
+
+            </article>
+
+            <footer class="calibre4">
+                
+            </footer>
+
+        </section>
+    </body></html>

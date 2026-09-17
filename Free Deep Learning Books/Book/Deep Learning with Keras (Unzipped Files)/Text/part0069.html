@@ -1,0 +1,31 @@
+<?xml version='1.0' encoding='utf-8'?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+  <head>
+    <title>Convolutional and pooling layers</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <link href="../stylesheet.css" rel="stylesheet" type="text/css"/>
+<link href="../page_styles.css" rel="stylesheet" type="text/css"/>
+</head>
+  <body class="calibre">
+        <section>
+
+            <header>
+                </header><h1 class="header-title" id="calibre_pb_0">Convolutional and pooling layers</h1>
+            
+
+            <article>
+                
+<p class="calibre1">ConvNets are a class of neural networks using convolutional and pooling operations for progressively learning rather sophisticated models based on progressive levels of abstraction. This learning via progressive abstraction resembles vision models that have evolved over millions of years inside the human brain. People called it <em class="calibre11">deep</em> with 3-5 layers a few years ago, and now it has gone up to 100-200. We will discuss convolutional neural networks in <a href="part0083.html" class="calibre6">Chapter 3</a>, <em class="calibre11">Deep Learning with ConvNets</em>. Here are some prototypes with a definition of the parameters:</p>
+<pre class="calibre21">
+keras.layers.convolutional.Conv1D(filters, kernel_size, strides=<span>1</span>, padding=<span>'valid'</span>, dilation_rate=<span>1</span>, activation=<span>None</span>, use_bias=<span>True</span>, kernel_initializer=<span>'glorot_uniform'</span>, bias_initializer=<span>'zeros'</span>, kernel_regularizer=<span>None</span>, bias_regularizer=<span>None</span>, activity_regularizer=<span>None</span>, kernel_constraint=<span>None</span>, bias_constraint=<span>None</span>)<br class="title-page-name"/><br class="title-page-name"/>keras.layers.convolutional.Conv2D(filters, kernel_size, strides=(<span>1</span>, <span>1</span>), padding=<span>'valid'</span>, data_format=<span>None</span>, dilation_rate=(<span>1</span>, <span>1</span>), activation=<span>None</span>, use_bias=<span>True</span>, kernel_initializer=<span>'glorot_uniform'</span>, bias_initializer=<span>'zeros'</span>, kernel_regularizer=<span>None</span>, bias_regularizer=<span>None</span>, activity_regularizer=<span>None</span>, kernel_constraint=<span>None</span>, bias_constraint=<span>None</span>)<br class="title-page-name"/><br class="title-page-name"/>keras.layers.pooling.MaxPooling1D(pool_size=<span>2</span>, strides=<span>None</span>, padding=<span>'valid'</span>)<br class="title-page-name"/><br class="title-page-name"/>keras.layers.pooling.MaxPooling2D(pool_size=(<span>2</span>, <span>2</span>), strides=<span>None</span>, padding=<span>'valid'</span>, data_format=<span>None</span>)
+</pre>
+
+
+            </article>
+
+            <footer class="calibre4">
+                
+            </footer>
+
+        </section>
+    </body></html>

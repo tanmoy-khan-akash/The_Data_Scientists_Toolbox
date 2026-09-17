@@ -1,0 +1,29 @@
+<?xml version='1.0' encoding='utf-8'?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+  <head>
+    <title>Hyperparameters tuning</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <link href="../stylesheet.css" rel="stylesheet" type="text/css"/>
+<link href="../page_styles.css" rel="stylesheet" type="text/css"/>
+</head>
+  <body class="calibre">
+        <section>
+
+            <header>
+                </header><h1 class="header-title" id="calibre_pb_0">Hyperparameters tuning</h1>
+            
+
+            <article>
+                
+<p class="calibre1">The preceding experiments gave a sense of what the opportunities for fine-tuning a net are. However, what is working for this example is not necessarily working for other examples. For a given net, there are indeed multiple parameters that can be optimized (such as the number of <kbd class="calibre12">hidden neurons</kbd>, <kbd class="calibre12">BATCH_SIZE</kbd>, number of <kbd class="calibre12">epochs</kbd>, and many more according to the complexity of the net itself).</p>
+<p class="calibre1">Hyperparameter tuning is the process of finding the optimal combination of those parameters that minimize cost functions. The key idea is that if we have <em class="calibre11">n</em> parameters, then we can imagine that they define a space with <em class="calibre11">n</em> dimensions, and the goal is to find the point in this space which corresponds to an optimal value for the cost function. One way to achieve this goal is to create a grid in this space and systematically check for each grid vertex what the value assumed by the cost function is. In other words, the parameters are divided into buckets, and different combinations of values are checked via a brute force approach.</p>
+
+
+            </article>
+
+            <footer class="calibre4">
+                
+            </footer>
+
+        </section>
+    </body></html>

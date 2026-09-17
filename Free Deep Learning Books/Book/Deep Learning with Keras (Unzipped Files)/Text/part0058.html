@@ -1,0 +1,53 @@
+<?xml version='1.0' encoding='utf-8'?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+  <head>
+    <title>Installing Keras on Amazon AWS</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <link href="../stylesheet.css" rel="stylesheet" type="text/css"/>
+<link href="../page_styles.css" rel="stylesheet" type="text/css"/>
+</head>
+  <body class="calibre">
+        <section>
+
+            <header>
+                </header><h1 class="header-title" id="calibre_pb_0">Installing Keras on Amazon AWS</h1>
+            
+
+            <article>
+                
+<p class="calibre1">Installing TensorFlow and Keras on Amazon is very simple. Indeed, it is possible to use a prebuilt AMI named <kbd class="calibre12">TFAMI.v3</kbd> that is open and free (for more information, refer to <a href="https://github.com/ritchieng/tensorflow-aws-ami" target="_blank" class="calibre6">https://github.com/ritchieng/tensorflow-aws-ami</a>), shown as follows:</p>
+<p class="calibre1"><img class="image-border31" src="../images/00081.jpeg"/></p>
+<p class="calibre1">This AMI runs TensorFlow in less than five minutes and supports TensorFlow, Keras, OpenAI Gym, and all dependencies. As of January 2017, it supports the following:</p>
+<ul class="calibre15">
+<li class="calibre16">TensorFlow 0.12 </li>
+<li class="calibre16">Keras 1.1.0</li>
+<li class="calibre16">TensorLayer 1.2.7</li>
+<li class="calibre16">CUDA 8.0</li>
+<li class="calibre16">CuDNN 5.1</li>
+<li class="calibre16">Python 2.7</li>
+<li class="calibre16">Ubuntu 16.04</li>
+</ul>
+<p class="calibre1"><span>In addition,</span> <kbd class="calibre12">TFAMI.v3</kbd> <span>works on P2 computing instances (for more information, refer to </span><a href="https://aws.amazon.com/ec2/instance-types/#p2" target="_blank" class="calibre6">https://aws.amazon.com/ec2/instance-types/#p2</a><span>), as shown in the following screenshot:</span></p>
+<div class="CDPAlignCenter"><img class="image-border10" src="../images/00082.jpeg"/></div>
+<p class="calibre1">Some features of P2 instances are as follows:</p>
+<ul class="calibre15">
+<li class="calibre16">Intel Xeon E5-2686v4 (Broadwell) processors</li>
+<li class="calibre16">NVIDIA K80 GPUs, each with 2,496 parallel cores and 12 GB of GPU memory</li>
+<li class="calibre16">Supports peer-to-peer GPU communication</li>
+<li class="calibre16">Provides enhanced networking (for more information, refer to <a href="https://aws.amazon.com/ec2/faqs/#What_networking_capabilities_are_included_in_this_feature" target="_blank" class="calibre6">https://aws.amazon.com/ec2/faqs/#What_networking_capabilities_are_included_in_this_feature</a>) with 20 Gbps of aggregate network bandwidth</li>
+</ul>
+<p class="calibre1">The <kbd class="calibre12">TFAMI.v3</kbd> also works on G2 computing instances (for more information, refer to <a href="https://aws.amazon.com/ec2/instance-types/#g2" target="_blank" class="calibre6">https://aws.amazon.com/ec2/instance-types/#g2</a>). <span>Some features of G2 instances are as follows</span>:</p>
+<ul class="calibre15">
+<li class="calibre16">Intel Xeon E5-2670 (Sandy Bridge) processors</li>
+<li class="calibre16">NVIDIA GPUs, each with 1,536 CUDA cores and 4 GB of video memory</li>
+</ul>
+
+
+            </article>
+
+            <footer class="calibre4">
+                
+            </footer>
+
+        </section>
+    </body></html>

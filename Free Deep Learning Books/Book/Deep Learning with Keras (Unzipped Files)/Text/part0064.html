@@ -1,0 +1,31 @@
+<?xml version='1.0' encoding='utf-8'?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+  <head>
+    <title>Sequential composition</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <link href="../stylesheet.css" rel="stylesheet" type="text/css"/>
+<link href="../page_styles.css" rel="stylesheet" type="text/css"/>
+</head>
+  <body class="calibre">
+        <section>
+
+            <header>
+                </header><h1 class="header-title" id="calibre_pb_0">Sequential composition</h1>
+            
+
+            <article>
+                
+<p class="calibre1">The first one is the sequential composition, where different predefined models are stacked together in a linear pipeline of layers similar to a stack or a queue. In <a href="part0022.html" class="calibre6">Chapter 1</a>, <em class="calibre11">Neural Networks Foundations</em>, we saw a few examples of sequential pipelines. For instance:</p>
+<pre class="calibre21">
+model = Sequential()<br class="title-page-name"/>model.add(Dense(N_HIDDEN, input_shape=(784,)))<br class="title-page-name"/>model.add(Activation('relu'))<br class="title-page-name"/>model.add(Dropout(DROPOUT))<br class="title-page-name"/>model.add(Dense(N_HIDDEN))<br class="title-page-name"/>model.add(Activation('relu'))<br class="title-page-name"/>model.add(Dropout(DROPOUT))<br class="title-page-name"/>model.add(Dense(nb_classes))<br class="title-page-name"/>model.add(Activation('softmax'))<br class="title-page-name"/>model.summary()
+</pre>
+
+
+            </article>
+
+            <footer class="calibre4">
+                
+            </footer>
+
+        </section>
+    </body></html>

@@ -1,0 +1,35 @@
+<?xml version='1.0' encoding='utf-8'?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+  <head>
+    <title>Installing Keras on Microsoft Azure</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <link href="../stylesheet.css" rel="stylesheet" type="text/css"/>
+<link href="../page_styles.css" rel="stylesheet" type="text/css"/>
+</head>
+  <body class="calibre">
+        <section>
+
+            <header>
+                </header><h1 class="header-title" id="calibre_pb_0">Installing Keras on Microsoft Azure</h1>
+            
+
+            <article>
+                
+<p class="calibre1">One way to install Keras on Azure is to install the support for Docker and then get a containerized version of TensorFlow plus Keras. Online, it is also possible to find a detailed set of instructions on how to install Keras and TensorFlow with Docker, but this is essentially what we have seen already in a previous section (for more information, refer to <a href="https://blogs.msdn.microsoft.com/uk_faculty_connection/2016/09/26/tensorflow-on-docker-with-microsoft-azure/" target="_blank" class="calibre6">https://blogs.msdn.microsoft.com/uk_faculty_connection/2016/09/26/tensorflow-on-docker-with-microsoft-azure/</a>).</p>
+<p class="calibre1">If you use Theano as the only backend, then Keras can run with just a click by loading a pre-built package available on Cortana Intelligence Gallery (for more information, refer to <a href="https://gallery.cortanaintelligence.com/Experiment/Theano-Keras-1" target="_blank" class="calibre6">https://gallery.cortanaintelligence.com/Experiment/Theano-Keras-1</a>).<br class="title-page-name"/>
+The following sample shows how to import Theano and Keras into Azure ML directly as a ZIP file and use them in the Execute Python Script module. This example is due to Hai Ning (for more information, refer to <a href="https://goo.gl/VLR25o" target="_blank" class="calibre6">https://goo.gl/VLR25o</a>), and it essentially runs the Keras code within the <kbd class="calibre12">azureml_main()</kbd> method:</p>
+<pre class="calibre21">
+# The script MUST contain a function named azureml_main<br class="title-page-name"/># which is the entry point for this module.<br class="title-page-name"/><br class="title-page-name"/># imports up here can be used to<br class="title-page-name"/>import pandas as pd<br class="title-page-name"/>import theano<br class="title-page-name"/>import theano.tensor as T<br class="title-page-name"/>from theano import function<br class="title-page-name"/>from keras.models import Sequential<br class="title-page-name"/>from keras.layers import Dense, Activation<br class="title-page-name"/>import numpy as np<br class="title-page-name"/># The entry point function can contain up to two input arguments:<br class="title-page-name"/>#   Param&lt;dataframe1&gt;: a pandas.DataFrame<br class="title-page-name"/>#   Param&lt;dataframe2&gt;: a pandas.DataFrame<br class="title-page-name"/>def azureml_main(dataframe1 = None, dataframe2 = None):<br class="title-page-name"/>    # Execution logic goes here<br class="title-page-name"/>    # print('Input pandas.DataFrame #1:rnrn{0}'.format(dataframe1))<br class="title-page-name"/><br class="title-page-name"/>    # If a zip file is connected to the third input port is connected,<br class="title-page-name"/>    # it is unzipped under ".Script Bundle". This directory is added<br class="title-page-name"/>    # to sys.path. Therefore, if your zip file contains a Python file<br class="title-page-name"/>    # mymodule.py you can import it using:<br class="title-page-name"/>    # import mymodule<br class="title-page-name"/>    model = Sequential()<br class="title-page-name"/>    model.add(Dense(1, input_dim=784, activation="relu"))<br class="title-page-name"/>    model.compile(optimizer='rmsprop', loss='binary_crossentropy', metrics=['accuracy'])<br class="title-page-name"/>    data = np.random.random((1000,784))<br class="title-page-name"/>    labels = np.random.randint(2, size=(1000,1))<br class="title-page-name"/>    model.fit(data, labels, nb_epoch=10, batch_size=32)<br class="title-page-name"/>    model.evaluate(data, labels)<br class="title-page-name"/><br class="title-page-name"/>    return dataframe1,
+</pre>
+<p class="calibre1">In this screenshot, you see an example use of Microsoft Azure ML to run Theano and Keras:</p>
+<div class="CDPAlignCenter"><img class="image-border32" src="../images/00083.jpeg"/></div>
+
+
+            </article>
+
+            <footer class="calibre4">
+                
+            </footer>
+
+        </section>
+    </body></html>

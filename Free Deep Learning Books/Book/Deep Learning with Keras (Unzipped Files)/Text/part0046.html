@@ -1,0 +1,34 @@
+<?xml version='1.0' encoding='utf-8'?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+  <head>
+    <title>Towards a deep learning approach</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <link href="../stylesheet.css" rel="stylesheet" type="text/css"/>
+<link href="../page_styles.css" rel="stylesheet" type="text/css"/>
+</head>
+  <body class="calibre">
+        <section>
+
+            <header>
+                </header><h1 class="header-title" id="calibre_pb_0">Towards a deep learning approach</h1>
+            
+
+            <article>
+                
+<p class="calibre1">While playing with handwritten digit recognition, we came to the conclusion that the closer we get to the accuracy of 99%, the more difficult it is to improve. If we want to have more improvements, we definitely need a new idea. What are we missing? Think about it.</p>
+<p class="calibre1">The fundamental intuition is that, so far, we lost all the information related to the local spatiality of the images. In particular, this piece of code transforms the bitmap, representing each written digit into a flat vector where the spatial locality is gone:</p>
+<pre class="calibre21">
+#X_train is 60000 rows of 28x28 values --&gt; reshaped in 60000 x 784<br class="title-page-name"/>X_train = X_train.reshape(60000, 784)<br class="title-page-name"/>X_test = X_test.reshape(10000, 784)
+</pre>
+<p class="calibre1">However, this is not how our brain works. Remember that our vision is based on multiple cortex levels, each one recognizing more and more structured information, still preserving the locality. First we see single pixels, then from that, we recognize simple geometric forms and then more and more sophisticated elements such as objects, faces, human bodies, animals and so on.</p>
+<p class="calibre1">In <a target="_blank" href="part0083.html" class="calibre6">Chapter 3</a>, <em class="calibre11">Deep Learning with ConvNets</em>, we will see that a particular type of deep learning network known as <strong class="calibre3">convolutional neural network</strong> (<strong class="calibre3">CNN</strong>) has been developed by taking into account both the idea of preserving the spatial locality in images (and, more generally, in any type of information) and the idea of learning via progressive levels of abstraction: with one layer, you can only learn simple patterns; with more than one layer, you can learn multiple patterns. Before discussing CNN, we need to discuss some aspects of Keras architecture and have a practical introduction to a few additional machine learning concepts. This will be the topic of the next chapters.</p>
+
+
+            </article>
+
+            <footer class="calibre4">
+                
+            </footer>
+
+        </section>
+    </body></html>
