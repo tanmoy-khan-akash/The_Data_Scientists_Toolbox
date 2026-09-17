@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+    <head>
+        <title>How to do it...</title>
+        <link rel="stylesheet" href="css/style.css" type="text/css"/>
+        <meta charset="utf-8"/>
+    
+<!-- kobo-style -->
+<script xmlns="http://www.w3.org/1999/xhtml" type="text/javascript" src="js/kobo.js"/>
+<style xmlns="http://www.w3.org/1999/xhtml" type="text/css" id="koboSpanStyle">.koboSpan { -webkit-text-combine: inherit; }</style>
+
+</head>
+
+    <body>
+        <section>
+
+                            <header>
+                    <h1 class="header-title"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.1.1">How to do it...</span></h1>
+                </header>
+            
+            <article>
+                
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.2.1">We proceed with installing TensorFlow mobile for macOS and Android as follows:</span></p>
+<ol>
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.3.1">Install Android Studio from </span><a href="https://developer.android.com/studio/install.html"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.4.1">https://developer.android.com/studio/install.html.</span></a></li>
+</ol>
+<ol start="2">
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.5.1"> Create a new project name </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.6.1">AndroidExampleTensorflow</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.7.1"> as illustrated in the following </span><span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.8.1">screenshot:</span></span></li>
+</ol>
+<div class="CDPAlignCenter CDPAlign"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.9.1"><img class=" image-border" src="assets/44bd76a7-4f75-4671-8744-a199b6fd8de4.png"/></span></div>
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.10.1">An example of creating TensorFlow mobile application in AndroidStudio, first step </span><span class="packt_screen"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.11.1">Select Phone and Table</span></span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.12.1"> option as explained in the following figure:</span></p>
+<div class="CDPAlignCenter CDPAlign"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.13.1"><img class=" image-border" src="assets/c77df556-9e64-4a62-ac21-ab8e0f7312e9.png"/></span></div>
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.14.1">An example of creating TensorFlow mobile application in AndroidStudio, second step And select an </span><span class="packt_screen"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.15.1">Empty activity</span></span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.16.1"> as shown in the following figure:</span></p>
+<div class="mce-root CDPAlignCenter CDPAlign"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.17.1"><img class=" image-border" src="assets/4d0e2ada-41cc-41c4-8fb9-85f6c656a576.png"/></span></div>
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.18.1">An example of creating TensorFlow mobile application in AndroidStudio, third step Then customize the </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.19.1">MainActivity</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.20.1"> as shown in the following figure:</span></p>
+<div class="CDPAlignCenter CDPAlign"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.21.1"><img class=" image-border" src="assets/547d0ed5-b558-440c-a4a0-102cbfbee10f.png"/></span></div>
+<div class="packt_figref CDPAlignCenter CDPAlign"><span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.22.1">An example of creating TensorFlow mobile application in AndroidStudio, fourth step</span></span></div>
+<ol start="3">
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.23.1">Insert the following lines in your </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.24.1">build.gradle</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.25.1"> app, as illustrated in the following code:</span></li>
+</ol>
+<pre style="padding-left: 60px"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.26.1">// added for automatically connect to TensorFlow via maven</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.27.1">repositories {</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.28.1">jcenter()</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.29.1">maven {</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.30.1">url 'https://google.bintray.com/TensorFlow'</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.31.1">}</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.32.1">}</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.33.1">dependencies {</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.34.1">compile fileTree(dir: 'libs', include: ['*.jar'])</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.35.1">androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.36.1">exclude group: 'com.android.support', module: 'support-annotations'</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.37.1">})</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.38.1">compile 'com.android.support:appcompat-v7:26.+'</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.39.1">compile 'com.android.support.constraint:constraint-layout:1.0.2'</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.40.1">// added for automatically compile TensorFlow</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.41.1">compile 'org.TensorFlow:TensorFlow-android:+'</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.42.1">testCompile 'junit:junit:4.12'</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.43.1">}</span></pre>
+<p style="padding-left: 90px"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.44.1">The following screenshot shows the code inserted:</span></p>
+<div class="CDPAlignCenter CDPAlign"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.45.1"><img class=" image-border" src="assets/20c31887-136c-4296-832b-16baed597181.png"/></span></div>
+<ol start="4">
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.46.1">Run the project and get the results:</span></li>
+</ol>
+<div class="CDPAlignCenter CDPAlign"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.47.1"><img height="332" width="442" class=" image-border" src="assets/6806de9b-c754-4f85-a6e2-51dc19628b9b.png"/></span></div>
+<p class="mce-root"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.48.1">An example of compilation with the AndroidStudio, showing the connected devices.</span></p>
+<div class="CDPAlignCenter CDPAlign"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.49.1"><img height="378" width="207" class=" image-border" src="assets/e1bca4b2-5e46-44a9-99d6-c7ea9fd0c1ee.png"/></span></div>
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.50.1">An example of creating TensorFlow mobile application in AndroidStudio. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.50.2">A simple </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.51.1">Hello World</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.52.1"> application</span></p>
+
+
+            </article>
+
+            
+        </section>
+    </body>
+
+</html>

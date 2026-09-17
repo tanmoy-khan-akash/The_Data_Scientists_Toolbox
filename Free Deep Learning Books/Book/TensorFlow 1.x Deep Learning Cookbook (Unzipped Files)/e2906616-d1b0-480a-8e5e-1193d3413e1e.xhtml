@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+    <head>
+        <title>How to do it...</title>
+        <link rel="stylesheet" href="css/style.css" type="text/css"/>
+        <meta charset="utf-8"/>
+    
+<!-- kobo-style -->
+<script xmlns="http://www.w3.org/1999/xhtml" type="text/javascript" src="js/kobo.js"/>
+<style xmlns="http://www.w3.org/1999/xhtml" type="text/css" id="koboSpanStyle">.koboSpan { -webkit-text-combine: inherit; }</style>
+
+</head>
+
+    <body>
+        <section>
+
+                            <header>
+                    <h1 class="header-title"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.1.1">How to do it...</span></h1>
+                </header>
+            
+            <article>
+                
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.2.1">Here is how we proceed with the recipe:</span></p>
+<ol>
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.3.1">The first step is, as always, importing the modules needed:</span></li>
+</ol>
+<div>
+<pre style="padding-left: 60px"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.4.1">import tensorflow as tf</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.5.1">import matplotlib.pyplot as plt,  matplotlib.image as mpimg</span></pre></div>
+<ol start="2">
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.6.1">We take the input data of MNIST from the TensorFlow examples given in the module </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.7.1">input_data</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.8.1">. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.8.2">The </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.9.1">one_hot</span></kbd> <span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.10.1">flag </span></span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.11.1">is set to </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.12.1">True</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.13.1"> to enable </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.14.1">one_hot</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.15.1"> encoding of labels. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.15.2">This results in generating two tensors, </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.16.1">mnist.train.images</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.17.1"> of shape [55000,784] and </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.18.1">mnist.train.labels</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.19.1"> of shape [55000,10]. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.19.2">Each entry of </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.20.1">mnist.train.images</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.21.1"> is a pixel intensity with the value ranging between 0 and 1:</span></li>
+</ol>
+<div>
+<pre style="padding-left: 60px"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.22.1">from tensorflow.examples.tutorials.mnist import input_data</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.23.1">mnist = input_data.read_data_sets("MNIST_data/", one_hot=True)</span></pre></div>
+<ol start="3">
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.24.1">Create placeholders for the training dataset inputs </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.25.1">x</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.26.1"> and label </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.27.1">y</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.28.1"> to the TensorFlow graph:</span></li>
+</ol>
+<div>
+<pre style="padding-left: 60px"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.29.1">x = tf.placeholder(tf.float32, [None, 784], name='X')</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.30.1">y = tf.placeholder(tf.float32, [None, 10],name='Y')</span></pre></div>
+<ol start="4">
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.31.1">Create the learning variables, weights, and bias:</span></li>
+</ol>
+<div>
+<pre style="padding-left: 60px"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.32.1">W = tf.Variable(tf.zeros([784, 10]), name='W')</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.33.1">b = tf.Variable(tf.zeros([10]), name='b')</span></pre></div>
+<ol start="5">
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.34.1">Create the logistic regression model. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.34.2">The TensorFlow OP is given the </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.35.1">name_scope("wx_b")</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.36.1">:</span></li>
+</ol>
+<div>
+<pre style="padding-left: 60px"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.37.1">with tf.name_scope("wx_b") as scope:</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.38.1">    y_hat = tf.nn.softmax(tf.matmul(x,W) + b)</span></pre></div>
+<ol start="6">
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.39.1">Add summary OPs to collect data while training. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.39.2">We use the histogram summary so that we can see how weights and bias change relative to each other's value with time. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.39.3">We will be able to see this in the TensorBoard Histogram tab:</span></li>
+</ol>
+<div>
+<pre style="padding-left: 60px"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.40.1">w_h = tf.summary.histogram("weights", W)</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.41.1">b_h = tf.summary.histogram("biases", b)</span></pre></div>
+<ol start="7">
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.42.1">Define the </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.43.1">cross-entropy</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.44.1"> and </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.45.1">loss</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.46.1"> function, and also add name scope and summary for better visualization. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.46.2">Here, we use the scalar summary to obtain the variation in the </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.47.1">loss</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.48.1"> function over time. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.48.2">The scalar summary is visible under the Events tab:</span></li>
+</ol>
+<div>
+<pre style="padding-left: 60px"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.49.1">with tf.name_scope('cross-entropy') as scope:</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.50.1">    loss = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(labels=y, logits=y_hat)</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.51.1">    tf.summary.scalar('cross-entropy', loss)</span></pre></div>
+<ol start="8">
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.52.1">Employ the TensorFlow </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.53.1">GradientDescentOptimizer</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.54.1"> with learning rate </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.55.1">0.01</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.56.1">. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.56.2">Again, for better visualization, we define a </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.57.1">name_scope</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.58.1">:</span></li>
+</ol>
+<div>
+<pre style="padding-left: 60px"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.59.1">with tf.name_scope('Train') as scope:</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.60.1">    optimizer = tf.train.GradientDescentOptimizer(0.01).minimize(loss)</span></pre></div>
+<ol start="9">
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.61.1">Declare the initializing op for the variables:</span></li>
+</ol>
+<div>
+<pre style="padding-left: 60px"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.62.1"># Initializing the variables</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.63.1">init = tf.global_variables_initializer()</span></pre></div>
+<ol start="10">
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.64.1">We combine all the summary operations:</span></li>
+</ol>
+<pre style="padding-left: 60px"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.65.1">merged_summary_op = tf.summary.merge_all()</span></pre>
+<ol start="11">
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.66.1">Now, we define the session and store the summaries in a defined folder:</span></li>
+</ol>
+<div>
+<pre style="padding-left: 60px"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.67.1">with tf.Session() as sess:</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.68.1">    sess.run(init)  # initialize all variables</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.69.1">    summary_writer = tf.summary.FileWriter('graphs', sess.graph)  # Create an event file</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.70.1">    # Training</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.71.1">    for epoch in range(max_epochs):</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.72.1">        loss_avg = 0</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.73.1">        num_of_batch = int(mnist.train.num_examples/batch_size)</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.74.1">        for i in range(num_of_batch):</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.75.1">            batch_xs, batch_ys = mnist.train.next_batch(100)  # get the next batch of data</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.76.1">            _, l, summary_str = sess.run([optimizer,loss, merged_summary_op], feed_dict={x: batch_xs, y: batch_ys})  # Run the optimizer</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.77.1">           loss_avg += l</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.78.1">           summary_writer.add_summary(summary_str, epoch*num_of_batch + i)  # Add all summaries per batch</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.79.1">        loss_avg = loss_avg/num_of_batch</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.80.1">        print('Epoch {0}: Loss {1}'.format(epoch, loss_avg))</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.81.1">    print('Done')</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.82.1">    print(sess.run(accuracy, feed_dict={x: mnist.test.images,y: mnist.test.labels}))</span></pre></div>
+<ol start="12">
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.83.1">We get an accuracy of 86.5 percent after 30 epochs, 89.36 percent after 50 epochs, and, after 100 epochs, the accuracy increases to 90.91 percent.</span></li>
+</ol>
+
+
+            </article>
+
+            
+        </section>
+    </body>
+
+</html>

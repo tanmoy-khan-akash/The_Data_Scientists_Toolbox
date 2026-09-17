@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+    <head>
+        <title>ConvNets summary</title>
+        <link rel="stylesheet" href="css/style.css" type="text/css"/>
+        <meta charset="utf-8"/>
+    
+<!-- kobo-style -->
+<script xmlns="http://www.w3.org/1999/xhtml" type="text/javascript" src="js/kobo.js"/>
+<style xmlns="http://www.w3.org/1999/xhtml" type="text/css" id="koboSpanStyle">.koboSpan { -webkit-text-combine: inherit; }</style>
+
+</head>
+
+    <body>
+        <section>
+
+                            <header>
+                    <h1 class="header-title"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.1.1">ConvNets summary</span></h1>
+                </header>
+            
+            <article>
+                
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.2.1">CNNs are basically several layers of convolutions with nonlinear activation functions and pooling layers applied to the results. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.2.2">Each layer applies different filters (hundreds or thousands). </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.2.3">The key observation to understand is that the filters are not pre-assigned, but instead, they are learned during the training phase in such a way that a suitable loss function is minimized. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.2.4">It has been observed that lower layers will learn to detect basic features, while the higher layers detect progressively more sophisticated features such as shapes or faces. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.2.5">Note that, thanks to pooling, individual neurons in later layers see more of the original image, hence they are able to compose basic features learned in the earlier layers.</span></p>
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.3.1">So far we have described the basic concepts of ConvNets. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.3.2">CNNs apply convolution and pooling operations in one dimension for audio and text data along the time dimension, in two dimensions for images along the (height x width) dimensions, and in three dimensions for videos along the (height x width x time) dimensions. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.3.3">For images, sliding the filter over an input volume produces a map that provides the responses of the filter for each spatial position.</span></p>
+<div class="packt_infobox"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.4.1">In other words, a ConvNet has multiple filters stacked together that learn to recognize specific visual features independently of the location in the image. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.4.2">Those visual features are simple in the initial layers of the network and then more and more sophisticated deeper in the network.</span></div>
+
+
+            </article>
+
+            
+        </section>
+    </body>
+
+</html>

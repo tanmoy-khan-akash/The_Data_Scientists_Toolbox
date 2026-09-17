@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+    <head>
+        <title>How to do it...</title>
+        <link rel="stylesheet" href="css/style.css" type="text/css"/>
+        <meta charset="utf-8"/>
+    
+<!-- kobo-style -->
+<script xmlns="http://www.w3.org/1999/xhtml" type="text/javascript" src="js/kobo.js"/>
+<style xmlns="http://www.w3.org/1999/xhtml" type="text/css" id="koboSpanStyle">.koboSpan { -webkit-text-combine: inherit; }</style>
+
+</head>
+
+    <body>
+        <section>
+
+                            <header>
+                    <h1 class="header-title"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.1.1">How to do it...</span></h1>
+                </header>
+            
+            <article>
+                
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.2.1">Here is how we proceed with the recipe:</span></p>
+<ol>
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.3.1">Create a new Google Cloud project from the Web console </span><a href="https://pantheon.google.com/cloud-resource-manager"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.4.1">https://pantheon.google.com/cloud-resource-manager</span></a></li>
+</ol>
+<div class="CDPAlignCenter CDPAlign"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.5.1"><img height="63" width="534" class=" image-border" src="assets/d91fcd12-0e0f-49ac-8a2f-976810b3e96d.png"/></span></div>
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.6.1">The following screen is displayed when you click on </span><span class="packt_screen"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.7.1">create project</span></span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.8.1">:</span></p>
+<div class="CDPAlignCenter CDPAlign"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.9.1"><img height="213" width="430" class=" image-border" src="assets/95c462d7-af82-4b17-bef3-adeaecd81236.png"/></span></div>
+<ol start="2">
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.10.1">Enable billing for this project by selecting the related voice on the left bar of the console. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.10.2">Then enable the </span><span class="packt_screen"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.11.1">Compute Engine</span></span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.12.1"> and </span><span class="packt_screen"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.13.1">Cloud Machine Learning APIs</span></span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.14.1"> for the project:</span></li>
+</ol>
+<table class="a0">
+<tbody>
+<tr>
+<td>
+<div class="CDPAlignCenter CDPAlign"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.15.1"><img height="237" width="247" class=" image-border" src="assets/41ea2e03-f1d7-4aac-a6e3-33db31053786.png"/></span></div>
+</td>
+<td>
+<div class="CDPAlignCenter CDPAlign"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.16.1"><img height="236" width="371" class=" image-border" src="assets/ed57ff64-af8b-43fb-a692-892811cf9dfb.png"/></span></div>
+</td>
+</tr>
+</tbody>
+</table>
+<ol start="3">
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.17.1">Login to the web cloudshell </span><a href="https://pantheon.google.com/cloudshell/editor"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.18.1">https://pantheon.google.com/cloudshell/editor</span></a><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.19.1">?</span></li>
+</ol>
+<div class="CDPAlignCenter CDPAlign"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.20.1"><img height="102" width="469" class=" image-border" src="assets/848d8c7b-e216-41ff-82f2-17c390720f1e.png"/></span></div>
+<ol start="4">
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.21.1">From the console run the following commands for configuring the zone where the computation will be executed, for downloading the sample code and for creating the VMs used for running the code. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.21.2">Finally connect to the machine:</span></li>
+</ol>
+<pre><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.22.1">gcloud config set compute/zone us-east1-c</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.23.1">gcloud config set project [YOUR_PROJECT_ID]</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.24.1">git clone https://github.com/GoogleCloudPlatform/cloudml-dist-mnist-example</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.25.1">cd cloudml-dist-mnist-example</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.26.1">gcloud compute instances create template-instance \</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.27.1"> --image-project ubuntu-os-cloud \</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.28.1"> --image-family ubuntu-1604-lts \</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.29.1"> --boot-disk-size 10GB \</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.30.1"> --machine-type n1-standard-1</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.31.1">gcloud compute ssh template-instance</span></pre>
+<ol start="5">
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.32.1">Now, after logging into the machine we need to setup the environment by installing PIP and TensorFlow with these commands.</span></li>
+</ol>
+<pre><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.33.1">sudo apt-get update</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.34.1">sudo apt-get -y upgrade \</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.35.1"> &amp;&amp; sudo apt-get install -y python-pip python-dev</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.36.1">sudo pip install tensorflow</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.37.1">sudo pip install --upgrade tensorflow</span></pre>
+<ol start="6">
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.38.1">We will have multiple workers operating on MNIST data so best approach is to create a storage bucket shared among all the workers and copy the MNIST data in this bucket</span></li>
+</ol>
+<pre><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.39.1">BUCKET="mnist-$RANDOM-$RANDOM"</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.40.1">gsutil mb -c regional -l us-east1 gs://${BUCKET}</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.41.1">sudo ./scripts/create_records.py</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.42.1">gsutil cp /tmp/data/train.tfrecords gs://${BUCKET}/data/</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.43.1">gsutil cp /tmp/data/test.tfrecords gs://${BUCKET}/data/</span></pre>
+<ol start="7">
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.44.1">We are now going to create multiple workers (worker-0, worker-1) which are clones of the initial template-instance machine. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.44.2">We don't want the machines to delete the disks when they are turned off so that's why we have the first command.</span></li>
+</ol>
+<pre><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.45.1">gcloud compute instances set-disk-auto-delete template-instance \</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.46.1"> --disk template-instance --no-auto-delete</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.47.1">gcloud compute instances delete template-instance</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.48.1">gcloud compute images create template-image \</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.49.1"> --source-disk template-instance</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.50.1">gcloud compute instances create \</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.51.1"> master-0 worker-0 worker-1 ps-0 \</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.52.1"> --image template-image \</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.53.1"> --machine-type n1-standard-4 \</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.54.1"> --scopes=default,storage-rw</span></pre>
+<ol start="8">
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.55.1">The final step is to run the computation for distributed training.</span></li>
+</ol>
+<pre><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.56.1">./scripts/start-training.sh gs://${BUCKET}</span></pre>
+
+
+            </article>
+
+            
+        </section>
+    </body>
+
+</html>

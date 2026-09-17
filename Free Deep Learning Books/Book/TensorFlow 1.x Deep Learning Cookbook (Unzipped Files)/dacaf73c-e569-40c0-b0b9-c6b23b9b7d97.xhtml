@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+    <head>
+        <title>How to do it...</title>
+        <link rel="stylesheet" href="css/style.css" type="text/css"/>
+        <meta charset="utf-8"/>
+    
+<!-- kobo-style -->
+<script xmlns="http://www.w3.org/1999/xhtml" type="text/javascript" src="js/kobo.js"/>
+<style xmlns="http://www.w3.org/1999/xhtml" type="text/css" id="koboSpanStyle">.koboSpan { -webkit-text-combine: inherit; }</style>
+
+</head>
+
+    <body>
+        <section>
+
+                            <header>
+                    <h1 class="header-title"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.1.1">How to do it...</span></h1>
+                </header>
+            
+            <article>
+                
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.2.1">We proceed with the recipe as follows:</span></p>
+<ol>
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.3.1">Import a few </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.4.1">utils</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.5.1"> and core layers for ConvNets, </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.6.1">dropout</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.7.1">, </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.8.1">fully_connected</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.9.1">, and </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.10.1">max_pool</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.11.1">. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.11.2">In addition, import a few modules useful for image processing and image augmentation. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.11.3">Note that TFLearn provides some already defined higher-level layers for ConvNets and this allows us to focus on the definition of our code:</span></li>
+</ol>
+<pre style="padding-left: 60px" class="mce-root"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.12.1">from __future__ import division, print_function, absolute_import 
+import tflearn 
+from tflearn.data_utils import shuffle, to_categorical 
+from tflearn.layers.core import input_data, dropout, fully_connected 
+from tflearn.layers.conv import conv_2d, max_pool_2d 
+from tflearn.layers.estimator import regression 
+from tflearn.data_preprocessing import ImagePreprocessing 
+from tflearn.data_augmentation import ImageAugmentation </span></pre>
+<ol start="2">
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.13.1">Load the CIFAR-10 data and separate it into X train data, Y train labels, </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.14.1">X_test</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.15.1"> for test, and </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.16.1">Y_test</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.17.1"> for test labels. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.17.2">It might be useful to shuffle </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.18.1">X</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.19.1"> and </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.20.1">Y</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.21.1"> to avoid depending on a particular data configuration. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.21.2">The last step is to perform one-hot encoding for both </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.22.1">X</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.23.1"> and </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.24.1">Y</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.25.1">:</span></li>
+</ol>
+<pre style="padding-left: 60px" class="mce-root"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.26.1"># Data loading and preprocessing 
+from tflearn.datasets import cifar10 
+(X, Y), (X_test, Y_test) = cifar10.load_data() 
+X, Y = shuffle(X, Y) 
+Y = to_categorical(Y, 10) 
+Y_test = to_categorical(Y_test, 10)</span></pre>
+<ol start="3">
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.27.1">Use </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.28.1">ImagePreprocessing()</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.29.1"> for Zero Center (with mean computed over the whole dataset) and for STD Normalization (with std computed over the whole dataset). </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.29.2">The TFLearn data stream is designed to speed up training by preprocessing data on CPU while GPU is performing model training.</span></li>
+</ol>
+<pre style="padding-left: 60px" class="mce-root"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.30.1"># Real-time data preprocessing 
+img_prep = ImagePreprocessing() 
+img_prep.add_featurewise_zero_center() 
+img_prep.add_featurewise_stdnorm()</span></pre>
+<ol start="4">
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.31.1">Augment the dataset by performing random flip right and left and by random rotation. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.31.2">This step is a simple trick used to increase the data available for the training:</span></li>
+</ol>
+<pre style="padding-left: 60px" class="mce-root"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.32.1"># Real-time data augmentation 
+img_aug = ImageAugmentation() 
+img_aug.add_random_flip_leftright() 
+img_aug.add_random_rotation(max_angle=25.) </span></pre>
+<ol start="5">
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.33.1">Create the convolutional network with the images preparation and augmentation defined earlier. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.33.2">The network consists of three convolutional layers. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.33.3">The first one uses 32 convolutional filters, with size of filters 3 and activation function ReLU. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.33.4">After that, there is a </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.34.1">max_pool</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.35.1"> layer for the downsizing. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.35.2">Then there are two convolutional filters in cascade with 64 convolutional filters, with size of filters 3 and activation function ReLU. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.35.3">After that, there is a </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.36.1">max_pool</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.37.1"> for the downsizing and a fully connected network with 512 neurons with activation function ReLU followed by a dropout with probability 50 percent. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.37.2">The last layer is a fully connected network with 10 neurons and activation function </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.38.1">softmax</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.39.1"> to determine the category of the handwritten digits. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.39.2">Note that this particular type of ConvNet is known to be very effective with CIFAR-10. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.39.3">In this particular case, we use the Adam optimizer with </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.40.1">categorical_crossentropy</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.41.1"> and learning rate </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.42.1">0.001</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.43.1">:</span></li>
+</ol>
+<pre style="padding-left: 60px" class="mce-root"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.44.1"># Convolutional network building 
+network = input_data(shape=[None, 32, 32, 3], 
+                     data_preprocessing=img_prep, 
+                     data_augmentation=img_aug) 
+network = conv_2d(network, 32, 3, activation='relu') 
+network = max_pool_2d(network, 2) 
+network = conv_2d(network, 64, 3, activation='relu') 
+network = conv_2d(network, 64, 3, activation='relu') 
+network = max_pool_2d(network, 2) 
+network = fully_connected(network, 512, activation='relu') 
+network = dropout(network, 0.5) 
+network = fully_connected(network, 10, activation='softmax') 
+network = regression(network, optimizer='adam', 
+                     loss='categorical_crossentropy', 
+                     learning_rate=0.001)</span></pre>
+<ol start="6">
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.45.1">Instantiate the ConvNet and run the train for 50 epochs with </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.46.1">batch_size=96</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.47.1">:</span></li>
+</ol>
+<pre style="padding-left: 60px" class="mce-root"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.48.1"># Train using classifier 
+model = tflearn.DNN(network, tensorboard_verbose=0) 
+model.fit(X, Y, n_epoch=50, shuffle=True, validation_set=(X_test, Y_test), 
+          show_metric=True, batch_size=96, run_id='cifar10_cnn') </span></pre>
+
+
+            </article>
+
+            
+        </section>
+    </body>
+
+</html>

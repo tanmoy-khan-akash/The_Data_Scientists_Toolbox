@@ -1,0 +1,3118 @@
+<?xml version="1.0" encoding="UTF-8"?><ncx:ncx xmlns:ncx="http://www.daisy.org/z3986/2005/ncx/" version="2005-1" xml:lang="en">
+
+    <ncx:head>
+        
+        <ncx:meta name="dtb:uid" content="978-1-78829-186-6"/>  
+        <ncx:meta name="dtb:depth" content="2"/>            
+        <ncx:meta name="dtb:totalPageCount" content="0"/>   
+        <ncx:meta name="dtb:maxPageNumber" content="0"/>    
+
+                    <ncx:meta name="cover" content="cover"/>
+            </ncx:head>
+
+    <ncx:docTitle>
+        <ncx:text>TensorFlow 1.x Deep Learning Cookbook </ncx:text>
+    </ncx:docTitle>
+
+    <ncx:docAuthor>
+        <ncx:text>Antonio Gulli</ncx:text>
+    </ncx:docAuthor>
+
+    <ncx:navMap>
+        <ncx:navPoint class="book" id="uuid-d3d9b38e-a10d-4422-8971-5512ee569d59" playOrder="1">
+    <ncx:navLabel>
+        <ncx:text>Title Page</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="d3d9b38e-a10d-4422-8971-5512ee569d59.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-aa4dfb4c-b174-4461-be88-2fb9bb32e755" playOrder="2">
+    <ncx:navLabel>
+        <ncx:text>Copyright</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="aa4dfb4c-b174-4461-be88-2fb9bb32e755.xhtml"/>
+    <ncx:navPoint class="book" id="uuid-7283079e-37fb-4ead-b26e-f12302c0f628" playOrder="3">
+    <ncx:navLabel>
+        <ncx:text>TensorFlow 1.x Deep Learning Cookbook</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="7283079e-37fb-4ead-b26e-f12302c0f628.xhtml"/>
+    
+</ncx:navPoint>
+
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-54745142-99ce-451a-9258-210e3b88622e" playOrder="4">
+    <ncx:navLabel>
+        <ncx:text>Credits</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="54745142-99ce-451a-9258-210e3b88622e.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-beedcd7f-d0ea-4a51-b8ab-f532970bfae7" playOrder="5">
+    <ncx:navLabel>
+        <ncx:text>About the Authors</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="beedcd7f-d0ea-4a51-b8ab-f532970bfae7.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-1408e1e0-025b-4343-a6b7-8a4c287deed5" playOrder="6">
+    <ncx:navLabel>
+        <ncx:text>About the Reviewers</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="1408e1e0-025b-4343-a6b7-8a4c287deed5.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-532598a6-dd13-42b5-9c61-c61c07ab6794" playOrder="7">
+    <ncx:navLabel>
+        <ncx:text>www.PacktPub.com</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="532598a6-dd13-42b5-9c61-c61c07ab6794.xhtml"/>
+    <ncx:navPoint class="book" id="uuid-12b77dde-3714-4523-b450-64ece67c08e8" playOrder="8">
+    <ncx:navLabel>
+        <ncx:text>Why subscribe?</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="12b77dde-3714-4523-b450-64ece67c08e8.xhtml"/>
+    
+</ncx:navPoint>
+
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-9656c674-4acd-4246-aa5c-571e1b1b4b9e" playOrder="9">
+    <ncx:navLabel>
+        <ncx:text>Customer Feedback</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="9656c674-4acd-4246-aa5c-571e1b1b4b9e.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-ed6e8cd4-7fb8-4343-825e-b22ecaf7fde8" playOrder="10">
+    <ncx:navLabel>
+        <ncx:text>Dedication</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="ed6e8cd4-7fb8-4343-825e-b22ecaf7fde8.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-adc88184-0c76-42ae-92aa-b060f1fc8005" playOrder="11">
+    <ncx:navLabel>
+        <ncx:text>Preface</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="adc88184-0c76-42ae-92aa-b060f1fc8005.xhtml"/>
+    <ncx:navPoint class="book" id="uuid-4205272a-eda8-4e95-9bdb-e88a46b1b503" playOrder="12">
+    <ncx:navLabel>
+        <ncx:text>What this book covers</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="4205272a-eda8-4e95-9bdb-e88a46b1b503.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-8fe0644f-b547-4bc2-8ced-92890e35804f" playOrder="13">
+    <ncx:navLabel>
+        <ncx:text>What you need for this book</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="8fe0644f-b547-4bc2-8ced-92890e35804f.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-f11f1839-0c54-4b27-832d-65b024083ebe" playOrder="14">
+    <ncx:navLabel>
+        <ncx:text>Who this book is for</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="f11f1839-0c54-4b27-832d-65b024083ebe.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-ed7c98f0-8e00-4611-96be-5e33f9f006f9" playOrder="15">
+    <ncx:navLabel>
+        <ncx:text>Sections</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="ed7c98f0-8e00-4611-96be-5e33f9f006f9.xhtml"/>
+    <ncx:navPoint class="book" id="uuid-3c391c6b-76e9-41aa-ac60-6c423eec15c7" playOrder="16">
+    <ncx:navLabel>
+        <ncx:text>Getting ready</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="3c391c6b-76e9-41aa-ac60-6c423eec15c7.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-32d54203-36fe-4a8b-93b5-a48961cb2d39" playOrder="17">
+    <ncx:navLabel>
+        <ncx:text>How to do it…</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="32d54203-36fe-4a8b-93b5-a48961cb2d39.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-160d3bd1-3ef1-4021-872d-44ceeaf03b08" playOrder="18">
+    <ncx:navLabel>
+        <ncx:text>How it works…</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="160d3bd1-3ef1-4021-872d-44ceeaf03b08.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-b76c5aa5-0e5e-4cdf-9828-1546b80345e1" playOrder="19">
+    <ncx:navLabel>
+        <ncx:text>There's more…</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="b76c5aa5-0e5e-4cdf-9828-1546b80345e1.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-0d161095-6d3c-4fa9-ba29-d61edb79f043" playOrder="20">
+    <ncx:navLabel>
+        <ncx:text>See also</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="0d161095-6d3c-4fa9-ba29-d61edb79f043.xhtml"/>
+    
+</ncx:navPoint>
+
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-bff07b7a-99ff-46e0-b2eb-d751aba56c2f" playOrder="21">
+    <ncx:navLabel>
+        <ncx:text>Conventions</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="bff07b7a-99ff-46e0-b2eb-d751aba56c2f.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-4cbbfa10-f1f7-4978-a12c-545c621195d6" playOrder="22">
+    <ncx:navLabel>
+        <ncx:text>Reader feedback</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="4cbbfa10-f1f7-4978-a12c-545c621195d6.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-9cc79568-4133-4f23-ad63-112a785f2240" playOrder="23">
+    <ncx:navLabel>
+        <ncx:text>Customer support</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="9cc79568-4133-4f23-ad63-112a785f2240.xhtml"/>
+    <ncx:navPoint class="book" id="uuid-a1a55bce-6b06-4422-8751-fc8cce596804" playOrder="24">
+    <ncx:navLabel>
+        <ncx:text>Downloading the example code</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="a1a55bce-6b06-4422-8751-fc8cce596804.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-4c228418-c704-4acf-87d6-2d6b334c15a0" playOrder="25">
+    <ncx:navLabel>
+        <ncx:text>Errata</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="4c228418-c704-4acf-87d6-2d6b334c15a0.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-2c0a09d3-3980-4d3e-bd1f-69c5403105fd" playOrder="26">
+    <ncx:navLabel>
+        <ncx:text>Piracy</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="2c0a09d3-3980-4d3e-bd1f-69c5403105fd.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-d86ed9df-a053-4ea6-9c51-776f332fab78" playOrder="27">
+    <ncx:navLabel>
+        <ncx:text>Questions</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="d86ed9df-a053-4ea6-9c51-776f332fab78.xhtml"/>
+    
+</ncx:navPoint>
+
+</ncx:navPoint>
+
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-340f5263-f3b8-455a-baa6-c210b0dd9f87" playOrder="28">
+    <ncx:navLabel>
+        <ncx:text>TensorFlow - An Introduction</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="340f5263-f3b8-455a-baa6-c210b0dd9f87.xhtml"/>
+    <ncx:navPoint class="book" id="uuid-482eb54a-43a1-4147-aadd-f74a3a7eef19" playOrder="29">
+    <ncx:navLabel>
+        <ncx:text>Introduction</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="482eb54a-43a1-4147-aadd-f74a3a7eef19.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-ddb4626b-4bc8-44e1-aad6-837c08a8d882" playOrder="30">
+    <ncx:navLabel>
+        <ncx:text>Installing TensorFlow</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="ddb4626b-4bc8-44e1-aad6-837c08a8d882.xhtml"/>
+    <ncx:navPoint class="book" id="uuid-163e01ef-7a6d-4f88-a661-bc9f9a923c41" playOrder="31">
+    <ncx:navLabel>
+        <ncx:text>Getting ready</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="163e01ef-7a6d-4f88-a661-bc9f9a923c41.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-bc8d49b5-ac59-4bc0-a6e5-f90a510211f5" playOrder="32">
+    <ncx:navLabel>
+        <ncx:text>How to do it...</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="bc8d49b5-ac59-4bc0-a6e5-f90a510211f5.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-13a83e54-6d3f-41d0-903a-eae739f94be7" playOrder="33">
+    <ncx:navLabel>
+        <ncx:text>How it works...</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="13a83e54-6d3f-41d0-903a-eae739f94be7.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-e6ae3dcd-cb4e-421f-b745-b15e47becbd8" playOrder="34">
+    <ncx:navLabel>
+        <ncx:text>There's more...</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="e6ae3dcd-cb4e-421f-b745-b15e47becbd8.xhtml"/>
+    
+</ncx:navPoint>
+
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-38b3b34e-24a7-4b16-9379-ca0e2d3347e0" playOrder="35">
+    <ncx:navLabel>
+        <ncx:text>Hello world in TensorFlow</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="38b3b34e-24a7-4b16-9379-ca0e2d3347e0.xhtml"/>
+    <ncx:navPoint class="book" id="uuid-fde1e0c7-adad-49e0-a9a8-0915164ad75f" playOrder="36">
+    <ncx:navLabel>
+        <ncx:text>How to do it...</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="fde1e0c7-adad-49e0-a9a8-0915164ad75f.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-a12e6262-38a6-4368-876b-11a45386f317" playOrder="37">
+    <ncx:navLabel>
+        <ncx:text>How it works...</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="a12e6262-38a6-4368-876b-11a45386f317.xhtml"/>
+    
+</ncx:navPoint>
+
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-37ad71ee-c11a-4c1e-833b-c6d6bc815983" playOrder="38">
+    <ncx:navLabel>
+        <ncx:text>Understanding the TensorFlow program structure</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="37ad71ee-c11a-4c1e-833b-c6d6bc815983.xhtml"/>
+    <ncx:navPoint class="book" id="uuid-b3623586-e806-4185-a0ef-99147d658ccd" playOrder="39">
+    <ncx:navLabel>
+        <ncx:text>How to do it...</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="b3623586-e806-4185-a0ef-99147d658ccd.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-442f7cee-7313-45ee-974d-20c4826e219c" playOrder="40">
+    <ncx:navLabel>
+        <ncx:text>How it works...</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="442f7cee-7313-45ee-974d-20c4826e219c.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-ceffd337-4d2c-4198-b54a-b29ab03dc2d1" playOrder="41">
+    <ncx:navLabel>
+        <ncx:text>There's more...</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="ceffd337-4d2c-4198-b54a-b29ab03dc2d1.xhtml"/>
+    
+</ncx:navPoint>
+
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-9c213d46-07b3-4b90-862d-1aeb84affba1" playOrder="42">
+    <ncx:navLabel>
+        <ncx:text>Working with constants, variables, and placeholders</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="9c213d46-07b3-4b90-862d-1aeb84affba1.xhtml"/>
+    <ncx:navPoint class="book" id="uuid-4b1eb459-6eab-456a-bffd-0264dd3eb016" playOrder="43">
+    <ncx:navLabel>
+        <ncx:text>How to do it...</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="4b1eb459-6eab-456a-bffd-0264dd3eb016.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-fd68d64b-a3a1-46c4-9dc1-b81822943e68" playOrder="44">
+    <ncx:navLabel>
+        <ncx:text>How it works...</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="fd68d64b-a3a1-46c4-9dc1-b81822943e68.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-54fd599e-1c7e-42ea-b1c5-b3bd858d9058" playOrder="45">
+    <ncx:navLabel>
+        <ncx:text>There's more...</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="54fd599e-1c7e-42ea-b1c5-b3bd858d9058.xhtml"/>
+    
+</ncx:navPoint>
+
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-4e813c3f-8438-41fa-8042-f1e681cf0103" playOrder="46">
+    <ncx:navLabel>
+        <ncx:text>Performing matrix manipulations using TensorFlow</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="4e813c3f-8438-41fa-8042-f1e681cf0103.xhtml"/>
+    <ncx:navPoint class="book" id="uuid-b785dd2e-33fc-4827-8900-ef32e29d61dd" playOrder="47">
+    <ncx:navLabel>
+        <ncx:text>How to do it...</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="b785dd2e-33fc-4827-8900-ef32e29d61dd.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-227480ee-4658-4960-b878-94ed4a3d0fa7" playOrder="48">
+    <ncx:navLabel>
+        <ncx:text>How it works...</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="227480ee-4658-4960-b878-94ed4a3d0fa7.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-8e58e0a7-6263-4a75-b887-c172372f6235" playOrder="49">
+    <ncx:navLabel>
+        <ncx:text>There's more...</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="8e58e0a7-6263-4a75-b887-c172372f6235.xhtml"/>
+    
+</ncx:navPoint>
+
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-b4ed6dcb-8c49-4130-953a-453191d51923" playOrder="50">
+    <ncx:navLabel>
+        <ncx:text>Using a data flow graph</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="b4ed6dcb-8c49-4130-953a-453191d51923.xhtml"/>
+    <ncx:navPoint class="book" id="uuid-fab2ca86-48d0-4f0c-b53c-80fc58a49984" playOrder="51">
+    <ncx:navLabel>
+        <ncx:text>How to do it...</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="fab2ca86-48d0-4f0c-b53c-80fc58a49984.xhtml"/>
+    
+</ncx:navPoint>
+
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-73a3cc89-b049-4283-8eb5-f21081e7b8b6" playOrder="52">
+    <ncx:navLabel>
+        <ncx:text>Migrating from 0.x to 1.x</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="73a3cc89-b049-4283-8eb5-f21081e7b8b6.xhtml"/>
+    <ncx:navPoint class="book" id="uuid-0922085a-d234-42e6-a06b-9079328ec45a" playOrder="53">
+    <ncx:navLabel>
+        <ncx:text>How to do it...</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="0922085a-d234-42e6-a06b-9079328ec45a.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-7323a535-530b-4284-851f-83ea8df2ab91" playOrder="54">
+    <ncx:navLabel>
+        <ncx:text>There's more...</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="7323a535-530b-4284-851f-83ea8df2ab91.xhtml"/>
+    
+</ncx:navPoint>
+
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-aabda4b1-d3bf-4b42-9e36-951421e34575" playOrder="55">
+    <ncx:navLabel>
+        <ncx:text>Using XLA to enhance computational performance</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="aabda4b1-d3bf-4b42-9e36-951421e34575.xhtml"/>
+    <ncx:navPoint class="book" id="uuid-6d451b01-5508-4f96-819e-0a8af9714c2e" playOrder="56">
+    <ncx:navLabel>
+        <ncx:text>Getting ready</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="6d451b01-5508-4f96-819e-0a8af9714c2e.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-55c522c1-e231-4468-8cb1-7e2b8565023f" playOrder="57">
+    <ncx:navLabel>
+        <ncx:text>How to do it...</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="55c522c1-e231-4468-8cb1-7e2b8565023f.xhtml"/>
+    
+</ncx:navPoint>
+
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-b8f3fdc3-81b7-401f-a8e1-505301aad0e7" playOrder="58">
+    <ncx:navLabel>
+        <ncx:text>Invoking CPU/GPU devices</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="b8f3fdc3-81b7-401f-a8e1-505301aad0e7.xhtml"/>
+    <ncx:navPoint class="book" id="uuid-4e640c0d-30fd-4635-885e-c0d6895d850f" playOrder="59">
+    <ncx:navLabel>
+        <ncx:text>How to do it...</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="4e640c0d-30fd-4635-885e-c0d6895d850f.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-3542d2c5-fbac-4ac4-a4d4-e79994b4200e" playOrder="60">
+    <ncx:navLabel>
+        <ncx:text>How it works...</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="3542d2c5-fbac-4ac4-a4d4-e79994b4200e.xhtml"/>
+    
+</ncx:navPoint>
+
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-2fd8cebf-99be-49d7-a2f9-211928367b53" playOrder="61">
+    <ncx:navLabel>
+        <ncx:text>TensorFlow for Deep Learning</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="2fd8cebf-99be-49d7-a2f9-211928367b53.xhtml"/>
+    <ncx:navPoint class="book" id="uuid-1f611123-b22f-4736-9f6f-80b6b1eb73a0" playOrder="62">
+    <ncx:navLabel>
+        <ncx:text>How to do it...</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="1f611123-b22f-4736-9f6f-80b6b1eb73a0.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-76c7c748-f8c7-49f1-b71b-881d9ce0a529" playOrder="63">
+    <ncx:navLabel>
+        <ncx:text>There's more</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="76c7c748-f8c7-49f1-b71b-881d9ce0a529.xhtml"/>
+    
+</ncx:navPoint>
+
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-bd34da65-63f3-440b-8c26-e2c52b76f38a" playOrder="64">
+    <ncx:navLabel>
+        <ncx:text>Different Python packages required for DNN-based problems</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="bd34da65-63f3-440b-8c26-e2c52b76f38a.xhtml"/>
+    <ncx:navPoint class="book" id="uuid-5bf80afc-ce4d-4690-b20f-8824cafc311d" playOrder="65">
+    <ncx:navLabel>
+        <ncx:text>How to do it...</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="5bf80afc-ce4d-4690-b20f-8824cafc311d.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-7e5a419c-86c1-4d1c-8ec2-fc6c914168f1" playOrder="66">
+    <ncx:navLabel>
+        <ncx:text>See also</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="7e5a419c-86c1-4d1c-8ec2-fc6c914168f1.xhtml"/>
+    
+</ncx:navPoint>
+
+</ncx:navPoint>
+
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-63cafe73-86d3-4ee1-929b-e45677956d9a" playOrder="67">
+    <ncx:navLabel>
+        <ncx:text>Regression</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="63cafe73-86d3-4ee1-929b-e45677956d9a.xhtml"/>
+    <ncx:navPoint class="book" id="uuid-dd519846-761d-4187-a2b9-262d3658d729" playOrder="68">
+    <ncx:navLabel>
+        <ncx:text>Introduction</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="dd519846-761d-4187-a2b9-262d3658d729.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-71beef79-2e73-4835-b805-bd98b6983664" playOrder="69">
+    <ncx:navLabel>
+        <ncx:text>Choosing loss functions</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="71beef79-2e73-4835-b805-bd98b6983664.xhtml"/>
+    <ncx:navPoint class="book" id="uuid-4d248166-cfdb-4f3e-a0ba-7bbe42c83756" playOrder="70">
+    <ncx:navLabel>
+        <ncx:text>Getting ready</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="4d248166-cfdb-4f3e-a0ba-7bbe42c83756.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-a99399cd-c88c-4ef0-9bd8-de18562c6dc3" playOrder="71">
+    <ncx:navLabel>
+        <ncx:text> How to do it...</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="a99399cd-c88c-4ef0-9bd8-de18562c6dc3.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-1c34b3b5-9cb7-4410-9f1e-b91ad51912fa" playOrder="72">
+    <ncx:navLabel>
+        <ncx:text>How it works...</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="1c34b3b5-9cb7-4410-9f1e-b91ad51912fa.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-fcaf9a55-1e34-4c38-95a5-fadb4214ab54" playOrder="73">
+    <ncx:navLabel>
+        <ncx:text>There's more...</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="fcaf9a55-1e34-4c38-95a5-fadb4214ab54.xhtml"/>
+    
+</ncx:navPoint>
+
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-10ca516c-0c4f-4eac-948a-0c82f1cc7164" playOrder="74">
+    <ncx:navLabel>
+        <ncx:text>Optimizers in TensorFlow</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="10ca516c-0c4f-4eac-948a-0c82f1cc7164.xhtml"/>
+    <ncx:navPoint class="book" id="uuid-ee1bc03d-0020-4277-b010-d02044ae9171" playOrder="75">
+    <ncx:navLabel>
+        <ncx:text>Getting ready</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="ee1bc03d-0020-4277-b010-d02044ae9171.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-dcff5626-ca19-4ca3-add4-0131596a55af" playOrder="76">
+    <ncx:navLabel>
+        <ncx:text>How to do it...</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="dcff5626-ca19-4ca3-add4-0131596a55af.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-256d57ec-328f-4c14-abe7-df49fff0d8ef" playOrder="77">
+    <ncx:navLabel>
+        <ncx:text>There's more...</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="256d57ec-328f-4c14-abe7-df49fff0d8ef.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-ef923871-9196-41c4-b3e6-c4680f1c8759" playOrder="78">
+    <ncx:navLabel>
+        <ncx:text>See also</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="ef923871-9196-41c4-b3e6-c4680f1c8759.xhtml"/>
+    
+</ncx:navPoint>
+
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-6bb78983-3c26-4bfe-9e66-824f02019b0e" playOrder="79">
+    <ncx:navLabel>
+        <ncx:text>Reading from CSV files and preprocessing data</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="6bb78983-3c26-4bfe-9e66-824f02019b0e.xhtml"/>
+    <ncx:navPoint class="book" id="uuid-ec91e210-8eb9-4ab0-be32-1b18bef32a1f" playOrder="80">
+    <ncx:navLabel>
+        <ncx:text>Getting ready</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="ec91e210-8eb9-4ab0-be32-1b18bef32a1f.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-1e0c6087-37e0-4eae-a528-ff93a35d4728" playOrder="81">
+    <ncx:navLabel>
+        <ncx:text>How to do it…</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="1e0c6087-37e0-4eae-a528-ff93a35d4728.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-7580be6d-bf13-486b-bd57-d2b3b4937045" playOrder="82">
+    <ncx:navLabel>
+        <ncx:text>There's more...</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="7580be6d-bf13-486b-bd57-d2b3b4937045.xhtml"/>
+    
+</ncx:navPoint>
+
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-1e0e33d2-ac85-4d9f-93df-bba2067f6fdd" playOrder="83">
+    <ncx:navLabel>
+        <ncx:text>House price estimation-simple linear regression</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="1e0e33d2-ac85-4d9f-93df-bba2067f6fdd.xhtml"/>
+    <ncx:navPoint class="book" id="uuid-7722078c-f210-47e5-9842-5b199269cc41" playOrder="84">
+    <ncx:navLabel>
+        <ncx:text>Getting ready</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="7722078c-f210-47e5-9842-5b199269cc41.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-452cd606-7a58-4cb4-b3dc-820516ad5770" playOrder="85">
+    <ncx:navLabel>
+        <ncx:text>How to do it...</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="452cd606-7a58-4cb4-b3dc-820516ad5770.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-d9e45297-35b0-48be-a05e-7da680c41bf7" playOrder="86">
+    <ncx:navLabel>
+        <ncx:text>How it works...</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="d9e45297-35b0-48be-a05e-7da680c41bf7.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-3d28f5de-16f5-4ee9-8f13-37f539b82c28" playOrder="87">
+    <ncx:navLabel>
+        <ncx:text>There's more...</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="3d28f5de-16f5-4ee9-8f13-37f539b82c28.xhtml"/>
+    
+</ncx:navPoint>
+
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-9c427851-2742-486d-9500-1ba98f26771d" playOrder="88">
+    <ncx:navLabel>
+        <ncx:text>House price estimation-multiple linear regression</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="9c427851-2742-486d-9500-1ba98f26771d.xhtml"/>
+    <ncx:navPoint class="book" id="uuid-311470f2-1bc3-4629-816a-337c9675215d" playOrder="89">
+    <ncx:navLabel>
+        <ncx:text>How to do it...</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="311470f2-1bc3-4629-816a-337c9675215d.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-08bd68fb-5f9a-45f2-a228-c9775f43da5b" playOrder="90">
+    <ncx:navLabel>
+        <ncx:text>How it works...</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="08bd68fb-5f9a-45f2-a228-c9775f43da5b.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-2f55a62e-b72e-4e1b-bc95-7ef535b16ef4" playOrder="91">
+    <ncx:navLabel>
+        <ncx:text>There's more...</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="2f55a62e-b72e-4e1b-bc95-7ef535b16ef4.xhtml"/>
+    
+</ncx:navPoint>
+
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-04e98b45-1753-481c-a282-227901e68d6e" playOrder="92">
+    <ncx:navLabel>
+        <ncx:text>Logistic regression on the MNIST dataset</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="04e98b45-1753-481c-a282-227901e68d6e.xhtml"/>
+    <ncx:navPoint class="book" id="uuid-e2906616-d1b0-480a-8e5e-1193d3413e1e" playOrder="93">
+    <ncx:navLabel>
+        <ncx:text>How to do it...</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="e2906616-d1b0-480a-8e5e-1193d3413e1e.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-87edbcb9-bb68-4c98-affb-4c2526bb7d13" playOrder="94">
+    <ncx:navLabel>
+        <ncx:text>How it works...</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="87edbcb9-bb68-4c98-affb-4c2526bb7d13.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-c6123999-2984-454c-aa27-a01e1b8e337c" playOrder="95">
+    <ncx:navLabel>
+        <ncx:text>See also</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="c6123999-2984-454c-aa27-a01e1b8e337c.xhtml"/>
+    
+</ncx:navPoint>
+
+</ncx:navPoint>
+
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-8a46655c-6805-48b5-b4c1-c35457883d78" playOrder="96">
+    <ncx:navLabel>
+        <ncx:text>Neural Networks - Perceptron</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="8a46655c-6805-48b5-b4c1-c35457883d78.xhtml"/>
+    <ncx:navPoint class="book" id="uuid-23f053c0-13f3-4805-857b-832ee4cdcaf2" playOrder="97">
+    <ncx:navLabel>
+        <ncx:text>Introduction</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="23f053c0-13f3-4805-857b-832ee4cdcaf2.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-bbf8385d-c83a-41a4-9acc-c5fb1982f73a" playOrder="98">
+    <ncx:navLabel>
+        <ncx:text>Activation functions</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="bbf8385d-c83a-41a4-9acc-c5fb1982f73a.xhtml"/>
+    <ncx:navPoint class="book" id="uuid-af3969cc-9ff3-4b6b-91d4-537b55ba57f2" playOrder="99">
+    <ncx:navLabel>
+        <ncx:text>Getting ready</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="af3969cc-9ff3-4b6b-91d4-537b55ba57f2.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-87c0785f-e455-4e2e-ada9-a236468ad6e7" playOrder="100">
+    <ncx:navLabel>
+        <ncx:text>How to do it...</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="87c0785f-e455-4e2e-ada9-a236468ad6e7.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-1fe075eb-9a24-4cb9-954f-32deb39aecec" playOrder="101">
+    <ncx:navLabel>
+        <ncx:text>How it works...</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="1fe075eb-9a24-4cb9-954f-32deb39aecec.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-5ac7c14a-8d49-4c66-b849-e3d0df2d567e" playOrder="102">
+    <ncx:navLabel>
+        <ncx:text>There's more...</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="5ac7c14a-8d49-4c66-b849-e3d0df2d567e.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-0cc68f7b-fc32-46a4-a967-5e2fc8c4d632" playOrder="103">
+    <ncx:navLabel>
+        <ncx:text>See also</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="0cc68f7b-fc32-46a4-a967-5e2fc8c4d632.xhtml"/>
+    
+</ncx:navPoint>
+
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-94c907ff-9a0e-407f-b569-5ee56597d25a" playOrder="104">
+    <ncx:navLabel>
+        <ncx:text>Single layer perceptron</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="94c907ff-9a0e-407f-b569-5ee56597d25a.xhtml"/>
+    <ncx:navPoint class="book" id="uuid-6d88335f-1b93-4e73-b75e-449c8497030b" playOrder="105">
+    <ncx:navLabel>
+        <ncx:text>Getting ready</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="6d88335f-1b93-4e73-b75e-449c8497030b.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-8f2af628-7ad3-4d44-b8c3-d380b6d8139d" playOrder="106">
+    <ncx:navLabel>
+        <ncx:text>How to do it...</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="8f2af628-7ad3-4d44-b8c3-d380b6d8139d.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-b6c1e169-2c67-43f1-938e-80dd199b7a94" playOrder="107">
+    <ncx:navLabel>
+        <ncx:text>There's more...</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="b6c1e169-2c67-43f1-938e-80dd199b7a94.xhtml"/>
+    
+</ncx:navPoint>
+
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-78f6d385-7b79-4cbc-95df-33874fc9d773" playOrder="108">
+    <ncx:navLabel>
+        <ncx:text>Calculating gradients of backpropagation algorithm </ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="78f6d385-7b79-4cbc-95df-33874fc9d773.xhtml"/>
+    <ncx:navPoint class="book" id="uuid-a8aefb49-f2ce-418e-897b-a663e501e0f0" playOrder="109">
+    <ncx:navLabel>
+        <ncx:text>Getting ready</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="a8aefb49-f2ce-418e-897b-a663e501e0f0.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-0f16ee88-bd06-478b-a774-d9d27b956363" playOrder="110">
+    <ncx:navLabel>
+        <ncx:text>How to do it...</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="0f16ee88-bd06-478b-a774-d9d27b956363.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-dd968be9-70ba-433a-8a34-8198f17a09b2" playOrder="111">
+    <ncx:navLabel>
+        <ncx:text>How it works...</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="dd968be9-70ba-433a-8a34-8198f17a09b2.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-4f8c4db2-a547-40db-ba54-6e4b8a8178cd" playOrder="112">
+    <ncx:navLabel>
+        <ncx:text>There's more...</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="4f8c4db2-a547-40db-ba54-6e4b8a8178cd.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-cbe6d1f9-d49e-49ba-b3d7-0ddc28451115" playOrder="113">
+    <ncx:navLabel>
+        <ncx:text>See also</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="cbe6d1f9-d49e-49ba-b3d7-0ddc28451115.xhtml"/>
+    
+</ncx:navPoint>
+
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-5c6f233a-7c6d-46aa-9fbf-4695b88f0845" playOrder="114">
+    <ncx:navLabel>
+        <ncx:text>MNIST classifier using MLP</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="5c6f233a-7c6d-46aa-9fbf-4695b88f0845.xhtml"/>
+    <ncx:navPoint class="book" id="uuid-0ab0666b-7e88-4df7-8071-c5f65c73ee2f" playOrder="115">
+    <ncx:navLabel>
+        <ncx:text>Getting ready</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="0ab0666b-7e88-4df7-8071-c5f65c73ee2f.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-6739ea31-87a1-4092-8480-d3e2caa47f17" playOrder="116">
+    <ncx:navLabel>
+        <ncx:text>How to do it...</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="6739ea31-87a1-4092-8480-d3e2caa47f17.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-5fdd2169-0c44-4d5a-8b74-613236a57ce7" playOrder="117">
+    <ncx:navLabel>
+        <ncx:text>How it works...</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="5fdd2169-0c44-4d5a-8b74-613236a57ce7.xhtml"/>
+    
+</ncx:navPoint>
+
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-9fb45057-e3af-4601-9afe-4d5317884f53" playOrder="118">
+    <ncx:navLabel>
+        <ncx:text>Function approximation using MLP-predicting Boston house prices</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="9fb45057-e3af-4601-9afe-4d5317884f53.xhtml"/>
+    <ncx:navPoint class="book" id="uuid-3becec02-a574-42ec-8513-c3ab41cf5a6f" playOrder="119">
+    <ncx:navLabel>
+        <ncx:text>Getting ready</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="3becec02-a574-42ec-8513-c3ab41cf5a6f.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-72eb18f5-c8d1-4698-88df-3bb19d0de7e0" playOrder="120">
+    <ncx:navLabel>
+        <ncx:text>How to do it...</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="72eb18f5-c8d1-4698-88df-3bb19d0de7e0.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-70c6490c-8275-4e58-844c-fcab4bab9946" playOrder="121">
+    <ncx:navLabel>
+        <ncx:text>How it works...</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="70c6490c-8275-4e58-844c-fcab4bab9946.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-4a224b5f-88f0-434d-bd7d-fc13b63e4df3" playOrder="122">
+    <ncx:navLabel>
+        <ncx:text>There's more...</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="4a224b5f-88f0-434d-bd7d-fc13b63e4df3.xhtml"/>
+    
+</ncx:navPoint>
+
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-9f4790bd-8c71-425b-b151-f7394745b75b" playOrder="123">
+    <ncx:navLabel>
+        <ncx:text>Tuning hyperparameters</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="9f4790bd-8c71-425b-b151-f7394745b75b.xhtml"/>
+    <ncx:navPoint class="book" id="uuid-247b65da-637b-428b-a692-1efa1414ca11" playOrder="124">
+    <ncx:navLabel>
+        <ncx:text>How to do it...</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="247b65da-637b-428b-a692-1efa1414ca11.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-c7b3178a-0103-4182-a0a7-1c8dca7d0ca4" playOrder="125">
+    <ncx:navLabel>
+        <ncx:text>There's more...</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="c7b3178a-0103-4182-a0a7-1c8dca7d0ca4.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-1be9b61a-4c72-4f65-aff2-0cca98f66a10" playOrder="126">
+    <ncx:navLabel>
+        <ncx:text>See also</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="1be9b61a-4c72-4f65-aff2-0cca98f66a10.xhtml"/>
+    
+</ncx:navPoint>
+
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-7c4102da-ef68-47b3-a9af-f1f2e8fcf026" playOrder="127">
+    <ncx:navLabel>
+        <ncx:text>Higher-level APIs-Keras</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="7c4102da-ef68-47b3-a9af-f1f2e8fcf026.xhtml"/>
+    <ncx:navPoint class="book" id="uuid-8656f82f-f6dd-4577-94a1-21b8ac2637df" playOrder="128">
+    <ncx:navLabel>
+        <ncx:text>How to do it...</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="8656f82f-f6dd-4577-94a1-21b8ac2637df.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-ed5bcb80-ff04-4d57-aecd-69e2bd57cb22" playOrder="129">
+    <ncx:navLabel>
+        <ncx:text>There's more...</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="ed5bcb80-ff04-4d57-aecd-69e2bd57cb22.xhtml"/>
+    
+</ncx:navPoint>
+
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-d2600e0c-07da-49a4-9bb5-4d8db4085aa1" playOrder="130">
+    <ncx:navLabel>
+        <ncx:text>See also</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="d2600e0c-07da-49a4-9bb5-4d8db4085aa1.xhtml"/>
+    
+</ncx:navPoint>
+
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-885c3359-3cc4-4b32-a186-f6e98b3ac4a9" playOrder="131">
+    <ncx:navLabel>
+        <ncx:text>Convolutional Neural Networks</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="885c3359-3cc4-4b32-a186-f6e98b3ac4a9.xhtml"/>
+    <ncx:navPoint class="book" id="uuid-add6012b-88da-4910-b245-52f3ad030005" playOrder="132">
+    <ncx:navLabel>
+        <ncx:text>Introduction</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="add6012b-88da-4910-b245-52f3ad030005.xhtml"/>
+    <ncx:navPoint class="book" id="uuid-58b1e682-0c48-46a7-8cca-8f86d0abe713" playOrder="133">
+    <ncx:navLabel>
+        <ncx:text>Local receptive fields</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="58b1e682-0c48-46a7-8cca-8f86d0abe713.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-91c5ff1d-80ce-47d3-95a9-0845dba3ff3f" playOrder="134">
+    <ncx:navLabel>
+        <ncx:text>Shared weights and bias</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="91c5ff1d-80ce-47d3-95a9-0845dba3ff3f.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-24015dd9-394b-4803-ac74-b21599f807df" playOrder="135">
+    <ncx:navLabel>
+        <ncx:text>A mathematical example</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="24015dd9-394b-4803-ac74-b21599f807df.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-669f1728-8c24-47d5-b92d-e3379e1e47eb" playOrder="136">
+    <ncx:navLabel>
+        <ncx:text>ConvNets in TensorFlow</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="669f1728-8c24-47d5-b92d-e3379e1e47eb.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-a443c374-8f72-464a-9013-c1c4655b2167" playOrder="137">
+    <ncx:navLabel>
+        <ncx:text>Pooling layers</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="a443c374-8f72-464a-9013-c1c4655b2167.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-ce32714f-12ad-4997-a1c7-cac7b494aebf" playOrder="138">
+    <ncx:navLabel>
+        <ncx:text>Max pooling</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="ce32714f-12ad-4997-a1c7-cac7b494aebf.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-9f16ffde-4dec-443a-b5d9-d04c6e783909" playOrder="139">
+    <ncx:navLabel>
+        <ncx:text>Average pooling</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="9f16ffde-4dec-443a-b5d9-d04c6e783909.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-d233f9f9-2888-4d77-8999-36d50de2f1fc" playOrder="140">
+    <ncx:navLabel>
+        <ncx:text>ConvNets summary</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="d233f9f9-2888-4d77-8999-36d50de2f1fc.xhtml"/>
+    
+</ncx:navPoint>
+
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-b5f2f57c-5827-4a74-a33d-2f1539b59527" playOrder="141">
+    <ncx:navLabel>
+        <ncx:text>Creating a ConvNet to classify handwritten MNIST numbers</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="b5f2f57c-5827-4a74-a33d-2f1539b59527.xhtml"/>
+    <ncx:navPoint class="book" id="uuid-91b9e65a-1f89-483f-84c1-e3f6b2f0bd17" playOrder="142">
+    <ncx:navLabel>
+        <ncx:text>Getting ready</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="91b9e65a-1f89-483f-84c1-e3f6b2f0bd17.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-53e7c2b7-1e93-4c9d-ae14-b210383e1d49" playOrder="143">
+    <ncx:navLabel>
+        <ncx:text>How to do it...</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="53e7c2b7-1e93-4c9d-ae14-b210383e1d49.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-8172da1d-e914-49ef-b881-f86fcb74f180" playOrder="144">
+    <ncx:navLabel>
+        <ncx:text>How it works...</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="8172da1d-e914-49ef-b881-f86fcb74f180.xhtml"/>
+    
+</ncx:navPoint>
+
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-5f7a1cb8-6cda-4ffe-abfc-ee90bc8723db" playOrder="145">
+    <ncx:navLabel>
+        <ncx:text>Creating a ConvNet to classify CIFAR-10</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="5f7a1cb8-6cda-4ffe-abfc-ee90bc8723db.xhtml"/>
+    <ncx:navPoint class="book" id="uuid-665977a5-7791-4214-b6ee-8faa12824438" playOrder="146">
+    <ncx:navLabel>
+        <ncx:text>Getting ready</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="665977a5-7791-4214-b6ee-8faa12824438.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-dacaf73c-e569-40c0-b0b9-c6b23b9b7d97" playOrder="147">
+    <ncx:navLabel>
+        <ncx:text>How to do it...</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="dacaf73c-e569-40c0-b0b9-c6b23b9b7d97.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-27fe858f-63bd-455c-b207-bda438aed082" playOrder="148">
+    <ncx:navLabel>
+        <ncx:text>How it works...</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="27fe858f-63bd-455c-b207-bda438aed082.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-66897c90-8457-4804-a87b-6e171bb6b5ae" playOrder="149">
+    <ncx:navLabel>
+        <ncx:text>There's more...</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="66897c90-8457-4804-a87b-6e171bb6b5ae.xhtml"/>
+    
+</ncx:navPoint>
+
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-703f7760-74f3-4187-a3fd-9b7b330f65ee" playOrder="150">
+    <ncx:navLabel>
+        <ncx:text>Transferring style with VGG19 for image repainting</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="703f7760-74f3-4187-a3fd-9b7b330f65ee.xhtml"/>
+    <ncx:navPoint class="book" id="uuid-ba77980b-e265-48a5-aec2-aa6291233de3" playOrder="151">
+    <ncx:navLabel>
+        <ncx:text>Getting ready</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="ba77980b-e265-48a5-aec2-aa6291233de3.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-3fd31daa-0b77-4eed-a7f8-349ee2228079" playOrder="152">
+    <ncx:navLabel>
+        <ncx:text>How to do it...</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="3fd31daa-0b77-4eed-a7f8-349ee2228079.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-ca0bc511-67f1-4cb7-abf1-ebc15c5147b4" playOrder="153">
+    <ncx:navLabel>
+        <ncx:text>How it works...</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="ca0bc511-67f1-4cb7-abf1-ebc15c5147b4.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-e8a8b929-72a4-4973-b64b-9872b96554e4" playOrder="154">
+    <ncx:navLabel>
+        <ncx:text>There's more...</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="e8a8b929-72a4-4973-b64b-9872b96554e4.xhtml"/>
+    
+</ncx:navPoint>
+
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-3855a5ce-eb6e-45b4-95cc-df8e064d4977" playOrder="155">
+    <ncx:navLabel>
+        <ncx:text>Using a pretrained VGG16 net for transfer learning</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="3855a5ce-eb6e-45b4-95cc-df8e064d4977.xhtml"/>
+    <ncx:navPoint class="book" id="uuid-51386c04-a542-4d04-ae16-f833f104f1e8" playOrder="156">
+    <ncx:navLabel>
+        <ncx:text>Getting ready</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="51386c04-a542-4d04-ae16-f833f104f1e8.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-ba51313f-665c-4461-96f7-26d11e6dd58d" playOrder="157">
+    <ncx:navLabel>
+        <ncx:text>How to do it...</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="ba51313f-665c-4461-96f7-26d11e6dd58d.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-e2265bb1-4700-4a48-b6a7-2305014f1cf8" playOrder="158">
+    <ncx:navLabel>
+        <ncx:text>How it works...</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="e2265bb1-4700-4a48-b6a7-2305014f1cf8.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-388d1e6b-7ee2-4d84-a972-508933f6063d" playOrder="159">
+    <ncx:navLabel>
+        <ncx:text>There's more...</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="388d1e6b-7ee2-4d84-a972-508933f6063d.xhtml"/>
+    
+</ncx:navPoint>
+
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-1c3dd266-2da4-449f-a88a-aec855338140" playOrder="160">
+    <ncx:navLabel>
+        <ncx:text>Creating a DeepDream network</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="1c3dd266-2da4-449f-a88a-aec855338140.xhtml"/>
+    <ncx:navPoint class="book" id="uuid-e0c3aa9a-61d7-49c8-8c85-c27b410342d9" playOrder="161">
+    <ncx:navLabel>
+        <ncx:text>Getting ready</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="e0c3aa9a-61d7-49c8-8c85-c27b410342d9.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-657f944f-f44a-430b-8e31-a2ed16043a77" playOrder="162">
+    <ncx:navLabel>
+        <ncx:text>How to do it...</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="657f944f-f44a-430b-8e31-a2ed16043a77.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-b3e3a51b-0eee-422e-b3cd-455a35c16cea" playOrder="163">
+    <ncx:navLabel>
+        <ncx:text>How it works...</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="b3e3a51b-0eee-422e-b3cd-455a35c16cea.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-cd2f9c9a-7f5a-4c54-930d-e7dcf8756944" playOrder="164">
+    <ncx:navLabel>
+        <ncx:text>There's more...</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="cd2f9c9a-7f5a-4c54-930d-e7dcf8756944.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-5bdb969f-7c2f-40a6-a743-bfc5f5790887" playOrder="165">
+    <ncx:navLabel>
+        <ncx:text>See also</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="5bdb969f-7c2f-40a6-a743-bfc5f5790887.xhtml"/>
+    
+</ncx:navPoint>
+
+</ncx:navPoint>
+
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-2d61413b-7b73-4794-9403-ca4ac146e218" playOrder="166">
+    <ncx:navLabel>
+        <ncx:text>Advanced Convolutional Neural Networks</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="2d61413b-7b73-4794-9403-ca4ac146e218.xhtml"/>
+    <ncx:navPoint class="book" id="uuid-f36c4314-e34f-4936-814f-938a4e3bb930" playOrder="167">
+    <ncx:navLabel>
+        <ncx:text>Introduction</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="f36c4314-e34f-4936-814f-938a4e3bb930.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-f56c4a1c-ad0e-4666-afd3-29f79f0517b3" playOrder="168">
+    <ncx:navLabel>
+        <ncx:text>Creating a ConvNet for Sentiment Analysis</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="f56c4a1c-ad0e-4666-afd3-29f79f0517b3.xhtml"/>
+    <ncx:navPoint class="book" id="uuid-7825d413-a613-4d39-ad96-95575d167fc5" playOrder="169">
+    <ncx:navLabel>
+        <ncx:text>Getting ready</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="7825d413-a613-4d39-ad96-95575d167fc5.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-da0eef60-fc96-419b-a8f1-5957eafdafd2" playOrder="170">
+    <ncx:navLabel>
+        <ncx:text>How to do it...</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="da0eef60-fc96-419b-a8f1-5957eafdafd2.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-353f932b-3b23-4ee9-ae36-462045894998" playOrder="171">
+    <ncx:navLabel>
+        <ncx:text>How it works...</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="353f932b-3b23-4ee9-ae36-462045894998.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-b2009b53-2b50-4c79-9f32-ecc738797196" playOrder="172">
+    <ncx:navLabel>
+        <ncx:text>There is more...</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="b2009b53-2b50-4c79-9f32-ecc738797196.xhtml"/>
+    
+</ncx:navPoint>
+
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-b4ec4441-15dc-418a-9443-e7ccbd143b39" playOrder="173">
+    <ncx:navLabel>
+        <ncx:text>Inspecting what filters a VGG pre-built network has learned</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="b4ec4441-15dc-418a-9443-e7ccbd143b39.xhtml"/>
+    <ncx:navPoint class="book" id="uuid-701823a4-d675-44ab-8a7c-2364f0aa92a9" playOrder="174">
+    <ncx:navLabel>
+        <ncx:text>Getting ready</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="701823a4-d675-44ab-8a7c-2364f0aa92a9.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-744e3887-d230-439c-bd46-a274c9621abb" playOrder="175">
+    <ncx:navLabel>
+        <ncx:text>How to do it...</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="744e3887-d230-439c-bd46-a274c9621abb.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-5376a583-bcfd-4366-9e99-c8ecc11e12cd" playOrder="176">
+    <ncx:navLabel>
+        <ncx:text>How it works...</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="5376a583-bcfd-4366-9e99-c8ecc11e12cd.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-4d1cbefa-4eeb-4a28-a114-562304665222" playOrder="177">
+    <ncx:navLabel>
+        <ncx:text>There is more...</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="4d1cbefa-4eeb-4a28-a114-562304665222.xhtml"/>
+    
+</ncx:navPoint>
+
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-7f9c1ad4-32c5-4cb7-9806-4034d1e13bbb" playOrder="178">
+    <ncx:navLabel>
+        <ncx:text>Classifying images with VGGNet, ResNet, Inception, and Xception</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="7f9c1ad4-32c5-4cb7-9806-4034d1e13bbb.xhtml"/>
+    <ncx:navPoint class="book" id="uuid-f6f5ea42-459f-4b26-a35d-d6066a876a15" playOrder="179">
+    <ncx:navLabel>
+        <ncx:text>VGG16 and VGG19</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="f6f5ea42-459f-4b26-a35d-d6066a876a15.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-7dc6121a-0cde-428f-855e-d219a19b0b4c" playOrder="180">
+    <ncx:navLabel>
+        <ncx:text>ResNet</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="7dc6121a-0cde-428f-855e-d219a19b0b4c.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-c17def2d-3496-4b06-8466-b335dfe1cd6e" playOrder="181">
+    <ncx:navLabel>
+        <ncx:text>Inception</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="c17def2d-3496-4b06-8466-b335dfe1cd6e.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-93271b62-6b7a-40a2-84ad-c63e356f72f2" playOrder="182">
+    <ncx:navLabel>
+        <ncx:text>Xception</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="93271b62-6b7a-40a2-84ad-c63e356f72f2.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-f88683ea-0f59-41f7-ba44-4bfeb67454ff" playOrder="183">
+    <ncx:navLabel>
+        <ncx:text>Getting ready</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="f88683ea-0f59-41f7-ba44-4bfeb67454ff.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-66307a90-1581-42dd-bef8-247730cf11dd" playOrder="184">
+    <ncx:navLabel>
+        <ncx:text>How to do it...</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="66307a90-1581-42dd-bef8-247730cf11dd.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-b91071b9-f6ee-439c-892f-a84281e32e0b" playOrder="185">
+    <ncx:navLabel>
+        <ncx:text>How it works...</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="b91071b9-f6ee-439c-892f-a84281e32e0b.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-b4f44894-846a-42f5-bf02-0cc53c4bbc71" playOrder="186">
+    <ncx:navLabel>
+        <ncx:text>There is more...</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="b4f44894-846a-42f5-bf02-0cc53c4bbc71.xhtml"/>
+    
+</ncx:navPoint>
+
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-9f042f47-d186-42b5-9710-85d3bd1062ec" playOrder="187">
+    <ncx:navLabel>
+        <ncx:text>Recycling pre-built Deep Learning models for extracting features</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="9f042f47-d186-42b5-9710-85d3bd1062ec.xhtml"/>
+    <ncx:navPoint class="book" id="uuid-7db4d57e-5968-440e-8f21-6a03f15670b6" playOrder="188">
+    <ncx:navLabel>
+        <ncx:text>Getting ready</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="7db4d57e-5968-440e-8f21-6a03f15670b6.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-b04178e0-42ae-4c67-9173-39ba4b7cd6ac" playOrder="189">
+    <ncx:navLabel>
+        <ncx:text>How to do it...</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="b04178e0-42ae-4c67-9173-39ba4b7cd6ac.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-2e35bd3a-8a93-48c8-a101-c62f0a1c0b73" playOrder="190">
+    <ncx:navLabel>
+        <ncx:text>How it works...</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="2e35bd3a-8a93-48c8-a101-c62f0a1c0b73.xhtml"/>
+    
+</ncx:navPoint>
+
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-0cafcfeb-ef62-49da-8f73-999b326898fa" playOrder="191">
+    <ncx:navLabel>
+        <ncx:text>Very deep InceptionV3 Net used for Transfer Learning</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="0cafcfeb-ef62-49da-8f73-999b326898fa.xhtml"/>
+    <ncx:navPoint class="book" id="uuid-25c0071f-ccc4-4b5a-8ac5-c7cd51eda161" playOrder="192">
+    <ncx:navLabel>
+        <ncx:text>Getting ready</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="25c0071f-ccc4-4b5a-8ac5-c7cd51eda161.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-e7f2478c-288e-404a-98f8-a485dbd9261e" playOrder="193">
+    <ncx:navLabel>
+        <ncx:text>How to do it...</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="e7f2478c-288e-404a-98f8-a485dbd9261e.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-2c255e33-2e32-4596-a7de-a8940806de57" playOrder="194">
+    <ncx:navLabel>
+        <ncx:text>How it works...</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="2c255e33-2e32-4596-a7de-a8940806de57.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-8debb420-ce81-4f4e-8535-2d6ab644937d" playOrder="195">
+    <ncx:navLabel>
+        <ncx:text>There is more...</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="8debb420-ce81-4f4e-8535-2d6ab644937d.xhtml"/>
+    
+</ncx:navPoint>
+
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-d1305c6e-18ec-4e8a-a5d1-6b50b89f3781" playOrder="196">
+    <ncx:navLabel>
+        <ncx:text>Generating music with dilated ConvNets, WaveNet, and NSynth</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="d1305c6e-18ec-4e8a-a5d1-6b50b89f3781.xhtml"/>
+    <ncx:navPoint class="book" id="uuid-d15ee12c-0123-4e4c-b2a7-9eb23fa54067" playOrder="197">
+    <ncx:navLabel>
+        <ncx:text>Getting ready</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="d15ee12c-0123-4e4c-b2a7-9eb23fa54067.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-5b675ee9-6820-4324-8a12-71db536bf7c9" playOrder="198">
+    <ncx:navLabel>
+        <ncx:text>How to do it...</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="5b675ee9-6820-4324-8a12-71db536bf7c9.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-3c7390b8-89a9-42bd-9a59-7a8d78e81c5f" playOrder="199">
+    <ncx:navLabel>
+        <ncx:text>How it works...</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="3c7390b8-89a9-42bd-9a59-7a8d78e81c5f.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-3ba3127c-cd83-4a9d-8b54-627fc1ed3861" playOrder="200">
+    <ncx:navLabel>
+        <ncx:text>There is more...</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="3ba3127c-cd83-4a9d-8b54-627fc1ed3861.xhtml"/>
+    
+</ncx:navPoint>
+
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-a48d3efa-c38b-488d-89c3-3f010883e65e" playOrder="201">
+    <ncx:navLabel>
+        <ncx:text>Answering questions about images (Visual Q&amp;A)</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="a48d3efa-c38b-488d-89c3-3f010883e65e.xhtml"/>
+    <ncx:navPoint class="book" id="uuid-8b826f3f-fa91-4b35-897f-201798deed13" playOrder="202">
+    <ncx:navLabel>
+        <ncx:text>How to do it...</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="8b826f3f-fa91-4b35-897f-201798deed13.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-54bd6a92-144e-4ffe-bb90-e9b9ae96e0ce" playOrder="203">
+    <ncx:navLabel>
+        <ncx:text>How it works...</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="54bd6a92-144e-4ffe-bb90-e9b9ae96e0ce.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-9198c196-7b2e-44d5-905b-92fccb45e894" playOrder="204">
+    <ncx:navLabel>
+        <ncx:text>There is more...</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="9198c196-7b2e-44d5-905b-92fccb45e894.xhtml"/>
+    
+</ncx:navPoint>
+
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-7d452dc9-99ab-4d7c-8ff6-3e369f640b7a" playOrder="205">
+    <ncx:navLabel>
+        <ncx:text>Classifying videos with pre-trained nets in six different ways</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="7d452dc9-99ab-4d7c-8ff6-3e369f640b7a.xhtml"/>
+    <ncx:navPoint class="book" id="uuid-4bfe3558-5b2c-4c8e-bf9a-232bf48f9e99" playOrder="206">
+    <ncx:navLabel>
+        <ncx:text>How to do it...</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="4bfe3558-5b2c-4c8e-bf9a-232bf48f9e99.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-15dbddd8-0946-4fad-b672-c090bfc57909" playOrder="207">
+    <ncx:navLabel>
+        <ncx:text>How it works...</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="15dbddd8-0946-4fad-b672-c090bfc57909.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-1f3fdc67-acf7-40d7-bc7d-82c0fe1c0306" playOrder="208">
+    <ncx:navLabel>
+        <ncx:text>There is more...</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="1f3fdc67-acf7-40d7-bc7d-82c0fe1c0306.xhtml"/>
+    
+</ncx:navPoint>
+
+</ncx:navPoint>
+
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-682d0ced-291c-4712-8cd9-545109bb62aa" playOrder="209">
+    <ncx:navLabel>
+        <ncx:text>Recurrent Neural Networks</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="682d0ced-291c-4712-8cd9-545109bb62aa.xhtml"/>
+    <ncx:navPoint class="book" id="uuid-c436f2d2-2a67-411f-bb57-420624869be8" playOrder="210">
+    <ncx:navLabel>
+        <ncx:text>Introduction</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="c436f2d2-2a67-411f-bb57-420624869be8.xhtml"/>
+    <ncx:navPoint class="book" id="uuid-b2566f9a-ca4c-4056-b0b5-0315c794672e" playOrder="211">
+    <ncx:navLabel>
+        <ncx:text>Vanishing and exploding gradients</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="b2566f9a-ca4c-4056-b0b5-0315c794672e.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-27185aef-5db0-4fb2-a46d-c21772074639" playOrder="212">
+    <ncx:navLabel>
+        <ncx:text>Long Short Term Memory (LSTM)</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="27185aef-5db0-4fb2-a46d-c21772074639.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-90b2d7cf-9efb-40ff-9a88-8b8ab062622c" playOrder="213">
+    <ncx:navLabel>
+        <ncx:text>Gated Recurrent Units (GRUs) and Peephole LSTM</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="90b2d7cf-9efb-40ff-9a88-8b8ab062622c.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-4f0c9342-8237-45af-aa8f-bf19eef4ea63" playOrder="214">
+    <ncx:navLabel>
+        <ncx:text>Operating on sequences of vectors</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="4f0c9342-8237-45af-aa8f-bf19eef4ea63.xhtml"/>
+    
+</ncx:navPoint>
+
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-69df1985-d0b9-4f48-be5b-d6528251b47a" playOrder="215">
+    <ncx:navLabel>
+        <ncx:text>Neural machine translation - training a seq2seq RNN</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="69df1985-d0b9-4f48-be5b-d6528251b47a.xhtml"/>
+    <ncx:navPoint class="book" id="uuid-c769a9fd-3863-41c0-ab09-f22879b53cab" playOrder="216">
+    <ncx:navLabel>
+        <ncx:text>Getting ready</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="c769a9fd-3863-41c0-ab09-f22879b53cab.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-9edcc5aa-28db-4a47-a3a0-f91da3dcd04e" playOrder="217">
+    <ncx:navLabel>
+        <ncx:text>How to do it...</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="9edcc5aa-28db-4a47-a3a0-f91da3dcd04e.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-b6105dce-4923-41c3-8f7d-ec984b31e0c9" playOrder="218">
+    <ncx:navLabel>
+        <ncx:text>How it works...</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="b6105dce-4923-41c3-8f7d-ec984b31e0c9.xhtml"/>
+    
+</ncx:navPoint>
+
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-709d2841-6dc9-4b17-8dc1-914e2f13b404" playOrder="219">
+    <ncx:navLabel>
+        <ncx:text>Neural machine translation - inference on a seq2seq RNN</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="709d2841-6dc9-4b17-8dc1-914e2f13b404.xhtml"/>
+    <ncx:navPoint class="book" id="uuid-8da7c81e-8995-4281-a22d-fab97111437e" playOrder="220">
+    <ncx:navLabel>
+        <ncx:text>How to do it...</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="8da7c81e-8995-4281-a22d-fab97111437e.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-999a7219-3add-41ef-8396-1945e2c41e82" playOrder="221">
+    <ncx:navLabel>
+        <ncx:text>How it works...</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="999a7219-3add-41ef-8396-1945e2c41e82.xhtml"/>
+    
+</ncx:navPoint>
+
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-0f8982ca-db5c-4563-a343-e9c5b65d3c02" playOrder="222">
+    <ncx:navLabel>
+        <ncx:text>All you need is attention - another example of a seq2seq RNN</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="0f8982ca-db5c-4563-a343-e9c5b65d3c02.xhtml"/>
+    <ncx:navPoint class="book" id="uuid-3da13027-e0c7-4895-9ad8-9668475ef4e6" playOrder="223">
+    <ncx:navLabel>
+        <ncx:text>How to do it...</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="3da13027-e0c7-4895-9ad8-9668475ef4e6.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-9a5770a6-4734-475c-abf4-0121cd6697f0" playOrder="224">
+    <ncx:navLabel>
+        <ncx:text>How it works...</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="9a5770a6-4734-475c-abf4-0121cd6697f0.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-0aee3cd1-5765-4d10-a11d-0f364f59774f" playOrder="225">
+    <ncx:navLabel>
+        <ncx:text>There's more...</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="0aee3cd1-5765-4d10-a11d-0f364f59774f.xhtml"/>
+    
+</ncx:navPoint>
+
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-e5c2af8f-d5e9-48ce-b134-c4bce4190c69" playOrder="226">
+    <ncx:navLabel>
+        <ncx:text>Learning to write as Shakespeare with RNNs</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="e5c2af8f-d5e9-48ce-b134-c4bce4190c69.xhtml"/>
+    <ncx:navPoint class="book" id="uuid-5c916029-d058-4606-904e-3ae09fd54f48" playOrder="227">
+    <ncx:navLabel>
+        <ncx:text>How to do it...</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="5c916029-d058-4606-904e-3ae09fd54f48.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-c97dcb11-aad8-44b9-9778-779553d02b54" playOrder="228">
+    <ncx:navLabel>
+        <ncx:text>How it works...</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="c97dcb11-aad8-44b9-9778-779553d02b54.xhtml"/>
+    <ncx:navPoint class="book" id="uuid-b41c0a26-6417-41bd-84f5-c80da01a9a86" playOrder="229">
+    <ncx:navLabel>
+        <ncx:text>First iteration</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="b41c0a26-6417-41bd-84f5-c80da01a9a86.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-7999db88-bad4-42c7-a792-94c3359ccfca" playOrder="230">
+    <ncx:navLabel>
+        <ncx:text>After a few iterations</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="7999db88-bad4-42c7-a792-94c3359ccfca.xhtml"/>
+    
+</ncx:navPoint>
+
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-24b7fadd-4133-4887-86a5-1be5d17b0bea" playOrder="231">
+    <ncx:navLabel>
+        <ncx:text>There's more...</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="24b7fadd-4133-4887-86a5-1be5d17b0bea.xhtml"/>
+    
+</ncx:navPoint>
+
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-ea77c744-724b-44f7-8e57-217578974c6c" playOrder="232">
+    <ncx:navLabel>
+        <ncx:text>Learning to predict future Bitcoin value with RNNs</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="ea77c744-724b-44f7-8e57-217578974c6c.xhtml"/>
+    <ncx:navPoint class="book" id="uuid-8078eca6-52ec-421a-ad9f-6166a67cdc87" playOrder="233">
+    <ncx:navLabel>
+        <ncx:text>How to do it...</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="8078eca6-52ec-421a-ad9f-6166a67cdc87.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-1c198913-fd16-4a72-834b-ab772f5eb216" playOrder="234">
+    <ncx:navLabel>
+        <ncx:text>How it works...</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="1c198913-fd16-4a72-834b-ab772f5eb216.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-b1de4882-5d46-4607-897c-2948c4784397" playOrder="235">
+    <ncx:navLabel>
+        <ncx:text>There's more...</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="b1de4882-5d46-4607-897c-2948c4784397.xhtml"/>
+    
+</ncx:navPoint>
+
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-aece1461-e646-431f-ba43-d5855263e038" playOrder="236">
+    <ncx:navLabel>
+        <ncx:text>Many-to-one and many-to-many RNN examples</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="aece1461-e646-431f-ba43-d5855263e038.xhtml"/>
+    <ncx:navPoint class="book" id="uuid-bc64b4eb-a77c-4d10-a9a6-baee29beffff" playOrder="237">
+    <ncx:navLabel>
+        <ncx:text>How to do it...</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="bc64b4eb-a77c-4d10-a9a6-baee29beffff.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-dbe63f52-e088-4661-8160-77e1f8355bde" playOrder="238">
+    <ncx:navLabel>
+        <ncx:text>How it works...</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="dbe63f52-e088-4661-8160-77e1f8355bde.xhtml"/>
+    
+</ncx:navPoint>
+
+</ncx:navPoint>
+
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-7107d74d-abaa-4d1e-86c5-4739cb12a876" playOrder="239">
+    <ncx:navLabel>
+        <ncx:text>Unsupervised Learning</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="7107d74d-abaa-4d1e-86c5-4739cb12a876.xhtml"/>
+    <ncx:navPoint class="book" id="uuid-9728fafd-9774-4719-820a-ed4e02ca9636" playOrder="240">
+    <ncx:navLabel>
+        <ncx:text>Introduction</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="9728fafd-9774-4719-820a-ed4e02ca9636.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-1654d9a6-767f-442b-8af4-1109a2aca01e" playOrder="241">
+    <ncx:navLabel>
+        <ncx:text>Principal component analysis</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="1654d9a6-767f-442b-8af4-1109a2aca01e.xhtml"/>
+    <ncx:navPoint class="book" id="uuid-e23667a9-fec9-4bbf-97c7-fe811234f0da" playOrder="242">
+    <ncx:navLabel>
+        <ncx:text>Getting ready</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="e23667a9-fec9-4bbf-97c7-fe811234f0da.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-4524b463-d450-44a2-8b52-f79ee9c44d44" playOrder="243">
+    <ncx:navLabel>
+        <ncx:text>How to do it...</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="4524b463-d450-44a2-8b52-f79ee9c44d44.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-dcea9e5a-cc44-426b-ae0f-ae6e40c846fe" playOrder="244">
+    <ncx:navLabel>
+        <ncx:text>How it works...</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="dcea9e5a-cc44-426b-ae0f-ae6e40c846fe.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-1a17940b-15b8-400c-b2f0-b907db72755f" playOrder="245">
+    <ncx:navLabel>
+        <ncx:text>There's more...</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="1a17940b-15b8-400c-b2f0-b907db72755f.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-43793d43-dacd-4340-a96d-b01b1f1f9a25" playOrder="246">
+    <ncx:navLabel>
+        <ncx:text>See also</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="43793d43-dacd-4340-a96d-b01b1f1f9a25.xhtml"/>
+    
+</ncx:navPoint>
+
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-df0377cc-98bd-43e8-a5bd-2bf7bd371bae" playOrder="247">
+    <ncx:navLabel>
+        <ncx:text>k-means clustering</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="df0377cc-98bd-43e8-a5bd-2bf7bd371bae.xhtml"/>
+    <ncx:navPoint class="book" id="uuid-fbea52ab-c0e2-4f7e-b1b4-00c207e5c7ee" playOrder="248">
+    <ncx:navLabel>
+        <ncx:text>Getting ready</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="fbea52ab-c0e2-4f7e-b1b4-00c207e5c7ee.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-7bf170f9-4952-4800-b1dc-4c1043958d9c" playOrder="249">
+    <ncx:navLabel>
+        <ncx:text>How to do it...</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="7bf170f9-4952-4800-b1dc-4c1043958d9c.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-fe18dbde-81ea-4283-acc6-645268fd4529" playOrder="250">
+    <ncx:navLabel>
+        <ncx:text>How it works...</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="fe18dbde-81ea-4283-acc6-645268fd4529.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-85428553-42c1-4b2c-b6ec-66393f6da2fb" playOrder="251">
+    <ncx:navLabel>
+        <ncx:text>There's more...</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="85428553-42c1-4b2c-b6ec-66393f6da2fb.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-e0fba12a-6131-49cc-bac1-cb800bae8368" playOrder="252">
+    <ncx:navLabel>
+        <ncx:text>See also</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="e0fba12a-6131-49cc-bac1-cb800bae8368.xhtml"/>
+    
+</ncx:navPoint>
+
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-9e4fe1bd-59a5-4883-bc0e-a2a0928a6ddf" playOrder="253">
+    <ncx:navLabel>
+        <ncx:text>Self-organizing maps</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="9e4fe1bd-59a5-4883-bc0e-a2a0928a6ddf.xhtml"/>
+    <ncx:navPoint class="book" id="uuid-ec037259-02ea-4df8-b9f8-5fe45030be7c" playOrder="254">
+    <ncx:navLabel>
+        <ncx:text>Getting ready</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="ec037259-02ea-4df8-b9f8-5fe45030be7c.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-4dc94cd5-0fe2-4a4b-9d64-52c6f280ec8f" playOrder="255">
+    <ncx:navLabel>
+        <ncx:text>How to do it...</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="4dc94cd5-0fe2-4a4b-9d64-52c6f280ec8f.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-41cdd072-c116-4b9d-85d3-ce84ab221887" playOrder="256">
+    <ncx:navLabel>
+        <ncx:text>How it works...</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="41cdd072-c116-4b9d-85d3-ce84ab221887.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-04af565d-d415-4a6b-a280-d6028528eb29" playOrder="257">
+    <ncx:navLabel>
+        <ncx:text>See also</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="04af565d-d415-4a6b-a280-d6028528eb29.xhtml"/>
+    
+</ncx:navPoint>
+
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-d8ed9b6a-749e-4489-80f6-c4a575e66825" playOrder="258">
+    <ncx:navLabel>
+        <ncx:text>Restricted Boltzmann Machine</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="d8ed9b6a-749e-4489-80f6-c4a575e66825.xhtml"/>
+    <ncx:navPoint class="book" id="uuid-6bbe5a2c-00ea-4bf5-b42a-f57eed94ad43" playOrder="259">
+    <ncx:navLabel>
+        <ncx:text>Getting ready</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="6bbe5a2c-00ea-4bf5-b42a-f57eed94ad43.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-92502b58-60ae-4a39-9305-5210e20c987e" playOrder="260">
+    <ncx:navLabel>
+        <ncx:text>How to do it...</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="92502b58-60ae-4a39-9305-5210e20c987e.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-834bad67-02d8-48d0-abe2-1771e06dd87e" playOrder="261">
+    <ncx:navLabel>
+        <ncx:text>How it works...</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="834bad67-02d8-48d0-abe2-1771e06dd87e.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-42fac176-e606-4323-b1e1-5df473054a55" playOrder="262">
+    <ncx:navLabel>
+        <ncx:text>See also</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="42fac176-e606-4323-b1e1-5df473054a55.xhtml"/>
+    
+</ncx:navPoint>
+
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-be856ecb-50dc-4054-9066-6893953364b6" playOrder="263">
+    <ncx:navLabel>
+        <ncx:text>Recommender system using RBM</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="be856ecb-50dc-4054-9066-6893953364b6.xhtml"/>
+    <ncx:navPoint class="book" id="uuid-49ababa7-a9b1-4dfd-80bc-2acbdaa5af82" playOrder="264">
+    <ncx:navLabel>
+        <ncx:text>Getting ready</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="49ababa7-a9b1-4dfd-80bc-2acbdaa5af82.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-35ab9391-09b7-43aa-ab02-51c0a019f58b" playOrder="265">
+    <ncx:navLabel>
+        <ncx:text>How to do it...</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="35ab9391-09b7-43aa-ab02-51c0a019f58b.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-945a9e81-a4cc-40b8-a32d-ab10347825a5" playOrder="266">
+    <ncx:navLabel>
+        <ncx:text>There's more...</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="945a9e81-a4cc-40b8-a32d-ab10347825a5.xhtml"/>
+    
+</ncx:navPoint>
+
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-cf43cbec-c8d5-4925-8781-102504c16f9e" playOrder="267">
+    <ncx:navLabel>
+        <ncx:text>DBN for Emotion Detection</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="cf43cbec-c8d5-4925-8781-102504c16f9e.xhtml"/>
+    <ncx:navPoint class="book" id="uuid-53f7884b-ac6e-4a06-b0dd-507401010d2b" playOrder="268">
+    <ncx:navLabel>
+        <ncx:text>Getting ready</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="53f7884b-ac6e-4a06-b0dd-507401010d2b.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-b441740b-82c6-49c1-9faf-ac258ffc861b" playOrder="269">
+    <ncx:navLabel>
+        <ncx:text>How to do it...</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="b441740b-82c6-49c1-9faf-ac258ffc861b.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-aa41447a-353e-49cb-bc58-639a435eed15" playOrder="270">
+    <ncx:navLabel>
+        <ncx:text>How it works...</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="aa41447a-353e-49cb-bc58-639a435eed15.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-f696c2a2-7355-4da2-b355-3914f0cb0534" playOrder="271">
+    <ncx:navLabel>
+        <ncx:text>There's more...</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="f696c2a2-7355-4da2-b355-3914f0cb0534.xhtml"/>
+    
+</ncx:navPoint>
+
+</ncx:navPoint>
+
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-d7a06920-0145-432c-a6b3-fa367cc5b3fc" playOrder="272">
+    <ncx:navLabel>
+        <ncx:text>Autoencoders</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="d7a06920-0145-432c-a6b3-fa367cc5b3fc.xhtml"/>
+    <ncx:navPoint class="book" id="uuid-9e564c9f-0dc1-4227-913b-8034daa61110" playOrder="273">
+    <ncx:navLabel>
+        <ncx:text>Introduction</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="9e564c9f-0dc1-4227-913b-8034daa61110.xhtml"/>
+    <ncx:navPoint class="book" id="uuid-6ad3f703-c6d6-44b0-8a66-559bb53c239c" playOrder="274">
+    <ncx:navLabel>
+        <ncx:text>See Also</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="6ad3f703-c6d6-44b0-8a66-559bb53c239c.xhtml"/>
+    
+</ncx:navPoint>
+
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-85a7bb81-7b10-430e-a7aa-725f410bf6ac" playOrder="275">
+    <ncx:navLabel>
+        <ncx:text>Vanilla autoencoders</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="85a7bb81-7b10-430e-a7aa-725f410bf6ac.xhtml"/>
+    <ncx:navPoint class="book" id="uuid-7621649c-96db-4d29-902a-9dd33e60c8d9" playOrder="276">
+    <ncx:navLabel>
+        <ncx:text>Getting ready</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="7621649c-96db-4d29-902a-9dd33e60c8d9.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-cebaf783-1b5e-4eeb-91dc-8087930c3f24" playOrder="277">
+    <ncx:navLabel>
+        <ncx:text>How to do it...</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="cebaf783-1b5e-4eeb-91dc-8087930c3f24.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-ccb53d29-3d7b-4e2c-92bc-241ec1bcfd05" playOrder="278">
+    <ncx:navLabel>
+        <ncx:text>How it works...</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="ccb53d29-3d7b-4e2c-92bc-241ec1bcfd05.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-6b29d14d-7a50-4eab-9faf-a3817f755d56" playOrder="279">
+    <ncx:navLabel>
+        <ncx:text>There's more...</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="6b29d14d-7a50-4eab-9faf-a3817f755d56.xhtml"/>
+    
+</ncx:navPoint>
+
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-8f7837c5-f435-4c5c-80ab-7028eedc131f" playOrder="280">
+    <ncx:navLabel>
+        <ncx:text>Sparse autoencoder</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="8f7837c5-f435-4c5c-80ab-7028eedc131f.xhtml"/>
+    <ncx:navPoint class="book" id="uuid-cb07e8da-d5b6-4644-95f1-8aa4dbaf4ebb" playOrder="281">
+    <ncx:navLabel>
+        <ncx:text>Getting Ready...</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="cb07e8da-d5b6-4644-95f1-8aa4dbaf4ebb.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-0cdb2f0b-cf01-4e4e-b70f-3e1f7cabb4a1" playOrder="282">
+    <ncx:navLabel>
+        <ncx:text>How to do it...</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="0cdb2f0b-cf01-4e4e-b70f-3e1f7cabb4a1.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-69748d7f-52c7-43aa-a484-9e11a058ea97" playOrder="283">
+    <ncx:navLabel>
+        <ncx:text>How it works...</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="69748d7f-52c7-43aa-a484-9e11a058ea97.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-cb2a24b5-a33a-4625-96ff-112e52a4ad49" playOrder="284">
+    <ncx:navLabel>
+        <ncx:text>There's More...</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="cb2a24b5-a33a-4625-96ff-112e52a4ad49.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-b793d011-854c-48ff-9078-0fe157b4e32a" playOrder="285">
+    <ncx:navLabel>
+        <ncx:text>See Also</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="b793d011-854c-48ff-9078-0fe157b4e32a.xhtml"/>
+    
+</ncx:navPoint>
+
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-f2d02b57-0911-4de0-86d6-38caa0e8c397" playOrder="286">
+    <ncx:navLabel>
+        <ncx:text>Denoising autoencoder</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="f2d02b57-0911-4de0-86d6-38caa0e8c397.xhtml"/>
+    <ncx:navPoint class="book" id="uuid-69427185-f76c-476a-82e9-4ea3e7f95983" playOrder="287">
+    <ncx:navLabel>
+        <ncx:text>Getting Ready</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="69427185-f76c-476a-82e9-4ea3e7f95983.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-c56a75a1-5397-4226-8bfa-b0c51bdfbac3" playOrder="288">
+    <ncx:navLabel>
+        <ncx:text>How to do it...</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="c56a75a1-5397-4226-8bfa-b0c51bdfbac3.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-9b510524-3d74-441d-b040-db38ec8aabc5" playOrder="289">
+    <ncx:navLabel>
+        <ncx:text>See Also</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="9b510524-3d74-441d-b040-db38ec8aabc5.xhtml"/>
+    
+</ncx:navPoint>
+
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-ff024730-540c-4503-b2b4-06d3669e84b1" playOrder="290">
+    <ncx:navLabel>
+        <ncx:text>Convolutional autoencoders</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="ff024730-540c-4503-b2b4-06d3669e84b1.xhtml"/>
+    <ncx:navPoint class="book" id="uuid-defb2dc9-551a-476c-b0d4-4887de608e32" playOrder="291">
+    <ncx:navLabel>
+        <ncx:text>Getting Ready...</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="defb2dc9-551a-476c-b0d4-4887de608e32.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-55f75614-0c5d-40a1-acdc-4e40d167eb1e" playOrder="292">
+    <ncx:navLabel>
+        <ncx:text>How to do it...</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="55f75614-0c5d-40a1-acdc-4e40d167eb1e.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-d619747f-81e8-4781-b100-87b97865a5cf" playOrder="293">
+    <ncx:navLabel>
+        <ncx:text>How it Works...</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="d619747f-81e8-4781-b100-87b97865a5cf.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-980eed22-63e7-422b-a570-42485ad711e4" playOrder="294">
+    <ncx:navLabel>
+        <ncx:text>There's More...</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="980eed22-63e7-422b-a570-42485ad711e4.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-d3caba60-4460-4786-8975-af96df691dca" playOrder="295">
+    <ncx:navLabel>
+        <ncx:text>See Also</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="d3caba60-4460-4786-8975-af96df691dca.xhtml"/>
+    
+</ncx:navPoint>
+
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-649e4395-ae1b-4461-b105-ac31fb449410" playOrder="296">
+    <ncx:navLabel>
+        <ncx:text>Stacked autoencoder</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="649e4395-ae1b-4461-b105-ac31fb449410.xhtml"/>
+    <ncx:navPoint class="book" id="uuid-834a7db5-3008-4f3e-8785-f734e7757c94" playOrder="297">
+    <ncx:navLabel>
+        <ncx:text>Getting Ready</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="834a7db5-3008-4f3e-8785-f734e7757c94.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-e6c7a454-7cf4-4022-baa1-839dd27a8d47" playOrder="298">
+    <ncx:navLabel>
+        <ncx:text>How to do it...</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="e6c7a454-7cf4-4022-baa1-839dd27a8d47.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-93bebdd5-03b7-415f-8ef9-739c5ffdb4a8" playOrder="299">
+    <ncx:navLabel>
+        <ncx:text>How it works...</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="93bebdd5-03b7-415f-8ef9-739c5ffdb4a8.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-a72cb8cd-a45c-40a3-b015-650e4a94ec84" playOrder="300">
+    <ncx:navLabel>
+        <ncx:text>There's More...</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="a72cb8cd-a45c-40a3-b015-650e4a94ec84.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-5255cb13-78d6-465e-a7a4-8a8d312c1f0f" playOrder="301">
+    <ncx:navLabel>
+        <ncx:text>See Also</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="5255cb13-78d6-465e-a7a4-8a8d312c1f0f.xhtml"/>
+    
+</ncx:navPoint>
+
+</ncx:navPoint>
+
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-671df089-57af-4c8f-b498-050188364865" playOrder="302">
+    <ncx:navLabel>
+        <ncx:text>Reinforcement Learning</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="671df089-57af-4c8f-b498-050188364865.xhtml"/>
+    <ncx:navPoint class="book" id="uuid-117a6efb-fbc6-4b2b-b636-aa94a0a17d4a" playOrder="303">
+    <ncx:navLabel>
+        <ncx:text>Introduction</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="117a6efb-fbc6-4b2b-b636-aa94a0a17d4a.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-ea9de80c-d75c-4595-b19f-feb8117acbb2" playOrder="304">
+    <ncx:navLabel>
+        <ncx:text>Learning OpenAI Gym</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="ea9de80c-d75c-4595-b19f-feb8117acbb2.xhtml"/>
+    <ncx:navPoint class="book" id="uuid-abd72b3d-9159-45b3-96d0-58121a2ee7d1" playOrder="305">
+    <ncx:navLabel>
+        <ncx:text>Getting ready</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="abd72b3d-9159-45b3-96d0-58121a2ee7d1.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-eaec38d1-c5df-49e1-a04c-6b57255ca179" playOrder="306">
+    <ncx:navLabel>
+        <ncx:text>How to do it...</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="eaec38d1-c5df-49e1-a04c-6b57255ca179.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-c5fa6d05-e7e4-4c6a-8583-8cd22b45c11a" playOrder="307">
+    <ncx:navLabel>
+        <ncx:text>How it works...</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="c5fa6d05-e7e4-4c6a-8583-8cd22b45c11a.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-45aac75e-d45f-4d81-ab9e-37b828e691ff" playOrder="308">
+    <ncx:navLabel>
+        <ncx:text>There's more...</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="45aac75e-d45f-4d81-ab9e-37b828e691ff.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-f3e3c4d4-2456-4192-af2d-26980408e5cd" playOrder="309">
+    <ncx:navLabel>
+        <ncx:text>See also</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="f3e3c4d4-2456-4192-af2d-26980408e5cd.xhtml"/>
+    
+</ncx:navPoint>
+
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-e3fb0864-6f22-42f3-abae-82276c5a300e" playOrder="310">
+    <ncx:navLabel>
+        <ncx:text>Implementing neural network agent to play Pac-Man</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="e3fb0864-6f22-42f3-abae-82276c5a300e.xhtml"/>
+    <ncx:navPoint class="book" id="uuid-15348ae7-63e0-4d65-8c5b-866affcd170d" playOrder="311">
+    <ncx:navLabel>
+        <ncx:text>Getting ready</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="15348ae7-63e0-4d65-8c5b-866affcd170d.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-e0855b8f-3c01-4c1b-b2a9-a7ab6fc1a12d" playOrder="312">
+    <ncx:navLabel>
+        <ncx:text>How to do it...</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="e0855b8f-3c01-4c1b-b2a9-a7ab6fc1a12d.xhtml"/>
+    
+</ncx:navPoint>
+
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-57355b79-f405-453a-876e-48f5fda4ac81" playOrder="313">
+    <ncx:navLabel>
+        <ncx:text>Q learning to balance Cart-Pole</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="57355b79-f405-453a-876e-48f5fda4ac81.xhtml"/>
+    <ncx:navPoint class="book" id="uuid-ddd85fdb-d27b-4b01-8035-83d30c778092" playOrder="314">
+    <ncx:navLabel>
+        <ncx:text>Getting ready</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="ddd85fdb-d27b-4b01-8035-83d30c778092.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-5a3cd0be-d009-4bd0-b31a-b62b8efba6fe" playOrder="315">
+    <ncx:navLabel>
+        <ncx:text>How to do it...</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="5a3cd0be-d009-4bd0-b31a-b62b8efba6fe.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-d27d3fa9-2cc6-4dc7-ac7f-4d33e449df23" playOrder="316">
+    <ncx:navLabel>
+        <ncx:text>There's more...</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="d27d3fa9-2cc6-4dc7-ac7f-4d33e449df23.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-2c70cac4-94f3-44ac-a5bd-7f877a22dd44" playOrder="317">
+    <ncx:navLabel>
+        <ncx:text>See also</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="2c70cac4-94f3-44ac-a5bd-7f877a22dd44.xhtml"/>
+    
+</ncx:navPoint>
+
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-0d125313-2243-4265-9486-f827a44343ca" playOrder="318">
+    <ncx:navLabel>
+        <ncx:text>Game of Atari using Deep Q Networks</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="0d125313-2243-4265-9486-f827a44343ca.xhtml"/>
+    <ncx:navPoint class="book" id="uuid-9445e129-0c48-495e-9c9e-43bbe4f37464" playOrder="319">
+    <ncx:navLabel>
+        <ncx:text>Getting ready</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="9445e129-0c48-495e-9c9e-43bbe4f37464.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-ab8ff1e4-14d0-4d93-8e07-3b519e812443" playOrder="320">
+    <ncx:navLabel>
+        <ncx:text>How to do it...</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="ab8ff1e4-14d0-4d93-8e07-3b519e812443.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-ba0b9134-f338-4fed-a28c-66ac830b57ea" playOrder="321">
+    <ncx:navLabel>
+        <ncx:text>There's more...</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="ba0b9134-f338-4fed-a28c-66ac830b57ea.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-6e56a62e-5096-4e49-b2ef-d0f425726c39" playOrder="322">
+    <ncx:navLabel>
+        <ncx:text>See also</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="6e56a62e-5096-4e49-b2ef-d0f425726c39.xhtml"/>
+    
+</ncx:navPoint>
+
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-8c71a76d-a6db-46dd-b6fa-481b9d4fea9d" playOrder="323">
+    <ncx:navLabel>
+        <ncx:text>Policy gradients to play the game of Pong</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="8c71a76d-a6db-46dd-b6fa-481b9d4fea9d.xhtml"/>
+    <ncx:navPoint class="book" id="uuid-6b5a1644-3835-478b-98af-25313d88000d" playOrder="324">
+    <ncx:navLabel>
+        <ncx:text>Getting ready</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="6b5a1644-3835-478b-98af-25313d88000d.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-f718254f-e691-4ebe-920c-9192555e11b9" playOrder="325">
+    <ncx:navLabel>
+        <ncx:text>How to do it...</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="f718254f-e691-4ebe-920c-9192555e11b9.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-f42bd820-0d0a-46e5-9126-9eb7a812e340" playOrder="326">
+    <ncx:navLabel>
+        <ncx:text>How it works...</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="f42bd820-0d0a-46e5-9126-9eb7a812e340.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-e25eebb6-90a8-4752-8ee8-6f5125c442e7" playOrder="327">
+    <ncx:navLabel>
+        <ncx:text>There's more...</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="e25eebb6-90a8-4752-8ee8-6f5125c442e7.xhtml"/>
+    <ncx:navPoint class="book" id="uuid-03d03659-f916-425b-b3c1-b8971a57a69a" playOrder="328">
+    <ncx:navLabel>
+        <ncx:text>AlphaGo Zero</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="03d03659-f916-425b-b3c1-b8971a57a69a.xhtml"/>
+    
+</ncx:navPoint>
+
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-fd4e26e2-c16c-49ed-9af5-9d3fc5ea44a6" playOrder="329">
+    <ncx:navLabel>
+        <ncx:text>See also</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="fd4e26e2-c16c-49ed-9af5-9d3fc5ea44a6.xhtml"/>
+    
+</ncx:navPoint>
+
+</ncx:navPoint>
+
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-284c0bfc-60b0-40b0-b87f-44e4bdc61373" playOrder="330">
+    <ncx:navLabel>
+        <ncx:text>Mobile Computation</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="284c0bfc-60b0-40b0-b87f-44e4bdc61373.xhtml"/>
+    <ncx:navPoint class="book" id="uuid-c769e542-f9e4-4e93-83f5-7c810ba91ca7" playOrder="331">
+    <ncx:navLabel>
+        <ncx:text>Introduction</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="c769e542-f9e4-4e93-83f5-7c810ba91ca7.xhtml"/>
+    <ncx:navPoint class="book" id="uuid-9cc9561b-eec9-4ce7-a028-6a248cdda5c3" playOrder="332">
+    <ncx:navLabel>
+        <ncx:text>TensorFlow, mobile, and the cloud</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="9cc9561b-eec9-4ce7-a028-6a248cdda5c3.xhtml"/>
+    
+</ncx:navPoint>
+
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-51ae17dd-59a1-401d-b97f-e70984456777" playOrder="333">
+    <ncx:navLabel>
+        <ncx:text>Installing TensorFlow mobile for macOS and Android</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="51ae17dd-59a1-401d-b97f-e70984456777.xhtml"/>
+    <ncx:navPoint class="book" id="uuid-fd3cbafb-c871-4ebe-8dcd-ffa02cfca574" playOrder="334">
+    <ncx:navLabel>
+        <ncx:text>Getting ready</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="fd3cbafb-c871-4ebe-8dcd-ffa02cfca574.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-fddf9ac8-9bd2-49d8-83bd-5eb3de534679" playOrder="335">
+    <ncx:navLabel>
+        <ncx:text>How to do it...</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="fddf9ac8-9bd2-49d8-83bd-5eb3de534679.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-5cc6a3bd-3a52-406a-bf98-6c86737e6469" playOrder="336">
+    <ncx:navLabel>
+        <ncx:text>How it works...</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="5cc6a3bd-3a52-406a-bf98-6c86737e6469.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-8d45116e-a907-4fb2-84e4-a2955783ce1f" playOrder="337">
+    <ncx:navLabel>
+        <ncx:text>There's more...</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="8d45116e-a907-4fb2-84e4-a2955783ce1f.xhtml"/>
+    
+</ncx:navPoint>
+
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-7944567a-bb77-44a1-bec8-3b086cac98f7" playOrder="338">
+    <ncx:navLabel>
+        <ncx:text>Playing with TensorFlow and Android examples</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="7944567a-bb77-44a1-bec8-3b086cac98f7.xhtml"/>
+    <ncx:navPoint class="book" id="uuid-ef8ea979-1842-4ff1-9ef2-6419655bb31c" playOrder="339">
+    <ncx:navLabel>
+        <ncx:text>Getting ready</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="ef8ea979-1842-4ff1-9ef2-6419655bb31c.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-a5b98059-08cb-4fc3-8518-44ad8181a6e9" playOrder="340">
+    <ncx:navLabel>
+        <ncx:text>How to do it...</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="a5b98059-08cb-4fc3-8518-44ad8181a6e9.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-c408c647-1658-4298-8163-df085ef37c34" playOrder="341">
+    <ncx:navLabel>
+        <ncx:text>How it works...</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="c408c647-1658-4298-8163-df085ef37c34.xhtml"/>
+    
+</ncx:navPoint>
+
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-4d2eb282-0072-43c8-a447-9e97c1d76ec3" playOrder="342">
+    <ncx:navLabel>
+        <ncx:text>Installing TensorFlow mobile for macOS and iPhone</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="4d2eb282-0072-43c8-a447-9e97c1d76ec3.xhtml"/>
+    <ncx:navPoint class="book" id="uuid-96e78896-c687-4e05-ae23-336c3db826cf" playOrder="343">
+    <ncx:navLabel>
+        <ncx:text>Getting ready</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="96e78896-c687-4e05-ae23-336c3db826cf.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-53960b76-4e2d-41df-9636-6a65b1415154" playOrder="344">
+    <ncx:navLabel>
+        <ncx:text>How to do it...</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="53960b76-4e2d-41df-9636-6a65b1415154.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-97215fb9-c8e2-4d4f-87c2-e9681fb1eb62" playOrder="345">
+    <ncx:navLabel>
+        <ncx:text>How it works...</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="97215fb9-c8e2-4d4f-87c2-e9681fb1eb62.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-d66c99ee-3641-4f5c-bf04-63816b86b83a" playOrder="346">
+    <ncx:navLabel>
+        <ncx:text>There's more...</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="d66c99ee-3641-4f5c-bf04-63816b86b83a.xhtml"/>
+    
+</ncx:navPoint>
+
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-06f08106-a9e2-4259-824d-ec78e1d587a0" playOrder="347">
+    <ncx:navLabel>
+        <ncx:text>Optimizing a TensorFlow graph for mobile devices</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="06f08106-a9e2-4259-824d-ec78e1d587a0.xhtml"/>
+    <ncx:navPoint class="book" id="uuid-da6e262f-bb79-4960-9624-3ae77f5172fa" playOrder="348">
+    <ncx:navLabel>
+        <ncx:text>Getting ready</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="da6e262f-bb79-4960-9624-3ae77f5172fa.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-2d2daee2-40ff-470e-90cb-4bb986133011" playOrder="349">
+    <ncx:navLabel>
+        <ncx:text>How to do it...</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="2d2daee2-40ff-470e-90cb-4bb986133011.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-3479d76c-3915-4f1b-bd2c-29ccaf766457" playOrder="350">
+    <ncx:navLabel>
+        <ncx:text>How it works...</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="3479d76c-3915-4f1b-bd2c-29ccaf766457.xhtml"/>
+    
+</ncx:navPoint>
+
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-f2e5d2ce-9fd2-4a4d-98d2-2a20c0f9cda8" playOrder="351">
+    <ncx:navLabel>
+        <ncx:text>Profiling a TensorFlow graph for mobile devices</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="f2e5d2ce-9fd2-4a4d-98d2-2a20c0f9cda8.xhtml"/>
+    <ncx:navPoint class="book" id="uuid-c67e842f-b3bc-4d9d-a9c5-80a38cf47bea" playOrder="352">
+    <ncx:navLabel>
+        <ncx:text>Getting ready</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="c67e842f-b3bc-4d9d-a9c5-80a38cf47bea.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-3163dc8d-4f1f-490d-839b-2a49fc3e236e" playOrder="353">
+    <ncx:navLabel>
+        <ncx:text>How to do it...</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="3163dc8d-4f1f-490d-839b-2a49fc3e236e.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-39b83904-6aff-4def-97e8-4bef1c402b2b" playOrder="354">
+    <ncx:navLabel>
+        <ncx:text>How it works...</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="39b83904-6aff-4def-97e8-4bef1c402b2b.xhtml"/>
+    
+</ncx:navPoint>
+
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-43586d4f-8d8a-4b17-822d-4fd50dd963ea" playOrder="355">
+    <ncx:navLabel>
+        <ncx:text>Transforming a TensorFlow graph for mobile devices</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="43586d4f-8d8a-4b17-822d-4fd50dd963ea.xhtml"/>
+    <ncx:navPoint class="book" id="uuid-ebe32b61-56fd-4cb5-bba2-92772c7769de" playOrder="356">
+    <ncx:navLabel>
+        <ncx:text>Getting ready</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="ebe32b61-56fd-4cb5-bba2-92772c7769de.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-b55e5377-0657-416c-b922-6d4b4b773ddb" playOrder="357">
+    <ncx:navLabel>
+        <ncx:text>How to do it...</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="b55e5377-0657-416c-b922-6d4b4b773ddb.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-238a8dbe-a801-446e-9492-250bf389ec59" playOrder="358">
+    <ncx:navLabel>
+        <ncx:text>How it works...</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="238a8dbe-a801-446e-9492-250bf389ec59.xhtml"/>
+    
+</ncx:navPoint>
+
+</ncx:navPoint>
+
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-60f066cc-ed8c-41db-851e-06933f71a4a8" playOrder="359">
+    <ncx:navLabel>
+        <ncx:text>Generative Models and CapsNet</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="60f066cc-ed8c-41db-851e-06933f71a4a8.xhtml"/>
+    <ncx:navPoint class="book" id="uuid-e1ce1bcd-1ff8-4fcc-a9b3-c91125d2a883" playOrder="360">
+    <ncx:navLabel>
+        <ncx:text>Introduction</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="e1ce1bcd-1ff8-4fcc-a9b3-c91125d2a883.xhtml"/>
+    <ncx:navPoint class="book" id="uuid-8df45a5a-92dd-466c-8467-9b9d2c5caee6" playOrder="361">
+    <ncx:navLabel>
+        <ncx:text>So what is a GAN?</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="8df45a5a-92dd-466c-8467-9b9d2c5caee6.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-42d3d6fb-2f53-4e00-8e97-3e002e8a16f1" playOrder="362">
+    <ncx:navLabel>
+        <ncx:text>Some cool GAN applications</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="42d3d6fb-2f53-4e00-8e97-3e002e8a16f1.xhtml"/>
+    
+</ncx:navPoint>
+
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-987895f5-b7d0-405c-a04d-d6d6d364e8b8" playOrder="363">
+    <ncx:navLabel>
+        <ncx:text>Learning to forge MNIST images with simple GANs</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="987895f5-b7d0-405c-a04d-d6d6d364e8b8.xhtml"/>
+    <ncx:navPoint class="book" id="uuid-e2f57d69-c36e-4019-a46b-191fe51e3f10" playOrder="364">
+    <ncx:navLabel>
+        <ncx:text>Getting ready</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="e2f57d69-c36e-4019-a46b-191fe51e3f10.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-0c979c6e-d247-45d8-aeec-0b6ac73378ae" playOrder="365">
+    <ncx:navLabel>
+        <ncx:text>How to do it...</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="0c979c6e-d247-45d8-aeec-0b6ac73378ae.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-8f13b276-d840-4fc4-a5f7-35e73e3927dc" playOrder="366">
+    <ncx:navLabel>
+        <ncx:text>How it works...</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="8f13b276-d840-4fc4-a5f7-35e73e3927dc.xhtml"/>
+    
+</ncx:navPoint>
+
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-8006a594-76ed-4036-8032-65b32f9bcdf2" playOrder="367">
+    <ncx:navLabel>
+        <ncx:text>Learning to forge MNIST images with DCGANs</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="8006a594-76ed-4036-8032-65b32f9bcdf2.xhtml"/>
+    <ncx:navPoint class="book" id="uuid-642cff00-b727-45ef-a80a-86d80c2ca620" playOrder="368">
+    <ncx:navLabel>
+        <ncx:text>Getting ready</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="642cff00-b727-45ef-a80a-86d80c2ca620.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-b27bb77b-3439-476d-a61c-f48294395748" playOrder="369">
+    <ncx:navLabel>
+        <ncx:text>How to do it...</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="b27bb77b-3439-476d-a61c-f48294395748.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-1f90dbc8-2833-4b6e-aa6e-e167b2831d91" playOrder="370">
+    <ncx:navLabel>
+        <ncx:text>How it works...</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="1f90dbc8-2833-4b6e-aa6e-e167b2831d91.xhtml"/>
+    
+</ncx:navPoint>
+
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-567435bb-b5f8-4e9b-8e6c-f9641625722d" playOrder="371">
+    <ncx:navLabel>
+        <ncx:text>Learning to forge Celebrity Faces and other datasets with DCGAN</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="567435bb-b5f8-4e9b-8e6c-f9641625722d.xhtml"/>
+    <ncx:navPoint class="book" id="uuid-d66d351c-12cb-4834-afb9-152299a6a478" playOrder="372">
+    <ncx:navLabel>
+        <ncx:text>Getting ready</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="d66d351c-12cb-4834-afb9-152299a6a478.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-6aba694a-13c8-41ac-b2b1-11add7dab159" playOrder="373">
+    <ncx:navLabel>
+        <ncx:text>How to do it...</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="6aba694a-13c8-41ac-b2b1-11add7dab159.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-7fbafb3a-0e0f-448f-adc6-c49b9649346b" playOrder="374">
+    <ncx:navLabel>
+        <ncx:text>How it works...</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="7fbafb3a-0e0f-448f-adc6-c49b9649346b.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-a65e83a2-c9fb-414b-9116-26d3d3f3bbcf" playOrder="375">
+    <ncx:navLabel>
+        <ncx:text>There's more...</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="a65e83a2-c9fb-414b-9116-26d3d3f3bbcf.xhtml"/>
+    
+</ncx:navPoint>
+
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-030fa062-c487-4f4c-b8d8-808f4e74879e" playOrder="376">
+    <ncx:navLabel>
+        <ncx:text>Implementing Variational Autoencoders</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="030fa062-c487-4f4c-b8d8-808f4e74879e.xhtml"/>
+    <ncx:navPoint class="book" id="uuid-9c8da5e9-abf4-4da6-8bc3-86bd62365d0a" playOrder="377">
+    <ncx:navLabel>
+        <ncx:text>Getting ready...</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="9c8da5e9-abf4-4da6-8bc3-86bd62365d0a.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-308407dc-e998-4a26-a96b-48ac76f1a72b" playOrder="378">
+    <ncx:navLabel>
+        <ncx:text>How to do it...</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="308407dc-e998-4a26-a96b-48ac76f1a72b.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-371ff522-c768-413a-a194-21a13d82f143" playOrder="379">
+    <ncx:navLabel>
+        <ncx:text>How it works...</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="371ff522-c768-413a-a194-21a13d82f143.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-c273ab33-1941-4869-8db7-cf295acf2104" playOrder="380">
+    <ncx:navLabel>
+        <ncx:text>There's More...</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="c273ab33-1941-4869-8db7-cf295acf2104.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-5299b2ee-3e7a-41d1-bed1-1a87b3b3a9c6" playOrder="381">
+    <ncx:navLabel>
+        <ncx:text>See also...</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="5299b2ee-3e7a-41d1-bed1-1a87b3b3a9c6.xhtml"/>
+    
+</ncx:navPoint>
+
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-fb8e57ce-1b09-4daa-9b5a-2a9166ca41bf" playOrder="382">
+    <ncx:navLabel>
+        <ncx:text>Learning to beat the previous MNIST state-of-the-art results with Capsule Networks</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="fb8e57ce-1b09-4daa-9b5a-2a9166ca41bf.xhtml"/>
+    <ncx:navPoint class="book" id="uuid-d8db3327-90f3-465a-a401-3ad733fc4018" playOrder="383">
+    <ncx:navLabel>
+        <ncx:text>Getting ready</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="d8db3327-90f3-465a-a401-3ad733fc4018.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-57be412d-c4de-4df0-a0fc-02bfc61514e6" playOrder="384">
+    <ncx:navLabel>
+        <ncx:text>How to do it...</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="57be412d-c4de-4df0-a0fc-02bfc61514e6.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-710252b0-6ee0-44ef-b5e7-ffdee5cadcbe" playOrder="385">
+    <ncx:navLabel>
+        <ncx:text>How it works...</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="710252b0-6ee0-44ef-b5e7-ffdee5cadcbe.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-7ac25cdc-76a0-49ce-90a6-1768b250f104" playOrder="386">
+    <ncx:navLabel>
+        <ncx:text>There's more...</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="7ac25cdc-76a0-49ce-90a6-1768b250f104.xhtml"/>
+    
+</ncx:navPoint>
+
+</ncx:navPoint>
+
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-fdb2546e-ff27-4e0d-a3d0-85b9d49288eb" playOrder="387">
+    <ncx:navLabel>
+        <ncx:text>Distributed TensorFlow and Cloud Deep Learning</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="fdb2546e-ff27-4e0d-a3d0-85b9d49288eb.xhtml"/>
+    <ncx:navPoint class="book" id="uuid-0e8fce7a-f11d-4a87-8067-561b41de4d93" playOrder="388">
+    <ncx:navLabel>
+        <ncx:text>Introduction</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="0e8fce7a-f11d-4a87-8067-561b41de4d93.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-d4e70013-f81f-4e07-a658-0714d4c7fee8" playOrder="389">
+    <ncx:navLabel>
+        <ncx:text>Working with TensorFlow and GPUs</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="d4e70013-f81f-4e07-a658-0714d4c7fee8.xhtml"/>
+    <ncx:navPoint class="book" id="uuid-cdf987ed-9954-426c-83d6-dd8c6ab9d5b2" playOrder="390">
+    <ncx:navLabel>
+        <ncx:text>Getting ready</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="cdf987ed-9954-426c-83d6-dd8c6ab9d5b2.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-233784f6-03b3-43bd-92dd-4eac9d0b07ba" playOrder="391">
+    <ncx:navLabel>
+        <ncx:text>How to do it...</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="233784f6-03b3-43bd-92dd-4eac9d0b07ba.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-21fd3ab1-8004-454c-bb25-3230dd956a3a" playOrder="392">
+    <ncx:navLabel>
+        <ncx:text>How it works...</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="21fd3ab1-8004-454c-bb25-3230dd956a3a.xhtml"/>
+    
+</ncx:navPoint>
+
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-df46364c-82c9-47a3-a677-f859db03a881" playOrder="393">
+    <ncx:navLabel>
+        <ncx:text>Playing with Distributed TensorFlow: multiple GPUs and one CPU</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="df46364c-82c9-47a3-a677-f859db03a881.xhtml"/>
+    <ncx:navPoint class="book" id="uuid-ba4d276b-d335-4588-8c73-946f12e89e00" playOrder="394">
+    <ncx:navLabel>
+        <ncx:text>Getting ready</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="ba4d276b-d335-4588-8c73-946f12e89e00.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-e9ca7491-8cad-461f-9867-6aba3a4d889c" playOrder="395">
+    <ncx:navLabel>
+        <ncx:text>How to do it...</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="e9ca7491-8cad-461f-9867-6aba3a4d889c.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-e9968b86-4a18-4f6f-9f9d-18a4da0e36a8" playOrder="396">
+    <ncx:navLabel>
+        <ncx:text>How it works...</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="e9968b86-4a18-4f6f-9f9d-18a4da0e36a8.xhtml"/>
+    
+</ncx:navPoint>
+
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-e2fa4ee6-6cd8-4984-8431-95981de7982a" playOrder="397">
+    <ncx:navLabel>
+        <ncx:text>Playing with Distributed TensorFlow: multiple servers</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="e2fa4ee6-6cd8-4984-8431-95981de7982a.xhtml"/>
+    <ncx:navPoint class="book" id="uuid-3019d8f5-28ab-4587-a207-1004dc819b22" playOrder="398">
+    <ncx:navLabel>
+        <ncx:text>Getting ready</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="3019d8f5-28ab-4587-a207-1004dc819b22.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-69d78ec8-7678-480f-be4a-b60e7dcaee4f" playOrder="399">
+    <ncx:navLabel>
+        <ncx:text>How to do it...</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="69d78ec8-7678-480f-be4a-b60e7dcaee4f.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-2703f1ac-162b-49be-bc3d-3c6243475fed" playOrder="400">
+    <ncx:navLabel>
+        <ncx:text>How it works...</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="2703f1ac-162b-49be-bc3d-3c6243475fed.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-89ec6419-6393-476a-a50c-6dccb9843061" playOrder="401">
+    <ncx:navLabel>
+        <ncx:text>There is more...</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="89ec6419-6393-476a-a50c-6dccb9843061.xhtml"/>
+    
+</ncx:navPoint>
+
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-e522d89b-53eb-4868-a7e6-1fef2951707b" playOrder="402">
+    <ncx:navLabel>
+        <ncx:text>Training a Distributed TensorFlow MNIST classifier</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="e522d89b-53eb-4868-a7e6-1fef2951707b.xhtml"/>
+    <ncx:navPoint class="book" id="uuid-a82a3daa-6c22-45b8-8575-e1525e05659e" playOrder="403">
+    <ncx:navLabel>
+        <ncx:text>Getting ready</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="a82a3daa-6c22-45b8-8575-e1525e05659e.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-a44e7c7e-fe2d-45fd-abdd-409397a41b8e" playOrder="404">
+    <ncx:navLabel>
+        <ncx:text>How to do it...</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="a44e7c7e-fe2d-45fd-abdd-409397a41b8e.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-6a556d32-78ad-4dca-a500-873f2bbac27f" playOrder="405">
+    <ncx:navLabel>
+        <ncx:text>How it works...</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="6a556d32-78ad-4dca-a500-873f2bbac27f.xhtml"/>
+    
+</ncx:navPoint>
+
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-0fcd6400-feba-4c0f-9008-6630662891ef" playOrder="406">
+    <ncx:navLabel>
+        <ncx:text>Working with TensorFlow Serving and Docker</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="0fcd6400-feba-4c0f-9008-6630662891ef.xhtml"/>
+    <ncx:navPoint class="book" id="uuid-b796d390-68bd-42a9-b9f2-b7d2a06fa877" playOrder="407">
+    <ncx:navLabel>
+        <ncx:text>Getting ready</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="b796d390-68bd-42a9-b9f2-b7d2a06fa877.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-d503edd9-d63a-48b2-aff2-f54a84910216" playOrder="408">
+    <ncx:navLabel>
+        <ncx:text>How to do it...</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="d503edd9-d63a-48b2-aff2-f54a84910216.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-905c4ab8-f43f-470a-a039-d92b9892016a" playOrder="409">
+    <ncx:navLabel>
+        <ncx:text>How it works...</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="905c4ab8-f43f-470a-a039-d92b9892016a.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-569b9ee4-3e94-4286-bc4f-41d285ab01fa" playOrder="410">
+    <ncx:navLabel>
+        <ncx:text>There is more...</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="569b9ee4-3e94-4286-bc4f-41d285ab01fa.xhtml"/>
+    
+</ncx:navPoint>
+
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-9f4776bb-d83f-42d6-8b26-9a6be6f28dd2" playOrder="411">
+    <ncx:navLabel>
+        <ncx:text>Running Distributed TensorFlow on Google Cloud (GCP) with Compute Engine</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="9f4776bb-d83f-42d6-8b26-9a6be6f28dd2.xhtml"/>
+    <ncx:navPoint class="book" id="uuid-672f9d4c-44cc-4a17-be9c-1c62e5729e97" playOrder="412">
+    <ncx:navLabel>
+        <ncx:text>Getting ready</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="672f9d4c-44cc-4a17-be9c-1c62e5729e97.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-e29dfd38-4c00-4644-a44e-8b08647218d6" playOrder="413">
+    <ncx:navLabel>
+        <ncx:text>How to do it...</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="e29dfd38-4c00-4644-a44e-8b08647218d6.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-ad5e57df-11ff-47bb-89e2-92dd499d874c" playOrder="414">
+    <ncx:navLabel>
+        <ncx:text>How it works...</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="ad5e57df-11ff-47bb-89e2-92dd499d874c.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-e490d1b0-4745-45e6-9eea-5ff1629aefac" playOrder="415">
+    <ncx:navLabel>
+        <ncx:text>There is more...</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="e490d1b0-4745-45e6-9eea-5ff1629aefac.xhtml"/>
+    
+</ncx:navPoint>
+
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-5d76e48c-9efe-47e2-ab02-e1502b79fe63" playOrder="416">
+    <ncx:navLabel>
+        <ncx:text>Running Distributed TensorFlow on Google CloudML</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="5d76e48c-9efe-47e2-ab02-e1502b79fe63.xhtml"/>
+    <ncx:navPoint class="book" id="uuid-1987ccef-0e4d-49eb-bfe9-2312d044694e" playOrder="417">
+    <ncx:navLabel>
+        <ncx:text>Getting ready</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="1987ccef-0e4d-49eb-bfe9-2312d044694e.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-3d28c8f5-abbb-49df-bca2-9ab23ae3201c" playOrder="418">
+    <ncx:navLabel>
+        <ncx:text>How to do it...</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="3d28c8f5-abbb-49df-bca2-9ab23ae3201c.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-ca9de92d-4c05-4955-a255-99cf3b22e1c2" playOrder="419">
+    <ncx:navLabel>
+        <ncx:text>How it works...</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="ca9de92d-4c05-4955-a255-99cf3b22e1c2.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-27061168-7b5c-46aa-84a5-3dd2634276c6" playOrder="420">
+    <ncx:navLabel>
+        <ncx:text>There is more...</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="27061168-7b5c-46aa-84a5-3dd2634276c6.xhtml"/>
+    
+</ncx:navPoint>
+
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-7e3b2a8e-a86a-47ed-8b78-a7ec23028efd" playOrder="421">
+    <ncx:navLabel>
+        <ncx:text>Running Distributed TensorFlow on Microsoft Azure</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="7e3b2a8e-a86a-47ed-8b78-a7ec23028efd.xhtml"/>
+    <ncx:navPoint class="book" id="uuid-39741baa-5da3-45fb-a54c-9de78d10e991" playOrder="422">
+    <ncx:navLabel>
+        <ncx:text>Getting ready</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="39741baa-5da3-45fb-a54c-9de78d10e991.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-91e8f4bd-96fd-4671-aa45-273c49380785" playOrder="423">
+    <ncx:navLabel>
+        <ncx:text>How to do it...</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="91e8f4bd-96fd-4671-aa45-273c49380785.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-11f34963-a0d5-464a-8290-3e3ae218dae3" playOrder="424">
+    <ncx:navLabel>
+        <ncx:text>How it works...</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="11f34963-a0d5-464a-8290-3e3ae218dae3.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-69fecdfb-73c2-4c12-919e-78f83c9f5f71" playOrder="425">
+    <ncx:navLabel>
+        <ncx:text>There's more...</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="69fecdfb-73c2-4c12-919e-78f83c9f5f71.xhtml"/>
+    
+</ncx:navPoint>
+
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-bb14bd59-00ff-4fff-9939-cc671c67cd5b" playOrder="426">
+    <ncx:navLabel>
+        <ncx:text>Running Distributed TensorFlow on Amazon AWS</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="bb14bd59-00ff-4fff-9939-cc671c67cd5b.xhtml"/>
+    <ncx:navPoint class="book" id="uuid-bf4d54ef-5428-472d-a6cf-6fe13f06cac8" playOrder="427">
+    <ncx:navLabel>
+        <ncx:text>Getting ready</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="bf4d54ef-5428-472d-a6cf-6fe13f06cac8.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-5abe5eed-74cf-4129-822b-52d24d5df8f6" playOrder="428">
+    <ncx:navLabel>
+        <ncx:text>How to do it...</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="5abe5eed-74cf-4129-822b-52d24d5df8f6.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-6e37e85a-5e9b-4619-88e1-1f987df78e01" playOrder="429">
+    <ncx:navLabel>
+        <ncx:text>How it works...</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="6e37e85a-5e9b-4619-88e1-1f987df78e01.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-2d035f1b-9d43-4a72-a015-1a6cd1243a68" playOrder="430">
+    <ncx:navLabel>
+        <ncx:text>There is more...</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="2d035f1b-9d43-4a72-a015-1a6cd1243a68.xhtml"/>
+    
+</ncx:navPoint>
+
+</ncx:navPoint>
+
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-9e1bb4b3-e4c4-4092-8527-771754a76bd4" playOrder="431">
+    <ncx:navLabel>
+        <ncx:text>Learning to Learn with AutoML (Meta-Learning)</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="9e1bb4b3-e4c4-4092-8527-771754a76bd4.xhtml"/>
+    <ncx:navPoint class="book" id="uuid-d2413571-c431-45f4-84f7-3c3b3f87eed7" playOrder="432">
+    <ncx:navLabel>
+        <ncx:text>Meta-learning with recurrent networks and with reinforcement learning</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="d2413571-c431-45f4-84f7-3c3b3f87eed7.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-87fa1784-4dd1-4145-ad77-4f5562f761b6" playOrder="433">
+    <ncx:navLabel>
+        <ncx:text>Meta-learning blocks</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="87fa1784-4dd1-4145-ad77-4f5562f761b6.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-5e5af23b-5b6a-4b58-9eb9-00adfd66c872" playOrder="434">
+    <ncx:navLabel>
+        <ncx:text>Meta-learning novel tasks</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="5e5af23b-5b6a-4b58-9eb9-00adfd66c872.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-b109c39d-4c68-45e1-90de-c9c307498783" playOrder="435">
+    <ncx:navLabel>
+        <ncx:text>Siamese Network</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="b109c39d-4c68-45e1-90de-c9c307498783.xhtml"/>
+    <ncx:navPoint class="book" id="uuid-bfef2e67-8685-4d0a-b152-77822dcb9338" playOrder="436">
+    <ncx:navLabel>
+        <ncx:text>Applications of Siamese Networks</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="bfef2e67-8685-4d0a-b152-77822dcb9338.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-7026971e-dc7a-4ec2-8a3f-dce04b6b68dc" playOrder="437">
+    <ncx:navLabel>
+        <ncx:text>A working example - MNIST</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="7026971e-dc7a-4ec2-8a3f-dce04b6b68dc.xhtml"/>
+    
+</ncx:navPoint>
+
+</ncx:navPoint>
+
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-8caf712d-133b-41a6-976f-b222ff15baa1" playOrder="438">
+    <ncx:navLabel>
+        <ncx:text>TensorFlow Processing Units</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="8caf712d-133b-41a6-976f-b222ff15baa1.xhtml"/>
+    <ncx:navPoint class="book" id="uuid-42e30ecf-8cb7-499a-90f1-88d9163a56fa" playOrder="439">
+    <ncx:navLabel>
+        <ncx:text>Components of TPUs</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="42e30ecf-8cb7-499a-90f1-88d9163a56fa.xhtml"/>
+    <ncx:navPoint class="book" id="uuid-666b8fe1-c2a5-4cc2-916d-503219a56af5" playOrder="440">
+    <ncx:navLabel>
+        <ncx:text>Advantages of TPUs</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="666b8fe1-c2a5-4cc2-916d-503219a56af5.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-5e9e8fa0-69a0-4126-ad49-816e2a1d7f84" playOrder="441">
+    <ncx:navLabel>
+        <ncx:text>Accessing TPUs</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="5e9e8fa0-69a0-4126-ad49-816e2a1d7f84.xhtml"/>
+    
+</ncx:navPoint>
+<ncx:navPoint class="book" id="uuid-a2aaa828-9720-470a-afb5-6c14907053a2" playOrder="442">
+    <ncx:navLabel>
+        <ncx:text>Resources on TPUs</ncx:text>
+    </ncx:navLabel>
+    <ncx:content src="a2aaa828-9720-470a-afb5-6c14907053a2.xhtml"/>
+    
+</ncx:navPoint>
+
+</ncx:navPoint>
+
+</ncx:navPoint>
+
+    </ncx:navMap>
+</ncx:ncx>

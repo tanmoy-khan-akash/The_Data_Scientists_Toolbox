@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+    <head>
+        <title>Getting ready</title>
+        <link rel="stylesheet" href="css/style.css" type="text/css"/>
+        <meta charset="utf-8"/>
+    
+<!-- kobo-style -->
+<script xmlns="http://www.w3.org/1999/xhtml" type="text/javascript" src="js/kobo.js"/>
+<style xmlns="http://www.w3.org/1999/xhtml" type="text/css" id="koboSpanStyle">.koboSpan { -webkit-text-combine: inherit; }</style>
+
+</head>
+
+    <body>
+        <section>
+
+                            <header>
+                    <h1 class="header-title"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.1.1">Getting ready</span></h1>
+                </header>
+            
+            <article>
+                
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.2.1">In order to implement SOM, let's first understand how it works. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.2.2">As the first step, the weights of the network are initialized to either some random value or by taking random samples from the input. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.2.3">Each neuron occupying a space in the lattice will be assigned specific locations. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.2.4">Now as an input is presented, the neuron with the least distance from the input is declared Winner (WTU). </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.2.5">This is done by measuring the distance between weight vector (</span><em><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.3.1">W</span></em><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.4.1">) and input vectors (</span><em><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.5.1">X</span></em><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.6.1">) of all neurons:</span></p>
+<div style="padding-left: 150px" class="mce-root CDPAlignLeft CDPAlign"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.7.1"><img src="assets/9130d069-1c37-41c4-888d-46c56abe7c4e.png"/></span></div>
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.8.1">Here, </span><em><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.9.1">d</span><sub><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.10.1">j</span></sub></em><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.11.1"> is the distance of weights of neuron </span><em><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.12.1">j</span></em><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.13.1"> from input </span><em><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.14.1">X</span></em><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.15.1">. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.15.2">The neuron with minimum </span><em><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.16.1">d</span></em><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.17.1"> value is the winner.</span></p>
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.18.1">Next, the weights of the winning neuron and its neighboring neurons are adjusted in a manner to ensure that the same neuron is the winner if the same input is presented next time. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.18.2">To decide which neighboring neurons need to be modified, the network uses a neighborhood function </span><em><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.19.1">Λ(r)</span></em><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.20.1">; normally, the Gaussian Mexican hat function is chosen as a neighborhood function. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.20.2">The neighborhood function is mathematically represented as follows:</span></p>
+<div style="padding-left: 180px" class="mce-root CDPAlignLeft CDPAlign"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.21.1"><img height="47" width="124" src="assets/40abb69c-5ccf-490d-b8d8-c2dd8fb47b37.png"/></span></div>
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.22.1">Here, </span><em><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.23.1">σ</span></em><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.24.1"> is a time-dependent radius of influence of a neuron and </span><em><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.25.1">d</span></em><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.26.1"> is its distance from the winning neuron:</span></p>
+<div class="CDPAlignCenter CDPAlign"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.27.1"><img height="235" width="293" src="assets/b6eafbc4-5fc7-40b5-8292-3ae26ea8ca65.png"/></span></div>
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.28.1">Another important property of the neighborhood function is that its radius reduces with time. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.28.2">As a result, in the beginning, many neighboring neurons' weights are modified, but as the network learns, eventually a few neurons' weights (at times, only one or none) are modified in the learning process. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.28.3">The change in weight is given by the following equation:</span></p>
+<div class="CDPAlignCenter CDPAlign"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.29.1">dW </span><em><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.30.1">= η</span></em><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.31.1">Λ</span><em><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.32.1">(X-W)</span></em></div>
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.33.1">We continue the process for all inputs and repeat it for a given number of iterations. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.33.2">As the iterations progress, we reduce the learning rate and the radius by a factor dependent on the iteration number.</span></p>
+
+
+            </article>
+
+            
+        </section>
+    </body>
+
+</html>

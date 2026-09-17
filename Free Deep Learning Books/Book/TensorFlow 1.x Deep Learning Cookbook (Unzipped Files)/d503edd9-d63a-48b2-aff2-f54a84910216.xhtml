@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+    <head>
+        <title>How to do it...</title>
+        <link rel="stylesheet" href="css/style.css" type="text/css"/>
+        <meta charset="utf-8"/>
+    
+<!-- kobo-style -->
+<script xmlns="http://www.w3.org/1999/xhtml" type="text/javascript" src="js/kobo.js"/>
+<style xmlns="http://www.w3.org/1999/xhtml" type="text/css" id="koboSpanStyle">.koboSpan { -webkit-text-combine: inherit; }</style>
+
+</head>
+
+    <body>
+        <section>
+
+                            <header>
+                    <h1 class="header-title"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.1.1">How to do it...</span></h1>
+                </header>
+            
+            <article>
+                
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.2.1">Here is how we proceed with the recipe:</span></p>
+<ol>
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.3.1">Download Dockerfile.devel from </span><a href="https://github.com/tensorflow/serving/blob/master/tensorflow_serving/tools/docker/Dockerfile.devel"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.4.1">https://github.com/tensorflow/serving/blob/master/tensorflow_serving/tools/docker/Dockerfile.devel</span></a></li>
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.5.1">Build a container by running</span></li>
+</ol>
+<pre><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.6.1">docker build --pull -t $USER/tensorflow-serving-devel -f Dockerfile.devel</span></pre>
+<ol start="3">
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.7.1">Run the container</span></li>
+</ol>
+<pre><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.8.1">docker run -it $USER/tensorflow-serving-devel</span></pre>
+<ol start="4">
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.9.1">Clone the TensorFlow Serving, configure and test the server</span></li>
+</ol>
+<pre><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.10.1">git clone --recurse-submodules https://github.com/tensorflow/serving</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.11.1">cd serving/tensorflow</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.12.1">./configure</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.13.1">cd ..</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.14.1">bazel test tensorflow_serving/...</span></pre>
+<ol start="5">
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.15.1">Now let's see an example of saving a model so that the Server can save it. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.15.2">This step is inspired by an example used for building a MNIST trainer and serving the model (see </span><a href="https://github.com/tensorflow/serving/blob/master/tensorflow_serving/example/mnist_saved_model.py"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.16.1">https://github.com/tensorflow/serving/blob/master/tensorflow_serving/example/mnist_saved_model.py</span></a><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.17.1"> ). </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.17.2">The first step is to import the builder as saved_model_builder. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.17.3">Then the bulk of the work is done by the </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.18.1">SavedModelBuilder()</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.19.1"> which saves a </span><em><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.20.1">snapshot</span></em><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.21.1"> of the trained model to reliable storage. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.21.2">Note that here </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.22.1">export_path</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.23.1"> is /tmp/mnist_model/</span></li>
+</ol>
+<pre><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.24.1">from tensorflow.python.saved_model import builder as saved_model_builder</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.25.1">...</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.26.1">export_path_base = sys.argv[-1]</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.27.1">export_path = os.path.join(</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.28.1">  compat.as_bytes(export_path_base),</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.29.1">  compat.as_bytes(str(FLAGS.model_version)))</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.30.1">print 'Exporting trained model to', export_path</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.31.1">builder = saved_model_builder.SavedModelBuilder(export_path)</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.32.1">builder.add_meta_graph_and_variables(</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.33.1">  sess, [tag_constants.SERVING],</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.34.1">  signature_def_map={</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.35.1">    'predict_images':</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.36.1">    prediction_signature,</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.37.1">    signature_constants.DEFAULT_SERVING_SIGNATURE_DEF_KEY:</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.38.1">    classification_signature,</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.39.1">  },</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.40.1">  legacy_init_op=legacy_init_op)</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.41.1">builder.save()</span></pre>
+<ol start="6">
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.42.1">The model can then be served with a simple command</span></li>
+</ol>
+<pre><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.43.1">tensorflow_model_server --port=9000 --model_name=mnist --model_base_path=/tmp/mnist_model/</span></pre>
+
+
+            </article>
+
+            
+        </section>
+    </body>
+
+</html>

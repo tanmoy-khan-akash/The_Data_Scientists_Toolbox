@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+    <head>
+        <title>How to do it...</title>
+        <link rel="stylesheet" href="css/style.css" type="text/css"/>
+        <meta charset="utf-8"/>
+    
+<!-- kobo-style -->
+<script xmlns="http://www.w3.org/1999/xhtml" type="text/javascript" src="js/kobo.js"/>
+<style xmlns="http://www.w3.org/1999/xhtml" type="text/css" id="koboSpanStyle">.koboSpan { -webkit-text-combine: inherit; }</style>
+
+</head>
+
+    <body>
+        <section>
+
+                            <header>
+                    <h1 class="header-title"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.1.1">How to do it...</span></h1>
+                </header>
+            
+            <article>
+                
+<ol>
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.2.1">Import </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.3.1">tensorflow</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.4.1">  this imports the TensorFlow library and allows you to use its wonderful features.</span></li>
+</ol>
+<pre style="padding-left: 60px"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.5.1"> import tensorflow as tf </span></pre>
+<ol start="2">
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.6.1">Since the message we want to print is a constant string, we use </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.7.1">tf.constant</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.8.1">:</span></li>
+</ol>
+<pre style="padding-left: 60px"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.9.1">message = tf.constant('Welcome to the exciting world of Deep Neural Networks!')</span><br/><br/></pre>
+<ol start="3">
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.10.1">To execute the graph element, we need to define the Session using </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.11.1">with</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.12.1"> and run the session using </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.13.1">run</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.14.1">:</span></li>
+</ol>
+<pre style="padding-left: 60px"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.15.1">with tf.Session() as sess:</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.16.1">     print(sess.run(message).decode()) </span></pre>
+<ol start="4">
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.17.1">The output contains a series of warning messages (W), depending on your computer system and OS, claiming that code could run faster if compiled for your specific machine:</span></li>
+</ol>
+<pre style="padding-left: 60px"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.18.1">The TensorFlow library wasn't compiled to use SSE instructions, but these are available on your machine and could speed up CPU computations. </span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.19.1">The TensorFlow library wasn't compiled to use SSE2 instructions, but these are available on your machine and could speed up CPU computations. </span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.20.1">The TensorFlow library wasn't compiled to use SSE3 instructions, but these are available on your machine and could speed up CPU computations. </span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.21.1">The TensorFlow library wasn't compiled to use SSE4.1 instructions, but these are available on your machine and could speed up CPU computations. </span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.22.1">The TensorFlow library wasn't compiled to use SSE4.2 instructions, but these are available on your machine and could speed up CPU computations. </span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.23.1">The TensorFlow library wasn't compiled to use AVX instructions, but these are available on your machine and could speed up CPU computations. </span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.24.1">The TensorFlow library wasn't compiled to use AVX2 instructions, but these are available on your machine and could speed up CPU computations. </span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.25.1">The TensorFlow library wasn't compiled to use FMA instructions, but these are available on your machine and could speed up CPU computations. </span></pre>
+<ol start="5">
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.26.1">If you are working with TensorFlow GPU, you also get a list of informative messages (I) giving details of the devices used:</span></li>
+</ol>
+<pre style="padding-left: 60px"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.27.1">Found device 0 with properties:  </span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.28.1">name: GeForce GTX 1070 </span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.29.1">major: 6 minor: 1 memoryClockRate (GHz) 1.683 </span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.30.1">pciBusID 0000:01:00.0 </span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.31.1">Total memory: 8.00GiB </span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.32.1">Free memory: 6.66GiB </span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.33.1">DMA: 0  </span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.34.1">0:   Y  </span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.35.1">Creating TensorFlow device (/gpu:0) -&gt; (device: 0, name: GeForce GTX 1070, pci bus id: 0000:01:00.0) </span></pre>
+<ol start="6">
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.36.1">At the end is the message we asked to print in the session:</span></li>
+</ol>
+<pre style="padding-left: 60px"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.37.1">Welcome to the exciting world of Deep Neural Networks</span></pre>
+
+
+            </article>
+
+            
+        </section>
+    </body>
+
+</html>

@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+    <head>
+        <title>How to do it...</title>
+        <link rel="stylesheet" href="css/style.css" type="text/css"/>
+        <meta charset="utf-8"/>
+    
+<!-- kobo-style -->
+<script xmlns="http://www.w3.org/1999/xhtml" type="text/javascript" src="js/kobo.js"/>
+<style xmlns="http://www.w3.org/1999/xhtml" type="text/css" id="koboSpanStyle">.koboSpan { -webkit-text-combine: inherit; }</style>
+
+</head>
+
+    <body>
+        <section>
+
+                            <header>
+                    <h1 class="header-title"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.1.1">How to do it...</span></h1>
+                </header>
+            
+            <article>
+                
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.2.1">We proceed with the recipe as follows:</span></p>
+<ol>
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.3.1">The first thing we decide is the optimizer that we want. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.3.2">TensorFlow provides you with a wide variety of optimizers. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.3.3">We start with the most popular and simple one, the gradient descent optimizer:</span></li>
+</ol>
+<div>
+<pre style="padding-left: 60px"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.4.1">tf.train.GradientDescentOptimizer(learning_rate)</span></pre></div>
+<ol start="2">
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.5.1">The </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.6.1">learning_rate</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.7.1"> argument to </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.8.1">GradientDescentOptimizer</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.9.1"> can be a constant or tensor. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.9.2">Its value can lie between 0 and 1.</span></li>
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.10.1">The optimizer must be told about the function to be optimized. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.10.2">This is done using its method, minimize. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.10.3">This method computes the gradients and applies the gradients to learning coefficients. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.10.4">The function as defined in TensorFlow docs is the following:</span></li>
+</ol>
+<div>
+<pre style="padding-left: 60px"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.11.1">minimize(</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.12.1">     loss,</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.13.1">     global_step=None,</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.14.1">     var_list=None,</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.15.1">     gate_gradients=GATE_OP,</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.16.1">     aggregation_method=None,</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.17.1">     colocate_gradients_with_ops=False,</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.18.1">     name=None,</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.19.1">     grad_loss=None</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.20.1"> )</span></pre></div>
+<ol start="4">
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.21.1">Combining it all, we define the computational graph:</span></li>
+</ol>
+<div>
+<pre style="padding-left: 60px"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.22.1"> ...</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.23.1">optimizer = tf.train.GradientDescentOptimizer(learning_rate=0.01)</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.24.1">train_step = optimizer.minimize(loss)</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.25.1">...</span><br/><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.26.1">#Execution Graph</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.27.1">with tf.Session() as sess:</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.28.1">    ...</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.29.1">    sess.run(train_step, feed_dict = {X:X_data, Y:Y_data})</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.30.1">    ...</span><strong> </strong></pre></div>
+<ol start="5">
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.31.1">The </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.32.1">X</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.33.1"> and </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.34.1">Y</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.35.1"> data fed to </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.36.1">feed_dict</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.37.1"> can be single </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.38.1">X</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.39.1"> and </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.40.1">Y</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.41.1"> points (stochastic gradient), the entire training set (vanilla), or batch.</span></li>
+</ol>
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.42.1"> </span></p>
+<ol start="6">
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.43.1">Another variation in gradient descent is adding the momentum term (we will find out more about this in </span><a href="8a46655c-6805-48b5-b4c1-c35457883d78.xhtml" target="_blank"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.44.1">Chapter 3</span></a><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.45.1">, </span><em><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.46.1">Neural Networks - Perceptrons</span></em><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.47.1">). </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.47.2">For this, we use the optimizer </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.48.1">tf.train.MomentumOptimizer()</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.49.1">. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.49.2">It takes both </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.50.1">learning_rate</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.51.1"> and </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.52.1">momentum</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.53.1"> as </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.54.1">init</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.55.1"> arguments:</span></li>
+</ol>
+<div>
+<pre style="padding-left: 60px"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.56.1">optimizer = tf.train.MomentumOtimizer(learning_rate=0.01, momentum=0.5).minimize(loss)</span></pre></div>
+<ol start="7">
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.57.1">We can have an adaptive, monotonically decreasing learning rate if we use </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.58.1">tf.train.AdadeltaOptimizer()</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.59.1">, which uses two </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.60.1">init</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.61.1"> arguments, </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.62.1">learning_rate</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.63.1"> and decay factor </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.64.1">rho</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.65.1">:</span></li>
+</ol>
+<div>
+<pre style="padding-left: 60px"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.66.1">optimizer = tf.train.AdadeltaOptimizer(learning_rate=0.8, rho=0.95).minimize(loss)</span></pre></div>
+<ol start="8">
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.67.1">TensorFlow also supports Hinton's RMSprop, which works similarly to Adadelta--</span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.68.1">tf.train.RMSpropOptimizer()</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.69.1">:</span></li>
+</ol>
+<div>
+<pre style="padding-left: 60px"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.70.1">optimizer = tf.train.RMSpropOptimizer(learning_rate=0.01, decay=0.8, momentum=0.1).minimize(loss)</span></pre></div>
+<div class="packt_tip"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.71.1">There are some fine differences between Adadelta and RMSprop. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.71.2">To find out more about them, you can refer to </span><a href="http://www.cs.toronto.edu/~tijmen/csc321/slides/lecture_slides_lec6.pdf"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.72.1">http://www.cs.toronto.edu/~tijmen/csc321/slides/lecture_slides_lec6.pdf</span></a><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.73.1"> and </span><a href="https://arxiv.org/pdf/1212.5701.pdf"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.74.1">https://arxiv.org/pdf/1212.5701.pdf</span></a><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.75.1">.</span></div>
+<ol start="9">
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.76.1">Another popular optimizer supported by TensorFlow is the Adam optimizer. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.76.2">The method computes individual adaptive learning rates for the different coefficients using the estimates of the first and second moments of gradients:</span></li>
+</ol>
+<div>
+<pre style="padding-left: 60px"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.77.1"> optimizer = tf.train.AdamOptimizer().minimize(loss)</span></pre></div>
+<ol start="10">
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.78.1">Besides these, TensorFlow also provides the following optimizers:</span></li>
+</ol>
+<div>
+<pre style="padding-left: 60px"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.79.1">tf.train.AdagradOptimizer  #Adagrad Optimizer</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.80.1">tf.train.AdagradDAOptimizer #</span><span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.81.1">Adagrad Dual Averaging optimizer </span></span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.82.1">tf.train.FtrlOptimizer #Follow the regularized leader optimizer</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.83.1">tf.train.ProximalGradientDescentOptimizer #Proximal GD optimizer</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.84.1">tf.train.ProximalAdagradOptimizer # Proximal Adagrad optimizer</span></pre></div>
+
+
+            </article>
+
+            
+        </section>
+    </body>
+
+</html>

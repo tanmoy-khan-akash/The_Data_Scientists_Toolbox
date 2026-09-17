@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+    <head>
+        <title>Getting ready</title>
+        <link rel="stylesheet" href="css/style.css" type="text/css"/>
+        <meta charset="utf-8"/>
+    
+<!-- kobo-style -->
+<script xmlns="http://www.w3.org/1999/xhtml" type="text/javascript" src="js/kobo.js"/>
+<style xmlns="http://www.w3.org/1999/xhtml" type="text/css" id="koboSpanStyle">.koboSpan { -webkit-text-combine: inherit; }</style>
+
+</head>
+
+    <body>
+        <section>
+
+                            <header>
+                    <h1 class="header-title"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.1.1">Getting ready</span></h1>
+                </header>
+            
+            <article>
+                
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.2.1">The update of coefficients (</span><em><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.3.1">W</span></em><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.4.1"> and </span><em><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.5.1">b</span></em><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.6.1">) is done proportionally to the negative of the gradient of the </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.7.1">loss</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.8.1"> function. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.8.2">There are three variations of gradient descent depending on the size of the training sample:</span></p>
+<ul>
+<li><strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.9.1">Vanilla gradient descent</span></strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.10.1">: In vanilla gradient descent (also sometimes called </span><strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.11.1">batch gradient descent</span></strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.12.1">), the gradient of the </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.13.1">loss</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.14.1"> function is calculated for the entire training set at each epoch. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.14.2">This process can be slow and intractable for very large datasets. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.14.3">It is guaranteed to converge to the global minimum for convex </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.15.1">loss</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.16.1"> function, but for non-convex </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.17.1">loss</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.18.1"> function, it might settle at the local minimum.</span></li>
+<li><strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.19.1">Stochastic gradient descent</span></strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.20.1">: In stochastic gradient descent, one training sample is presented at a time, the weights and biases are updated such that the gradient of </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.21.1">loss</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.22.1"> function decreases, and then we move to the next training sample. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.22.2">The whole process is repeated for a number of epochs. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.22.3">As it performs one update at a time, it is faster than vanilla, but at the same time, due to frequent updates, there can be a high variance in the </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.23.1">loss</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.24.1"> function.</span></li>
+<li><strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.25.1">Mini-batch gradient descent</span></strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.26.1">: This combines the best qualities of both the previous ones; here, the parameters are updated for a batch of the training sample.</span></li>
+</ul>
+
+
+            </article>
+
+            
+        </section>
+    </body>
+
+</html>

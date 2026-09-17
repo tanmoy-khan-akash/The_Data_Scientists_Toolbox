@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+    <head>
+        <title>k-means clustering</title>
+        <link rel="stylesheet" href="css/style.css" type="text/css"/>
+        <meta charset="utf-8"/>
+    
+<!-- kobo-style -->
+<script xmlns="http://www.w3.org/1999/xhtml" type="text/javascript" src="js/kobo.js"/>
+<style xmlns="http://www.w3.org/1999/xhtml" type="text/css" id="koboSpanStyle">.koboSpan { -webkit-text-combine: inherit; }</style>
+
+</head>
+
+    <body>
+        <section>
+
+                            <header>
+                    <h1 class="header-title"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.1.1">k-means clustering</span></h1>
+                </header>
+            
+            <article>
+                
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.2.1">The k-means clustering, as the name suggests, is a technique to cluster data, that is, partition data into a specified number of data points. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.2.2">It is an unsupervised learning technique. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.2.3">It works by identifying patterns in the given data. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.2.4">Remember the sorting hat from Harry Potter fame? </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.2.5">What it is doing in the book is clustering--dividing new (unlabeled) students into four different clusters: Gryffindor, Ravenclaw, Hufflepuff, and Slytherin.</span></p>
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.3.1">Humans are very good at grouping objects together; clustering algorithms try to give a similar capability to computers. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.3.2">There are many clustering techniques available such as Hierarchical, Bayesian, or Partional. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.3.3">The k-means clustering belongs to Partional clustering; it partitions the data into </span><em><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.4.1">k</span></em><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.5.1"> clusters. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.5.2">Each cluster has a center, called </span><strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.6.1">centroid</span></strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.7.1">. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.7.2">The number of clusters </span><em><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.8.1">k</span></em><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.9.1"> has to be specified by the user.</span></p>
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.10.1">The k-means algorithm works in the following manner:</span></p>
+<ol>
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.11.1">Randomly choose </span><em><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.12.1">k</span></em><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.13.1"> data points as the initial centroids (cluster centers)</span></li>
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.14.1">Assign each data point to the closest centroid; there can be different measures to find closeness, the most common being the Euclidean distance</span></li>
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.15.1">Recompute the centroids using current cluster membership, such that the sum of squared distance decreases</span></li>
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.16.1">Repeat the last two steps until convergence is met</span></li>
+</ol>
+
+
+            </article>
+
+            
+        </section>
+    </body>
+
+</html>

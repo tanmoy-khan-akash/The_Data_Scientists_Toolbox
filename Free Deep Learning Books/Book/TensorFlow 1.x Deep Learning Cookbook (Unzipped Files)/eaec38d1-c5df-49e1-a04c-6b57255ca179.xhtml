@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+    <head>
+        <title>How to do it...</title>
+        <link rel="stylesheet" href="css/style.css" type="text/css"/>
+        <meta charset="utf-8"/>
+    
+<!-- kobo-style -->
+<script xmlns="http://www.w3.org/1999/xhtml" type="text/javascript" src="js/kobo.js"/>
+<style xmlns="http://www.w3.org/1999/xhtml" type="text/css" id="koboSpanStyle">.koboSpan { -webkit-text-combine: inherit; }</style>
+
+</head>
+
+    <body>
+        <section>
+
+                            <header>
+                    <h1 class="header-title"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.1.1">How to do it...</span></h1>
+                </header>
+            
+            <article>
+                
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.2.1">Let's start with the recipe:</span></p>
+<ol>
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.3.1">The core interface provided by OpenAI Gym is the Unified Environment Interface. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.3.2">The agent can interact with the environment using three basic methods, that is, reset, step, and render. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.3.3">The </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.4.1">reset</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.5.1"> method resets the environment and returns the observation. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.5.2">The </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.6.1">step</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.7.1"> method steps the environment by one timestep and returns observation, reward, done, and info. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.7.2">The </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.8.1">render</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.9.1"> method renders one frame of the environment, like popping a window.</span></li>
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.10.1">To use OpenAI Gym, you will need to import it first:</span></li>
+</ol>
+<pre style="padding-left: 60px"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.11.1">import gym</span></pre>
+<ol start="3">
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.12.1">Next, we create our first environment:</span></li>
+</ol>
+<pre style="padding-left: 60px"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.13.1">env_name = 'Breakout-v3'</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.14.1">env = gym.make(env_name)</span></pre>
+<ol start="4">
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.15.1">We start the environment using the </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.16.1">reset</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.17.1"> method:</span></li>
+</ol>
+<pre style="padding-left: 60px"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.18.1">obs = env.reset()</span></pre>
+<ol start="5">
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.19.1">Let's check the shape of our environment:</span></li>
+</ol>
+<pre style="padding-left: 60px"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.20.1">print(obs.shape)</span></pre>
+<ol start="6">
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.21.1">The number of actions possible can be checked using the command </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.22.1">actions = env.action_space</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.23.1">. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.23.2">We can see from the result of this that, for Breakout-v4, we have four possible actions: NoOp, Fire, Left, and Right. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.23.3">The total number of actions can be obtained by calling the </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.24.1">env.action_space.n</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.25.1"> command.</span></li>
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.26.1">Let's define an agent with a random policy. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.26.2">The agent chooses any of the four possible actions randomly:</span></li>
+</ol>
+<pre style="padding-left: 60px"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.27.1">def random_policy(n):</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.28.1"> action = np.random.randint(0,n)</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.29.1"> return action</span></pre>
+<ol start="8">
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.30.1">We next allow our random agent to play for 1,000 steps, using </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.31.1">obs, reward, done, info = env.step(action)</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.32.1">:</span></li>
+</ol>
+<pre style="padding-left: 60px"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.33.1">for step in range(1000): # 1000 steps max</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.34.1"> action = random_policy(env.action_space.n)</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.35.1"> obs, reward, done, info = env.step(action)</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.36.1"> env.render()</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.37.1"> if done:</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.38.1">     img = env.render(mode='rgb_array')</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.39.1">     plt.imshow(img)</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.40.1">     plt.show()</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.41.1">     print("The game is over in {} steps".format(step))</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.42.1">     break</span></pre>
+<p style="padding-left: 60px"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.43.1">The </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.44.1">obs</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.45.1"> tells the agent what the environment looks like; for our environment, it corresponds to an RGB image of size 210 x 160 x 3. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.45.2">The agent is rewarded either 0 or 1 at each step, the </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.46.1">reward</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.47.1"> as per the OpenAI Gym wiki is </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.48.1">[-inf, inf]</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.49.1">. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.49.2">Once the game is over, the environment returns </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.50.1">done</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.51.1"> as </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.52.1">True</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.53.1">. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.53.2">The </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.54.1">info</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.55.1"> can be useful for debugging but is not used by the agent. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.55.2">The </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.56.1">env.render()</span></kbd> <span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.57.1">command </span></span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.58.1">pops up a window that shows the present state of the environment; when you include this command, you can see through the popped-up window how the agent is trying to play and learn. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.58.2">It is better to comment it when the agent is under training to save time.</span></p>
+<ol start="9">
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.59.1">Lastly, close the environment:</span></li>
+</ol>
+<pre style="padding-left: 60px"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.60.1">env.close()</span></pre>
+
+
+            </article>
+
+            
+        </section>
+    </body>
+
+</html>

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+    <head>
+        <title>Getting Ready...</title>
+        <link rel="stylesheet" href="css/style.css" type="text/css"/>
+        <meta charset="utf-8"/>
+    
+<!-- kobo-style -->
+<script xmlns="http://www.w3.org/1999/xhtml" type="text/javascript" src="js/kobo.js"/>
+<style xmlns="http://www.w3.org/1999/xhtml" type="text/css" id="koboSpanStyle">.koboSpan { -webkit-text-combine: inherit; }</style>
+
+</head>
+
+    <body>
+        <section>
+
+                            <header>
+                    <h1 class="header-title"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.1.1">Getting Ready...</span></h1>
+                </header>
+            
+            <article>
+                
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.2.1">From Chapter 4, </span><em><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.3.1">Convolutional Neural Network</span></em><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.4.1">, you had learned that, as convolutional layers are added, the information passed to the next layer reduces in spatial extent, but in an autoencoder, the reconstructed image should be of the same size and depth as the input image. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.4.2">This implies that the decoder should somehow do both image resizing and convolution to reconstruct the original image. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.4.3">One way of increasing the spatial extent along with convolution is with the help of </span><strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.5.1">transposed convolution layers</span></strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.6.1">. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.6.2">These are easily implemented in TensorFlow by </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.7.1">tf.nn.conv2d_transpose</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.8.1">, but it was found that transposed convolution layers result in artefacts in the final image. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.8.2">Augustus Odena et al. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.8.3">[1], in their work, showed that these artefacts can be avoided by resizing the layers using either the nearest neighbour or bilinear interpolation (upsampling) followed by a convolutional layer. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.8.4">They achieved best results with nearest neighbour interpolation, implemented via </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.9.1">tf.image.resize_images</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.10.1">; we will follow the same approach here.</span></p>
+
+
+            </article>
+
+            
+        </section>
+    </body>
+
+</html>

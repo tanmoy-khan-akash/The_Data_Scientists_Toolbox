@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+    <head>
+        <title>How to do it...</title>
+        <link rel="stylesheet" href="css/style.css" type="text/css"/>
+        <meta charset="utf-8"/>
+    
+<!-- kobo-style -->
+<script xmlns="http://www.w3.org/1999/xhtml" type="text/javascript" src="js/kobo.js"/>
+<style xmlns="http://www.w3.org/1999/xhtml" type="text/css" id="koboSpanStyle">.koboSpan { -webkit-text-combine: inherit; }</style>
+
+</head>
+
+    <body>
+        <section>
+
+                            <header>
+                    <h1 class="header-title"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.1.1">How to do it...</span></h1>
+                </header>
+            
+            <article>
+                
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.2.1">We proceed with the recipe as follows:</span></p>
+<ol>
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.3.1">Consider this piece of code which runs a matrix multiplication on a single GPU.</span></li>
+</ol>
+<pre><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.4.1"># single GPU (baseline)</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.5.1">import tensorflow as tf</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.6.1"># place the initial data on the cpu</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.7.1">with tf.device('/cpu:0'):</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.8.1">  input_data = tf.Variable([[1., 2., 3.],</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.9.1">    [4., 5., 6.],</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.10.1">    [7., 8., 9.],</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.11.1">    [10., 11., 12.]])</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.12.1">b = tf.Variable([[1.], [1.], [2.]])</span><br/> <br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.13.1"># compute the result on the 0th gpu</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.14.1">with tf.device('/gpu:0'):</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.15.1">  output = tf.matmul(input_data, b)</span><br/> <br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.16.1"># create a session and run</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.17.1">with tf.Session() as sess:</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.18.1">  sess.run(tf.global_variables_initializer())</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.19.1">  print sess.run(output)</span></pre>
+<ol start="2">
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.20.1">Partition the code with in graph replication as in the following snippet between 2 different GPUs. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.20.2">Note that the CPU is acting as the master node distributing the graph and collecting the final results.</span></li>
+</ol>
+<pre><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.21.1"># in-graph replication</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.22.1">import tensorflow as tf</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.23.1">num_gpus = 2</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.24.1"># place the initial data on the cpu</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.25.1">with tf.device('/cpu:0'):</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.26.1">  input_data = tf.Variable([[1., 2., 3.],</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.27.1">   [4., 5., 6.],</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.28.1">   [7., 8., 9.],</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.29.1">   [10., 11., 12.]])</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.30.1">   b = tf.Variable([[1.], [1.], [2.]])</span><br/> <br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.31.1"># split the data into chunks for each gpu</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.32.1">inputs = tf.split(input_data, num_gpus)</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.33.1">outputs = []</span><br/> <br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.34.1"># loop over available gpus and pass input data</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.35.1">for i in range(num_gpus):</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.36.1">  with tf.device('/gpu:'+str(i)):</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.37.1">    outputs.append(tf.matmul(inputs[i], b))</span><br/> <br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.38.1"># merge the results of the devices</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.39.1">with tf.device('/cpu:0'):</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.40.1">  output = tf.concat(outputs, axis=0)</span><br/> <br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.41.1"># create a session and run</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.42.1">with tf.Session() as sess:</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.43.1">  sess.run(tf.global_variables_initializer())</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.44.1">  print sess.run(output)</span></pre>
+
+
+            </article>
+
+            
+        </section>
+    </body>
+
+</html>

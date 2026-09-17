@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+    <head>
+        <title>Introduction</title>
+        <link rel="stylesheet" href="css/style.css" type="text/css"/>
+        <meta charset="utf-8"/>
+    
+<!-- kobo-style -->
+<script xmlns="http://www.w3.org/1999/xhtml" type="text/javascript" src="js/kobo.js"/>
+<style xmlns="http://www.w3.org/1999/xhtml" type="text/css" id="koboSpanStyle">.koboSpan { -webkit-text-combine: inherit; }</style>
+
+</head>
+
+    <body>
+        <section>
+
+                            <header>
+                    <h1 class="header-title"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.1.1">Introduction</span></h1>
+                </header>
+            
+            <article>
+                
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.2.1">In the previous chapter, we saw how to apply ConvNets to images. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.2.2">During this chapter, we will apply similar ideas to texts.</span></p>
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.3.1">What do a text and an image have in common? </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.3.2">At first glance, very little. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.3.3">However, if we represent sentences or documents as a matrix then this matrix is not different from an image matrix where each cell is a pixel. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.3.4">So, the next question is, how can we represent a text as a matrix? </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.3.5">Well, it is pretty simple: each row of a matrix is a vector which represents a basic unit of the text. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.3.6">Of course, now we need to define what a basic unit is. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.3.7">A simple choice could be to say that the basic unit is a character. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.3.8">Another choice would be to say that a basic unit is a word, yet another choice is to aggregate similar words together and then denote each aggregation (sometimes called cluster or embedding) with a representative symbol.</span></p>
+<div class="packt_infobox"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.4.1">Note that regardless of the specific choice adopted for our basic units, we need to have a 1:1 map from basic units into integer IDs so that a text can be seen as a matrix. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.4.2">For instance, if we have a document with 10 lines of text and each line is a 100-dimensional embedding, then we will represent our text with a matrix 10 x 100. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.4.3">In this very particular </span><em><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.5.1">image</span></em><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.6.1">, a </span><em><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.7.1">pixel</span></em><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.8.1"> is turned on if that sentence x contains the embedding represented by position y. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.8.2">You might also notice that a text is not really a matrix but more a vector because two words located in adjacent rows of text have very little in common. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.8.3">Indeed, there is a major difference with images where two pixels located in adjacent columns most likely have some correlation.</span></div>
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.9.1">Now you might wonder: I understand that you represent the text as a vector but, in doing so, we lose the position of the words and this position should be important, shouldn't it?</span></p>
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.10.1">Well, it turns out that in many real applications knowing whether a sentence contains a particular basic unit (a char, a word, or an aggregate) or not is pretty accurate information, even if we don't memorize where exactly in the sentence this basic unit is located.</span></p>
+
+
+            </article>
+
+            
+        </section>
+    </body>
+
+</html>
