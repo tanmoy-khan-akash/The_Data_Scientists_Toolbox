@@ -1,0 +1,72 @@
+<?xml version='1.0' encoding='utf-8'?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+  <head>
+    <title>How to do it...</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <link href="../stylesheet.css" rel="stylesheet" type="text/css"/>
+<link href="../page_styles.css" rel="stylesheet" type="text/css"/>
+</head>
+  <body id="1565U0-5e1e3ce63feb42db9ae6338e8302dfdb" class="calibre">
+        <section class="calibre1">
+
+                            <header class="calibre1">
+                    </header><h1 class="header-title" id="calibre_pb_0">How to do it...</h1>
+                
+            
+            <article class="calibre1">
+                
+<ol class="calibre17">
+<li value="1" class="calibre15"><span>First, we will show how to install TensorFlow from your terminal (make sure that you adjust the link to the TensorFlow wheel for your platform and Python version accordingly):</span></li>
+</ol>
+<pre class="calibre23"><strong class="calibre5">pip install --ignore-installed --upgrade https://storage.googleapis.com/tensorflow/linux/gpu/tensorflow_gpu-1.3.0-cp35-cp35m-linux_x86_64.whl</strong></pre>
+<p class="calibre29">This will install the GPU-enabled version of TensorFlow and the correct dependencies.</p>
+<ol start="2" class="calibre17">
+<li value="2" class="calibre15">You can now import the TensorFlow library into your Python environment:</li>
+</ol>
+<pre class="calibre23">import tensorflow as tf</pre>
+<ol start="3" class="calibre17">
+<li value="3" class="calibre15">To provide a dummy dataset, we will use <kbd class="calibre12">numpy</kbd> and the following code:</li>
+</ol>
+<pre class="calibre23">import numpy as np<br class="calibre24"/>x_input = np.array([[1,2,3,4,5]])<br class="calibre24"/>y_input = np.array([[10]])</pre>
+<ol start="4" class="calibre17">
+<li value="4" class="calibre15">When defining a TensorFlow model, you cannot feed the data directly to your model. You should create a placeholder that acts like an entry point for your data feed:</li>
+</ol>
+<pre class="calibre23">x = tf.placeholder(tf.float32, [None, 5])<br class="calibre24"/>y = tf.placeholder(tf.float32, [None, 1])</pre>
+<ol start="5" class="calibre17">
+<li value="5" class="calibre15">Afterwards, you apply some operations to the placeholder with some variables. For example:</li>
+</ol>
+<pre class="calibre23">W = tf.Variable(tf.zeros([5, 1]))<br class="calibre24"/>b = tf.Variable(tf.zeros([1]))<br class="calibre24"/>y_pred = tf.matmul(x, W)+b</pre>
+<ol start="6" class="calibre17">
+<li value="6" class="calibre15">Next, define a loss function as follows:</li>
+</ol>
+<pre class="calibre23">loss = tf.reduce_sum(tf.pow((y-y_pred), 2))</pre>
+<ol start="7" class="calibre17">
+<li value="7" class="calibre15">We need to specify the optimizer and the variable that we want to minimize:</li>
+</ol>
+<pre class="calibre23">train = tf.train.GradientDescentOptimizer(0.0001).minimize(loss)</pre>
+<ol start="8" class="calibre17">
+<li value="8" class="calibre15">In TensorFlow, it's important that you initialize all variables. Therefore, we create a variable called <kbd class="calibre12">init</kbd>:</li>
+</ol>
+<pre class="calibre23">init = tf.global_variables_initializer()</pre>
+<p class="calibre29">We should note that this command doesn't initialize the variables yet; this is done when we run a session.</p>
+<ol start="9" class="calibre17">
+<li value="9" class="calibre15">Next, we create a session and run the training for 10 epochs:</li>
+</ol>
+<pre class="calibre23">sess = tf.Session()<br class="calibre24"/>sess.run(init)<br class="calibre24"/><br class="calibre24"/>for i in range(10):<br class="calibre24"/>    feed_dict = {x: x_input, y: y_input}<br class="calibre24"/>    sess.run(train, feed_dict=feed_dict)</pre>
+<ol start="10" class="calibre17">
+<li value="10" class="calibre15">If we also want to extract the costs, we can do so by adding it as follows:</li>
+</ol>
+<pre class="calibre23">sess = tf.Session()<br class="calibre24"/>sess.run(init)<br class="calibre24"/><br class="calibre24"/>for i in range(10):<br class="calibre24"/>    feed_dict = {x: x_input, y: y_input}<br class="calibre24"/>    _, loss_value = sess.run([train, loss], feed_dict=feed_dict)<br class="calibre24"/>    print(loss_value)</pre>
+<ol start="11" class="calibre17">
+<li value="11" class="calibre15">If we want to use multiple GPUs, we should specify this explicitly. For example, take this part of code from the TensorFlow documentation:</li>
+</ol>
+<pre class="calibre23">c = []<br class="calibre24"/>for d in ['/gpu:0', '/gpu:1']:<br class="calibre24"/>    with tf.device(d):<br class="calibre24"/>        a = tf.constant([1.0, 2.0, 3.0, 4.0, 5.0, 6.0], shape=[2, 3])<br class="calibre24"/>        b = tf.constant([1.0, 2.0, 3.0, 4.0, 5.0, 6.0], shape=[3, 2])<br class="calibre24"/>c.append(tf.matmul(a, b))<br class="calibre24"/>with tf.device('/cpu:0'):<br class="calibre24"/>    sum = tf.add_n(c)<br class="calibre24"/># Creates a session with log_device_placement set to True.<br class="calibre24"/>sess = tf.Session(config=tf.ConfigProto(log_device_placement=True))<br class="calibre24"/># Runs the op.<br class="calibre24"/>print(sess.run(sum))</pre>
+<p class="calibre3">As you can see, this gives a lot of flexibility in how the computations are handled and by which device.</p>
+<div class="packt_infobox">This is just a brief introduction to how TensorFlow works. The granular level of model implementation gives the user a lot of flexibility when implementing networks. However, if you're new to neural networks, it might be overwhelming. That is why the Keras framework--a wrapper on top of TensorFlow—can be a good alternative for those who want to start building neural networks without getting too much into the details. T<span class="calibre30">herefore, i</span><span class="calibre30">n this book, the first few chapters will mainly focus on Keras, while the more advanced chapters will include more recipes that use other frameworks such as TensorFlow.</span></div>
+
+
+            </article>
+
+            
+        </section>
+    </body></html>

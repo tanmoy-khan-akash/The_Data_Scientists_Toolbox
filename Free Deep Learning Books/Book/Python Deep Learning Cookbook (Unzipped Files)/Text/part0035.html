@@ -1,0 +1,53 @@
+<?xml version='1.0' encoding='utf-8'?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+  <head>
+    <title>How to do it...</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <link href="../stylesheet.css" rel="stylesheet" type="text/css"/>
+<link href="../page_styles.css" rel="stylesheet" type="text/css"/>
+</head>
+  <body id="11C3M0-5e1e3ce63feb42db9ae6338e8302dfdb" class="calibre">
+        <section class="calibre1">
+
+                            <header class="calibre1">
+                    </header><h1 class="header-title" id="calibre_pb_0">How to do it...</h1>
+                
+            
+            <article class="calibre1">
+                
+<ol class="calibre17">
+<li value="1" class="calibre15">You can directly download the installation file for Anaconda on your machine as follows (adjust your Anaconda file accordingly):</li>
+</ol>
+<pre class="calibre23"><strong class="calibre5">curl -O https://repo.continuum.io/archive/Anaconda3-4.3.1-Linux-x86_64.sh</strong></pre>
+<ol start="2" class="calibre17">
+<li value="2" class="calibre15">Next, run the bash script (if necessary, adjust the filename accordingly):</li>
+</ol>
+<pre class="calibre23"><strong class="calibre5">bash Anaconda3-4.3.1-Linux-x86_64.sh</strong></pre>
+<p class="calibre27">Follow all prompts and choose 'yes' when you're asked to to add the PATH to the <kbd class="calibre12">.bashrc</kbd> file (the default is 'no').</p>
+<ol start="3" class="calibre17">
+<li value="3" class="calibre15">Afterwards, reload the file:</li>
+</ol>
+<pre class="calibre23"><strong class="calibre5">source ~/.bashrc</strong></pre>
+<ol start="4" class="calibre17">
+<li value="4" class="calibre15">Now, let's set up an Anaconda environment. Let's start with copying the files from the GitHub repository and opening the directory:</li>
+</ol>
+<pre class="calibre23"><strong class="calibre5">git clone https://github.com/indradenbakker/Python-Deep-Learning-Cookbook-Kit.git</strong><br class="calibre24"/><strong class="calibre5"><span>cd</span> Python-Deep-Learning-Cookbook-Kit</strong></pre>
+<ol start="5" class="calibre17">
+<li value="5" class="calibre15">Create the environment with the following command:</li>
+</ol>
+<pre class="calibre23"><strong class="calibre5">conda env create -f environment-deep-learning-cookbook.yml</strong></pre>
+<ol start="6" class="calibre17">
+<li value="6" class="calibre15">This creates an environment named <kbd class="calibre12"><span>environment-deep-learning-cookbook</span></kbd> and installs all libraries and dependencies included in the <kbd class="calibre12">.yml</kbd> file. All libraries used in this book are included, for example, NumPy, OpenCV, Jupyter, and scikit-learn. </li>
+<li value="7" class="calibre15">Activate the environment:</li>
+</ol>
+<pre class="calibre23"><strong class="calibre5">source activate environment-deep-learning-cookbook</strong></pre>
+<ol start="8" class="calibre17">
+<li value="8" class="calibre15">You're now ready to run Python. Follow the next recipe to install Jupyter and the deep learning frameworks used in this book.</li>
+</ol>
+
+
+            </article>
+
+            
+        </section>
+    </body></html>

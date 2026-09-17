@@ -1,0 +1,66 @@
+<?xml version='1.0' encoding='utf-8'?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+  <head>
+    <title>How to do it...</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <link href="../stylesheet.css" rel="stylesheet" type="text/css"/>
+<link href="../page_styles.css" rel="stylesheet" type="text/css"/>
+</head>
+  <body id="VF2I0-5e1e3ce63feb42db9ae6338e8302dfdb" class="calibre">
+        <section class="calibre1">
+
+                            <header class="calibre1">
+                    </header><h1 class="header-title" id="calibre_pb_0">How to do it...</h1>
+                
+            
+            <article class="calibre1">
+                
+<ol class="calibre17">
+<li value="1" class="calibre15">We start by downloading NVIDIA with the following command in the terminal (adjust the download link accordingly if needed; make sure you use CUDA 8 and not CUDA 9 for now):</li>
+</ol>
+<pre class="calibre23"><strong class="calibre5">curl -O http://developer.download.nvidia.com/compute/cuda/repos/ubuntu1604/x86_64/cuda-repo-ubuntu1604_8.0.61-1_amd64.deb</strong></pre>
+<ol start="2" class="calibre17">
+<li value="2" class="calibre15">Next, we unpack the file and update all all packages in the package lists. Afterwards, we remove the downloaded file:</li>
+</ol>
+<pre class="calibre23"><strong class="calibre5">sudo dpkg -i cuda-repo-ubuntu1604_8.0.61-1_amd64.deb</strong><br class="calibre24"/><strong class="calibre5">sudo apt-get update</strong><br class="calibre24"/><strong class="calibre5">rm cuda-repo-ubuntu1604_8.0.61-1_amd64.deb</strong></pre>
+<ol start="3" class="calibre17">
+<li value="3" class="calibre15">Now, we're ready to install CUDA with the following command:</li>
+</ol>
+<pre class="calibre23"><strong class="calibre5">sudo apt-get install cuda-8-0</strong></pre>
+<ol start="4" class="calibre17">
+<li value="4" class="calibre15">Next, we need to set the environment variables and add them to the shell script <kbd class="calibre12">.bashrc</kbd>:</li>
+</ol>
+<pre class="calibre23"><strong class="calibre5">echo 'export CUDA_HOME=/usr/local/cuda' &gt;&gt; ~/.bashrc</strong><br class="calibre24"/><strong class="calibre5">echo 'export PATH=$PATH:$CUDA_HOME/bin' &gt;&gt; ~/.bashrc</strong><br class="calibre24"/><strong class="calibre5">echo 'export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$CUDA_HOME/lib64' &gt;&gt; ~/.bashrc</strong></pre>
+<ol start="5" class="calibre17">
+<li value="5" class="calibre15">Make sure to reload the shell script afterwards with the following command:</li>
+</ol>
+<pre class="calibre23"><strong class="calibre5">source ~/.bashrc</strong></pre>
+<ol start="6" class="calibre17">
+<li value="6" class="calibre15">You can check whether the CUDA 8.0 driver and toolkit are correctly installed using the following commands in your terminal:</li>
+</ol>
+<pre class="calibre23"><strong class="calibre5">nvcc --version</strong><br class="calibre24"/><strong class="calibre5">nvidia-smi</strong></pre>
+<p class="calibre27">The output of the last command should look something like this:</p>
+<div class="cdpaligncenter"><img src="../images/00006.jpeg" class="calibre28"/></div>
+<div class="mce-root1"><span>Figure 1.2: Example output of nvidia-smi showing the connected GPU</span></div>
+<ol start="7" class="calibre17">
+<li value="7" class="calibre15">Here, we can see that an NVIDIA P100 GPU with 16 GB of memory is correctly connected and ready to use.<strong class="calibre5"> </strong></li>
+</ol>
+<ol start="8" class="calibre17">
+<li value="8" class="calibre15">We are now ready to install <kbd class="calibre12">cuDNN</kbd>. Make sure the NVIDIA <kbd class="calibre12">cuDNN</kbd> file is available on the machine, for example, by copying from your local machine to the server if needed. For Google cloud compute engine (make sure you've set up <kbd class="calibre12">gcloud</kbd> and the project and zone are set up correctly), you can use the following command (replace local-directory and instance-name with your own settings):</li>
+</ol>
+<pre class="calibre23"><strong class="calibre5">gcloud compute scp local-directory/cudnn-8.0-linux-x64-v6.0.tgz instance-name</strong></pre>
+<ol start="9" class="calibre17">
+<li value="9" class="calibre15">First we unpack the file before copying to the right directory as root:</li>
+</ol>
+<pre class="calibre23"><strong class="calibre5">cd</strong><br class="calibre24"/><strong class="calibre5">tar xzvf cudnn-8.0-linux-x64-v6.0.tgz</strong><br class="calibre24"/><strong class="calibre5">sudo cp cuda/lib64/* /usr/local/cuda/lib64/</strong><br class="calibre24"/><strong class="calibre5">sudo cp cuda/include/cudnn.h /usr/local/cuda/include/</strong></pre>
+<ol start="10" class="calibre17">
+<li value="10" class="calibre15">To clean up our space, we can remove the files we've used for installation, as follows:</li>
+</ol>
+<pre class="calibre23"><strong class="calibre5">rm -rf ~/cuda</strong><br class="calibre24"/><strong class="calibre5">rm cudnn-8.0-linux-x64-v5.1.tgz</strong></pre>
+
+
+            </article>
+
+            
+        </section>
+    </body></html>

@@ -1,0 +1,35 @@
+<?xml version='1.0' encoding='utf-8'?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+  <head>
+    <title>How to do it...</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <link href="../stylesheet.css" rel="stylesheet" type="text/css"/>
+<link href="../page_styles.css" rel="stylesheet" type="text/css"/>
+</head>
+  <body id="PNV60-5e1e3ce63feb42db9ae6338e8302dfdb" class="calibre">
+        <section class="calibre1">
+
+                            <header class="calibre1">
+                    </header><h1 class="header-title" id="calibre_pb_0">How to do it...</h1>
+                
+            
+            <article class="calibre1">
+                
+<ol class="calibre17">
+<li value="1" class="calibre15">Make sure the region you want to work in gives access to P2 or G3 instances. These instances include <strong class="calibre5">NVIDIA K80</strong> GPUs and <strong class="calibre5">NVIDIA Tesla M60</strong> GPUs, respectively. The K80 GPU is faster and has more GPU memory than the M60 GPU: <span>12 GB versus 8 GB. </span></li>
+</ol>
+<div class="packt_infobox">While the NVIDIA K80 and M60 GPUs are powerful GPUs for running deep learning models, these should not be considered state-of-the-art. Other faster GPUs have already been launched by NVIDIA and it takes some time before these are added to cloud solutions. However, a big advantage of these cloud machines is that it is straightforward to scale the number of GPUs attached to a machine; for example, Amazon's <strong class="calibre25">p2.16xlarge</strong> instance has 16 GPUs.</div>
+<ol start="2" class="calibre17">
+<li value="2" class="calibre15">There are two options when launching an AWS instance. <strong class="calibre5">Option 1</strong>: You build everything from scratch. <strong class="calibre5">Option 2</strong>: You use a preconfigured <strong class="calibre5">Amazon Machine Image</strong> (<strong class="calibre5">AMI</strong>) from the AWS marketplace. If you choose option 2, you will have to pay additional costs. For an example, see this AMI at <a href="https://aws.amazon.com/marketplace/pp/B06VSPXKDX" target="_blank" class="calibre6">https://aws.amazon.com/marketplace/pp/B06VSPXKDX</a>.</li>
+<li value="3" class="calibre15">Amazon provides a detailed and up-to-date overview of steps to launch the deep learning AMI at <a href="https://aws.amazon.com/blogs/ai/get-started-with-deep-learning-using-the-aws-deep-learning-ami/" target="_blank" class="calibre6">https://aws.amazon.com/blogs/ai/get-started-with-deep-learning-using-the-aws-deep-learning-ami/</a>.</li>
+<li value="4" class="calibre15">If you want to build the server from scratch, launch a P2 or G3 instance and follow the steps under the <em class="calibre22">Installing CUDA and cuDNN</em> and <em class="calibre22">Installing Anaconda and Libraries</em> recipes.</li>
+<li value="5" class="calibre15">Always make sure you stop the running instances when you're done to prevent unnecessary costs. </li>
+</ol>
+<div class="packt_tip">A good option to save costs is to use AWS Spot instances. This allows you to bid on spare Amazon EC2 computing capacity.</div>
+
+
+            </article>
+
+            
+        </section>
+    </body></html>
