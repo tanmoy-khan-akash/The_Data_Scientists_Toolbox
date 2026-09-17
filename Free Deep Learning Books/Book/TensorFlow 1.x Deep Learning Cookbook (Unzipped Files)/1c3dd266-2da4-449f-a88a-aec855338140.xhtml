@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+    <head>
+        <title>Creating a DeepDream network</title>
+        <link rel="stylesheet" href="css/style.css" type="text/css"/>
+        <meta charset="utf-8"/>
+    
+<!-- kobo-style -->
+<script xmlns="http://www.w3.org/1999/xhtml" type="text/javascript" src="js/kobo.js"/>
+<style xmlns="http://www.w3.org/1999/xhtml" type="text/css" id="koboSpanStyle">.koboSpan { -webkit-text-combine: inherit; }</style>
+
+</head>
+
+    <body>
+        <section>
+
+                            <header>
+                    <h1 class="header-title"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.1.1">Creating a DeepDream network</span></h1>
+                </header>
+            
+            <article>
+                
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.2.1">Google trained a neural network on </span><strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.3.1">ImageNet for the Large Scale Visual Recognition Challenge</span></strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.4.1"> (</span><strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.5.1">ILSVRC</span></strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.6.1">) in 2014 and made it open source in July 2015. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.6.2">The original algorithm is presented in </span><em><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.7.1">Going Deeper with Convolutions, Christian Szegedy, Wei Liu, Yangqing Jia, Pierre Sermanet, Scott Reed, Dragomir Anguelov, Dumitru Erhan, Vincent Vanhoucke e Andrew Rabinovich (https://arxiv.org/abs/1409.4842) </span></em><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.8.1">. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.8.2">The network learned a representation of each image. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.8.3">The lower layers learned low-level features, such as lines and edges, while the higher layers learned more sophisticated patterns such as eyes, noses, mouths, and so on. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.8.4">Therefore, if we try to represent a higher level in the network, we will see a mix of different features extracted from the original ImageNet such as the eyes of a bird and the mouth of a dog. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.8.5">With this in mind, if we take a new image and try to maximize the similarity with an upper layer of the network, then the result is a new visionary image. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.8.6">In this visionary image, some of the patterns learned by the higher layers are dreamt (for example, imagined) in the original image. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.8.7">Here is an example of such visionary images:</span></p>
+<div class="CDPAlignCenter CDPAlign"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.9.1"><img height="165" width="221" src="assets/cbbf2fe8-00f2-4ee3-b340-050425f20a7c.jpg"/></span></div>
+<div class="packt_figref CDPAlignCenter CDPAlign"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.10.1">An example of Google Deep Dreams as seen in </span><a href="https://commons.wikimedia.org/wiki/File:Aurelia-aurita-3-0009.jpg"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.11.1">https://commons.wikimedia.org/wiki/File:Aurelia-aurita-3-0009.jpg</span></a></div>
+
+
+            </article>
+
+            
+        </section>
+    </body>
+
+</html>

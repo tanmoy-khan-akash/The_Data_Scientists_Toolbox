@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+    <head>
+        <title>Logistic regression on the MNIST dataset</title>
+        <link rel="stylesheet" href="css/style.css" type="text/css"/>
+        <meta charset="utf-8"/>
+    
+<!-- kobo-style -->
+<script xmlns="http://www.w3.org/1999/xhtml" type="text/javascript" src="js/kobo.js"/>
+<style xmlns="http://www.w3.org/1999/xhtml" type="text/css" id="koboSpanStyle">.koboSpan { -webkit-text-combine: inherit; }</style>
+
+</head>
+
+    <body>
+        <section>
+
+                            <header>
+                    <h1 class="header-title"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.1.1">Logistic regression on the MNIST dataset</span></h1>
+                </header>
+            
+            <article>
+                
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.2.1">This recipe is based on the logistic regressor for MNIST provided at </span><a href="https://www.tensorflow.org/get_started/mnist/beginners"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.3.1">https://www.tensorflow.org/get_started/mnist/beginners</span></a><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.4.1">, but we will add some TensorBoard summaries to understand it better. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.4.2">Most of you must already be familiar with the MNIST dataset--it is like the ABC of machine learning. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.4.3">It contains images of handwritten digits and a label for each image, saying which digit it is.</span></p>
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.5.1">For logistic regression, we use one-hot encoding for the output Y. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.5.2">Thus, we have 10 bits representing the output; each bit can have a value either 0 or 1, and being one-hot means that for each image in label Y, only one bit out of the 10 will have value 1, the rest will be zeros. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.5.3">Here, you can see the image of the handwritten numeral 8, along with its hot encoded value </span><strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.6.1">[0 0 0 0 0 0 0 0 1 0]</span></strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.7.1">:</span></p>
+<div class="CDPAlignCenter CDPAlign"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.8.1"><img src="assets/47ba5240-9d42-4475-866b-5ab156ecbdb0.png"/></span></div>
+
+
+            </article>
+
+            
+        </section>
+    </body>
+
+</html>

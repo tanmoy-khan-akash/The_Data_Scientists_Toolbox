@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+    <head>
+        <title>How to do it...</title>
+        <link rel="stylesheet" href="css/style.css" type="text/css"/>
+        <meta charset="utf-8"/>
+    
+<!-- kobo-style -->
+<script xmlns="http://www.w3.org/1999/xhtml" type="text/javascript" src="js/kobo.js"/>
+<style xmlns="http://www.w3.org/1999/xhtml" type="text/css" id="koboSpanStyle">.koboSpan { -webkit-text-combine: inherit; }</style>
+
+</head>
+
+    <body>
+        <section>
+
+                            <header>
+                    <h1 class="header-title"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.1.1">How to do it...</span></h1>
+                </header>
+            
+            <article>
+                
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.2.1">We proceed with the recipe as follows:</span></p>
+<ol>
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.3.1">Define an attention mechanism by using the library </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.4.1">tf.contrib.seq2seq.LuongAttention</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.5.1">, which implements the attention model defined in </span><em><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.6.1">Effective Approaches to Attention-based Neural Machine Translation</span></em><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.7.1"> by Minh-Thang Luong, Hieu Pham, and Christopher D. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.7.2">Manning (2015):</span></li>
+</ol>
+<pre><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.8.1"># attention_states: [batch_size, max_time, num_units]</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.9.1"> attention_states = tf.transpose(encoder_outputs, [1, 0, 2])</span><br/> <br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.10.1"> # Create an attention mechanism</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.11.1"> attention_mechanism = tf.contrib.seq2seq.LuongAttention(</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.12.1"> num_units, attention_states,</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.13.1"> memory_sequence_length=source_sequence_length)</span></pre>
+<ol start="2">
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.14.1">Use the defined attention mechanism as a wrapper around the decoder cell by means of an attention wrapper:</span></li>
+</ol>
+<pre><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.15.1">decoder_cell = tf.contrib.seq2seq.AttentionWrapper(</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.16.1"> decoder_cell, attention_mechanism,</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.17.1"> attention_layer_size=num_units)</span></pre>
+<ol start="3">
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.18.1">Run the code to see the results. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.18.2">We immediately notice that the attention mechanism produces a significant improvement in terms of the BLEU score:</span></li>
+</ol>
+<pre><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.19.1">python -m nmt.nmt \</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.20.1">&gt; --attention=scaled_luong \</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.21.1">&gt; --src=vi --tgt=en \</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.22.1">&gt; --vocab_prefix=/tmp/nmt_data/vocab \</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.23.1">&gt; --train_prefix=/tmp/nmt_data/train \</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.24.1">&gt; --dev_prefix=/tmp/nmt_data/tst2012 \</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.25.1">&gt; --test_prefix=/tmp/nmt_data/tst2013 \</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.26.1">&gt; --out_dir=/tmp/nmt_attention_model \</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.27.1">&gt; --num_train_steps=12000 \</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.28.1">&gt; --steps_per_stats=100 \</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.29.1">&gt; --num_layers=2 \</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.30.1">&gt; --num_units=128 \</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.31.1">&gt; --dropout=0.2 \</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.32.1">&gt; --metrics=bleu</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.33.1">[...]</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.34.1"># Start step 0, lr 1, Fri Sep 22 22:49:12 2017</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.35.1"># Init train iterator, skipping 0 elements</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.36.1">global step 100 lr 1 step-time 1.71s wps 3.23K ppl 15193.44 bleu 0.00</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.37.1">[...]</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.38.1"># Final, step 12000 lr 0.98 step-time 1.67 wps 3.37K ppl 14.64, dev ppl 14.01, dev bleu 15.9, test ppl 12.58, test bleu 17.5, Sat Sep 23 04:35:42 2017</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.39.1"># Done training!, time 20790s, Sat Sep 23 04:35:42 2017.</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.40.1"># Start evaluating saved best models.</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.41.1">[..]</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.42.1">loaded infer model parameters from /tmp/nmt_attention_model/best_bleu/translate.ckpt-12000, time 0.06s</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.43.1"># 608</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.44.1">src: nhưng bạn biết điều gì không ?</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.45.1">ref: But you know what ?</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.46.1">nmt: But what do you know ?</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.47.1">[...]</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.48.1"># Best bleu, step 12000 step-time 1.67 wps 3.37K, dev ppl 14.01, dev bleu 15.9, test ppl 12.58, test bleu 17.5, Sat Sep 23 04:36:35 2017</span></pre>
+
+
+            </article>
+
+            
+        </section>
+    </body>
+
+</html>

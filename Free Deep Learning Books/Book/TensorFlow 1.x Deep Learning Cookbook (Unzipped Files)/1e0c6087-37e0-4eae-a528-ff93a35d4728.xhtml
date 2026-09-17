@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+    <head>
+        <title>How to do it…</title>
+        <link rel="stylesheet" href="css/style.css" type="text/css"/>
+        <meta charset="utf-8"/>
+    
+<!-- kobo-style -->
+<script xmlns="http://www.w3.org/1999/xhtml" type="text/javascript" src="js/kobo.js"/>
+<style xmlns="http://www.w3.org/1999/xhtml" type="text/css" id="koboSpanStyle">.koboSpan { -webkit-text-combine: inherit; }</style>
+
+</head>
+
+    <body>
+        <section>
+
+                            <header>
+                    <h1 class="header-title"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.1.1">How to do it…</span></h1>
+                </header>
+            
+            <article>
+                
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.2.1">We proceed with the recipe as follows:</span></p>
+<ol>
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.3.1">Import the modules required and declare global variables:</span></li>
+</ol>
+<div>
+<pre style="padding-left: 60px"><strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.4.1">import </span></strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.5.1">tensorflow </span><strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.6.1">as </span></strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.7.1">tf</span><br/><br/><em><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.8.1"># Global parameters</span><br/></em><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.9.1">DATA_FILE = </span><strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.10.1">'boston_housing.csv'</span><br/></strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.11.1">BATCH_SIZE = 10</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.12.1">NUM_FEATURES = 14</span></pre></div>
+<ol start="2">
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.13.1">Next, we define a function that will take as argument the filename and return tensors in batches of size equal to </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.14.1">BATCH_SIZE</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.15.1">:</span></li>
+</ol>
+<div>
+<pre style="padding-left: 60px"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.16.1">def</span><strong> </strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.17.1">data_generator(filename):</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.18.1">    """</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.19.1">    Generates Tensors in batches of size Batch_SIZE.</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.20.1">    Args: String Tensor</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.21.1">    Filename from which data is to be read</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.22.1">    Returns: Tensors</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.23.1">    feature_batch and label_batch</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.24.1">    """</span></pre></div>
+<ol start="3">
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.25.1">Define the filename that is </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.26.1">f_queue</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.27.1"> and </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.28.1">reader</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.29.1">:</span></li>
+</ol>
+<div>
+<pre style="padding-left: 60px"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.30.1">f_queue = tf.train.string_input_producer(filename)</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.31.1">reader = tf.TextLineReader(skip_header_lines=1) </span><em><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.32.1"># Skips the first line</span><br/> </em><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.33.1">_, value = reader.read(f_queue)</span></pre></div>
+<ol start="4">
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.34.1">We specify the data to use in case data is missing. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.34.2">Decode the </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.35.1">.csv</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.36.1"> and select the features we need. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.36.2">For the example, we choose RM, PTRATIO, and LSTAT:</span></li>
+</ol>
+<div>
+<pre style="padding-left: 60px"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.37.1">record_defaults = [ [0.0] for _ in range(NUM_FEATURES)]</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.38.1">data = tf.decode_csv(value, record_defaults=record_defaults)</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.39.1">features = tf.stack(tf.gather_nd(data,[[5],[10],[12]]))</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.40.1">label = data[-1]</span></pre></div>
+<ol start="5">
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.41.1">Define parameters to generate batch and use </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.42.1">tf.train.shuffle_batch()</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.43.1"> for randomly shuffling the tensors. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.43.2">The function returns the tensors--</span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.44.1">feature_batch</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.45.1"> and </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.46.1">label_batch</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.47.1">:</span></li>
+</ol>
+<div>
+<pre style="padding-left: 60px"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.48.1"># minimum number elements in the queue after a dequeuemin_after_dequeue = 10 * BATCH_SIZE</span><br/> <br/><em><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.49.1"># the maximum number of elements in the queue</span><br/></em><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.50.1">capacity = 20 * BATCH_SIZE</span><br/> <br/><em><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.51.1"># shuffle the data to generate BATCH_SIZE sample pairs</span><br/></em><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.52.1">feature_batch, label_batch = tf.train.shuffle_batch([features, label], batch_size=BATCH_SIZE,</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.53.1">                                                 capacity=capacity, min_after_dequeue=min_after_dequeue)</span><br/> <br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.54.1">return feature_batch, label_batch</span></pre></div>
+<ol start="6">
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.55.1">We define another function to generate the batches in the session:</span></li>
+</ol>
+<div>
+<pre style="padding-left: 60px"><strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.56.1">def </span></strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.57.1">generate_data(feature_batch, label_batch):</span><br/>    <strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.58.1">with </span></strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.59.1">tf.Session() </span><strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.60.1">as </span></strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.61.1">sess:</span><br/>        <em><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.62.1"># intialize the queue threads</span><br/>       </em><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.63.1">coord = tf.train.Coordinator()</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.64.1">        threads = tf.train.start_queue_runners(coord=coord)</span><br/>        <strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.65.1">for </span></strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.66.1">_ </span><strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.67.1">in </span></strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.68.1">range(5): </span><em><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.69.1"># Generate 5 batches</span><br/>           </em><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.70.1">features, labels = sess.run([feature_batch, label_batch])</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.71.1">            print (features, </span><strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.72.1">"HI"</span></strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.73.1">)</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.74.1">        coord.request_stop()</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.75.1">        coord.join(threads)</span></pre></div>
+<ol start="7">
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.76.1">Now, we can use these two functions to get the data in batches. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.76.2">Here, we are just printing the data; when learning, we will perform the optimization step at this point:</span></li>
+</ol>
+<div>
+<pre style="padding-left: 60px"><strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.77.1">if </span></strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.78.1">__name__ =='__main__':</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.79.1">    feature_batch, label_batch = data_generator([DATA_FILE])</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.80.1">    generate_data(feature_batch, label_batch)</span></pre></div>
+
+
+            </article>
+
+            
+        </section>
+    </body>
+
+</html>

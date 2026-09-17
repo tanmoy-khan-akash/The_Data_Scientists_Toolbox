@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+    <head>
+        <title>Policy gradients to play the game of Pong</title>
+        <link rel="stylesheet" href="css/style.css" type="text/css"/>
+        <meta charset="utf-8"/>
+    
+<!-- kobo-style -->
+<script xmlns="http://www.w3.org/1999/xhtml" type="text/javascript" src="js/kobo.js"/>
+<style xmlns="http://www.w3.org/1999/xhtml" type="text/css" id="koboSpanStyle">.koboSpan { -webkit-text-combine: inherit; }</style>
+
+</head>
+
+    <body>
+        <section>
+
+                            <header>
+                    <h1 class="header-title"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.1.1">Policy gradients to play the game of Pong</span></h1>
+                </header>
+            
+            <article>
+                
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.2.1">As of today, policy gradient is one of the most used </span><span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.3.1">RL</span></span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.4.1"> algorithms. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.4.2">Research has shown that when properly tuned, they perform better than DQNs and, at the same time, do not suffer from excessive memory and computation disadvantages. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.4.3">Unlike Q learning, policy gradients use a parameterized policy that can select actions without consulting a value function. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.4.4">In policy gradients, we talk about a performance measure </span><em><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.5.1">η(θ</span><sub><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.6.1">p</span></sub><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.7.1">)</span></em><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.8.1">; the goal is to maximize the performance and hence the weights of the NN are updated according to the gradient ascent algorithm. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.8.2">However, TensorFlow does not have a </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.9.1">maximum</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.10.1"> optimizer, thus we use the negative of the gradient of performance, </span><em><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.11.1">-∇η(θ</span><sub><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.12.1">p</span></sub><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.13.1">)</span></em><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.14.1">, and minimize it.</span></p>
+
+
+            </article>
+
+            
+        </section>
+    </body>
+
+</html>

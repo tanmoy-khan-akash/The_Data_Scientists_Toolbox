@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+    <head>
+        <title>How to do it...</title>
+        <link rel="stylesheet" href="css/style.css" type="text/css"/>
+        <meta charset="utf-8"/>
+    
+<!-- kobo-style -->
+<script xmlns="http://www.w3.org/1999/xhtml" type="text/javascript" src="js/kobo.js"/>
+<style xmlns="http://www.w3.org/1999/xhtml" type="text/css" id="koboSpanStyle">.koboSpan { -webkit-text-combine: inherit; }</style>
+
+</head>
+
+    <body>
+        <section>
+
+                            <header>
+                    <h1 class="header-title"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.1.1">How to do it...</span></h1>
+                </header>
+            
+            <article>
+                
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.2.1">We proceed with the optimization as follows:</span></p>
+<ol>
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.3.1">Install Android Studio from </span><a href="https://developer.android.com/studio/install.html" target="_blank"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.4.1">https://developer.android.com/studio/install.html</span></a><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.5.1">.</span></li>
+</ol>
+<ol start="2">
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.6.1">Install Bazel by following the instructions at </span><a href="https://docs.bazel.build/versions/master/install.html"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.7.1">https://docs.bazel.build/versions/master/install.html</span></a><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.8.1">. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.8.2">For macOS, we are going to use Homebrew:</span></li>
+</ol>
+<pre style="padding-left: 60px"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.9.1">/usr/bin/ruby -e "$(curl -fsSL \</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.10.1"> https://raw.githubusercontent.com/Homebrew/install/master/install)"</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.11.1">brew install bazel</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.12.1">bazel version</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.13.1">brew upgrade bazel</span></pre>
+<ol start="3">
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.14.1">Clone the TensorFlow distribution from GitHub:</span></li>
+</ol>
+<pre style="padding-left: 60px"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.15.1">git clone https://github.com/TensorFlow/TensorFlow.git</span></pre>
+<ol start="4">
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.16.1">Build the graph transformer that summarizes the graph itself:</span></li>
+</ol>
+<pre style="padding-left: 60px"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.17.1">cd ~/TensorFlow/</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.18.1">bazel build TensorFlow/tools/graph_transforms:summarize_graph</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.19.1">[2,326 / 2,531] Compiling TensorFlow/core/kernels/cwise_op_greater.cc</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.20.1">INFO: From Linking TensorFlow/tools/graph_transforms/summarize_graph:</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.21.1">clang: warning: argument unused during compilation: '-pthread' [-Wunused-command-line-argument]</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.22.1">Target //TensorFlow/tools/graph_transforms:summarize_graph up-to-date:</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.23.1">bazel-bin/TensorFlow/tools/graph_transforms/summarize_graph</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.24.1">INFO: Elapsed time: 1521.260s, Critical Path: 103.87s</span></pre>
+<ol start="7">
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.25.1">Download a TensorFlow graph to be used as an example. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.25.2">In this case, we will use Inception v1 TensorFlow graph:</span></li>
+</ol>
+<pre style="padding-left: 60px"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.26.1">mkdir -p ~/graphs</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.27.1"> curl -o ~/graphs/inception5h.zip \</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.28.1"> https://storage.googleapis.com/download.TensorFlow.org/models/inception5h.zip \</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.29.1"> &amp;&amp; unzip ~/graphs/inception5h.zip -d ~/graphs/inception5h</span></pre>
+<ol start="8">
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.30.1">Summarize the Inception graph and notice the number of const parameters: 13.46Million. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.30.2">Each of them is stored with 32-bit floats, and this is quite expensive:</span></li>
+</ol>
+<pre style="padding-left: 60px"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.31.1">bazel-bin/TensorFlow/tools/graph_transforms/summarize_graph --in_graph=/Users/gulli/graphs/TensorFlow_inception_graph.pb</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.32.1">Found 1 possible inputs: (name=input, type=float(1), shape=[])</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.33.1">No variables spotted.</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.34.1">Found 3 possible outputs: (name=output, op=Identity) (name=output1, op=Identity) (name=output2, op=Identity)</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.35.1">Found 13462015 (13.46M) const parameters, 0 (0) variable parameters, and 0 control_edges</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.36.1">370 nodes assigned to device '/cpu:0'Op types used: 142 Const, 64 BiasAdd, 61 Relu, 59 Conv2D, 13 MaxPool, 9 Concat, 5 Reshape, 5 MatMul, 3 Softmax, 3 Identity, 3 AvgPool, 2 LRN, 1 Placeholder</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.37.1">To use with TensorFlow/tools/benchmark:benchmark_model try these arguments:</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.38.1">bazel run TensorFlow/tools/benchmark:benchmark_model -- --graph=/Users/gulli/graphs/TensorFlow_inception_graph.pb --show_flops --input_layer=input --input_layer_type=float --input_layer_shape= --output_layer=output,output1,output2</span></pre>
+<ol start="9">
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.39.1">Compile the tool for quantizing the const operations down to 8 bits:</span></li>
+</ol>
+<pre style="padding-left: 60px"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.40.1">bazel build TensorFlow/tools/graph_transforms:transform_graph</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.41.1">INFO: From Linking TensorFlow/tools/graph_transforms/transform_graph:</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.42.1">clang: warning: argument unused during compilation: '-pthread' [-Wunused-command-line-argument]</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.43.1">Target //TensorFlow/tools/graph_transforms:transform_graph up-to-date:</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.44.1">bazel-bin/TensorFlow/tools/graph_transforms/transform_graph</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.45.1">INFO: Elapsed time: 294.421s, Critical Path: 28.83s</span></pre>
+<ol start="10">
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.46.1">Run the tool for quantizing the Inception V1 graph:</span></li>
+</ol>
+<pre style="padding-left: 60px"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.47.1">bazel-bin/TensorFlow/tools/graph_transforms/transform_graph --in_graph=/Users/gulli/graphs/inception5h/TensorFlow_inception_graph.pb --out_graph=/tmp/TensorFlow_inception_quantized.pb --inputs='Mul:0' --outputs='softmax:0' --transforms='quantize_weights'</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.48.1">2017-10-15 18:56:01.192498: I TensorFlow/tools/graph_transforms/transform_graph.cc:264] Applying quantize_weights</span></pre>
+<ol start="11">
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.49.1">Compare the two models:</span></li>
+</ol>
+<pre style="padding-left: 60px"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.50.1">ls -lah /Users/gulli/graphs/inception5h/TensorFlow_inception_graph.pb</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.51.1">-rw-r----- 1 gulli 5001 51M Nov 19 2015 /Users/gulli/graphs/inception5h/TensorFlow_inception_graph.pb</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.52.1">ls -lah /tmp/TensorFlow_inception_quantized.pb</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.53.1">-rw-r--r-- 1 gulli wheel 13M Oct 15 18:56 /tmp/TensorFlow_inception_quantized.pb</span></pre>
+
+
+            </article>
+
+            
+        </section>
+    </body>
+
+</html>

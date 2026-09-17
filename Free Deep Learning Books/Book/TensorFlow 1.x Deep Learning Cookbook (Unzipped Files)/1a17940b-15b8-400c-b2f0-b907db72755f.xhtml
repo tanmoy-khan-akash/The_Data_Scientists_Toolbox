@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+    <head>
+        <title>There's more...</title>
+        <link rel="stylesheet" href="css/style.css" type="text/css"/>
+        <meta charset="utf-8"/>
+    
+<!-- kobo-style -->
+<script xmlns="http://www.w3.org/1999/xhtml" type="text/javascript" src="js/kobo.js"/>
+<style xmlns="http://www.w3.org/1999/xhtml" type="text/css" id="koboSpanStyle">.koboSpan { -webkit-text-combine: inherit; }</style>
+
+</head>
+
+    <body>
+        <section>
+
+                            <header>
+                    <h1 class="header-title"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.1.1">There's more...</span></h1>
+                </header>
+            
+            <article>
+                
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.2.1">TensorFlow provides a technique called </span><strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.3.1">embeddings</span></strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.4.1">, which is a mapping of objects into vectors. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.4.2">Embedding Projector of TensorBoard allows us to interactively visualize embeddings from our model. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.4.3">Embedding Projector provides three ways for dimensionality reduction: PCA, t-SNE, and Custom. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.4.4">We can use the Embedding Projector of TensorBoard to achieve a similar result as the previous one. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.4.5">We will need to import the </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.5.1">projector</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.6.1"> class from </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.7.1">tensorflow.contrib.tensorboard.plugins</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.8.1"> to do the same from </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.9.1">tensorflow.contrib.tensorboard.plugins</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.10.1"> import </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.11.1">projector</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.12.1">. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.12.2">We can do it in three simple steps:</span></p>
+<ol>
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.13.1">Load the data whose embeddings you want to explore:</span></li>
+</ol>
+<div>
+<pre style="padding-left: 60px"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.14.1">mnist = input_data.read_data_sets(</span><strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.15.1">'MNIST_data'</span></strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.16.1">)</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.17.1">images = tf.Variable(mnist.test.images, name=</span><strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.18.1">'images'</span></strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.19.1">)</span></pre></div>
+<ol start="2">
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.20.1">Create a </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.21.1">metadata</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.22.1"> file a (</span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.23.1">metadata</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.24.1"> file is a tab-separated value </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.25.1">.tsv</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.26.1"> file):</span></li>
+</ol>
+<div>
+<pre style="padding-left: 60px"><strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.27.1">with </span></strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.28.1">open(metadata, </span><strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.29.1">'w'</span></strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.30.1">) </span><strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.31.1">as </span></strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.32.1">metadata_file:</span><br/>    <strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.33.1">for </span></strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.34.1">row </span><strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.35.1">in </span></strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.36.1">mnist.test.labels:</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.37.1">        metadata_file.write(</span><strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.38.1">'%d\n' </span></strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.39.1">% row)</span></pre></div>
+<ol start="3">
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.40.1">Save the embeddings in the desired </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.41.1">Log_DIR</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.42.1">:</span></li>
+</ol>
+<div>
+<pre style="padding-left: 60px"><strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.43.1">with </span></strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.44.1">tf.Session() </span><strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.45.1">as </span></strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.46.1">sess:</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.47.1">    saver = tf.train.Saver([images])</span><br/> <br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.48.1">    sess.run(images.initializer)</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.49.1">    saver.save(sess, os.path.join(LOG_DIR, </span><strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.50.1">'images.ckpt'</span></strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.51.1">))</span><br/> <br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.52.1">    config = projector.ProjectorConfig()</span><br/>    <em><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.53.1"># One can add multiple embeddings.</span><br/>    </em><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.54.1">embedding = config.embeddings.add()</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.55.1">    embedding.tensor_name = images.name</span><br/>    <em><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.56.1"># Link this tensor to its metadata file (e.g. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.56.2">labels).</span><br/>    </em><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.57.1">embedding.metadata_path = metadata</span><br/>    <em><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.58.1"># Saves a config file that TensorBoard will read during startup.</span><br/>       </em><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.59.1">projector.visualize_embeddings(tf.summary.FileWriter(LOG_DIR), config)</span></pre></div>
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.60.1">The embeddings are ready and can now be seen using TensorBoard. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.60.2">Launch TensorBoard through CLI </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.61.1">tensorboard --logdir=log</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.62.1">, open TensorBoard in your web browser, and go to the </span><span class="packt_screen"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.63.1">EMBEDDINGS</span></span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.64.1"> tab. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.64.2">Here is the TensorBoard projection using PCA with the first three principal components as the axis:</span></p>
+<div class="CDPAlignCenter CDPAlign"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.65.1"><img src="assets/0138c6e3-6c07-415d-a74c-f080e9d27718.png"/></span></div>
+
+
+            </article>
+
+            
+        </section>
+    </body>
+
+</html>

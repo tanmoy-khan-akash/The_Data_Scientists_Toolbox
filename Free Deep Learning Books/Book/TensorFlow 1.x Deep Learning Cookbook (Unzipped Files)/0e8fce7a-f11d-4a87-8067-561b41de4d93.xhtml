@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+    <head>
+        <title>Introduction</title>
+        <link rel="stylesheet" href="css/style.css" type="text/css"/>
+        <meta charset="utf-8"/>
+    
+<!-- kobo-style -->
+<script xmlns="http://www.w3.org/1999/xhtml" type="text/javascript" src="js/kobo.js"/>
+<style xmlns="http://www.w3.org/1999/xhtml" type="text/css" id="koboSpanStyle">.koboSpan { -webkit-text-combine: inherit; }</style>
+
+</head>
+
+    <body>
+        <section>
+
+                            <header>
+                    <h1 class="header-title"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.1.1">Introduction</span></h1>
+                </header>
+            
+            <article>
+                
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.2.1">Each TensorFlow computation is described in terms of a graph. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.2.2">This allows a natural degree of flexibility in the structure and the placement of operations that can be split across distributed nodes of computation. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.2.3">The graph can be split into multiple subgraphs that are assigned to different nodes in a cluster of servers.</span></p>
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.3.1">I strongly suggest the reader have a look to the paper Large Scale Distributed Deep Networks Jeffrey Dean, Greg S. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.3.2">Corrado, Rajat Monga, Kai Chen, Matthieu Devin, Quoc V. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.3.3">Le, Mark Z. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.3.4">Mao, Marc'Aurelio Ranzato, Andrew Senior, Paul Tucker, Ke Yang, and Andrew Y. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.3.5">Ng. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.3.6">NIPS, 2012, </span><a href="https://research.google.com/archive/large_deep_networks_nips2012.html"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.4.1">https://research.google.com/archive/large_deep_networks_nips2012.html</span></a></p>
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.5.1">One key result of the paper is to prove that it is possible to run distributed </span><strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.6.1">stochastic gradient descent</span></strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.7.1"> (</span><strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.8.1">SDG</span></strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.9.1">) where multiple nodes are working in parallel on data-shards and update independently and asynchronously the gradient by sending updates to a parameter server. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.9.2">Quoting the abstract of the paper:</span></p>
+<div class="packt_quote"><em><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.10.1">Our experiments reveal several surprising results about large-scale nonconvex optimization. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.10.2">Firstly, asynchronous SGD, rarely applied to nonconvex problems, works very well for training deep networks, particularly when combined with Adagrad adaptive learning rates.</span></em></div>
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.11.1">This is well explained by the following picture taken from the paper itself:</span></p>
+<div class="CDPAlignCenter CDPAlign"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.12.1"><img height="186" width="575" class=" image-border" src="assets/b2700755-61ba-44f4-82aa-a60e2dd7f16c.png"/></span></div>
+<div class="packt_figref CDPAlignCenter CDPAlign"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.13.1">An example of distributed gradient descent with a parameter server as taken from </span><a href="https://research.google.com/archive/large_deep_networks_nips2012.html"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.14.1">https://research.google.com/archive/large_deep_networks_nips2012.html</span></a></div>
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.15.1">Another document you should read is the white paper </span><em><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.16.1">TensorFlow: Large-Scale Machine Learning on Heterogeneous Distributed Systems</span></em><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.17.1"> Martín Abadi, and others November, 2015, </span><a href="http://download.tensorflow.org/paper/whitepaper2015.pdf"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.18.1">http://download.tensorflow.org/paper/whitepaper2015.pdf</span></a></p>
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.19.1">Considering some examples contained in it we can see a fragment of TensorFlow code shown on the left in the picture below which is then represented as a graph on the right:</span></p>
+<table class="a">
+<tbody>
+<tr>
+<td>
+<div class="CDPAlignCenter CDPAlign"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.20.1"><img class=" image-border" src="assets/b5cffc2b-9734-4179-abfb-71abe9fa4fa5.png"/></span></div>
+</td>
+<td>
+<div class="CDPAlignCenter CDPAlign"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.21.1"><img class=" image-border" src="assets/4eaf774e-bf1e-423f-bd04-bbbe56dfe2d4.png"/></span></div>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="packt_figref CDPAlignCenter CDPAlign"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.22.1">An example of TensorFlow graph as taken from </span><a href="http://download.tensorflow.org/paper/whitepaper2015.pdf"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.23.1">http://download.tensorflow.org/paper/whitepaper2015.pdf</span></a></div>
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.24.1">A graph can be partitioned across multiple nodes by having local computations and by transparently adding to the graph remote communication nodes when needed. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.24.2">This is well explained in the following figure which is still taken from the paper mentioned earlier:</span></p>
+<div class="CDPAlignCenter CDPAlign"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.25.1"><img height="167" width="292" class=" image-border" src="assets/bceaef6d-d560-4a58-9f7e-01797bfa3350.png"/></span></div>
+<div class="packt_figref CDPAlignCenter CDPAlign"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.26.1">An example of distributed TensorFlow graph computation as taken from </span><a href="http://download.tensorflow.org/paper/whitepaper2015.pdf"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.27.1">http://download.tensorflow.org/paper/whitepaper2015.pdf</span></a></div>
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.28.1">Gradient descent and all the major optimizer algorithms can be computed in either a centralized way (left side of the figure below) or in a distributed way (right side). </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.28.2">The latter involves a master process which talks with multiple workers provisioning both GPUs and CPUs:</span></p>
+<div class="CDPAlignCenter CDPAlign"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.29.1"><img height="256" width="589" class=" image-border" src="assets/96de5e4c-3af3-4ba3-9afa-6d1ad513b03c.png"/></span></div>
+<div class="packt_figref CDPAlignCenter CDPAlign"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.30.1">An example of single machine and distributed system structure as taken from </span><span><span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.31.1">An example of distributed TensorFlow graph computation as taken from </span><a href="http://download.tensorflow.org/paper/whitepaper2015.pdf"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.32.1">http://download.tensorflow.org/paper/whitepaper2015.pdf</span></a></span></span></div>
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.33.1">Distributed computations can be either synchronous ( all the workers are updating at the same time the gradient on sharded data) or asynchronous (the update did not happen at the same time). </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.33.2">The latter typically allows higher scalability with larger graph computations still working pretty well in terms of convergence to an optimal solution. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.33.3">Again the pictures are taken from the TensorFlow white paper and I strongly encourage the interested reader to have a look to this paper if you want to know more:</span></p>
+<div class="CDPAlignCenter CDPAlign"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.34.1"><img height="398" width="472" class=" image-border" src="assets/9f6bb40e-2159-4bf9-84ab-cddfebc6ae9d.png"/></span></div>
+<div class="packt_figref CDPAlignCenter CDPAlign"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.35.1">An example of synchronous and asynchronous data parallel training</span></div>
+
+
+            </article>
+
+            
+        </section>
+    </body>
+
+</html>

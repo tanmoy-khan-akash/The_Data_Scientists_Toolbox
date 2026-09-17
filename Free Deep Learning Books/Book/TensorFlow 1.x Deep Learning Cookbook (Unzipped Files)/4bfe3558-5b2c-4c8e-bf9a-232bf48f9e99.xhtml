@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+    <head>
+        <title>How to do it...</title>
+        <link rel="stylesheet" href="css/style.css" type="text/css"/>
+        <meta charset="utf-8"/>
+    
+<!-- kobo-style -->
+<script xmlns="http://www.w3.org/1999/xhtml" type="text/javascript" src="js/kobo.js"/>
+<style xmlns="http://www.w3.org/1999/xhtml" type="text/css" id="koboSpanStyle">.koboSpan { -webkit-text-combine: inherit; }</style>
+
+</head>
+
+    <body>
+        <section>
+
+                            <header>
+                    <h1 class="header-title"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.1.1">How to do it...</span></h1>
+                </header>
+            
+            <article>
+                
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.2.1">For this recipe, we simply summarize the results presented online (</span><a href="https://github.com/imatge-upc/activitynet-2016-cvprw/blob/master/misc/step_by_step_guide.md"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.3.1">https://github.com/imatge-upc/activitynet-2016-cvprw/blob/master/misc/step_by_step_guide.md</span></a><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.4.1">):</span></p>
+<ol>
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.5.1">The first step is to clone the git repository from</span></li>
+</ol>
+<pre><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.6.1">git clone https://github.com/imatge-upc/activitynet-2016-cvprw.git</span></pre>
+<ol start="2">
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.7.1">Then we need to download the ActivityNet v1.3 dataset, which has a size of 600 GB:</span></li>
+</ol>
+<pre><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.8.1">cd dataset</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.9.1"> # This will download the videos on the default directory</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.10.1"> sh download_videos.sh username password</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.11.1"> # This will download the videos on the directory you specify</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.12.1"> sh download_videos.sh username password /path/you/want</span></pre>
+<ol start="3">
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.13.1">The next step is to download the pre-trained weights for both the CNN3d and the RNN:</span></li>
+</ol>
+<pre><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.14.1">cd data/models</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.15.1"> sh get_c3d_sports_weights.sh</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.16.1"> sh get_temporal_location_weights.sh</span></pre>
+<ol start="4">
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.17.1">The last step consists of classifying the videos:</span></li>
+</ol>
+<pre><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.18.1">python scripts/run_all_pipeline.py -i path/to/test/video.mp4</span></pre>
+
+
+            </article>
+
+            
+        </section>
+    </body>
+
+</html>

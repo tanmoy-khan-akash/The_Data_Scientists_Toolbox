@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+    <head>
+        <title>Getting ready</title>
+        <link rel="stylesheet" href="css/style.css" type="text/css"/>
+        <meta charset="utf-8"/>
+    
+<!-- kobo-style -->
+<script xmlns="http://www.w3.org/1999/xhtml" type="text/javascript" src="js/kobo.js"/>
+<style xmlns="http://www.w3.org/1999/xhtml" type="text/css" id="koboSpanStyle">.koboSpan { -webkit-text-combine: inherit; }</style>
+
+</head>
+
+    <body>
+        <section>
+
+                            <header>
+                    <h1 class="header-title"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.1.1">Getting ready</span></h1>
+                </header>
+            
+            <article>
+                
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.2.1">At present, XLA is not included in the binary distributions of TensorFlow. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.2.2">One needs to build it from source. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.2.3">To build TensorFlow from source, knowledge of LLVM and Bazel along with TensorFlow is required. </span><a href="http://TensorFlow.org" target="_blank"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.3.1">TensorFlow.org</span></a><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.4.1"> supports building from source in only MacOS and Ubuntu. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.4.2">The steps needed to build TensorFlow from the source are as follows (</span><a href="https://www.tensorflow.org/install/install_sources"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.5.1">https://www.tensorflow.org/install/install_sources</span></a><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.6.1">):</span></p>
+<ol>
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.7.1">Determine which TensorFlow you want to install--TensorFlow with CPU support only or TensorFlow with GPU support.</span></li>
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.8.1">Clone the TensorFlow repository:</span></li>
+</ol>
+<pre style="padding-left: 60px"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.9.1">git clone </span><a href="https://github.com/tensorflow/tensorflow"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.10.1">https://github.com/tensorflow/tensorflow</span></a> <br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.11.1">cd tensorflow </span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.12.1">git checkout Branch #where Branch is the desired branch  </span></pre>
+<ol start="3">
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.13.1">Install the following dependencies:</span></li>
+</ol>
+<ul>
+<li style="list-style-type: none">
+<ul style="padding-left: 1px">
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.14.1">Bazel</span></li>
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.15.1">TensorFlow Python dependencies</span></li>
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.16.1">For the GPU version, NVIDIA packages to support TensorFlow</span></li>
+</ul>
+</li>
+</ul>
+<ol start="4">
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.17.1">Configure the installation. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.17.2">In this step, you need to choose different options such as XLA, Cuda support, Verbs, and so on:</span></li>
+</ol>
+<pre style="padding-left: 60px"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.18.1">./configure </span></pre>
+<ol start="5">
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.19.1">Next, use bazel-build:</span></li>
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.20.1">For CPU only version you use:</span></li>
+</ol>
+<pre style="padding-left: 60px"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.21.1">bazel build --config=opt //tensorflow/tools/pip_package:build_pip_package</span><br/>      </pre>
+<ol start="7">
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.22.1">If you have a compatible GPU device and you want the GPU Support, then use:</span></li>
+</ol>
+<pre style="padding-left: 60px"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.23.1">bazel build --config=opt --config=cuda //tensorflow/tools/pip_package:build_pip_package</span><br/>  </pre>
+<ol start="8">
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.24.1">On a successful run, you will get a script, </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.25.1">build_pip_package</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.26.1">.</span></li>
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.27.1">Run this script as follows to build the </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.28.1">whl</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.29.1"> file:</span></li>
+</ol>
+<pre style="padding-left: 60px"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.30.1">bazel-bin/tensorflow/tools/pip_package/build_pip_package /tmp/tensorflow_pkg</span></pre>
+<p style="padding-left: 60px"/>
+<ol start="10">
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.31.1">Install the </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.32.1">pip</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.33.1"> package:</span></li>
+</ol>
+<pre style="padding-left: 60px"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.34.1">sudo pip install /tmp/tensorflow_pkg/tensorflow-1.1.0-py2-none-any.whl</span><br/>  </pre>
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.35.1">Now you are ready to go.</span></p>
+
+
+            </article>
+
+            
+        </section>
+    </body>
+
+</html>

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+    <head>
+        <title>How to do it...</title>
+        <link rel="stylesheet" href="css/style.css" type="text/css"/>
+        <meta charset="utf-8"/>
+    
+<!-- kobo-style -->
+<script xmlns="http://www.w3.org/1999/xhtml" type="text/javascript" src="js/kobo.js"/>
+<style xmlns="http://www.w3.org/1999/xhtml" type="text/css" id="koboSpanStyle">.koboSpan { -webkit-text-combine: inherit; }</style>
+
+</head>
+
+    <body>
+        <section>
+
+                            <header>
+                    <h1 class="header-title"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.1.1">How to do it...</span></h1>
+                </header>
+            
+            <article>
+                
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.2.1">We proceed with the recipe as follows:</span></p>
+<ol>
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.3.1">Install NSynth by creating a separate conda environment. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.3.2">Create and activate a Magenta conda environment using Python 2.7 with Jupyter Notebook support:</span></li>
+</ol>
+<pre><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.4.1">conda create -n magenta python=2.7 jupyter</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.5.1">source activate magenta</span></pre>
+<ol start="2">
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.6.1">Install the Magenta pip package and the librosa, which is used for reading audio formats:</span></li>
+</ol>
+<pre><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.7.1">pip install magenta</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.8.1">pip install librosa</span></pre>
+<ol start="3">
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.9.1">Install a pre-built model from the internet </span><a href="http://download.magenta.tensorflow.org/models/nsynth/wavenet-ckpt.tar"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.10.1">http://download.magenta.tensorflow.org/models/nsynth/wavenet-ckpt.tar</span></a><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.11.1"> and download a sample sound </span><a href="https://www.freesound.org/people/MustardPlug/sounds/395058/"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.12.1">https://www.freesound.org/people/MustardPlug/sounds/395058/</span></a><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.13.1">. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.13.2">Then run the notebook contained in the demo directory (in my case </span><a href="http://localhost:8888/notebooks/nsynth/Exploring_Neural_Audio_Synthesis_with_NSynth.ipynb"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.14.1">http://localhost:8888/notebooks/nsynth/Exploring_Neural_Audio_Synthesis_with_NSynth.ipynb</span></a><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.15.1">) . </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.15.2">The first part is about including modules that will be used later in our computations:</span></li>
+</ol>
+<pre><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.16.1">import os</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.17.1">import numpy as np</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.18.1">import matplotlib.pyplot as plt</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.19.1">from magenta.models.nsynth import utils</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.20.1">from magenta.models.nsynth.wavenet import fastgen</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.21.1">from IPython.display import Audio</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.22.1">%matplotlib inline</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.23.1">%config InlineBackend.figure_format = 'jpg'</span></pre>
+<ol start="4">
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.24.1">Then we load the demo sound downloaded from the internet and put it in the same directory as the notebook. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.24.2">This will load 40,000 samples in about 2.5 seconds into the machine:</span></li>
+</ol>
+<pre><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.25.1"># from https://www.freesound.org/people/MustardPlug/sounds/395058/</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.26.1">fname = '395058__mustardplug__breakbeat-hiphop-a4-4bar-96bpm.wav'</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.27.1">sr = 16000</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.28.1">audio = utils.load_audio(fname, sample_length=40000, sr=sr)</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.29.1">sample_length = audio.shape[0]</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.30.1">print('{} samples, {} seconds'.format(sample_length, sample_length / float(sr)))</span></pre>
+<ol start="5">
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.31.1">The next step is to encode the audio samples in a very compact representation using a pre-trained NSynth model downloaded from the internet. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.31.2">This will give us a 78 x 16 dimension encoding for every four seconds of audio, which we can then decode or resynthesize. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.31.3">Our encoding is a tensor (</span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.32.1">#files=1 x 78 x 16</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.33.1">):</span></li>
+</ol>
+<pre><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.34.1">%time encoding = fastgen.encode(audio, 'model.ckpt-200000', sample_length)</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.35.1">INFO:tensorflow:Restoring parameters from model.ckpt-200000</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.36.1"> CPU times: user 1min 4s, sys: 2.96 s, total: 1min 7s</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.37.1"> Wall time: 25.7 s</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.38.1">print(encoding.shape)</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.39.1">(1, 78, 16)</span></pre>
+<ol start="6">
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.40.1">Let's save the encoding that will be used later for re-synthesizing. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.40.2">In addition, let's have a quick view of what the encoding shape is with a graphical representation and compare it with the original audio signal. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.40.3">As you can see, the encoding follows the beat presented in the original audio signal:</span></li>
+</ol>
+<pre><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.41.1">np.save(fname + '.npy', encoding)</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.42.1">fig, axs = plt.subplots(2, 1, figsize=(10, 5))</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.43.1">axs[0].plot(audio);</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.44.1">axs[0].set_title('Audio Signal')</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.45.1">axs[1].plot(encoding[0]);</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.46.1">axs[1].set_title('NSynth Encoding')</span></pre>
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.47.1">We observe the following audio signal and Nsynth Encoding:</span></p>
+<div class="CDPAlignCenter CDPAlign"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.48.1"><img height="427" width="1171" class="alignnone size-full wp-image-784 image-border" src="assets/43b1aecc-5889-4f98-bdf4-c10c4c96ab8e.jpg"/></span></div>
+<ol start="7">
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.49.1">Now let's do a decoding of the encoding we just produced. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.49.2">In other words, we try to reproduce the original audio from the compact representation with the intent of understanding if the re-synthesized sound is similar to the original one. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.49.3">Indeed, if you run the experiment and listen to the original audio and the re-synthesized one, they sound very similar:</span></li>
+</ol>
+<pre><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.50.1">%time fastgen.synthesize(encoding, save_paths=['gen_' + fname], samples_per_save=sample_length)</span></pre>
+
+
+            </article>
+
+            
+        </section>
+    </body>
+
+</html>

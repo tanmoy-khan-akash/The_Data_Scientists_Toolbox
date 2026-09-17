@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+    <head>
+        <title>How to do it...</title>
+        <link rel="stylesheet" href="css/style.css" type="text/css"/>
+        <meta charset="utf-8"/>
+    
+<!-- kobo-style -->
+<script xmlns="http://www.w3.org/1999/xhtml" type="text/javascript" src="js/kobo.js"/>
+<style xmlns="http://www.w3.org/1999/xhtml" type="text/css" id="koboSpanStyle">.koboSpan { -webkit-text-combine: inherit; }</style>
+
+</head>
+
+    <body>
+        <section>
+
+                            <header>
+                    <h1 class="header-title"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.1.1">How to do it...</span></h1>
+                </header>
+            
+            <article>
+                
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.2.1">We proceed with the recipe as follows:</span></p>
+<ol>
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.3.1">Install TFLearn with </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.4.1">pip</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.5.1">:</span></li>
+</ol>
+<pre><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.6.1">pip install -I tflearn</span></pre>
+<ol start="2">
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.7.1">Import a number of useful modules and download an example of text written by Shakespeare. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.7.2">In this case, we use one available at </span><a href="https://raw.githubusercontent.com/tflearn/tflearn.github.io/master/resources/shakespeare_input.txt"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.8.1">https://raw.githubusercontent.com/tflearn/tflearn.github.io/master/resources/shakespeare_input.txt</span></a><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.9.1">:</span><a href="https://raw.githubusercontent.com/tflearn/tflearn.github.io/master/resources/shakespeare_input.txt"/></li>
+</ol>
+<pre><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.10.1">import os</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.11.1">import pickle</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.12.1">from six.moves import urllib</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.13.1">import tflearn</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.14.1">from tflearn.data_utils import *</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.15.1">path = "shakespeare_input.txt"</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.16.1">char_idx_file = 'char_idx.pickle'</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.17.1">if not os.path.isfile(path): urllib.request.urlretrieve("https://raw.githubusercontent.com/tflearn/tflearn.github.io/master/resources/shakespeare_input.txt", path)</span></pre>
+<ol start="3">
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.18.1">Transform the input text into a vector and return the parsed sequences and targets, along with the associated dictionary, by using </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.19.1">string_to_semi_redundant_sequences()</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.20.1">, which returns a tuple (inputs, targets, dictionary):</span></li>
+</ol>
+<pre><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.21.1">maxlen = 25</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.22.1">char_idx = None</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.23.1">if os.path.isfile(char_idx_file):</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.24.1">print('Loading previous char_idx')</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.25.1">char_idx = pickle.load(open(char_idx_file, 'rb'))</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.26.1">X, Y, char_idx = \</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.27.1">textfile_to_semi_redundant_sequences(path, seq_maxlen=maxlen, redun_step=3,</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.28.1">pre_defined_char_idx=char_idx)</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.29.1">pickle.dump(char_idx, open(char_idx_file,'wb'))</span></pre>
+<ol start="4">
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.30.1">Define an RNN made up of three LSTMs, each of which has 512 nodes and returns the full sequence instead of the last sequence output only. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.30.2">Note that we use drop-out modules with a probability of 50% for connecting the LSTM modules. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.30.3">The last layer is a dense layer applying a softmax with length equal to the dictionary size. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.30.4">The loss function is </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.31.1">categorical_crossentropy</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.32.1"> and the optimizer is Adam:</span></li>
+</ol>
+<pre><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.33.1">g = tflearn.input_data([None, maxlen, len(char_idx)])</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.34.1">g = tflearn.lstm(g, 512, return_seq=True)</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.35.1">g = tflearn.dropout(g, 0.5)</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.36.1">g = tflearn.lstm(g, 512, return_seq=True)</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.37.1">g = tflearn.dropout(g, 0.5)</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.38.1">g = tflearn.lstm(g, 512)</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.39.1">g = tflearn.dropout(g, 0.5)</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.40.1">g = tflearn.fully_connected(g, len(char_idx), activation='softmax')</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.41.1">g = tflearn.regression(g, optimizer='adam', loss='categorical_crossentropy',</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.42.1">learning_rate=0.001)</span></pre>
+<ol start="5">
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.43.1">Given the network defined in step 4, we can now generate the sequence with the library </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.44.1">flearn.models.generator.SequenceGenerator</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.45.1"> (</span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.46.1">network</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.47.1">, </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.48.1">dictionary=char_idx, seq_maxlen=maxle</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.49.1">, </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.50.1">clip_gradients=5.0, checkpoint_path='model_shakespeare'</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.51.1">):</span></li>
+</ol>
+<pre><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.52.1">m = tflearn.SequenceGenerator(g, dictionary=char_idx,</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.53.1">seq_maxlen=maxlen,</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.54.1">clip_gradients=5.0,</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.55.1">checkpoint_path='model_shakespeare')</span></pre>
+<ol start="6">
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.56.1">For 50 iterations, we take a random sequence from the input text and we generate a new text. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.56.2">Temperature is controlling the novelty of the created sequence; a temperature close to 0 will look like samples used for training, while the higher the temperature, the more the novelty:</span></li>
+</ol>
+<pre><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.57.1">for i in range(50):</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.58.1">seed = random_sequence_from_textfile(path, maxlen)</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.59.1">m.fit(X, Y, validation_set=0.1, batch_size=128,</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.60.1">n_epoch=1, run_id='shakespeare')</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.61.1">print("-- TESTING...")</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.62.1">print("-- Test with temperature of 1.0 --")</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.63.1">print(m.generate(600, temperature=1.0, seq_seed=seed))</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.64.1">print("-- Test with temperature of 0.5 --")</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.65.1">print(m.generate(600, temperature=0.5, seq_seed=seed))</span></pre>
+
+
+            </article>
+
+            
+        </section>
+    </body>
+
+</html>

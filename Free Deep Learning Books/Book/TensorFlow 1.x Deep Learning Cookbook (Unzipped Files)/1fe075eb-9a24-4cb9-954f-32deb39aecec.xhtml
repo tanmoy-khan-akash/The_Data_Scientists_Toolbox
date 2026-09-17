@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+    <head>
+        <title>How it works...</title>
+        <link rel="stylesheet" href="css/style.css" type="text/css"/>
+        <meta charset="utf-8"/>
+    
+<!-- kobo-style -->
+<script xmlns="http://www.w3.org/1999/xhtml" type="text/javascript" src="js/kobo.js"/>
+<style xmlns="http://www.w3.org/1999/xhtml" type="text/css" id="koboSpanStyle">.koboSpan { -webkit-text-combine: inherit; }</style>
+
+</head>
+
+    <body>
+        <section>
+
+                            <header>
+                    <h1 class="header-title"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.1.1">How it works...</span></h1>
+                </header>
+            
+            <article>
+                
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.2.1">Following are the explanations of the functions:</span></p>
+<ul>
+<li><strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.3.1">Threshold activation function</span></strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.4.1"> was used by McCulloch Pitts Neuron and initial Perceptrons. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.4.2">It is not differentiable and is discontinuous at </span><em><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.5.1">x=0</span></em><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.6.1">. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.6.2">Therefore, it is not possible to use this activation function to train using gradient descent or its variants.</span></li>
+<li><strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.7.1">Sigmoid activation function</span></strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.8.1"> was very popular at one time. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.8.2">If you look at the curve, it looks like a continuous version of the threshold activation function. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.8.3">It suffers from the vanishing gradient problem, that is, the gradient of the function becomes zero near the two edges. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.8.4">This makes training and optimization difficult.</span></li>
+<li><strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.9.1">Hyperbolic Tangent activation function</span></strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.10.1"> is again sigmoidal in shape and has nonlinear properties. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.10.2">The function is centered at zero and has steeper derivatives compared to sigmoid. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.10.3">Like sigmoid, this also suffers from the vanishing gradient problem.</span></li>
+<li><strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.11.1">Linear activation function</span></strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.12.1"> is, as the name suggests, linear in nature. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.12.2">The function is unbounded from both sides </span><em><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.13.1">[-inf, inf]</span></em><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.14.1">. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.14.2">Its linearity is its major problem. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.14.3">The sum of linear functions will be a linear function and the linear function of a linear function too is a linear function. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.14.4">Thus, using this function, one cannot grasp the non-linearities present in complex datasets.</span></li>
+<li><strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.15.1">ReLU activation function</span></strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.16.1"> is the rectified version of the linear activation function, and this rectification allows it to capture non-linearities when used in multiple layers. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.16.2">One of the major advantages of using ReLU is that it leads to sparse activation; at any instant, all the neurons with negative activity are not firing. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.16.3">This makes the network lighter in terms of computation. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.16.4">ReLU neurons suffer from the dying ReLU problem, that is, neurons that do not fire will have their gradients zero and, hence, will not be able to undergo any training and stay off (dead). </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.16.5">Despite this problem, ReLU today is one of the most used activation functions for hidden layers.</span></li>
+<li><strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.17.1">Softmax activation function</span></strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.18.1"> is popularly used as the activation function of the output layer. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.18.2">The function is bounded in the range [0,1]. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.18.3">It is used to represent the probability of a class in a multiclass classification problem. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.18.4">The sum of the output of all the units will always be 1.</span></li>
+</ul>
+
+
+            </article>
+
+            
+        </section>
+    </body>
+
+</html>

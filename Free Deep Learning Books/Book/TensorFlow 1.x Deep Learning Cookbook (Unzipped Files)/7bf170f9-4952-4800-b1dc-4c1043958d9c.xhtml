@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+    <head>
+        <title>How to do it...</title>
+        <link rel="stylesheet" href="css/style.css" type="text/css"/>
+        <meta charset="utf-8"/>
+    
+<!-- kobo-style -->
+<script xmlns="http://www.w3.org/1999/xhtml" type="text/javascript" src="js/kobo.js"/>
+<style xmlns="http://www.w3.org/1999/xhtml" type="text/css" id="koboSpanStyle">.koboSpan { -webkit-text-combine: inherit; }</style>
+
+</head>
+
+    <body>
+        <section>
+
+                            <header>
+                    <h1 class="header-title"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.1.1">How to do it...</span></h1>
+                </header>
+            
+            <article>
+                
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.2.1">Here is how we proceed with the recipe:</span></p>
+<ol>
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.3.1">As before, we start by loading the necessary modules. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.3.2">We will require TensorFlow, NumPy, and Matplotlib as usual. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.3.3">In this recipe, we are working with the Iris dataset, which contains three classes of 50 instances each, where each class refers to a type of Iris plant. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.3.4">We can either download the data from </span><a href="https://archive.ics.uci.edu/ml/datasets/iris"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.4.1">https://archive.ics.uci.edu/ml/datasets/iris</span></a><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.5.1"> as a </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.6.1">.csv</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.7.1"> file or we can use the dataset module of sklearn (scikit-learn)to do the task:</span></li>
+</ol>
+<pre style="padding-left: 60px"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.8.1">import numpy as np</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.9.1">import tensorflow as tf</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.10.1">import matplotlib.pyplot as plt</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.11.1">from matplotlib.colors import ListedColormap</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.12.1"># dataset Iris</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.13.1">from sklearn import datasets</span><br/><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.14.1">%matplotlib inline</span></pre>
+<ol start="2">
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.15.1">We load the dataset:</span></li>
+</ol>
+<pre style="padding-left: 60px"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.16.1"># import some data to play with</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.17.1">iris = datasets.load_iris()</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.18.1">x = iris.data[:, :2] # we only take the first two features.</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.19.1">y = iris.target</span></pre>
+<ol start="3">
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.20.1">Let's see how this dataset looks:</span></li>
+</ol>
+<pre style="padding-left: 60px"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.21.1"># original data without clustering</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.22.1">plt.scatter(hw_frame[:,0], hw_frame[:,1])</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.23.1">plt.xlabel('Sepia Length')</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.24.1">plt.ylabel('Sepia Width')</span></pre>
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.25.1">Following is the output of the following code:</span></p>
+<div class="CDPAlignCenter CDPAlign"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.26.1"><img src="assets/30876097-6b58-458e-b7f7-122110365b5f.png"/></span></div>
+<ol start="4">
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.27.1">We can see that there are no clusters obviously visible in the data. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.27.2">Now we define </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.28.1">input_fn</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.29.1">, which will be used to feed the </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.30.1">fit</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.31.1"> method. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.31.2">Our input function returns a TensorFlow constant, which is assigned the value and shape of x, and is of the type </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.32.1">float</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.33.1">:</span></li>
+</ol>
+<pre style="padding-left: 60px"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.34.1">def input_fn():</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.35.1"> return tf.constant(np.array(x), tf.float32, x.shape),None</span></pre>
+<ol start="5">
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.36.1">Now we use the </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.37.1">KmeansClustering</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.38.1"> class; here, we already know the number of classes as 3, so we set </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.39.1">num_clusters=3</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.40.1">. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.40.2">Normally, we are not aware of what the number of clusters should be; in that case, a common methodology is the </span><strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.41.1">elbow method</span></strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.42.1">:</span></li>
+</ol>
+<pre style="padding-left: 60px"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.43.1">kmeans = tf.contrib.learn.KMeansClustering(num_clusters=3, relative_tolerance=0.0001, random_seed=2) </span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.44.1">kmeans.fit(input_fn=input_fn)</span></pre>
+<ol start="6">
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.45.1">We find the clusters using the </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.46.1">clusters()</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.47.1"> method and, to each input point, we assign the cluster index using the </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.48.1">predict_cluster_idx()</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.49.1"> method:</span></li>
+</ol>
+<pre style="padding-left: 60px"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.50.1">clusters = kmeans.clusters()</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.51.1">assignments = list(kmeans.predict_cluster_idex(input_fn=input_fn))</span></pre>
+<ol start="7">
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.52.1">Let's now visualize the clusters created by k-means. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.52.2">To do this, we create a wrapper function </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.53.1">ScatterPlot</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.54.1"> that takes the </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.55.1">X</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.56.1"> and </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.57.1">Y</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.58.1"> values along with the clusters and cluster index of each data point:</span></li>
+</ol>
+<pre style="padding-left: 60px"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.59.1">def ScatterPlot(X, Y, assignments=None, centers=None):</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.60.1"> if assignments is None:</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.61.1"> assignments = [0] * len(X)</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.62.1"> fig = plt.figure(figsize=(14,8))</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.63.1"> cmap = ListedColormap(['red', 'green', 'blue'])</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.64.1"> plt.scatter(X, Y, c=assignments, cmap=cmap)</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.65.1"> if centers is not None:</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.66.1"> plt.scatter(centers[:, 0], centers[:, 1], c=range(len(centers)), </span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.67.1"> marker='+', s=400, cmap=cmap) </span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.68.1"> plt.xlabel('Sepia Length')</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.69.1"> plt.ylabel('Sepia Width')</span></pre>
+<p style="padding-left: 60px"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.70.1">We use it to plot our </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.71.1">clusters</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.72.1">:</span></p>
+<pre style="padding-left: 60px"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.73.1">ScatterPlot(x[:,0], x[:,1], assignments, clusters)</span></pre>
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.74.1">The plot is as follows:</span></p>
+<div class="CDPAlignCenter CDPAlign"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.75.1"><img height="306" width="530" src="assets/51154394-5bbd-4d1d-9c74-31c9bc39a862.png"/></span></div>
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.76.1">The </span><strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.77.1">+</span></strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.78.1"> marks are the centroids of the three clusters.</span></p>
+
+
+            </article>
+
+            
+        </section>
+    </body>
+
+</html>

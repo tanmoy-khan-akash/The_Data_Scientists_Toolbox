@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+    <head>
+        <title>All you need is attention - another example of a seq2seq RNN</title>
+        <link rel="stylesheet" href="css/style.css" type="text/css"/>
+        <meta charset="utf-8"/>
+    
+<!-- kobo-style -->
+<script xmlns="http://www.w3.org/1999/xhtml" type="text/javascript" src="js/kobo.js"/>
+<style xmlns="http://www.w3.org/1999/xhtml" type="text/css" id="koboSpanStyle">.koboSpan { -webkit-text-combine: inherit; }</style>
+
+</head>
+
+    <body>
+        <section>
+
+                            <header>
+                    <h1 class="header-title"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.1.1">All you need is attention - another example of a seq2seq RNN</span></h1>
+                </header>
+            
+            <article>
+                
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.2.1">In this recipe, we present the </span><strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.3.1">attention</span></strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.4.1"> methodology, a state-of-the-art solution for neural network translation. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.4.2">The idea behind attention was introduced in 2015 in the paper, </span><em><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.5.1">Neural Machine Translation by Jointly Learning to Align and Translate, </span></em><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.6.1">by Dzmitry Bahdanau, Kyunghyun Cho, and Yoshua Bengio (ICLR, 2015, https://arxiv.org/abs/1409.0473) and it consists of adding additional connections between the encoder and the decoder RNNs. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.6.2">Indeed, connecting the decoder only with the latest layer of the encoder imposes an information bottleneck and does not necessarily allow the passing of the information acquired by the previous encoder layers. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.6.3">The solution adopted with attention is illustrated in the following figure:</span></p>
+<div class="CDPAlignCenter CDPAlign"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.7.1"><img height="282" width="379" src="assets/536457c9-7581-40ca-b61c-f38683038302.jpg"/></span></div>
+<div class="packt_figref CDPAlignCenter CDPAlign"><span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.8.1">An example of</span></span><span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.9.1"> attention model for NMT</span></span><span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.10.1"> </span></span><span><span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.11.1">as seen in https://github.com/lmthang/thesis/blob/master/thesis.pdf</span></span></span></div>
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.12.1">There are three aspects to consider:</span></p>
+<ul>
+<li class="MsoNormalCxSpMiddle"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.13.1">First, the current target hidden state is used together with all previous source states to derive attention weights which are used to pay more or less attention to tokens previously seen in the sequence</span></li>
+<li class="MsoNormalCxSpMiddle"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.14.1">Second, a context vector is created to summarize the results of the attention weights</span></li>
+<li class="MsoNormalCxSpLast"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.15.1">Third, the context vector is combined with the current target hidden state to obtain the attention vector</span></li>
+</ul>
+
+
+            </article>
+
+            
+        </section>
+    </body>
+
+</html>

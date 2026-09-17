@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+    <head>
+        <title>How to do it...</title>
+        <link rel="stylesheet" href="css/style.css" type="text/css"/>
+        <meta charset="utf-8"/>
+    
+<!-- kobo-style -->
+<script xmlns="http://www.w3.org/1999/xhtml" type="text/javascript" src="js/kobo.js"/>
+<style xmlns="http://www.w3.org/1999/xhtml" type="text/css" id="koboSpanStyle">.koboSpan { -webkit-text-combine: inherit; }</style>
+
+</head>
+
+    <body>
+        <section>
+
+                            <header>
+                    <h1 class="header-title"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.1.1">How to do it...</span></h1>
+                </header>
+            
+            <article>
+                
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.2.1">Let's start with constants:</span></p>
+<ol>
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.3.1">We can declare a scalar constant:</span></li>
+</ol>
+<pre style="padding-left: 60px"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.4.1">t_1 = tf.constant(4)   </span></pre>
+<ol start="2">
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.5.1">A constant vector of shape [1,3] can be declared as follows:</span></li>
+</ol>
+<pre style="padding-left: 60px"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.6.1">t_2 = tf.constant([4, 3, 2]) </span></pre>
+<ol start="3">
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.7.1">To create a tensor with all elements zero, we use </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.8.1">tf.zeros()</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.9.1">. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.9.2">This statement creates a zero matrix of shape </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.10.1">[M,N]</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.11.1"> with </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.12.1">dtype</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.13.1"> (</span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.14.1">int32</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.15.1">, </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.16.1">float32</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.17.1">, and so on):</span></li>
+</ol>
+<pre style="padding-left: 60px"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.18.1">tf.zeros([M,N],tf.dtype)   </span></pre>
+<p style="padding-left: 60px"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.19.1">Let's take an example:</span></p>
+<pre style="padding-left: 60px"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.20.1">zero_t = tf.zeros([2,3],tf.int32) </span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.21.1"># Results in an 2×3 array of zeros: [[0 0 0], [0 0 0]] </span></pre>
+<ol start="4">
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.22.1">We can also create tensor constants of the same shape as an existing Numpy array or tensor constant as follows:</span></li>
+</ol>
+<pre style="padding-left: 60px"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.23.1">tf.zeros_like(t_2) </span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.24.1"># Create a zero matrix of same shape as t_2  </span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.25.1">tf.ones_like(t_2) </span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.26.1"># Creates a ones matrix of same shape as t_2</span></pre>
+<ol start="5">
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.27.1">We can create a tensor with all elements set to one; here, we create a ones matrix of shape </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.28.1">[M,N]</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.29.1">:</span></li>
+</ol>
+<pre style="padding-left: 60px"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.30.1">tf.ones([M,N],tf.dtype) </span></pre>
+<p style="padding-left: 60px"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.31.1">Let's take an example:</span></p>
+<pre style="padding-left: 60px"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.32.1">ones_t = tf.ones([2,3],tf.int32) </span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.33.1"># Results in an 2×3 array of ones:[[1 1 1], [1 1 1]] </span></pre>
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.34.1">Let's proceed to sequences:</span></p>
+<ol>
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.35.1">We can generate a sequence of evenly spaced vectors, starting from start to stop, within total num values:</span></li>
+</ol>
+<pre style="padding-left: 60px"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.36.1">tf.linspace(start, stop, num) </span></pre>
+<ol start="2">
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.37.1">The corresponding values differ by </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.38.1">(stop-start)/(num-1)</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.39.1">.</span></li>
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.40.1">Let's take an example:</span></li>
+</ol>
+<pre style="padding-left: 60px"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.41.1">range_t = tf.linspace(2.0,5.0,5) </span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.42.1"># We get: [ 2.    </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.42.2">2.75  3.5   4.25  5.  </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.42.3">]  </span></pre>
+<ol start="4">
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.43.1">Generate a sequence of numbers starting from the start (default=0), incremented by delta (default =1), until, but not including, the limit:</span></li>
+</ol>
+<pre style="padding-left: 60px"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.44.1">tf.range(start,limit,delta) </span></pre>
+<p style="padding-left: 60px"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.45.1">Here is an example:</span></p>
+<pre style="padding-left: 60px"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.46.1">range_t = tf.range(10) </span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.47.1"># Result: [0 1 2 3 4 5 6 7 8 9] </span><br/> </pre>
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.48.1">TensorFlow allows </span><strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.49.1">random tensors</span></strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.50.1"> with different distributions to be created:</span></p>
+<ol>
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.51.1">To create random values from a normal distribution of shape </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.52.1">[M,N]</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.53.1"> with the mean (default =0.0) and standard deviation (default=1.0) with seed, we can use the following:</span></li>
+</ol>
+<pre style="padding-left: 60px"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.54.1">t_random = tf.random_normal([2,3], mean=2.0, stddev=4, seed=12) </span><br/><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.55.1"># Result: [[ 0.25347459  5.37990952  1.95276058], [-1.53760314  1.2588985   2.84780669]]</span></pre>
+<ol start="2">
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.56.1">To create random values from a truncated normal distribution of shape </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.57.1">[M,N]</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.58.1"> with the mean (default =0.0) and standard deviation (default=1.0) with seed, we can use the following:</span></li>
+</ol>
+<pre style="padding-left: 60px"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.59.1">t_random = tf.truncated_normal([1,5], stddev=2, seed=12) </span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.60.1"># Result: [[-0.8732627 1.68995488 -0.02361972 -1.76880157 -3.87749004]]</span></pre>
+<ol start="3">
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.61.1">To create random values from a given gamma distribution of shape </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.62.1">[M,N]</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.63.1"> in the range </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.64.1">[minval (default=0), maxval]</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.65.1"> with seed, perform as follows:</span></li>
+</ol>
+<pre style="padding-left: 60px"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.66.1">t_random = tf.random_uniform([2,3], maxval=4, seed=12) </span><br/><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.67.1"># Result: [[ 2.54461002  3.69636583  2.70510912], [ 2.00850058  3.84459829  3.54268885]] </span></pre>
+<ol start="4">
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.68.1">To randomly crop a given tensor to a specified size, do as follows:</span></li>
+</ol>
+<pre style="padding-left: 60px"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.69.1">tf.random_crop(t_random, [2,5],seed=12) </span></pre>
+<p style="padding-left: 60px"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.70.1">Here, </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.71.1">t_random</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.72.1"> is an already defined tensor. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.72.2">This will result in a </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.73.1">[2,5]</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.74.1"> tensor randomly cropped from tensor </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.75.1">t_random</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.76.1">.</span></p>
+<p style="padding-left: 60px"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.77.1">Many times we need to present the training sample in random order; we can use </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.78.1">tf.random_shuffle()</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.79.1"> to randomly shuffle a tensor along its first dimension. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.79.2">If </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.80.1">t_random</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.81.1"> is the tensor we want to shuffle, then we use the following:</span></p>
+<pre style="padding-left: 60px"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.82.1">tf.random_shuffle(t_random) </span></pre>
+<ol start="5">
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.83.1">Randomly generated tensors are affected by the value of the initial seed. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.83.2">To obtain the same random numbers in multiple runs or sessions, the seed should be set to a constant value. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.83.3">When there are large numbers of random tensors in use, we can set the seed for all randomly generated tensors using </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.84.1">tf.set_random_seed()</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.85.1">; the following command sets the seed for random tensors for all sessions as </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.86.1">54</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.87.1">:</span></li>
+</ol>
+<pre style="padding-left: 60px"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.88.1">tf.set_random_seed(54)  </span></pre>
+<div class="packt_tip"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.89.1">Seed can have only integer value.</span></div>
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.90.1">Let's now turn to the variables:</span></p>
+<ol>
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.91.1">They are created using the variable class. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.91.2">The definition of variables also includes the constant/random values from which they should be initialized. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.91.3">In the following code, we create two different tensor variables, </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.92.1">t_a</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.93.1"> and </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.94.1">t_b</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.95.1">. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.95.2">Both will be initialized to random uniform distributions of shape </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.96.1">[50, 50]</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.97.1">, </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.98.1">minval=0</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.99.1">, and </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.100.1">maxval=10</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.101.1">:</span></li>
+</ol>
+<pre style="padding-left: 60px"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.102.1">rand_t = tf.random_uniform([50,50], 0, 10, seed=0) </span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.103.1">t_a = tf.Variable(rand_t) </span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.104.1">t_b = tf.Variable(rand_t) </span></pre>
+<div class="packt_infobox"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.105.1">Variables are often used to represent weights and biases in a neural network.</span></div>
+<ol start="2">
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.106.1">In the following code, we define two variables weights and bias. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.106.2">The weights variable is randomly initialized using normal distribution, with mean zeros and standard deviation of two, the size of weights is 100×100. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.106.3">The bias consists of 100 elements each initialized to zero. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.106.4">Here we have also used </span><span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.107.1">the optional argument name to give a name to the variable defined in the computational graph. </span></span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.108.1"> </span></li>
+</ol>
+<pre style="padding-left: 60px"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.109.1">weights = tf.Variable(tf.random_normal([100,100],stddev=2)) </span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.110.1">bias = tf.Variable(tf.zeros[100], name = 'biases') </span></pre>
+<ol start="3">
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.111.1">In all the preceding examples, the source of initialization of variables is some constant. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.111.2">We can also specify a variable to be initialized from another variable; the following statement will initialize </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.112.1">weight2</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.113.1"> from the weights defined earlier:</span></li>
+</ol>
+<pre style="padding-left: 60px"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.114.1">weight2=tf.Variable(weights.initialized_value(), name='w2') </span></pre>
+<ol start="4">
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.115.1">The definition of variables specify how the variable is to be initialized, but we must explicitly initialize all declared variables. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.115.2">In the definition of the computational graph, we do it by declaring an initialization Operation Object:</span></li>
+</ol>
+<pre style="padding-left: 60px"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.116.1">intial_op = tf.global_variables_initializer(). </span></pre>
+<ol start="5">
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.117.1">Each variable can also be initialized separately using </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.118.1">tf.Variable.initializer</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.119.1"> during the running graph:</span></li>
+</ol>
+<pre style="padding-left: 60px"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.120.1">bias = tf.Variable(tf.zeros([100,100]))</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.121.1"> with tf.Session() as sess:</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.122.1">     sess.run(bias.initializer)</span></pre>
+<ol start="6">
+<li><strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.123.1">Saving variables</span></strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.124.1">: We can save the variables using the </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.125.1">Saver</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.126.1"> class. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.126.2">To do this, we define a </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.127.1">saver</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.128.1"> Operation Object:</span></li>
+</ol>
+<pre style="padding-left: 60px"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.129.1">saver = tf.train.Saver()  </span></pre>
+<ol start="7">
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.130.1">After constants and variables, we come to the most important element placeholders, they are used to feed data to the graph. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.130.2">We can define a placeholder using the following:</span></li>
+</ol>
+<pre style="padding-left: 60px"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.131.1">tf.placeholder(dtype, shape=None, name=None) </span></pre>
+<ol start="8">
+<li><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.132.1">dtype</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.133.1"> specifies the data type of the placeholder and must be specified while declaring the placeholder. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.133.2">Here, we define a placeholder for </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.134.1">x</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.135.1"> and calculate </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.136.1">y = 2 * x</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.137.1"> using </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.138.1">feed_dict</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.139.1"> for a random 4×5 matrix:</span></li>
+</ol>
+<pre style="padding-left: 60px"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.140.1">x = tf.placeholder("float")</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.141.1">y = 2 * x</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.142.1">data = tf.random_uniform([4,5],10)</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.143.1">with tf.Session() as sess:</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.144.1">     x_data = sess.run(data)</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.145.1">     print(sess.run(y, feed_dict = {x:x_data})) </span><br/> </pre>
+
+
+            </article>
+
+            
+        </section>
+    </body>
+
+</html>

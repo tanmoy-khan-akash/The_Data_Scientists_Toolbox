@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+    <head>
+        <title>How to do it...</title>
+        <link rel="stylesheet" href="css/style.css" type="text/css"/>
+        <meta charset="utf-8"/>
+    
+<!-- kobo-style -->
+<script xmlns="http://www.w3.org/1999/xhtml" type="text/javascript" src="js/kobo.js"/>
+<style xmlns="http://www.w3.org/1999/xhtml" type="text/css" id="koboSpanStyle">.koboSpan { -webkit-text-combine: inherit; }</style>
+
+</head>
+
+    <body>
+        <section>
+
+                            <header>
+                    <h1 class="header-title"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.1.1">How to do it...</span></h1>
+                </header>
+            
+            <article>
+                
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.2.1">TensorFlow represents devices as strings. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.2.2">Here, we will show you how one can manually assign a device for matrix multiplication in TensorFlow. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.2.3">To verify that TensorFlow is indeed using the device (CPU or GPU) specified, we create the session with the </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.3.1">log_device_placement</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.4.1"> flag set to </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.5.1">True</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.6.1">, namely, </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.7.1">config=tf.ConfigProto(log_device_placement=True)</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.8.1">:</span></p>
+<ol>
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.9.1">If you are not sure about the device and want TensorFlow to choose the existing and supported device, you can set the </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.10.1">allow_soft_placement</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.11.1"> flag to </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.12.1">True</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.13.1">:</span></li>
+</ol>
+<pre style="padding-left: 60px"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.14.1">config=tf.ConfigProto(allow_soft_placement=True, log_device_placement=True) </span></pre>
+<ol start="2">
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.15.1">Manually select CPU for operation:</span></li>
+</ol>
+<pre style="padding-left: 60px"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.16.1">with tf.device('/cpu:0'): </span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.17.1">    rand_t = tf.random_uniform([50,50], 0, 10, dtype=tf.float32, seed=0) </span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.18.1">    a = tf.Variable(rand_t) </span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.19.1">    b = tf.Variable(rand_t) </span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.20.1">    c = tf.matmul(a,b) </span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.21.1">    init = tf.global_variables_initializer() </span><br/> <br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.22.1">sess = tf.Session(config) </span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.23.1">sess.run(init) </span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.24.1">print(sess.run(c))    </span></pre>
+<ol start="3">
+<li>
+<div><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.25.1">We get the following output:</span></div>
+</li>
+</ol>
+<div class="mce-root CDPAlignCenter CDPAlign"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.26.1"><img height="498" width="973" class="aligncenter size-full wp-image-1251 image-border" src="assets/7def4852-0678-4c5b-a607-bb73118e9aea.png"/></span></div>
+<p style="padding-left: 60px"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.27.1">We can see that all the devices, in this case, are </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.28.1">'/cpu:0'</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.29.1">.</span></p>
+<ol start="4">
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.30.1">Manually select a single GPU for operation:</span></li>
+</ol>
+<pre style="padding-left: 60px"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.31.1">with tf.device('/gpu:0'): </span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.32.1">    rand_t = tf.random_uniform([50,50], 0, 10, dtype=tf.float32, seed=0) </span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.33.1">    a = tf.Variable(rand_t) </span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.34.1">    b = tf.Variable(rand_t) </span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.35.1">    c = tf.matmul(a,b) </span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.36.1">    init = tf.global_variables_initializer() </span><br/> <br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.37.1">sess = tf.Session(config=tf.ConfigProto(log_device_placement=True)) </span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.38.1">sess.run(init) </span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.39.1">print(sess.run(c)) </span></pre>
+<ol start="5">
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.40.1">The output now changes to the following:</span></li>
+</ol>
+<div class="mce-root CDPAlignCenter CDPAlign"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.41.1"><img class=" image-border" src="assets/bde1e2b9-ae28-4662-b9fb-b7a049ab165f.png"/></span></div>
+<ol start="6">
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.42.1">The </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.43.1">'/cpu:0'</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.44.1"> after each operation is now replaced by </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.45.1">'/gpu:0'</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.46.1">.</span></li>
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.47.1">Manually select multiple GPUs:</span></li>
+</ol>
+<pre style="padding-left: 60px"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.48.1">c=[]</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.49.1">for d in ['/gpu:1','/gpu:2']:</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.50.1">     with tf.device(d):</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.51.1">         rand_t = tf.random_uniform([50, 50], 0, 10, dtype=tf.float32, seed=0)</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.52.1">         a = tf.Variable(rand_t)</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.53.1">         b = tf.Variable(rand_t)</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.54.1">         c.append(tf.matmul(a,b))</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.55.1">         init = tf.global_variables_initializer()</span><br/><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.56.1">sess = tf.Session(config=tf.ConfigProto(allow_soft_placement=True,log_device_placement=True))</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.57.1">sess.run(init)</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.58.1">print(sess.run(c))</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.59.1">sess.close() </span></pre>
+<ol start="8">
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.60.1">In this case, if the system has three GPU devices, then the first set of multiplication will be carried on by </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.61.1">'/gpu:1'</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.62.1"> and the second set by </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.63.1">'/gpu:2'</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.64.1">.</span></li>
+</ol>
+
+
+            </article>
+
+            
+        </section>
+    </body>
+
+</html>

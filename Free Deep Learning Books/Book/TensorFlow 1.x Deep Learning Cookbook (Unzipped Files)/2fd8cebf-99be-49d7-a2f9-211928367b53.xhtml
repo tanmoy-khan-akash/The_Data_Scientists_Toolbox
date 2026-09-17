@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+    <head>
+        <title>TensorFlow for Deep Learning</title>
+        <link rel="stylesheet" href="css/style.css" type="text/css"/>
+        <meta charset="utf-8"/>
+    
+<!-- kobo-style -->
+<script xmlns="http://www.w3.org/1999/xhtml" type="text/javascript" src="js/kobo.js"/>
+<style xmlns="http://www.w3.org/1999/xhtml" type="text/css" id="koboSpanStyle">.koboSpan { -webkit-text-combine: inherit; }</style>
+
+</head>
+
+    <body>
+        <section>
+
+                            <header>
+                    <h1 class="header-title"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.1.1">TensorFlow for Deep Learning</span></h1>
+                </header>
+            
+            <article>
+                
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.2.1">DNNs today is the buzzword in the AI community. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.2.2">Many data science/Kaggle competitions have been recently won by candidates using DNNs. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.2.3">While the concept of DNNs had been around since the proposal of Perceptrons by Rosenblat in 1962 and they were made feasible by the discovery of the Gradient Descent Algorithm in 1986 by Rumelhart, Hinton, and Williams. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.2.4">It is only recently that DNNs became the favourite of AI/ML enthusiasts and engineers world over.</span></p>
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.3.1">The main reason for this is the availability of modern computing power such as GPUs and tools like TensorFlow that make it easier to access GPUs and construct complex neural networks in just a few lines of code.</span></p>
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.4.1">As a machine learning enthusiast, you must already be familiar with the concepts of neural networks and deep learning, but for the sake of completeness, we will introduce the basics here and explore what features of TensorFlow make it a popular choice for deep learning.</span></p>
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.5.1">Neural networks are a biologically inspired model for computation and learning. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.5.2">Like a biological neuron, they take weighted input from other cells (neurons or environment); this weighted input undergoes a processing element and results in an output which can be binary (fire or not fire) or continuous (probability, prediction). </span><strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.6.1">Artificial Neural Networks</span></strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.7.1"> (</span><strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.8.1">ANNs</span></strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.9.1">) are networks of these neurons, which can be randomly distributed or arranged in a layered structure. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.9.2">These neurons learn through the set of weights and biases associated with them.</span></p>
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.10.1">The following figure gives a good idea about the similarity of the neural network in biology and an artificial neural network:</span></p>
+<div class="CDPAlignCenter CDPAlign"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.11.1"><img src="assets/2eba3092-0b16-458a-b577-d7965ed73644.png"/></span></div>
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.12.1">Deep learning, as defined by Hinton et al. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.12.2">(</span><a href="https://www.cs.toronto.edu/~hinton/absps/NatureDeepReview.pdf"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.13.1">https://www.cs.toronto.edu/~hinton/absps/NatureDeepReview.pdf</span></a><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.14.1">), consists of computational models composed of multiple processing layers (hidden layers). </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.14.2">An increase in the number of layers results in an increase in learning time. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.14.3">The learning time further increases due to a large dataset, as is the norm of present-day CNN or </span><strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.15.1">Generative Adversarial Networks</span></strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.16.1"> (</span><strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.17.1">GANs</span></strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.18.1">). </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.18.2">Thus, to practically implement DNNs, we require high computation power. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.18.3">The advent of GPUs by NVDIA® made it feasible and then TensorFlow by Google made it possible to implement complex DNN structures without going into the complex mathematical details, and availability of large datasets provided the necessary food for DNNs. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.18.4">TensorFlow is the most popular library for deep learning for the following reasons:</span></p>
+<ul>
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.19.1">TensorFlow is a powerful library for performing large-scale numerical computations like matrix multiplication or auto-differentiation. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.19.2">These two computations are necessary to implement and train DNNs.</span></li>
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.20.1">TensorFlow uses C/C++ at the backend, which makes it computationally fast.</span></li>
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.21.1">TensorFlow has a high-level machine learning API (</span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.22.1">tf.contrib.learn</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.23.1">) that makes it easier to configure, train, and evaluate a large number of machine learning models.</span></li>
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.24.1">One can use Keras, a high-level deep learning library, on top of TensorFlow. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.24.2">Keras is very user-friendly and allows easy and fast prototyping. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.24.3">It supports various DNNs like RNNs, CNNs, and even a combination of the two.</span></li>
+</ul>
+
+
+            </article>
+
+            
+        </section>
+    </body>
+
+</html>

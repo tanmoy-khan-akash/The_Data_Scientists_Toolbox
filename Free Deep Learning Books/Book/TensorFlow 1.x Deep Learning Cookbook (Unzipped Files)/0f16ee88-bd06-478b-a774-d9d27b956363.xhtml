@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+    <head>
+        <title>How to do it...</title>
+        <link rel="stylesheet" href="css/style.css" type="text/css"/>
+        <meta charset="utf-8"/>
+    
+<!-- kobo-style -->
+<script xmlns="http://www.w3.org/1999/xhtml" type="text/javascript" src="js/kobo.js"/>
+<style xmlns="http://www.w3.org/1999/xhtml" type="text/css" id="koboSpanStyle">.koboSpan { -webkit-text-combine: inherit; }</style>
+
+</head>
+
+    <body>
+        <section>
+
+                            <header>
+                    <h1 class="header-title"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.1.1">How to do it...</span></h1>
+                </header>
+            
+            <article>
+                
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.2.1">Let us now get started on the backpropagation algorithm:</span></p>
+<ol>
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.3.1">Import the modules:</span></li>
+</ol>
+<pre style="padding-left: 60px"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.4.1">import tensorflow as tf 
+from tensorflow.examples.tutorials.mnist import input_data </span></pre>
+<ol start="2">
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.5.1">Load the dataset; we use one-hot encoded labels by setting </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.6.1">one_hot = True</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.7.1">:</span></li>
+</ol>
+<pre style="padding-left: 60px"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.8.1">mnist = input_data.read_data_sets("MNIST_data/", one_hot=True) 
+ </span></pre>
+<ol start="3">
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.9.1">Define hyperparameters and other constants. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.9.2">Here, each handwritten digit is of the size 28 x 28 = 784 pixels. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.9.3">The dataset is classified into 10 categories, as digits can be any number between 0 to 9. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.9.4">These two are fixed. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.9.5">The learning rate, the maximum number of epochs, the batch size of the mini batch to be trained, and the number of neurons in the hidden layer are the hyperparameters. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.9.6">One can play around with them to see how they affect the network behaviour:</span></li>
+</ol>
+<pre style="padding-left: 60px"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.10.1"># Data specific constants</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.11.1"> n_input = 784 # MNIST data input (img shape: 28*28)</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.12.1"> n_classes = 10 # MNIST total classes (0-9 digits)</span><br/><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.13.1"> # Hyperparameters</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.14.1"> max_epochs = 10000</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.15.1"> learning_rate = 0.5</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.16.1"> batch_size = 10</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.17.1"> seed = 0</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.18.1"> n_hidden = 30  # Number of neurons in the hidden layer 
+ </span></pre>
+<ol start="4">
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.19.1">We will require the derivative of the </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.20.1">sigmoid</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.21.1"> function for weight update, so we define it:</span></li>
+</ol>
+<pre style="padding-left: 60px"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.22.1">def sigmaprime(x):</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.23.1">     return tf.multiply(tf.sigmoid(x), tf.subtract(tf.constant(1.0), tf.sigmoid(x))) </span></pre>
+<ol start="5">
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.24.1">Create placeholders for the training data:</span></li>
+</ol>
+<pre style="padding-left: 60px"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.25.1">x_in = tf.placeholder(tf.float32, [None, n_input])</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.26.1">y = tf.placeholder(tf.float32, [None, n_classes])</span></pre>
+<ol start="6">
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.27.1">Create the model:</span></li>
+</ol>
+<pre style="padding-left: 60px"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.28.1">def multilayer_perceptron(x, weights, biases):</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.29.1">     # Hidden layer with RELU activation</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.30.1">     h_layer_1 = tf.add(tf.matmul(x, weights['h1']), biases['h1'])</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.31.1">     out_layer_1 = tf.sigmoid(h_layer_1)</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.32.1">     # Output layer with linear activation</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.33.1">     h_out = tf.matmul(out_layer_1, weights['out']) + biases['out']</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.34.1">     return tf.sigmoid(h_out), h_out, out_layer_1, h_layer_1 </span></pre>
+<ol start="7">
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.35.1">Define variables for </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.36.1">weights</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.37.1"> and </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.38.1">biases</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.39.1">:</span></li>
+</ol>
+<pre style="padding-left: 60px"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.40.1">weights = {</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.41.1">     'h1': tf.Variable(tf.random_normal([n_input, n_hidden], seed = seed)),</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.42.1">     'out': tf.Variable(tf.random_normal([n_hidden, n_classes], seed = seed)) }</span><br/><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.43.1"> biases = {</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.44.1">     'h1': tf.Variable(tf.random_normal([1, n_hidden], seed = seed)),</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.45.1">     'out': tf.Variable(tf.random_normal([1, n_classes], seed = seed))} </span></pre>
+<ol start="8">
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.46.1">Create the computation graph for the forward pass, error, gradient, and update calculations:</span></li>
+</ol>
+<pre style="padding-left: 60px"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.47.1"># Forward Pass</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.48.1"> y_hat, h_2, o_1, h_1 = multilayer_perceptron(x_in, weights, biases)</span><br/><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.49.1"> # Error</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.50.1"> err = y_hat - y</span><br/><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.51.1"> # Backward Pass</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.52.1"> delta_2 = tf.multiply(err, sigmaprime(h_2))</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.53.1"> delta_w_2 = tf.matmul(tf.transpose(o_1), delta_2)</span><br/><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.54.1"> wtd_error = tf.matmul(delta_2, tf.transpose(weights['out']))</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.55.1"> delta_1 = tf.multiply(wtd_error, sigmaprime(h_1))</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.56.1"> delta_w_1 = tf.matmul(tf.transpose(x_in), delta_1)</span><br/><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.57.1"> eta = tf.constant(learning_rate)</span><br/><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.58.1"> # Update weights</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.59.1"> step = [</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.60.1">     tf.assign(weights['h1'],tf.subtract(weights['h1'], tf.multiply(eta, delta_w_1)))</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.61.1">   , tf.assign(biases['h1'],tf.subtract(biases['h1'], tf.multiply(eta, tf.reduce_mean(delta_1, axis=[0]))))</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.62.1">   , tf.assign(weights['out'], tf.subtract(weights['out'], tf.multiply(eta, delta_w_2)))</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.63.1">   , tf.assign(biases['out'], tf.subtract(biases['out'], tf.multiply(eta,tf.reduce_mean(delta_2, axis=[0]))))</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.64.1"> ] </span></pre>
+<ol start="9">
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.65.1">Define ops for </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.66.1">accuracy</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.67.1">:</span></li>
+</ol>
+<pre style="padding-left: 60px"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.68.1">acct_mat = tf.equal(tf.argmax(y_hat, 1), tf.argmax(y, 1))</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.69.1">accuracy = tf.reduce_sum(tf.cast(acct_mat, tf.float32)) </span></pre>
+<ol start="10">
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.70.1">Initialize the variables:</span></li>
+</ol>
+<pre style="padding-left: 60px"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.71.1">init = tf.global_variables_initializer() </span></pre>
+<ol start="11">
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.72.1">Execute the graph:</span></li>
+</ol>
+<pre style="padding-left: 60px"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.73.1">with tf.Session() as sess:</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.74.1">     sess.run(init)</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.75.1">     for epoch in range(max_epochs):</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.76.1">         batch_xs, batch_ys = mnist.train.next_batch(batch_size)</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.77.1">         sess.run(step, feed_dict = {x_in: batch_xs, y : batch_ys})</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.78.1">         if epoch % 1000 == 0:</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.79.1">             acc_test = sess.run(accuracy, feed_dict =</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.80.1">                        {x_in: mnist.test.images,</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.81.1">                         y : mnist.test.labels})</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.82.1">             acc_train = sess.run(accuracy, feed_dict=</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.83.1">             {x_in: mnist.train.images,</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.84.1">              y: mnist.train.labels})</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.85.1">             print('Epoch: {0}  Accuracy Train%: {1}  Accuracy Test%: {2}'</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.86.1">                   .format(epoch,acc_train/600,(acc_test/100))) </span></pre>
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.87.1">The result is as follows:</span></p>
+<div class="CDPAlignCenter CDPAlign"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.88.1"><img height="94" width="240" class=" image-border" src="assets/89dcc2e8-9f73-4c7d-9bc0-40327d477b2a.png"/></span></div>
+
+
+            </article>
+
+            
+        </section>
+    </body>
+
+</html>

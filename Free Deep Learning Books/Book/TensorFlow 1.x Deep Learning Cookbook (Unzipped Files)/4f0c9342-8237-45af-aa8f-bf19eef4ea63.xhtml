@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+    <head>
+        <title>Operating on sequences of vectors</title>
+        <link rel="stylesheet" href="css/style.css" type="text/css"/>
+        <meta charset="utf-8"/>
+    
+<!-- kobo-style -->
+<script xmlns="http://www.w3.org/1999/xhtml" type="text/javascript" src="js/kobo.js"/>
+<style xmlns="http://www.w3.org/1999/xhtml" type="text/css" id="koboSpanStyle">.koboSpan { -webkit-text-combine: inherit; }</style>
+
+</head>
+
+    <body>
+        <section>
+
+                            <header>
+                    <h1 class="header-title"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.1.1">Operating on sequences of vectors</span></h1>
+                </header>
+            
+            <article>
+                
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.2.1">What really makes RNNs powerful is the ability to operate over sequences of vectors, where both the input to an RNN and/or the output of an RNN can be a sequence. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.2.2">This is well represented by the following figure, where the leftmost example is a traditional (non-recursive) network, followed by an RNN with a sequence in output, followed by an RNN with a sequence in input, followed by an RNN with sequences both in input and in output where the sequences are not synced, followed by an RNN with sequences both in input and in output where the sequences are synced:</span></p>
+<div class="CDPAlignCenter CDPAlign"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.3.1"><img height="154" width="491" src="assets/fdee6d5f-b2cf-40d2-aa69-ac5b11e6826f.png"/></span></div>
+<div class="packt_figref CDPAlignCenter CDPAlign"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.4.1">An example of RNN sequences as seen in http://karpathy.github.io/2015/05/21/rnn-effectiveness/ </span></div>
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.5.1">Machine translation is an example of non-synced sequences both in input and output: the network reads the input text as a sequence and </span><em><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.6.1">after</span></em><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.7.1"> reading the full text, it outputs the target language.</span></p>
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.8.1">Video classification is an example of synced sequences both in input and output: a video input is a sequence of frames and for each frame, a classification label is provided in output.</span></p>
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.9.1">Andrej Karpathy's blog posting at </span><a href="http://karpathy.github.io/2015/05/21/rnn-effectiveness/"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.10.1">http://karpathy.github.io/2015/05/21/rnn-effectiveness/</span></a><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.11.1"> is a must-read if you want to know more about fun applications of </span><span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.12.1">RNNs</span></span><span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.13.1">. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.13.2">He trained networks to write essays in Shakespeare's style (in Karpathy's words:</span></span> <em><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.14.1">can barely recognize these samples from actual Shakespeare</span></em><span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.15.1">), for writing realistic Wikipedia articles on imaginary subjects, for writing realistic theorem proofs of silly and unrealistic problems (in Karpathy's words:</span></span> <em><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.16.1">More hallucinated algebraic geometry</span></em><span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.17.1">) , and to write realistic fragments of Linux code (in Karpathy's words: t</span></span><em><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.18.1">he model first recites the GNU license character by character, samples a few includes, generates some macros and then dives into the code</span></em><span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.19.1">).</span></span></p>
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.20.1">The following example is taken from </span><a href="http://karpathy.github.io/2015/05/21/rnn-effectiveness/"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.21.1">http://karpathy.github.io/2015/05/21/rnn-effectiveness/</span></a><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.22.1">:</span><a href="http://karpathy.github.io/2015/05/21/rnn-effectiveness/"/></p>
+<div class="CDPAlignCenter CDPAlign"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.23.1"><img src="assets/bc72f98e-d71c-4703-8fa7-5195a6fc65af.jpg"/></span></div>
+<div class="packt_figref CDPAlignCenter CDPAlign"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.24.1">An example of text generated with RNNs</span></div>
+
+
+            </article>
+
+            
+        </section>
+    </body>
+
+</html>

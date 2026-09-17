@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+    <head>
+        <title>How to do it...</title>
+        <link rel="stylesheet" href="css/style.css" type="text/css"/>
+        <meta charset="utf-8"/>
+    
+<!-- kobo-style -->
+<script xmlns="http://www.w3.org/1999/xhtml" type="text/javascript" src="js/kobo.js"/>
+<style xmlns="http://www.w3.org/1999/xhtml" type="text/css" id="koboSpanStyle">.koboSpan { -webkit-text-combine: inherit; }</style>
+
+</head>
+
+    <body>
+        <section>
+
+                            <header>
+                    <h1 class="header-title"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.1.1">How to do it...</span></h1>
+                </header>
+            
+            <article>
+                
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.2.1">We proceed with running distributed TensorFlow on Google CloudML:</span></p>
+<ol>
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.3.1">The first step is simply to download the example code</span></li>
+</ol>
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.4.1">git clone </span><a href="https://github.com/GoogleCloudPlatform/cloudml-dist-mnist-example"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.5.1">https://github.com/GoogleCloudPlatform/cloudml-dist-mnist-example</span></a><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.6.1">
+cd cloudml-dist-mnist-example</span></p>
+<ol start="2">
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.7.1">Then we download the data and save in a GCP storage bucket</span></li>
+</ol>
+<pre><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.8.1">PROJECT_ID=$(gcloud config list project --format "value(core.project)")</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.9.1">BUCKET="${PROJECT_ID}-ml"</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.10.1">gsutil mb -c regional -l us-central1 gs://${BUCKET}</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.11.1">./scripts/create_records.py</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.12.1">gsutil cp /tmp/data/train.tfrecords gs://${BUCKET}/data/</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.13.1">gsutil cp /tmp/data/test.tfrecords gs://${BUCKET}/data/</span></pre>
+<ol start="3">
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.14.1">Submitting a training job is a very easy: we can simply invoke the training step with CloudML engine. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.14.2">In this example, the trainer code runs for 1000 iterations in the region us-central1. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.14.3">The input data is taken from a storage bucket and the output bucket will be submitted to a different storage bucket.</span></li>
+</ol>
+<pre><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.15.1">JOB_NAME="job_$(date +%Y%m%d_%H%M%S)"</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.16.1">gcloud ml-engine jobs submit training ${JOB_NAME} \</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.17.1"> --package-path trainer \</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.18.1"> --module-name trainer.task \</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.19.1"> --staging-bucket gs://${BUCKET} \</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.20.1"> --job-dir gs://${BUCKET}/${JOB_NAME} \</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.21.1"> --runtime-version 1.2 \</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.22.1"> --region us-central1 \</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.23.1"> --config config/config.yaml \</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.24.1"> -- \</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.25.1"> --data_dir gs://${BUCKET}/data \</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.26.1"> --output_dir gs://${BUCKET}/${JOB_NAME} \</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.27.1"> --train_steps 10000</span></pre>
+<ol start="4">
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.28.1">If you want You can control the training process by accessing the CloudML console in </span><a href="https://pantheon.google.com/mlengine/"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.29.1">https://pantheon.google.com/mlengine/</span></a></li>
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.30.1">Once the training is concluded, it is possible to serve the model directly from CloudML</span></li>
+</ol>
+<pre><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.31.1">MODEL_NAME=MNIST</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.32.1">gcloud ml-engine models create --regions us-central1 ${MODEL_NAME}</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.33.1">VERSION_NAME=v1</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.34.1">ORIGIN=$(gsutil ls gs://${BUCKET}/${JOB_NAME}/export/Servo | tail -1)</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.35.1">gcloud ml-engine versions create \</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.36.1"> --origin ${ORIGIN} \</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.37.1"> --model ${MODEL_NAME} \</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.38.1">${VERSION_NAME}</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.39.1">gcloud ml-engine versions set-default --model ${MODEL_NAME} ${VERSION_NAME}</span></pre>
+<ol start="6">
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.40.1">Once the model is served online it is possible to access the server and make a prediction. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.40.2">The request.json is created by using the script </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.41.1">make_request.py</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.42.1"> which reads data from MNIST, performs a one hot encoding and then write the features with a well-formatted json schema.</span></li>
+</ol>
+<pre><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.43.1">gcloud ml-engine predict --model ${MODEL_NAME} --json-instances request.json</span></pre>
+
+
+            </article>
+
+            
+        </section>
+    </body>
+
+</html>

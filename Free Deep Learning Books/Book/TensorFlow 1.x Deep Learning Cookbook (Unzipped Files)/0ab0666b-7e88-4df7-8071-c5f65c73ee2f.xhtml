@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+    <head>
+        <title>Getting ready</title>
+        <link rel="stylesheet" href="css/style.css" type="text/css"/>
+        <meta charset="utf-8"/>
+    
+<!-- kobo-style -->
+<script xmlns="http://www.w3.org/1999/xhtml" type="text/javascript" src="js/kobo.js"/>
+<style xmlns="http://www.w3.org/1999/xhtml" type="text/css" id="koboSpanStyle">.koboSpan { -webkit-text-combine: inherit; }</style>
+
+</head>
+
+    <body>
+        <section>
+
+                            <header>
+                    <h1 class="header-title"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.1.1">Getting ready</span></h1>
+                </header>
+            
+            <article>
+                
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.2.1">In the backpropagation algorithm recipe, we defined layers, weights, loss, gradients, and update through gradients manually. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.2.2">It is a good idea to do it manually with equations for better understanding but this can be quite cumbersome as the number of layers in the network increases.</span></p>
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.3.1">In this recipe, we will use powerful TensorFlow features such as Contrib (Layers) to define neural network layers and TensorFlow's own optimizer to compute and apply gradients. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.3.2">We saw in </span><a href="63cafe73-86d3-4ee1-929b-e45677956d9a.xhtml" target="_blank"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.4.1">Chapter 2</span></a><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.5.1">, </span><em><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.6.1">Regression</span></em><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.7.1">, how to use different TensorFlow optimizers. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.7.2">The contrib can be used to add various layers to the neural network model like adding building blocks. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.7.3">The one method that we use here is </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.8.1">tf.contrib.layers.fully_connected</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.9.1">, defined in TensorFlow documentation as follows:</span></p>
+<pre><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.10.1">fully_connected(</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.11.1">     inputs,</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.12.1">     num_outputs,</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.13.1">     activation_fn=tf.nn.relu,</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.14.1">     normalizer_fn=None,</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.15.1">     normalizer_params=None,</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.16.1">     weights_initializer=initializers.xavier_initializer(),</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.17.1">     weights_regularizer=None,</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.18.1">     biases_initializer=tf.zeros_initializer(),</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.19.1">     biases_regularizer=None,</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.20.1">     reuse=None,</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.21.1">     variables_collections=None,</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.22.1">     outputs_collections=None,</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.23.1">     trainable=True,</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.24.1">     scope=None</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.25.1"> ) </span></pre>
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.26.1">This adds a fully connected layer.</span></p>
+<div class="mce-root packt_infobox"><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.27.1">fully_connected</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.28.1"> creates a variable called weights, representing a fully connected weight matrix, which is multiplied by the inputs to produce a tensor of hidden units. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.28.2">If a </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.29.1">normalizer_fn</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.30.1"> is provided (such as </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.31.1">batch_norm</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.32.1">), it is then applied. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.32.2">Otherwise, if </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.33.1">normalizer_fn</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.34.1"> is None and a </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.35.1">biases_initializer</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.36.1"> is provided then a biases variable would be created and added to the hidden units. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.36.2">Finally, if </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.37.1">activation_fn</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.38.1"> is not None, it is applied to the hidden units as well.</span></div>
+
+
+            </article>
+
+            
+        </section>
+    </body>
+
+</html>
