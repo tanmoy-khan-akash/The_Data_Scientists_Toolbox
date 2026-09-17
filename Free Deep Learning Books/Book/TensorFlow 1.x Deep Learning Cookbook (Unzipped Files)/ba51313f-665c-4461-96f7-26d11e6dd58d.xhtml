@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+    <head>
+        <title>How to do it...</title>
+        <link rel="stylesheet" href="css/style.css" type="text/css"/>
+        <meta charset="utf-8"/>
+    
+<!-- kobo-style -->
+<script xmlns="http://www.w3.org/1999/xhtml" type="text/javascript" src="js/kobo.js"/>
+<style xmlns="http://www.w3.org/1999/xhtml" type="text/css" id="koboSpanStyle">.koboSpan { -webkit-text-combine: inherit; }</style>
+
+</head>
+
+    <body>
+        <section>
+
+                            <header>
+                    <h1 class="header-title"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.1.1">How to do it...</span></h1>
+                </header>
+            
+            <article>
+                
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.2.1">We proceed with the recipe as follows:</span></p>
+<ol>
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.3.1">Download the dogs and cats data from Kaggle (https://www.kaggle.com/c/dogs-vs-cats/data) and create a data directory containing two subdirectories, train and validation, each of which has two additional subdirectory, dogs and cats respectively.</span></li>
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.4.1">Import the Keras modules that will be used later for our computation and save a few useful constants:</span></li>
+</ol>
+<pre><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.5.1">from keras import applications</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.6.1">from keras.preprocessing.image import ImageDataGenerator</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.7.1">from keras import optimizers</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.8.1">from keras.models import Sequential, Model</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.9.1">from keras.layers import Dropout, Flatten, Dense</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.10.1">from keras import optimizers</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.11.1">img_width, img_height = 256, 256</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.12.1">batch_size = 16</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.13.1">epochs = 50</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.14.1">train_data_dir = 'data/dogs_and_cats/train'</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.15.1">validation_data_dir = 'data/dogs_and_cats/validation'</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.16.1">#OUT CATEGORIES</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.17.1">OUT_CATEGORIES=1</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.18.1">#number of train, validation samples</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.19.1">nb_train_samples = 2000</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.20.1">nb_validation_samples =</span></pre>
+<ol start="3">
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.21.1">Load the pretrained on the ImageNet VGG16 network and omit the last layer because we will add a custom classification network on the top of the prebuilt VGG16 and replace the last classification layer:</span></li>
+</ol>
+<pre style="padding-left: 60px" class="mce-root"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.22.1"># load the VGG16 model pretrained on imagenet </span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.23.1">base_model = applications.VGG16(weights = "imagenet", include_top=False, input_shape = (img_width, img_height, 3)) </span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.24.1">base_model.summary()</span></pre>
+<p style="padding-left: 60px"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.25.1">Here is the output of the preceding code:</span></p>
+<p class="mce-root"/>
+<p class="mce-root"/>
+<div class="CDPAlignCenter CDPAlign"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.26.1"><img height="495" width="378" src="assets/9ee33b53-f1bd-4fe0-b60c-8c7b55929dac.png"/></span></div>
+<ol start="4">
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.27.1">Freeze a certain number of lower layers for the pretrained VGG16 network. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.27.2">In this case, we decide to freeze the initial 15 layers:</span></li>
+</ol>
+<pre style="padding-left: 60px" class="mce-root"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.28.1"># Freeze the 15 lower layers for layer in base_model.layers[:15]: layer.trainable = False</span></pre>
+<ol start="5">
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.29.1">Add a custom set of top layers for classification:</span></li>
+</ol>
+<pre style="padding-left: 60px" class="mce-root"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.30.1"># Add custom to layers # build a classifier model to put on top of the convolutional model top_model = Sequential() top_model.add(Flatten(input_shape=base_model.output_shape[1:])) </span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.31.1">top_model.add(Dense(256, activation='relu')) top_model.add(Dropout(0.5)) top_model.add(Dense(OUT_CATEGORIES, activation='sigmoid'))</span></pre>
+<ol start="6">
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.32.1">The custom network should be pretrained separately and here, we omit this part for the sake of simplicity, leaving this task to the reader:</span></li>
+</ol>
+<pre style="padding-left: 60px" class="mce-root"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.33.1">#top_model.load_weights(top_model_weights_path)</span></pre>
+<ol start="7">
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.34.1">Create a new network that is the juxtaposition of the pretrained VGG16 network and our pretrained custom network:</span></li>
+</ol>
+<pre style="padding-left: 60px" class="mce-root"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.35.1"># creating the final model, a composition of </span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.36.1"># pre-trained and </span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.37.1">model = Model(inputs=base_model.input, outputs=top_model(base_model.output)) </span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.38.1"># compile the model </span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.39.1">model.compile(loss = "binary_crossentropy", optimizer = optimizers.SGD(lr=0.0001, momentum=0.9), metrics=["accuracy"])</span></pre>
+<ol start="8">
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.40.1">Retrain the juxtaposed new model still keeping the 15 lowest layers of VGG16 frozen. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.40.2">In this particular example, we also use an Image Augumentator to increase our training set:</span></li>
+</ol>
+<pre><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.41.1"># Initiate the train and test generators with data Augumentation</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.42.1">train_datagen = ImageDataGenerator(</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.43.1">rescale = 1./255,</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.44.1">horizontal_flip = True)</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.45.1">test_datagen = ImageDataGenerator(rescale=1. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.45.2">/ 255)</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.46.1">train_generator = train_datagen.flow_from_directory(</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.47.1">   train_data_dir,</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.48.1">   target_size=(img_height, img_width),</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.49.1">   batch_size=batch_size,</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.50.1">   class_mode='binary')</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.51.1">validation_generator = test_datagen.flow_from_directory(</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.52.1">   validation_data_dir,</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.53.1">   target_size=(img_height, img_width),</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.54.1">   batch_size=batch_size,</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.55.1">   class_mode='binary', shuffle=False)</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.56.1">model.fit_generator(</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.57.1">   train_generator,</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.58.1">   steps_per_epoch=nb_train_samples // batch_size,</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.59.1">   epochs=epochs,</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.60.1">   validation_data=validation_generator,</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.61.1">   validation_steps=nb_validation_samples // batch_size,</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.62.1">   verbose=2, workers=12)</span></pre>
+<ol start="9">
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.63.1">Evaluate the results on the juxtaposed network:</span></li>
+</ol>
+<pre style="padding-left: 60px" class="mce-root"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.64.1">score = model.evaluate_generator(validation_generator, nb_validation_samples/batch_size) </span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.65.1">scores = model.predict_generator(validation_generator, nb_validation_samples/batch_size)</span></pre>
+
+
+            </article>
+
+            
+        </section>
+    </body>
+
+</html>

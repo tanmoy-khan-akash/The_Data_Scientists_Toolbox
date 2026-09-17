@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+    <head>
+        <title>How it works...</title>
+        <link rel="stylesheet" href="css/style.css" type="text/css"/>
+        <meta charset="utf-8"/>
+    
+<!-- kobo-style -->
+<script xmlns="http://www.w3.org/1999/xhtml" type="text/javascript" src="js/kobo.js"/>
+<style xmlns="http://www.w3.org/1999/xhtml" type="text/css" id="koboSpanStyle">.koboSpan { -webkit-text-combine: inherit; }</style>
+
+</head>
+
+    <body>
+        <section>
+
+                            <header>
+                    <h1 class="header-title"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.1.1">How it works...</span></h1>
+                </header>
+            
+            <article>
+                
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.2.1">All the preceding code has been defined in </span><a href="https://github.com/tensorflow/nmt/blob/master/nmt/model.py"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.3.1">https://github.com/tensorflow/nmt/blob/master/nmt/model.py</span></a><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.4.1">. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.4.2">The key idea is to have two RNNs </span><em><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.5.1">packed together</span></em><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.6.1">. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.6.2">The first one is the encoder which works into an embedding space, mapping similar words very closely. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.6.3">The encoder </span><em><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.7.1">understands</span></em><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.8.1"> the meaning of training examples and it produces a tensor as output. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.8.2">This tensor is then passed to the decoder simply by connecting the last hidden layer of the encoder to the initial layer of the decoder. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.8.3">Note that the learning happens because of our loss function based on cross-entropy with </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.9.1">labels=decoder_outputs</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.10.1">.</span></p>
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.11.1">The code learns how to translate and the progress is tracked through iterations by the BLEU metric, as shown in the following figure:</span></p>
+<div class="CDPAlignCenter CDPAlign"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.12.1"><img height="508" width="546" src="assets/b1927820-4efa-44f5-9e5e-2bd3789f0bb3.png"/></span></div>
+<div class="packt_figref CDPAlignCenter CDPAlign"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.13.1">An example of BLEU metric in Tensorboard</span></div>
+
+
+            </article>
+
+            
+        </section>
+    </body>
+
+</html>

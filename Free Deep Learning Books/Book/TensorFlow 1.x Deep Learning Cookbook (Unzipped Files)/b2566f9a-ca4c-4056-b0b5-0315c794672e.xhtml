@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+    <head>
+        <title>Vanishing and exploding gradients</title>
+        <link rel="stylesheet" href="css/style.css" type="text/css"/>
+        <meta charset="utf-8"/>
+    
+<!-- kobo-style -->
+<script xmlns="http://www.w3.org/1999/xhtml" type="text/javascript" src="js/kobo.js"/>
+<style xmlns="http://www.w3.org/1999/xhtml" type="text/css" id="koboSpanStyle">.koboSpan { -webkit-text-combine: inherit; }</style>
+
+</head>
+
+    <body>
+        <section>
+
+                            <header>
+                    <h1 class="header-title"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.1.1">Vanishing and exploding gradients</span></h1>
+                </header>
+            
+            <article>
+                
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.2.1">Training an RNN is hard because of two stability problems. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.2.2">Due to the feedback loop, the gradient can quickly diverge to infinity, or it can rapidly to 0. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.2.3">In both cases, as illustrated in the following figure, the network will stop learning anything useful. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.2.4">The problem of an exploding gradient can be tackled with a relatively simple solution based on </span><strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.3.1">gradient clipping</span></strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.4.1">. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.4.2">The problem of a vanishing gradient is more difficult to solve and it involves the definition of more complex RNN basic cells, such as </span><strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.5.1">Long Short Term Memory</span></strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.6.1"> (</span><strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.7.1">LSTM</span></strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.8.1">), or </span><strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.9.1">Gated Recurrent Units</span></strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.10.1"> (</span><strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.11.1">GRUs</span></strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.12.1">). </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.12.2">Let's </span><span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.13.1">first</span></span><span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.14.1"> </span></span><span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.15.1">discuss exploding gradients and gradient clipping:</span></span></p>
+<div class="CDPAlignCenter CDPAlign"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.16.1"><img height="143" width="347" src="assets/1e10fcdf-8db6-4e52-8f7f-d1398c54c634.png"/></span></div>
+<div class="packt_figref CDPAlignCenter CDPAlign"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.17.1">Examples of gradient</span></div>
+<p><strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.18.1">Gradient clipping</span></strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.19.1"> consists of imposing a maximum value to the the gradient so that it cannot grow boundless. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.19.2">This simple solution, illustrated in the following figure, offers a simple solution to the problem of </span><strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.20.1">exploding gradients:</span></strong></p>
+<div class="CDPAlignCenter CDPAlign"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.21.1"><img height="167" width="252" src="assets/1ddb8b2f-e13b-479f-9568-488a01b4c539.png"/></span></div>
+<div class="packt_figref CDPAlignCenter CDPAlign"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.22.1">An example of gradient clipping</span></div>
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.23.1">Solving the problem of a vanishing gradient requires a more complex model for memory which allows it to selectively forget previous states and remember only the one that really matters. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.23.2">Considering the following figure, the input is written in a memory </span><em><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.24.1">M</span></em><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.25.1"> with a probability </span><em><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.26.1">p</span></em><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.27.1"> in </span><em><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.28.1">[0,1]</span></em><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.29.1">, which is multiplied to weight the input.</span></p>
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.30.1">In a similar way, the output is read with a probability </span><em><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.31.1">p</span></em><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.32.1"> in </span><em><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.33.1">[0,1]</span></em><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.34.1">, which is multiplied to weight the output. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.34.2">One more probability is used to decide what to remember or forget:</span></p>
+<div class="CDPAlignCenter CDPAlign"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.35.1"><img height="168" width="236" src="assets/7b32ca16-e98a-4ab0-b732-215739cc11fc.png"/></span></div>
+<div class="packt_figref CDPAlignCenter CDPAlign"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.36.1">An example of memory cell</span></div>
+
+
+            </article>
+
+            
+        </section>
+    </body>
+
+</html>

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+    <head>
+        <title> How to do it...</title>
+        <link rel="stylesheet" href="css/style.css" type="text/css"/>
+        <meta charset="utf-8"/>
+    
+<!-- kobo-style -->
+<script xmlns="http://www.w3.org/1999/xhtml" type="text/javascript" src="js/kobo.js"/>
+<style xmlns="http://www.w3.org/1999/xhtml" type="text/css" id="koboSpanStyle">.koboSpan { -webkit-text-combine: inherit; }</style>
+
+</head>
+
+    <body>
+        <section>
+
+                            <header>
+                    <h1 class="header-title"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.1.1"> How to do it...</span></h1>
+                </header>
+            
+            <article>
+                
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.2.1">Let us now see how to proceed with the recipe:</span></p>
+<ol>
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.3.1">In the case of standard linear regression, we have only one input variable and one output variable:</span></li>
+</ol>
+<div>
+<pre style="padding-left: 60px"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.4.1"># Placeholder for the Training Data</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.5.1">X = tf.placeholder(tf.float32, name='X')</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.6.1">Y = tf.placeholder(tf.float32, name='Y')</span><br/><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.7.1"># Variables for coefficients initialized to 0</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.8.1">w0 = tf.Variable(0.0)</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.9.1">w1 = tf.Variable(0.0)</span><br/><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.10.1"># The Linear Regression Model</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.11.1">Y_hat = X*w1 + w0</span><br/><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.12.1"># Loss function</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.13.1">loss = tf.square(Y - Y_hat, name=’loss’)</span></pre></div>
+<ol start="2">
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.14.1">In the case of multiple linear regression, the input variables are more than one, while the output variable remains one. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.14.2">Now you can define </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.15.1">X</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.16.1"> placeholder of shape </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.17.1">[m, n]</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.18.1">, where </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.19.1">m</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.20.1"> is the number of samples and </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.21.1">n</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.22.1"> is the number of features, then the code is as follows:</span></li>
+</ol>
+<div>
+<pre style="padding-left: 60px"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.23.1"># Placeholder for the Training Data</span><em><br/></em><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.24.1">X = tf.placeholder(tf.float32, name=</span><strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.25.1">'X'</span></strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.26.1">, shape=[m,n])</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.27.1">Y = tf.placeholder(tf.float32, name=</span><strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.28.1">'Y'</span></strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.29.1">)</span><br/><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.30.1"># Variables for coefficients initialized to 0</span><em><br/></em><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.31.1">w0 = tf.Variable(0.0)</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.32.1">w1 = tf.Variable(tf.random_normal([n,1]))</span><br/><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.33.1"># The Linear Regression Model</span><em><br/></em><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.34.1">Y_hat = tf.matmul(X, w1) + w0</span><br/><br/><em><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.35.1">#</span></em><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.36.1"> Multiple linear regression loss function</span><em><br/></em><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.37.1">loss = tf.reduce_mean(tf.square(Y - Y_hat, name=</span><strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.38.1">'loss'</span></strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.39.1">)</span></pre></div>
+<ol start="3">
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.40.1">In the case of logistic regression, the </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.41.1">loss</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.42.1"> function is defined by cross-entropy. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.42.2">Now output </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.43.1">Y</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.44.1"> will have dimensions equal to the number of classes in the training dataset. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.44.2">With </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.45.1">P</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.46.1"> number of classes, we will have the following:</span></li>
+</ol>
+<div>
+<pre style="padding-left: 60px"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.47.1"># Placeholder for the Training Data</span><em><br/></em><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.48.1">X = tf.placeholder(tf.float32, name='X', shape=[m,n])</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.49.1">Y = tf.placeholder(tf.float32, name='Y', shape=[m,P])</span><br/><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.50.1"># Variables for coefficients initialized to 0</span><em><br/></em><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.51.1">w0 = tf.Variable(tf.zeros([1,P]), name=’bias’)</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.52.1">w1 = tf.Variable(tf.random_normal([n,1]), name=’weights’)</span><br/><em><br/></em><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.53.1"># The Linear Regression Model</span><em><br/></em><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.54.1">Y_hat = tf.matmul(X, w1) + w0</span><br/><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.55.1"># Loss function</span><em><br/></em><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.56.1">entropy = tf.nn.softmax_cross_entropy_with_logits(Y_hat,Y)</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.57.1">loss = tf.reduce_mean(entropy)</span></pre></div>
+<ol start="4">
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.58.1">If we want to add L1 regularization to loss, then the code is as follows:</span></li>
+</ol>
+<div>
+<pre style="padding-left: 60px"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.59.1">lamda = tf.constant(0.8)  # regularization parameter</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.60.1">regularization_param = lamda*tf.reduce_sum(tf.abs(W1))</span><br/><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.61.1"># New loss</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.62.1">loss += regularization_param</span></pre></div>
+<ol start="5">
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.63.1">For L2 regularization, we can use the following:</span></li>
+</ol>
+<div>
+<pre style="padding-left: 60px"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.64.1">lamda = tf.constant(0.8)  # regularization parameter</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.65.1">regularization_param = lamda*tf.nn.l2_loss(W1)</span><br/><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.66.1"># New loss</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.67.1">loss += regularization_param</span></pre></div>
+
+
+            </article>
+
+            
+        </section>
+    </body>
+
+</html>

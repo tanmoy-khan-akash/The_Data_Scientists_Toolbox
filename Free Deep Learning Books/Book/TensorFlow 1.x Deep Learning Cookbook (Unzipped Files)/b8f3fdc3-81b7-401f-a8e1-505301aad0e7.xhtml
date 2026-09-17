@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+    <head>
+        <title>Invoking CPU/GPU devices</title>
+        <link rel="stylesheet" href="css/style.css" type="text/css"/>
+        <meta charset="utf-8"/>
+    
+<!-- kobo-style -->
+<script xmlns="http://www.w3.org/1999/xhtml" type="text/javascript" src="js/kobo.js"/>
+<style xmlns="http://www.w3.org/1999/xhtml" type="text/css" id="koboSpanStyle">.koboSpan { -webkit-text-combine: inherit; }</style>
+
+</head>
+
+    <body>
+        <section>
+
+                            <header>
+                    <h1 class="header-title"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.1.1">Invoking CPU/GPU devices</span></h1>
+                </header>
+            
+            <article>
+                
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.2.1">TensorFlow supports both CPUs and GPUs. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.2.2">It also supports distributed computation. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.2.3">We can use TensorFlow on multiple devices in one or more computer system. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.2.4">TensorFlow names the supported devices as </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.3.1">"/device:CPU:0"</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.4.1"> (or </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.5.1">"/cpu:0"</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.6.1">) for the CPU devices and </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.7.1">"/device:GPU:I"</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.8.1"> (or </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.9.1">"/gpu:I"</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.10.1">) for the i</span><sup><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.11.1">th</span></sup><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.12.1"> GPU device.</span></p>
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.13.1">As mentioned earlier, GPUs are much faster than CPUs because they have many small cores. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.13.2">However, it is not always an advantage in terms of computational speed to use GPUs for all types of computations. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.13.3">The overhead associated with GPUs can sometimes be more computationally expensive than the advantage of parallel computation offered by GPUs. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.13.4">To deal with this issue, TensorFlow has provisions to place computations on a particular device. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.13.5">By default, if both CPU and GPU are present, TensorFlow gives priority to GPU.</span></p>
+
+
+            </article>
+
+            
+        </section>
+    </body>
+
+</html>

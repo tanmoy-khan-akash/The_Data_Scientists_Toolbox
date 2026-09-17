@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+    <head>
+        <title>How it works...</title>
+        <link rel="stylesheet" href="css/style.css" type="text/css"/>
+        <meta charset="utf-8"/>
+    
+<!-- kobo-style -->
+<script xmlns="http://www.w3.org/1999/xhtml" type="text/javascript" src="js/kobo.js"/>
+<style xmlns="http://www.w3.org/1999/xhtml" type="text/css" id="koboSpanStyle">.koboSpan { -webkit-text-combine: inherit; }</style>
+
+</head>
+
+    <body>
+        <section>
+
+                            <header>
+                    <h1 class="header-title"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.1.1">How it works...</span></h1>
+                </header>
+            
+            <article>
+                
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.2.1">From the plot, we can see that our simple linear regressor tries to fit a linear line to the given dataset:</span></p>
+<div class="CDPAlignCenter CDPAlign"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.3.1"><img height="245" width="328" src="assets/58cd208f-6c30-4bfd-a635-015e499001bd.png"/></span></div>
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.4.1">In the following graph, we can see that as our model learned the data, the </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.5.1">loss</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.6.1"> function decreased, as was expected:</span></p>
+<div class="CDPAlignCenter CDPAlign"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.7.1"><img height="241" width="323" src="assets/a9f46b9c-b011-4396-a196-e1f20f1245a2.png"/></span></div>
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.8.1">The following is the TensorBoard graph of our simple linear regressor:</span></p>
+<div class="CDPAlignCenter CDPAlign"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.9.1"><img src="assets/4b0030fc-dad5-4ad4-9dd7-ee47af77ad05.png"/></span></div>
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.10.1">The graph has two name scope nodes, </span><strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.11.1">Variable</span></strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.12.1"> and </span><strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.13.1">Variable_1</span></strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.14.1">, they are the high-level nodes representing bias and weights respectively. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.14.2">The node named gradient is also a high-level node; expanding the node, we can see that it takes seven inputs and computes the </span><strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.15.1">gradients</span></strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.16.1"> that are then used by </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.17.1">GradientDescentOptimizer</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.18.1"> to compute and apply updates to weights and bias:</span></p>
+<div class="CDPAlignCenter CDPAlign"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.19.1"><img height="469" width="656" src="assets/f9692463-d4f6-4776-b899-087b3dfbac21.png"/></span></div>
+
+
+            </article>
+
+            
+        </section>
+    </body>
+
+</html>

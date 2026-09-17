@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+    <head>
+        <title>Running Distributed TensorFlow on Amazon AWS</title>
+        <link rel="stylesheet" href="css/style.css" type="text/css"/>
+        <meta charset="utf-8"/>
+    
+<!-- kobo-style -->
+<script xmlns="http://www.w3.org/1999/xhtml" type="text/javascript" src="js/kobo.js"/>
+<style xmlns="http://www.w3.org/1999/xhtml" type="text/css" id="koboSpanStyle">.koboSpan { -webkit-text-combine: inherit; }</style>
+
+</head>
+
+    <body>
+        <section>
+
+                            <header>
+                    <h1 class="header-title"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.1.1">Running Distributed TensorFlow on Amazon AWS</span></h1>
+                </header>
+            
+            <article>
+                
+<p class="mce-root"/>
+<p class="mce-root"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.2.1">Amazon AWS offers P2.x machine featuring NVIDIA K8 GPU. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.2.2">To be able to use, again the first step involves creating an Amazon AWS account. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.2.3">If you do not have one already, you can create it using the link: </span><a href="https://portal.aws.amazon.com/billing/signup?nc2=h_ct&amp;redirect_url=https%3A%2F%2Faws.amazon.com%2Fregistration-confirmation#/start"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.3.1">https://portal.aws.amazon.com/billing/signup?nc2=h_ct&amp;redirect_url=https%3A%2F%2Faws.amazon.com%2Fregistration-confirmation#/start</span></a><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.4.1"> . </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.4.2">Once you login into your account, your dashboard looks like this:</span></p>
+<div class="mce-root CDPAlignCenter CDPAlign"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.5.1"><img height="293" width="405" class=" image-border" src="assets/b32ea001-d1a5-464b-b2ec-a1a43c8d1001.png"/></span></div>
+<p class="mce-root"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.6.1">You can see that Amazon AWS provides a host of services, but here we are concerned with using Amazon AWS for Deep learning.</span></p>
+<p class="mce-root"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.7.1">The GPUs are available only in P2 instance creation, and are not available by default, to get this service one has to raise a ticket for increasing resources via AWS support, the support is available in the top right corner, once you go to support, you will see a button </span><span class="packt_screen"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.8.1">Create case</span></span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.9.1">, choose the button and make following selections:</span></p>
+<div class="CDPAlignCenter CDPAlign"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.10.1"><img height="319" width="503" class=" image-border" src="assets/1b9d45a6-ea33-4b49-bf7e-028927a57452.png"/></span></div>
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.11.1">You can choose any region offering </span><span class="packt_screen"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.12.1">p2.xlarge</span></span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.13.1"> instance. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.13.2">The new limit value decides the maximum number of the instances you can use, choose the number carefully because the service is not free and costs roughly $1 per hour. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.13.3">It takes about 24 hours for AWS to respond to the request.</span></p>
+
+
+            </article>
+
+            
+        </section>
+    </body>
+
+</html>

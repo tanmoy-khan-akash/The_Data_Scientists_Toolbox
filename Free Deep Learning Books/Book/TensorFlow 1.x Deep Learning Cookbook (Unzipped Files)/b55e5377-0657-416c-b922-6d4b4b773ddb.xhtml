@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+    <head>
+        <title>How to do it...</title>
+        <link rel="stylesheet" href="css/style.css" type="text/css"/>
+        <meta charset="utf-8"/>
+    
+<!-- kobo-style -->
+<script xmlns="http://www.w3.org/1999/xhtml" type="text/javascript" src="js/kobo.js"/>
+<style xmlns="http://www.w3.org/1999/xhtml" type="text/css" id="koboSpanStyle">.koboSpan { -webkit-text-combine: inherit; }</style>
+
+</head>
+
+    <body>
+        <section>
+
+                            <header>
+                    <h1 class="header-title"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.1.1">How to do it...</span></h1>
+                </header>
+            
+            <article>
+                
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.2.1">Here is how we proceed with transforming a TensorFlow:</span></p>
+<ol>
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.3.1">Install Android Studio from </span><a href="https://developer.android.com/studio/install.html"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.4.1">https://developer.android.com/studio/install.html.</span></a></li>
+</ol>
+<ol start="2">
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.5.1">Install Bazel by following the instructions at </span><a href="https://docs.bazel.build/versions/master/install.html"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.6.1">https://docs.bazel.build/versions/master/install.html</span></a><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.7.1">. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.7.2">For macOS, we are going to use Homebrew:</span></li>
+</ol>
+<pre style="padding-left: 60px"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.8.1">/usr/bin/ruby -e "$(curl -fsSL \</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.9.1"> https://raw.githubusercontent.com/Homebrew/install/master/install)"</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.10.1">brew install bazel</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.11.1">bazel version</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.12.1">brew upgrade bazel</span></pre>
+<ol start="3">
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.13.1">Clone the TensorFlow distribution from GitHub:</span></li>
+</ol>
+<pre style="padding-left: 60px"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.14.1">git clone https://github.com/TensorFlow/TensorFlow.git</span></pre>
+<ol start="4">
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.15.1">Build the graph transformer which summarizes the graph itself:</span></li>
+</ol>
+<pre style="padding-left: 60px"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.16.1">bazel run TensorFlow/tools/graph_transforms:summarize_graph -- --in_graph=/Users/gulli/graphs/inception5h/TensorFlow_inception_graph.pb</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.17.1">WARNING: /Users/gulli/TensorFlow/TensorFlow/core/BUILD:1783:1: in includes attribute of cc_library rule //TensorFlow/core:framework_headers_lib: '../../external/nsync/public' resolves to 'external/nsync/public' not below the relative path of its package 'TensorFlow/core'. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.17.2">This will be an error in the future. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.17.3">Since this rule was created by the macro 'cc_header_only_library', the error might have been caused by the macro implementation in /Users/gulli/TensorFlow/TensorFlow/TensorFlow.bzl:1054:30.</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.18.1">INFO: Found 1 target...</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.19.1">Target //TensorFlow/tools/graph_transforms:summarize_graph up-to-date:</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.20.1">bazel-bin/TensorFlow/tools/graph_transforms/summarize_graph</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.21.1">INFO: Elapsed time: 0.395s, Critical Path: 0.01s</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.22.1">INFO: Running command line: bazel-bin/TensorFlow/tools/graph_transforms/summarize_graph '--in_graph=/Users/gulli/graphs/inception5h/TensorFlow_inception_graph.pb'</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.23.1">Found 1 possible inputs: (name=input, type=float(1), shape=[])</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.24.1">No variables spotted.</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.25.1">Found 3 possible outputs: (name=output, op=Identity) (name=output1, op=Identity) (name=output2, op=Identity)</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.26.1">Found 13462015 (13.46M) const parameters, 0 (0) variable parameters, and 0 control_edges</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.27.1">370 nodes assigned to device '/cpu:0'Op types used: 142 Const, 64 BiasAdd, 61 Relu, 59 Conv2D, 13 MaxPool, 9 Concat, 5 Reshape, 5 MatMul, 3 Softmax, 3 Identity, 3 AvgPool, 2 LRN, 1 Placeholder</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.28.1">To use with TensorFlow/tools/benchmark:benchmark_model try these arguments:</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.29.1">bazel run TensorFlow/tools/benchmark:benchmark_model -- --graph=/Users/gulli/graphs/inception5h/TensorFlow_inception_graph.pb --show_flops --input_layer=input --input_layer_type=float --input_layer_shape= --output_layer=output,output1,output2</span></pre>
+<ol start="5">
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.30.1">Strip all the nodes used for training, which are not needed when the graph is used for inference on mobile devices:</span></li>
+</ol>
+<pre style="padding-left: 60px"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.31.1">bazel run TensorFlow/tools/graph_transforms:transform_graph -- --in_graph=/Users/gulli/graphs/inception5h/TensorFlow_inception_graph.pb --out_graph=/tmp/optimized_inception_graph.pb --transforms="strip_unused_nodes fold_constants(ignore_errors=true) fold_batch_norms fold_old_batch_norms"</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.32.1">WARNING: /Users/gulli/TensorFlow/TensorFlow/core/BUILD:1783:1: in includes attribute of cc_library rule //TensorFlow/core:framework_headers_lib: '../../external/nsync/public' resolves to 'external/nsync/public' not below the relative path of its package 'TensorFlow/core'. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.32.2">This will be an error in the future. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.32.3">Since this rule was created by the macro 'cc_header_only_library', the error might have been caused by the macro implementation in /Users/gulli/TensorFlow/TensorFlow/TensorFlow.bzl:1054:30.</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.33.1">INFO: Found 1 target...</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.34.1">Target //TensorFlow/tools/graph_transforms:transform_graph up-to-date:</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.35.1">bazel-bin/TensorFlow/tools/graph_transforms/transform_graph</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.36.1">INFO: Elapsed time: 0.578s, Critical Path: 0.01s</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.37.1">INFO: Running command line: bazel-bin/TensorFlow/tools/graph_transforms/transform_graph '--in_graph=/Users/gulli/graphs/inception5h/TensorFlow_inception_graph.pb' '--out_graph=/tmp/optimized_inception_graph.pb' '--transforms=strip_unused_nodes fold_constants(ignore_errors=true) fold_batch_norms fold_old_batch_norms'</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.38.1">2017-10-15 22:26:59.357129: I TensorFlow/tools/graph_transforms/transform_graph.cc:264] Applying strip_unused_nodes</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.39.1">2017-10-15 22:26:59.367997: I TensorFlow/tools/graph_transforms/transform_graph.cc:264] Applying fold_constants</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.40.1">2017-10-15 22:26:59.387800: I TensorFlow/core/platform/cpu_feature_guard.cc:137] Your CPU supports instructions that this TensorFlow binary was not compiled to use: SSE4.2 AVX AVX2 FMA</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.41.1">2017-10-15 22:26:59.388676: E TensorFlow/tools/graph_transforms/transform_graph.cc:279] fold_constants: Ignoring error Must specify at least one target to fetch or execute.</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.42.1">2017-10-15 22:26:59.388695: I TensorFlow/tools/graph_transforms/transform_graph.cc:264] Applying fold_batch_norms</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.43.1">2017-10-15 22:26:59.388721: I TensorFlow/tools/graph_transforms/transform_graph.cc:264] Applying fold_old_batch_norms</span></pre>
+
+
+            </article>
+
+            
+        </section>
+    </body>
+
+</html>

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+    <head>
+        <title>Introduction</title>
+        <link rel="stylesheet" href="css/style.css" type="text/css"/>
+        <meta charset="utf-8"/>
+    
+<!-- kobo-style -->
+<script xmlns="http://www.w3.org/1999/xhtml" type="text/javascript" src="js/kobo.js"/>
+<style xmlns="http://www.w3.org/1999/xhtml" type="text/css" id="koboSpanStyle">.koboSpan { -webkit-text-combine: inherit; }</style>
+
+</head>
+
+    <body>
+        <section>
+
+                            <header>
+                    <h1 class="header-title"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.1.1">Introduction</span></h1>
+                </header>
+            
+            <article>
+                
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.2.1">In this chapter, we will discuss how </span><strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.3.1">Recurrent Neural Networks</span></strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.4.1"> (</span><strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.5.1">RNN</span></strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.6.1">s) are used for deep learning in domains where maintaining a sequential order is important. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.6.2">Our attention will be mainly devoted to text analysis and </span><strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.7.1">natural language processing</span></strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.8.1"> (</span><strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.9.1">NLP</span></strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.10.1">), but we will also see examples of sequences used to predict the value of Bitcoins.</span></p>
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.11.1">Many real-time situations can be described by adopting a model based on temporal sequences. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.11.2">For instance, if you think about writing a document, the order of words is important and the current word certainly depends on the previous ones. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.11.3">If we still focus on text writing, it is clear that the next character in a word depends on the previous characters (for example, </span><em><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.12.1">The quick brown f...</span></em><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.13.1"> there is a very high probability that the next letter will be the letter </span><em><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.14.1">o</span></em><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.15.1">), as illustrated in the following figure. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.15.2">The key idea is to produce a distribution of next characters given the current context, and then to sample from the distribution to produce the next candidate character:</span></p>
+<div class="CDPAlignCenter CDPAlign"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.16.1"><img height="135" width="421" src="assets/428ab6dd-b328-4f89-a675-24eabccb2988.png"/></span></div>
+<div class="packt_figref CDPAlignCenter CDPAlign"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.17.1">An example of prediction with  "The quick brown fox" sentence</span></div>
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.18.1">A simple variant is to store more than one prediction and therefore create a tree of possible expansions as illustrated in the following figure:</span></p>
+<div class="CDPAlignCenter CDPAlign"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.19.1"><img height="192" width="403" src="assets/3d541407-363a-401e-b3eb-60dbbc994440.png"/></span></div>
+<div class="packt_figref CDPAlignCenter CDPAlign"><span><span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.20.1">An example of tree prediction with  "The quick brown fox" sentence</span></span></span></div>
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.21.1">However, a model based on sequences can be used in a very large number of additional domains. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.21.2">In music, the next note in a composition will certainly depend on the previous notes, and in a video, the next frame in a movie is certainly related to the previous frames. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.21.3">Moreover, in certain situations, the current video frame, word, character, or musical note will not only depend on the previous but also on the following ones.</span></p>
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.22.1">A model based on a temporal sequence can be described with an RNN where for a given input </span><em><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.23.1">X</span><sub><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.24.1">i</span></sub></em><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.25.1"> at time </span><em><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.26.1">i</span></em><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.27.1"> producing the output </span><em><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.28.1">Y</span><sub><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.29.1">i</span></sub></em><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.30.1">, a memory of previous states at time </span><em><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.31.1">[0, i-1]</span></em><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.32.1"> is fed back to the network. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.32.2">This idea of feeding back previous states is depicted by a recurrent loop, as shown in the following figures:</span></p>
+<div class="CDPAlignCenter CDPAlign"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.33.1"><img src="assets/b7455709-b488-4b9c-818a-da98d1afc06d.png"/></span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.34.1">           ;</span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.35.1"><img src="assets/fbffb7f6-46df-4186-964b-d01cac81ae8b.png"/></span></div>
+<div class="packt_figref CDPAlignCenter CDPAlign"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.36.1">An example of feeding back</span></div>
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.37.1">The recurrent relation can be conveniently expressed by </span><em><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.38.1">unfolding</span></em><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.39.1"> the network, as illustrated in the following figure:</span></p>
+<div class="CDPAlignCenter CDPAlign"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.40.1"><img src="assets/05b91901-88c4-44e6-bea5-d929c70dd2d2.png"/></span></div>
+<div class="packt_figref CDPAlignCenter CDPAlign"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.41.1">An example of unfolding a recurrent cell</span></div>
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.42.1">The simplest RNN cell consists of a simple </span><em><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.43.1">tanh</span></em><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.44.1"> function, the hyperbolic tangent function, as represented in the following figures:</span></p>
+<table class="a0">
+<tbody>
+<tr>
+<td>
+<div class="CDPAlignCenter CDPAlign"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.45.1"><img src="assets/681258f1-ac57-45bb-8626-9333ff015a28.png"/></span></div>
+</td>
+<td>
+<div class="CDPAlignCenter CDPAlign"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.46.1"><img src="assets/efb66350-20dc-4688-97f8-f7c661deb76a.png"/></span></div>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="packt_figref CDPAlignCenter CDPAlign"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.47.1">An example of simple tanh cell</span></div>
+
+
+            </article>
+
+            
+        </section>
+    </body>
+
+</html>

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+    <head>
+        <title>How it works...</title>
+        <link rel="stylesheet" href="css/style.css" type="text/css"/>
+        <meta charset="utf-8"/>
+    
+<!-- kobo-style -->
+<script xmlns="http://www.w3.org/1999/xhtml" type="text/javascript" src="js/kobo.js"/>
+<style xmlns="http://www.w3.org/1999/xhtml" type="text/css" id="koboSpanStyle">.koboSpan { -webkit-text-combine: inherit; }</style>
+
+</head>
+
+    <body>
+        <section>
+
+                            <header>
+                    <h1 class="header-title"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.1.1">How it works...</span></h1>
+                </header>
+            
+            <article>
+                
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.2.1">It is interesting to note that in the preceding code, we reduced the dimensions of the input from 784 to 256 and our network could still reconstruct the original image. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.2.2">Let's compare our performance with RBM (</span><em><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.3.1">Chapter </span><span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.4.1">7</span></span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.5.1">, Unsupervised Learning</span></em><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.6.1"> ) with the same dimension of the hidden layer:</span></p>
+<div class="CDPAlignCenter CDPAlign"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.7.1"><img height="279" width="408" src="assets/b15cfc28-8bf9-41c5-9a91-14b5c2b4196a.png"/></span></div>
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.8.1">We can see that the images reconstructed by the autoencoder are much crisper than the ones reconstructed by RBM. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.8.2">The reason is that, in the autoencoder, there are additional weights (weights from hidden to decoder output layer) to be trained and hence retain learning. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.8.3">As the autoencoder learns more, it performs better than RBM, even when both compact the information to the same dimensions.</span></p>
+
+
+            </article>
+
+            
+        </section>
+    </body>
+
+</html>

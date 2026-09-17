@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+    <head>
+        <title>How it works...</title>
+        <link rel="stylesheet" href="css/style.css" type="text/css"/>
+        <meta charset="utf-8"/>
+    
+<!-- kobo-style -->
+<script xmlns="http://www.w3.org/1999/xhtml" type="text/javascript" src="js/kobo.js"/>
+<style xmlns="http://www.w3.org/1999/xhtml" type="text/css" id="koboSpanStyle">.koboSpan { -webkit-text-combine: inherit; }</style>
+
+</head>
+
+    <body>
+        <section>
+
+                            <header>
+                    <h1 class="header-title"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.1.1">How it works...</span></h1>
+                </header>
+            
+            <article>
+                
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.2.1">The RBMs learn the hidden representations/features of the model using unsupervised learning and then the fully connected layers added along with pre-trained RBMs are finetuned.</span></p>
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.3.1">The accuracy here varies largely on image representation. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.3.2">In the preceding recipe, we have used no image processing, only grayscale images scaled between 0 to 1. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.3.3">But if we add the image processing as done in the following paper, it increases the accuracy further-</span><a href="http://deeplearning.net/wp-content/uploads/2013/03/dlsvm.pdf"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.4.1">http://deeplearning.net/wp-content/uploads/2013/03/dlsvm.pdf</span></a><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.5.1">. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.5.2">Thus we multiply each image by 100.0/255.0 in the </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.6.1">preprocess_data</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.7.1"> function, and add these few lines of the code to main code:</span></p>
+<pre><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.8.1">std_image = np.std(X_train, axis=0)</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.9.1">X_train = np.divide(np.subtract(X_train,mean_image), std_image)</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.10.1">X_val = np.divide(np.subtract(X_val,mean_image), std_image)</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.11.1">X_test = np.divide(np.subtract(X_test,mean_image), std_image)</span></pre>
+
+
+            </article>
+
+            
+        </section>
+    </body>
+
+</html>
