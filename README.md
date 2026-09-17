@@ -21,7 +21,7 @@ In short, it has almost everything you need to become a successful data scientis
 
 ✅ Follow this link and spread the word around the world.
 
-#### Link: 🔗 https://drive.google.com/drive/u/0/folders/1HEbGQ791_5CXONET6yQZgKYOF7swH64U
+#### Link: 🔗 https://github.com/tanmoy-khan-akash/The_Data_Scientists_Toolbox
 ------------------------------------------------------------------------------------------------------------------------------------------
 
 These resources are perfect for both beginners and advanced learners.
