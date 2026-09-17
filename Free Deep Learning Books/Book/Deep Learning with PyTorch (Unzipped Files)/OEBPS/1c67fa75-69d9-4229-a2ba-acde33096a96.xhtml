@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xmlns:m="http://www.w3.org/1998/Math/MathML" xmlns:pls="http://www.w3.org/2005/01/pronunciation-lexicon" xmlns:ssml="http://www.w3.org/2001/10/synthesis" xmlns:svg="http://www.w3.org/2000/svg">
+<head>
+  <meta charset="UTF-8" />
+  <title>Generative adversarial networks</title>
+  <link type="text/css" rel="stylesheet" media="all" href="style.css" />
+  <link type="text/css" rel="stylesheet" media="all" href="core.css" />
+</head>
+<body>
+  <div id="sbo-rt-content"><section>
+
+                            <header>
+                    <h1 class="header-title">Generative adversarial networks</h1>
+                </header>
+            
+            <article>
+                
+<p>GANs have become very popular in the last few years. Every week there are some advancements being made in the area of GANs. It has become one of the important subfields of deep learning, with a very active research community. GAN was introduced by Ian Goodfellow in 2014. The GAN addresses the problem of unsupervised learning by training two deep neural networks, called <em>generator</em> and <em>discriminator</em>, which compete with each other. In the course of training, both eventually become better at the tasks that they perform. </p>
+<p>GANs are intuitively understood using the case of counterfeiter (generator) and the police (discriminator). Initially, the counterfeiter shows the police fake money. The police identifies it as fake and explains to the counterfeiter why it is fake. The counterfeiter makes new fake money based on the feedback it received. The police finds it fake and informs the counterfeiter why it is fake. It repeats this a huge number of times until the counterfeiter is able to make fake money which the police is unable to recognize. In the GAN scenario, we end up with a generator that generates fake images which are quite similar to the real ones, and a classifier becomes great at identifying a fake from the real thing. </p>
+<p>GAN is a combination of a forger network and an expert network, each being trained to beat the other. The generator network takes a random vector as input and generates a synthetic image. The discriminator network takes an input image and predicts whether the image is real or fake. We pass the discriminator network either a real image or a fake image. </p>
+<p>The generator network is trained to produce images and fool the discriminator network into believing they are real. The discriminator network is also constantly improving at not getting fooled, as we pass the feedback whilst training it. <span>Though the idea of GANs sounds simple in theory, training a GAN model that actually works is very difficult. Training a GAN is also challenging, as there are two deep neural networks that need to be trained.</span> </p>
+<div class="packt_infobox">The DCGAN<span><span> is one of the early models that demonstrated how to build a GAN model that learns by itself and generates meaningful images. You can learn more about it here:<br/></span></span><a href="https://arxiv.org/pdf/1511.06434.pdf" target="_blank">https://arxiv.org/pdf/1511.06434.pdf</a></div>
+<p>The following diagram shows the architecture of a GAN model:</p>
+<div class="CDPAlignCenter CDPAlign"><img height="643" width="1013" class="alignnone size-full wp-image-385 image-border" src="images/4c01284d-d850-40c2-bc9d-75ad1910f2d3.png" /></div>
+<p>We will walk through each of the components of this architecture, and some of the reasoning behind them, and then we will implement the same flow in PyTorch in the next section. By the end of this implementation, we will have basic knowledge of how DCGANs work. </p>
+
+
+            </article>
+
+            
+        </section>
+    </div>
+</body>
+</html>

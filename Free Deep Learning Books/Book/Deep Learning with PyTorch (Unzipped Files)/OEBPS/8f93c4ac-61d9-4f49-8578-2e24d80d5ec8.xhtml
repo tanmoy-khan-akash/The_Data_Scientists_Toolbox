@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xmlns:m="http://www.w3.org/1998/Math/MathML" xmlns:pls="http://www.w3.org/2005/01/pronunciation-lexicon" xmlns:ssml="http://www.w3.org/2001/10/synthesis" xmlns:svg="http://www.w3.org/2000/svg">
+<head>
+  <meta charset="UTF-8" />
+  <title>Machine learning glossary</title>
+  <link type="text/css" rel="stylesheet" media="all" href="style.css" />
+  <link type="text/css" rel="stylesheet" media="all" href="core.css" />
+</head>
+<body>
+  <div id="sbo-rt-content"><section>
+
+                            <header>
+                    <h1 class="header-title">Machine learning glossary</h1>
+                </header>
+            
+            <article>
+                
+<p>In the last few chapters, we have used lot of terminology that could be completely new to you if you are just entering the machine learning or deep learning space. We will list a lot of commonly-used terms in machine learning, which are also used in the deep learning literature:</p>
+<ul>
+<li><strong>Sample</strong> <strong>or input or</strong> <strong>data point</strong>: These mean particular instances of training a set. In our image classification problem seen in the last chapter, each image can be referred to as a sample, input, or data point.</li>
+<li><strong>Prediction</strong> <strong>or</strong> <strong>output</strong>: The value our algorithm generates as an output. For example, in our previous example our algorithm predicted a particular image as 0, which is the label given to cat, so the number 0 is our prediction or output.</li>
+<li><strong>Target</strong> <strong>or label</strong>: The actual tagged label for an image.</li>
+<li><strong>Loss value</strong> <strong>or prediction error</strong>: Some measure of distance between the predicted value and actual value. The smaller the value, the better the accuracy.</li>
+<li><strong>Classes</strong>: Possible set of values or labels for a given dataset. In the example in our previous chapter, we had two classes—cats and dogs.</li>
+<li><strong>Binary classification</strong>: A classification task where each input example should be classified as either one of the two exclusive categories.</li>
+<li><strong>Multi-class classification</strong>: A classification task where each input example can be classified into of more than two different categories.</li>
+<li><strong>Multi-label classification</strong>: An input example can be tagged with multiple labels—for example, tagging a restaurant with different types of food it serves such as Italian, Mexican, and Indian. Another commonly-used example is object detection in an image, where the algorithm identifies different objects in the image.</li>
+<li><strong>Scalar regression</strong>: Each input data point will be associated with one scalar quality, which is a number. Some examples could be predicting house prices, stock prices, and cricket scores.</li>
+<li><strong>Vector regression</strong>: Where the algorithm needs to predict more than one scalar quantity. One good example is when you try to identify the bounding box that contains the location of a fish in an image. In order to predict the bounding box, your algorithm needs to predict four scalar quantities denoting the edges of a square.</li>
+<li><strong>Batch</strong>: For most cases, we train our algorithm on a bunch of input samples referred to as the batch. The batch size varies generally from 2 to 256, depending on the GPU's memory. The weights are also updated for each batch, so the algorithms tend to learn faster than when trained on a single example. </li>
+<li><strong>Epoch</strong>: Running the algorithm through a complete dataset is called an <strong>epoch</strong>. It is common to train (update the weights) for several epochs. </li>
+</ul>
+
+
+            </article>
+
+            
+        </section>
+    </div>
+</body>
+</html>

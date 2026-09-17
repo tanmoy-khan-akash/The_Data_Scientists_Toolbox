@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xmlns:m="http://www.w3.org/1998/Math/MathML" xmlns:pls="http://www.w3.org/2005/01/pronunciation-lexicon" xmlns:ssml="http://www.w3.org/2001/10/synthesis" xmlns:svg="http://www.w3.org/2000/svg">
+<head>
+  <meta charset="UTF-8" />
+  <title>Word embedding</title>
+  <link type="text/css" rel="stylesheet" media="all" href="style.css" />
+  <link type="text/css" rel="stylesheet" media="all" href="core.css" />
+</head>
+<body>
+  <div id="sbo-rt-content"><section>
+
+                            <header>
+                    <h1 class="header-title">Word embedding</h1>
+                </header>
+            
+            <article>
+                
+<p>Word embedding is a very popular way of representing text data in problems that are solved by deep learning algorithms. Word embedding provides a dense representation of a word filled with floating numbers. The vector dimension varies according to the vocabulary size. It is common to use a word embedding of dimension size 50, 100, 256, 300, and sometimes 1,000. The dimension size is a hyper-parameter that we need to play with during the training phase.</p>
+<p>If we are trying to represent a vocabulary of size 20,000 in one-hot representation then we will end up with 20,000 x 20,000 numbers, most of which will be zero. The same vocabulary can be represented in word embedding as 20,000 x dimension size, where the dimension size could be 10, 50, 300, and so on.</p>
+<p class="CDPAlignCenter CDPAlign CDPAlignLeft">One way to create word embeddings is to start with dense vectors for each token containing random numbers, and then train a model such as a document classifier or sentiment classifier. The floating point numbers, which represent the tokens, will get adjusted in a way such that semantically closer words will have similar representation. To understand it, let's look at the following figure, where we plotted the word embedding vectors on a two-dimensional plot of five movies:</p>
+<div class="CDPAlignCenter CDPAlign"><img height="319" width="426" class="alignnone size-full wp-image-448 image-border" src="images/f2302e41-c762-4566-aa6e-6b176145c527.png" /></div>
+<p>The preceding image shows how the dense vectors are tuned in order to have smaller distances for words that are semantically similar. Since movie titles such as <strong>Superman</strong>, <strong>Thor</strong>, and <strong>Batman</strong> are action movies based on comics, the embedding for such words is closer, whereas the embedding for the movie <strong>Titanic</strong> is far from the action movies and closer to the movie title <strong>Notebook</strong>, since they are romantic movies. </p>
+<p>Learning word embedding may not be feasible when you have too little data, and in such cases we can use word embeddings that are trained by some other machine learning algorithm. An embedding generated from another task is called a <strong>pretrained</strong> word embedding. We will learn how to build our own word embeddings and use pretrained word embeddings. </p>
+
+
+            </article>
+
+            
+        </section>
+    </div>
+</body>
+</html>

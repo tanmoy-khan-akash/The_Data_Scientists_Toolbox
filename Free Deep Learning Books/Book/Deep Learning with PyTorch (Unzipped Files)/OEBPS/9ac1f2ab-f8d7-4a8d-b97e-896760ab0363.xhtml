@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xmlns:m="http://www.w3.org/1998/Math/MathML" xmlns:pls="http://www.w3.org/2005/01/pronunciation-lexicon" xmlns:ssml="http://www.w3.org/2001/10/synthesis" xmlns:svg="http://www.w3.org/2000/svg">
+<head>
+  <meta charset="UTF-8" />
+  <title>Baseline model</title>
+  <link type="text/css" rel="stylesheet" media="all" href="style.css" />
+  <link type="text/css" rel="stylesheet" media="all" href="core.css" />
+</head>
+<body>
+  <div id="sbo-rt-content"><section>
+
+                            <header>
+                    <h1 class="header-title">Baseline model</h1>
+                </header>
+            
+            <article>
+                
+<p>Create a very simple model that beats the baseline score. In our previous example of dogs and cats, classification, the baseline accuracy should be 0.5 and our simple model should be able to beat this score. If we are not able to beat the baseline score, then maybe the input data does not hold the necessary information required to make the necessary prediction. Remember not to introduce any regularization or dropouts at this step.</p>
+<p>To make the model work, we have to make three important choices:</p>
+<ul>
+<li><strong>Choice of last layer</strong>: For a regression, it should be a linear layer generating a scalar value as output. For a vector regression problem, it would be the same linear layer generating more than one scalar output. For a bounding box, it outputs four values. For a binary classification, it is often common to use sigmoid, and for multi-class classification it is softmax.</li>
+<li><strong>Choice of loss function</strong>: The type of the problem will help you in deciding the loss function. For a regression problem, such as predicting house prices, we use the mean squared error, and for classification problems we use categorical cross entropy. </li>
+<li><strong>Optimization</strong>: Choosing the right optimization algorithm and some of its hyper parameters is quite tricky, and we can find them by experimenting with different ones. For most of the use cases, an Adam or RMSprop optimization algorithm works better. We will cover some of the tricks that can be used for learning rate selection.</li>
+</ul>
+<p class="mce-root">Let's summarize what kind of loss function and activation function we would use for the last layer of the network in our deep learning algorithms:</p>
+<table>
+<tbody>
+<tr>
+<td>
+<p><strong>Problem type</strong></p>
+</td>
+<td>
+<p><strong>Activation function</strong></p>
+</td>
+<td>
+<p> </p>
+<p class="mce-root"><strong>Loss function</strong></p>
+<p> </p>
+</td>
+</tr>
+<tr>
+<td>
+<p>Binary classification</p>
+</td>
+<td>
+<p>Sigmoid activation</p>
+</td>
+<td>
+<p> </p>
+<p class="mce-root"><kbd>nn.CrossEntropyLoss()</kbd></p>
+<p> </p>
+</td>
+</tr>
+<tr>
+<td>
+<p>Multi-class classification</p>
+</td>
+<td>
+<p>Softmax activation</p>
+</td>
+<td>
+<p> </p>
+<p class="mce-root"><kbd><span>nn.CrossEntropyLoss()</span></kbd></p>
+<p> </p>
+</td>
+</tr>
+<tr>
+<td>
+<p>Multi-label classification</p>
+</td>
+<td>
+<p>Sigmoid activation</p>
+</td>
+<td>
+<p> </p>
+<p class="mce-root"><kbd><span>nn.CrossEntropyLoss()</span></kbd></p>
+<p> </p>
+</td>
+</tr>
+<tr>
+<td>
+<p>Regression</p>
+</td>
+<td>
+<p>None</p>
+</td>
+<td>
+<p> </p>
+<p class="mce-root">MSE</p>
+<p> </p>
+</td>
+</tr>
+<tr>
+<td>
+<p>Vector regression</p>
+</td>
+<td>
+<p>None</p>
+</td>
+<td>
+<p> </p>
+<p class="mce-root">MSE</p>
+<p> </p>
+</td>
+</tr>
+</tbody>
+</table>
+
+
+            </article>
+
+            
+        </section>
+    </div>
+</body>
+</html>

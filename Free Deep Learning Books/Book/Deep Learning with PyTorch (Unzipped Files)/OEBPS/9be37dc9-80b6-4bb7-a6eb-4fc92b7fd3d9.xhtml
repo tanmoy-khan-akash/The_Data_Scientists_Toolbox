@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xmlns:m="http://www.w3.org/1998/Math/MathML" xmlns:pls="http://www.w3.org/2005/01/pronunciation-lexicon" xmlns:ssml="http://www.w3.org/2001/10/synthesis" xmlns:svg="http://www.w3.org/2000/svg">
+<head>
+  <meta charset="UTF-8" />
+  <title>ResNet&#xA0;</title>
+  <link type="text/css" rel="stylesheet" media="all" href="style.css" />
+  <link type="text/css" rel="stylesheet" media="all" href="core.css" />
+</head>
+<body>
+  <div id="sbo-rt-content"><section>
+
+                            <header>
+                    <h1 class="header-title">ResNet </h1>
+                </header>
+            
+            <article>
+                
+<p><span>ResNet solves these problems by explicitly letting the layers in the network fit a residual mapping by adding a shortcut connection. The following image shows how ResNet works:</span></p>
+<div class="CDPAlignCenter CDPAlign"><img height="324" width="352" class="alignnone size-full wp-image-404 image-border" src="images/458fcc47-ed90-46e3-aa8d-15d3a1c6b36b.png" /></div>
+<p>In all the networks we have seen, we try to find a function that maps the input (<em>x</em>) to its output (<em>H(x)</em>) by stacking different layers. But the authors of ResNet proposed a fix; instead of trying to learn an underlying mapping from <em>x</em> to <em>H(x)</em>, we learn the difference between the two, or the residual. Then, to calculate <em>H(x)</em>, we can just add the residual to the input. Say the residual is <em>F(x) = H(x) - x</em>; instead of trying to learn <em>H(x)</em> directly, we try to learn <em>F(x) + x</em>. </p>
+<p>Each ResNet block consists of a series of layers, and a shortcut connection adding the input of the block to the output of the block. The add operation is performed element-wise and the inputs and outputs need to be of the same size. If they are of a different size, then we can use paddings. The following code demonstrates what a simple ResNet block would look like:</p>
+<pre>class ResNetBasicBlock(nn.Module):<br/>    <br/>    def __init__(self,in_channels,out_channels,stride):<br/>        <br/>        super().__init__()<br/>        self.conv1 = nn.Conv2d(in_channels,out_channels,kernel_size=3,stride=stride,padding=1,bias=False)<br/>        self.bn1 = nn.BatchNorm2d(out_channels)<br/>        self.conv2 = nn.Conv2d(out_channels,out_channels,kernel_size=3,stride=stride,padding=1,bias=False)<br/>        self.bn2 = nn.BatchNorm2d(out_channels)<br/>        self.stride = stride<br/>        <br/>    def forward(self,x):<br/>        <br/>        residual = x<br/>        out = self.conv1(x)<br/>        out = F.relu(self.bn1(out),inplace=True)<br/>        out = self.conv2(out)<br/>        out = self.bn2(out)<br/>        out += residual<br/>        return F.relu(out)       </pre>
+<p>The <kbd>ResNetBasicBlock</kbd> contains an <kbd>init</kbd> method which initializes all the different layers, such as the convolution layer, batch normalization, and ReLU layers. The <kbd>forward</kbd> method is almost similar to what we have seen up until now, except that the input is being added back to the layer's output just before it is returned. </p>
+<p>The PyTorch <kbd>torchvision</kbd> package provides an out-of-the-box ResNet model with different layers. Some of the different models available are:</p>
+<ul>
+<li>ResNet-18</li>
+<li>ResNet-34</li>
+<li><span>ResNet-50</span></li>
+<li><span>ResNet-101</span></li>
+<li><span>ResNet-152</span></li>
+</ul>
+<p>We can also use any of these models for transfer learning. The <kbd>torchvision</kbd> instance enables us to simply create one of these models and use them. We have done this a couple of times in the book, and the following code is a refresher for that: </p>
+<pre>from torchvision.models import resnet18<br/><br/>resnet = resnet18(pretrained=False)</pre>
+<p>The following figure shows what a 34-layer ResNet model would look like:</p>
+<div class="CDPAlignCenter"><img height="629" width="92" class="alignnone size-full wp-image-740 image-border" src="images/e36d8826-ab65-403c-aec4-affe9b965fa4.png" /></div>
+<div class="packt_figref CDPAlignCenter CDPAlign">34 layer ResNet model</div>
+<p>We can see how this network consists of multiple ResNet blocks. There have been experiments where teams have tried models as deep as 1,000 layers. For most real-world use cases, my personal recommendation would be to start with a smaller network. Another key advantage of these modern networks is that they need very few parameters compared to models such as VGG, as they avoid using fully connected layers that need lots of parameters to train. Another popular architecture that is being used to solve problems in the computer vision field is <strong>Inception</strong>. Before moving on to Inception architecture, let's train a ResNet model on the <kbd>Dogs vs. Cats</kbd> dataset. We will use the data that we used in <a href="3cce1bbe-6d1c-4164-b1ef-8b0688126519.xhtml" target="_blank">Chapter 5</a><em>, Deep Learning for Computer Vision,</em> and will quickly train a model based on features calculated from ResNet. As usual, we will follow these steps to train the model:</p>
+<ul>
+<li>Creating PyTorch datasets</li>
+<li>Creating loaders for training and validation</li>
+<li>Creating the ResNet model</li>
+<li>Extract convolutional features</li>
+<li>Creating a custom PyTorch dataset class for the pre-convoluted features and loader</li>
+<li>Creating a simple linear model</li>
+<li>Training and validating the model</li>
+</ul>
+<p>Once done, we are going to repeat this step for Inception and DenseNet. At the end, we will also explore the ensembling technique, where we combine these powerful models to build a new model. </p>
+
+
+            </article>
+
+            
+        </section>
+    </div>
+</body>
+</html>

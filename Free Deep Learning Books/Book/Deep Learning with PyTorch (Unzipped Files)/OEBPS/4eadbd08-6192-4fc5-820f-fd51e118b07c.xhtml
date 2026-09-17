@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xmlns:m="http://www.w3.org/1998/Math/MathML" xmlns:pls="http://www.w3.org/2005/01/pronunciation-lexicon" xmlns:ssml="http://www.w3.org/2001/10/synthesis" xmlns:svg="http://www.w3.org/2000/svg">
+<head>
+  <meta charset="UTF-8" />
+  <title>Creating batches</title>
+  <link type="text/css" rel="stylesheet" media="all" href="style.css" />
+  <link type="text/css" rel="stylesheet" media="all" href="core.css" />
+</head>
+<body>
+  <div id="sbo-rt-content"><section>
+
+                            <header>
+                    <h1 class="header-title">Creating batches</h1>
+                </header>
+            
+            <article>
+                
+<p>We use the torchtext <kbd>BucketIterator</kbd> for creating batches, and the size of the batches will be sequence length and batches. For our case, the size will be [<kbd>200</kbd>, <kbd>32</kbd>], where <em>200</em> is the sequence length and <em>32</em> is the batch size. </p>
+<p>The following is the code used for batching:</p>
+<pre>train_iter, test_iter = data.BucketIterator.splits((train, test), batch_size=32, device=-1)<br/>train_iter.repeat = False<br/>test_iter.repeat = False</pre>
+
+
+            </article>
+
+            
+        </section>
+    </div>
+</body>
+</html>

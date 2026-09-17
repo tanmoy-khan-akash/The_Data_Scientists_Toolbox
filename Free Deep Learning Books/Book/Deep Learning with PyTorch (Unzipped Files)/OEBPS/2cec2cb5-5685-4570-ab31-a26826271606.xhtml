@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xmlns:m="http://www.w3.org/1998/Math/MathML" xmlns:pls="http://www.w3.org/2005/01/pronunciation-lexicon" xmlns:ssml="http://www.w3.org/2001/10/synthesis" xmlns:svg="http://www.w3.org/2000/svg">
+<head>
+  <meta charset="UTF-8" />
+  <title>Creating PyTorch datasets</title>
+  <link type="text/css" rel="stylesheet" media="all" href="style.css" />
+  <link type="text/css" rel="stylesheet" media="all" href="core.css" />
+</head>
+<body>
+  <div id="sbo-rt-content"><section>
+
+                            <header>
+                    <h1 class="header-title">Creating PyTorch datasets</h1>
+                </header>
+            
+            <article>
+                
+<p>We create a transformation object containing all the basic transformations required and use the <kbd>ImageFolder</kbd> to load the images from the data directory that we created in <a href="3cce1bbe-6d1c-4164-b1ef-8b0688126519.xhtml" target="_blank"></a><a href="3cce1bbe-6d1c-4164-b1ef-8b0688126519.xhtml" target="_blank">Chapter</a> <em><a href="3cce1bbe-6d1c-4164-b1ef-8b0688126519.xhtml" target="_blank">5</a>, Deep Learning for Computer Vision</em>. In the following code, we create the datasets: </p>
+<pre>data_transform = transforms.Compose([<br/>        transforms.Resize((299,299)),<br/>        transforms.ToTensor(),<br/>        transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])<br/>    ])<br/><br/># For Dogs &amp; Cats dataset<br/>train_dset = ImageFolder('../../chapter5/dogsandcats/train/',transform=data_transform)<br/>val_dset = ImageFolder('../../chapter5/dogsandcats/valid/',transform=data_transform)<br/>classes=2</pre>
+<p>By now, most of the preceding code will be self-explanatory. </p>
+
+
+            </article>
+
+            
+        </section>
+    </div>
+</body>
+</html>

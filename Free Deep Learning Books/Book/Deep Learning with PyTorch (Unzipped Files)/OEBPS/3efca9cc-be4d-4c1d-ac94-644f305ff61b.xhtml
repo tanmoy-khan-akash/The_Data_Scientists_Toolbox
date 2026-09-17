@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xmlns:m="http://www.w3.org/1998/Math/MathML" xmlns:pls="http://www.w3.org/2005/01/pronunciation-lexicon" xmlns:ssml="http://www.w3.org/2001/10/synthesis" xmlns:svg="http://www.w3.org/2000/svg">
+<head>
+  <meta charset="UTF-8" />
+  <title>Extracting convolutional features</title>
+  <link type="text/css" rel="stylesheet" media="all" href="style.css" />
+  <link type="text/css" rel="stylesheet" media="all" href="core.css" />
+</head>
+<body>
+  <div id="sbo-rt-content"><section>
+
+                            <header>
+                    <h1 class="header-title">Extracting convolutional features</h1>
+                </header>
+            
+            <article>
+                
+<p>We pass the data from the train and validation data loaders through the model and store the results of the model in a list for further computation. By calculating the pre-convoluted features, we can save a lot of time in training the model, as we will not be calculating these features in every iteration. In the following code, we calculate the pre-convulted features:</p>
+<pre>#For training data<br/><br/># Stores the labels of the train data<br/>trn_labels = [] <br/><br/># Stores the pre convoluted features of the train data<br/>trn_features = [] <br/><br/>#Iterate through the train data and store the calculated features and the labels<br/>for d,la in train_loader:<br/>    o = m(Variable(d.cuda()))<br/>    o = o.view(o.size(0),-1)<br/>    trn_labels.extend(la)<br/>    trn_features.extend(o.cpu().data)<br/><br/>#For validation data<br/><br/>#Iterate through the validation data and store the calculated features and the labels<br/>val_labels = []<br/>val_features = []<br/>for d,la in val_loader:<br/>    o = m(Variable(d.cuda()))<br/>    o = o.view(o.size(0),-1)<br/>    val_labels.extend(la)<br/>    val_features.extend(o.cpu().data)</pre>
+<p>Once we calculate the pre-convoluted features, we need to create a custom dataset that can pick data from our pre-convoluted features. Let's create a custom dataset and loader for the pre-convoluted features.</p>
+
+
+            </article>
+
+            
+        </section>
+    </div>
+</body>
+</html>

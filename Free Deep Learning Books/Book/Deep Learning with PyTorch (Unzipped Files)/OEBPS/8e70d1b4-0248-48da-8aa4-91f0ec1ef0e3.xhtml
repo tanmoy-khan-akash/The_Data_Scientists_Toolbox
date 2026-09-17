@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xmlns:m="http://www.w3.org/1998/Math/MathML" xmlns:pls="http://www.w3.org/2005/01/pronunciation-lexicon" xmlns:ssml="http://www.w3.org/2001/10/synthesis" xmlns:svg="http://www.w3.org/2000/svg">
+<head>
+  <meta charset="UTF-8" />
+  <title>Transposed convolutions</title>
+  <link type="text/css" rel="stylesheet" media="all" href="style.css" />
+  <link type="text/css" rel="stylesheet" media="all" href="core.css" />
+</head>
+<body>
+  <div id="sbo-rt-content"><section>
+
+                            <header>
+                    <h1 class="header-title">Transposed convolutions</h1>
+                </header>
+            
+            <article>
+                
+<p>Transposed convolutions are also called <strong>fractionally strided convolutions</strong>. They work in the opposite way to how convolution works. Intuitively, they try to calculate how the input vector can be mapped to higher dimensions. Let's look at the following figure to understand it better:</p>
+<div class="CDPAlignCenter CDPAlign"><img height="144" width="134" class="alignnone size-full wp-image-560 image-border" src="images/947539f3-39cd-42ce-959e-dfee7ce90a10.png" /> </div>
+<p>This diagram is referenced from Theano (another popular deep learning framework) documentation (<a href="http://deeplearning.net/software/theano/tutorial/conv_arithmetic.html" target="_blank">http://deeplearning.net/software/theano/tutorial/conv_arithmetic.html</a>). If you want to explore more about how strided convolutions work, I strongly recommend you read this article from the Theano documentation. What is important for us is, that it helps to convert a vector to a tensor of required dimensions, and we can train the values of the kernels by backpropagation.</p>
+
+
+            </article>
+
+            
+        </section>
+    </div>
+</body>
+</html>

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xmlns:m="http://www.w3.org/1998/Math/MathML" xmlns:pls="http://www.w3.org/2005/01/pronunciation-lexicon" xmlns:ssml="http://www.w3.org/2001/10/synthesis" xmlns:svg="http://www.w3.org/2000/svg">
+<head>
+  <meta charset="UTF-8" />
+  <title>Creating the network&#xA0;</title>
+  <link type="text/css" rel="stylesheet" media="all" href="style.css" />
+  <link type="text/css" rel="stylesheet" media="all" href="core.css" />
+</head>
+<body>
+  <div id="sbo-rt-content"><section>
+
+                            <header>
+                    <h1 class="header-title">Creating the network </h1>
+                </header>
+            
+            <article>
+                
+<p>Let's look at the code and then walk through the code. You may be surprised at how similar the code looks:</p>
+<pre>class IMDBRnn(nn.Module):<br/>    <br/>    def __init__(self,vocab,hidden_size,n_cat,bs=1,nl=2):<br/>        super().__init__()<br/>        self.hidden_size = hidden_size<br/>        self.bs = bs<br/>        self.nl = nl<br/>        self.e = nn.Embedding(n_vocab,hidden_size)<br/>        self.rnn = nn.LSTM(hidden_size,hidden_size,nl)<br/>        self.fc2 = nn.Linear(hidden_size,n_cat)<br/>        self.softmax = nn.LogSoftmax(dim=-1)<br/>        <br/>    def forward(self,inp):<br/>        bs = inp.size()[1]<br/>        if bs != self.bs:<br/>            self.bs = bs<br/>        e_out = self.e(inp)<br/>        h0 = c0 = Variable(e_out.data.new(*(self.nl,self.bs,self.hidden_size)).zero_())<br/>        rnn_o,_ = self.rnn(e_out,(h0,c0)) <br/>        rnn_o = rnn_o[-1]<br/>        fc = F.dropout(self.fc2(rnn_o),p=0.8)<br/>        return self.softmax(fc)</pre>
+<p>The <kbd>init</kbd> method creates an embedding layer of the size of the vocabulary and <kbd>hidden_size</kbd>. It also creates an LSTM and a linear layer. The last layer is a <kbd>LogSoftmax</kbd> layer for converting the results from the linear layer to probabilities.</p>
+<p class="mce-root">In the <kbd>forward</kbd> function, we pass the input data of size [<kbd>200</kbd>, <kbd>32</kbd>], which gets passed through the embedding layer and each token in the batch gets replaced by embedding and the size turns to [200, 32, 100], where <em>100</em> is the embedding dimensions. The LSTM layer takes the output of the embedding layer along with two hidden variables. The hidden variables should be of the same type of the embeddings output, and their size should be [<kbd>num_layers</kbd>, <kbd>batch_size</kbd>, <kbd>hidden_size</kbd>]. The LSTM processes the data in a sequence and generates the output of the shape [<kbd>Sequence_length</kbd>, <kbd>batch_size</kbd>, <kbd>hidden_size</kbd>], where each sequence index represents the output of that sequence. In this case, we just take the output of the last sequence, which is of shape [<kbd>batch_size</kbd>, <kbd>hidden_dim</kbd>], and pass it on to a linear layer to map it to the output categories. Since the model tends to overfit, add a dropout layer. You can play with the dropout probabilities.</p>
+
+
+            </article>
+
+            
+        </section>
+    </div>
+</body>
+</html>

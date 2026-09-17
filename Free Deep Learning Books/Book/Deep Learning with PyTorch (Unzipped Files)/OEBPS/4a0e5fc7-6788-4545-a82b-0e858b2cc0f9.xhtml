@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xmlns:m="http://www.w3.org/1998/Math/MathML" xmlns:pls="http://www.w3.org/2005/01/pronunciation-lexicon" xmlns:ssml="http://www.w3.org/2001/10/synthesis" xmlns:svg="http://www.w3.org/2000/svg">
+<head>
+  <meta charset="UTF-8" />
+  <title>Our first neural network</title>
+  <link type="text/css" rel="stylesheet" media="all" href="style.css" />
+  <link type="text/css" rel="stylesheet" media="all" href="core.css" />
+</head>
+<body>
+  <div id="sbo-rt-content"><section>
+
+                            <header>
+                    <h1 class="header-title">Our first neural network</h1>
+                </header>
+            
+            <article>
+                
+<p>We present our first neural network, which learns how to map training examples (input array) to targets (output array). Let's assume that we work for one of the largest online companies, <strong>Wondermovies,</strong> which serves videos on demand. Our training dataset contains a feature that represents the average hours spent by users watching movies on the platform and we would like to predict how much time each user would spend on the platform in the coming week. It's just an imaginary use case, don't think too much about it. Some of the high-level activities for building such a solution are as follows:</p>
+<ul>
+<li><strong>Data preparation</strong>: The <kbd>get_data</kbd> function prepares the tensors (arrays) containing input and output data</li>
+<li><strong>Creating learnable</strong> <strong>parameters</strong>: The <kbd>get_weights</kbd> function provides us with tensors containing random values that we will optimize to solve our problem</li>
+<li><strong>Network model</strong>: The <kbd>simple_network</kbd> function produces the output for the input data, applying a linear rule, multiplying weights with input data, and adding the bias term (<em>y = Wx+b</em>)</li>
+<li><strong>Loss</strong>: The <kbd>loss_fn</kbd> function provides information about how good the model is</li>
+<li><strong>Optimizer</strong>: The <kbd>optimize</kbd> function helps us in adjusting random weights created initially to help the model calculate target values more accurately</li>
+</ul>
+<p>If you are new to machine learning, do not worry, as we will understand exactly what each function does by the end of the chapter. The following functions abstract away PyTorch code to make it easier for us to understand. We will dive deep into each of these functionalities in detail. The aforementioned high level activities are common for most machine learning and deep learning problems. Later chapters in the book discuss techniques that can be used to improve each function to build useful applications.</p>
+<p>Lets consider following linear regression equation for our neural network:</p>
+<p style="padding-left: 180px"><img height="19" width="80" class="fm-editor-equation" src="images/c152c855-4352-491c-8602-80be5cd3c4d3.png" /></p>
+<p>Let's write our first neural network in PyTorch:</p>
+<pre>x,y = get_data() # x - represents training data,y -                 represents target variables<br/><br/>w,b = get_weights() # w,b - Learnable parameters<br/><br/>for i in range(500):<br/>    y_pred = simple_network(x) # function which computes wx + b<br/>    loss = loss_fn(y,y_pred) # calculates sum of the squared differences of y and y_pred<br/>    <br/>if i % 50 == 0: <br/>        print(loss)<br/>    optimize(learning_rate) # Adjust w,b to minimize the loss</pre>
+<p>By the end of this chapter, you will have an idea of what is happening inside each function.</p>
+
+
+            </article>
+
+            
+        </section>
+    </div>
+</body>
+</html>

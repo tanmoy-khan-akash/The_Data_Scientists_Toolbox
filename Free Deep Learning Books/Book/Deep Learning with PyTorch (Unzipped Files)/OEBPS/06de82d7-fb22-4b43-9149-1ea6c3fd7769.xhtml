@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xmlns:m="http://www.w3.org/1998/Math/MathML" xmlns:pls="http://www.w3.org/2005/01/pronunciation-lexicon" xmlns:ssml="http://www.w3.org/2001/10/synthesis" xmlns:svg="http://www.w3.org/2000/svg">
+<head>
+  <meta charset="UTF-8" />
+  <title>Loading data into PyTorch tensors</title>
+  <link type="text/css" rel="stylesheet" media="all" href="style.css" />
+  <link type="text/css" rel="stylesheet" media="all" href="core.css" />
+</head>
+<body>
+  <div id="sbo-rt-content"><section>
+
+                            <header>
+                    <h1 class="header-title">Loading data into PyTorch tensors</h1>
+                </header>
+            
+            <article>
+                
+<p>The PyTorch <kbd>torchvision.datasets</kbd> package provides a utility class called <kbd>ImageFolder</kbd> that can be used to load images along with their associated labels when data is presented in the aforementioned format. It is a common practice to perform the following preprocessing steps:</p>
+<ol>
+<li>Resize all the images to the same size. Most of the deep learning architectures expect the images to be of the same size.</li>
+<li>Normalize the dataset with the mean and standard deviation of the dataset.</li>
+<li>Convert the image dataset to a PyTorch tensor.</li>
+</ol>
+<p>PyTorch makes a lot of these preprocessing steps easier by providing a lot of utility functions in the <kbd>transforms</kbd> module. For our example, let's apply three transformations:</p>
+<ul>
+<li>Scale to a 256 x 256 image size</li>
+<li>Convert to a PyTorch tensor</li>
+<li>Normalize the data (we will talk about how we arrived at the mean and standard deviation in<a href="3cce1bbe-6d1c-4164-b1ef-8b0688126519.xhtml" target="_blank"> Chapter 5</a>, <em>Deep Learning for Computer Vision</em>)</li>
+</ul>
+<p>The following code demonstrates how transformation can be applied and images are loaded using the <kbd>ImageFolder</kbd> class:</p>
+<pre>simple_transform=transforms.Compose([transforms.Scale((224,224)),<br/>                             transforms.ToTensor(),<br/>                             transforms.Normalize([0.485, 0.456,                     0.406], [0.229, 0.224, 0.225])])<br/>train = ImageFolder('dogsandcats/train/',simple_transform)<br/>valid = ImageFolder('dogsandcats/valid/',simple_transform)</pre>
+<p>The <kbd>train</kbd> object holds all the images and associated labels for the dataset. It contains two important attributes: one that gives a mapping between classes and the associated index used in the dataset and another one that gives a list of classes:</p>
+<ul>
+<li><kbd>train.class_to_idx - {'cat': 0, 'dog': 1}</kbd></li>
+<li><kbd>train.classes - ['cat', 'dog']</kbd></li>
+</ul>
+<p class="mce-root">It is often a best practice to visualize the data loaded into tensors. To visualize the tensors, we have to reshape the tensors and denormalize the values. The following function does that for us:</p>
+<pre>def imshow(inp):<br/>    """Imshow for Tensor."""<br/>    inp = inp.numpy().transpose((1, 2, 0))<br/>    mean = np.array([0.485, 0.456, 0.406])<br/>    std = np.array([0.229, 0.224, 0.225])<br/>    inp = std * inp + mean<br/>    inp = np.clip(inp, 0, 1)<br/>    plt.imshow(inp)<br/>   </pre>
+<p>Now, we can pass our tensor to the preceding <kbd>imshow</kbd> function, which converts it into an image:</p>
+<pre>imshow(train[50][0])</pre>
+<p class="mce-root CDPAlignLeft CDPAlign">The preceding code generates the following output:</p>
+<div class="CDPAlignCenter CDPAlign"><img height="189" width="197" class="alignnone size-full wp-image-343 image-border" src="images/6fc5e3ac-369e-4a9f-bcbc-70395c8ed587.png" /></div>
+
+
+            </article>
+
+            
+        </section>
+    </div>
+</body>
+</html>

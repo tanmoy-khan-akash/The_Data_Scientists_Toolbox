@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xmlns:m="http://www.w3.org/1998/Math/MathML" xmlns:pls="http://www.w3.org/2005/01/pronunciation-lexicon" xmlns:ssml="http://www.w3.org/2001/10/synthesis" xmlns:svg="http://www.w3.org/2000/svg">
+<head>
+  <meta charset="UTF-8" />
+  <title>Loss function</title>
+  <link type="text/css" rel="stylesheet" media="all" href="style.css" />
+  <link type="text/css" rel="stylesheet" media="all" href="core.css" />
+</head>
+<body>
+  <div id="sbo-rt-content"><section>
+
+                            <header>
+                    <h1 class="header-title">Loss function</h1>
+                </header>
+            
+            <article>
+                
+<p>As we start with random values, our learnable parameters, <kbd>w</kbd> and <kbd>b</kbd>, will result in <kbd>y_pred</kbd>, which will not be anywhere close to the actual <kbd>y</kbd>. So, we need to define a function which tells the model how close its predictions are to the actual values. Since this is a regression problem, we use a loss function called <strong>sum of squared error</strong> (<strong>SSE</strong>). We take the difference between the predicted <kbd>y</kbd> and the actual <kbd>y</kbd> and square it. SSE helps the model to understand how close the predicted values are to the actual values. The <kbd>torch.nn</kbd> library has different loss functions, such as MSELoss and cross-entropy loss. However, for this chapter, let's implement the <kbd>loss</kbd> function ourselves:</p>
+<pre>def loss_fn(y,y_pred):<br/>    loss = (y_pred-y).pow(2).sum()<br/>    for param in [w,b]:<br/>        if not param.grad is None: param.grad.data.zero_()<br/>    loss.backward()<br/>    return loss.data[0]</pre>
+<p>Apart from calculating the loss, we also call the <kbd>backward</kbd> operation, which calculates the gradients of our learnable parameters, <kbd>w</kbd> and <kbd>b</kbd>. As we will use the <kbd>loss</kbd> function more than once, we remove any previously calculated gradients by calling the <kbd>grad.data.zero_()</kbd> operation. The first time we call the <kbd>backward</kbd> function, the gradients are empty, so we zero the gradients only when they are not <kbd>None</kbd>. </p>
+
+
+            </article>
+
+            
+        </section>
+    </div>
+</body>
+</html>

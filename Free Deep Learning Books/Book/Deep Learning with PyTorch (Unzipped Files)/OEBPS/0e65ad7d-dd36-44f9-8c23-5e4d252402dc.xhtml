@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xmlns:m="http://www.w3.org/1998/Math/MathML" xmlns:pls="http://www.w3.org/2005/01/pronunciation-lexicon" xmlns:ssml="http://www.w3.org/2001/10/synthesis" xmlns:svg="http://www.w3.org/2000/svg">
+<head>
+  <meta charset="UTF-8" />
+  <title>Defining the discriminator network</title>
+  <link type="text/css" rel="stylesheet" media="all" href="style.css" />
+  <link type="text/css" rel="stylesheet" media="all" href="core.css" />
+</head>
+<body>
+  <div id="sbo-rt-content"><section>
+
+                            <header>
+                    <h1 class="header-title">Defining the discriminator network</h1>
+                </header>
+            
+            <article>
+                
+<p><span>Let's quickly look at the following discriminator network code, and then discuss the key features of the discriminator network:</span></p>
+<pre>class Discriminator(nn.Module):<br/>    def __init__(self):<br/>        super(_netD, self).__init__()<br/>        self.main = nn.Sequential(<br/>            # input is (nc) x 64 x 64<br/>            nn.Conv2d(nc, ndf, 4, 2, 1, bias=False),<br/>            nn.LeakyReLU(0.2, inplace=True),<br/>            # state size. (ndf) x 32 x 32<br/>            nn.Conv2d(ndf, ndf * 2, 4, 2, 1, bias=False),<br/>            nn.BatchNorm2d(ndf * 2),<br/>            nn.LeakyReLU(0.2, inplace=True),<br/>            # state size. (ndf*2) x 16 x 16<br/>            nn.Conv2d(ndf * 2, ndf * 4, 4, 2, 1, bias=False),<br/>            nn.BatchNorm2d(ndf * 4),<br/>            nn.LeakyReLU(0.2, inplace=True),<br/>            # state size. (ndf*4) x 8 x 8<br/>            nn.Conv2d(ndf * 4, ndf * 8, 4, 2, 1, bias=False),<br/>            nn.BatchNorm2d(ndf * 8),<br/>            nn.LeakyReLU(0.2, inplace=True),<br/>            # state size. (ndf*8) x 4 x 4<br/>            nn.Conv2d(ndf * 8, 1, 4, 1, 0, bias=False),<br/>            nn.Sigmoid()<br/>        )<br/><br/>    def forward(self, input):<br/>        output = self.main(input)<br/>        return output.view(-1, 1).squeeze(1)<br/><br/><br/>netD = Discriminator()<br/>netD.apply(weights_init)<br/>print(netD)</pre>
+<p>There are two important things in the previous network, namely, the usage of <strong>leaky ReLU</strong> as an activation function, and the usage of sigmoid as the last activation layer. First, let's understand what Leaky ReLU is. </p>
+<p>Leaky ReLU is an attempt to fix the dying ReLU problem. Instead of the function returning zero when the input is negative, leaky ReLU will output a very small number like 0.001. In the paper, it is shown that using leaky ReLU improves the efficiency of the discriminator. </p>
+<p>Another important difference is not using fully connected layers at the end of the discriminator. It is common to see the last fully connected layers being replaced by global average pooling. But using global average pooling reduces the rate of the convergence speed (number of iterations to build an accurate classifier). The last convolution layer is flattened and passed to a sigmoid layer. </p>
+<p>Other than these two differences, the rest of the network is similar to the other image classifier networks we have seen in the book.</p>
+
+
+            </article>
+
+            
+        </section>
+    </div>
+</body>
+</html>

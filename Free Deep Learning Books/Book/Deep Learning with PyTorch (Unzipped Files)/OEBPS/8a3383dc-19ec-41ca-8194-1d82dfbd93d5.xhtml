@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xmlns:m="http://www.w3.org/1998/Math/MathML" xmlns:pls="http://www.w3.org/2005/01/pronunciation-lexicon" xmlns:ssml="http://www.w3.org/2001/10/synthesis" xmlns:svg="http://www.w3.org/2000/svg">
+<head>
+  <meta charset="UTF-8" />
+  <title>torchtext.data</title>
+  <link type="text/css" rel="stylesheet" media="all" href="style.css" />
+  <link type="text/css" rel="stylesheet" media="all" href="core.css" />
+</head>
+<body>
+  <div id="sbo-rt-content"><section>
+
+                            <header>
+                    <h1 class="header-title">torchtext.data</h1>
+                </header>
+            
+            <article>
+                
+<p>The <kbd>torchtext.data</kbd> instance defines a class called <kbd>Field</kbd>, which helps us to define how the data has to be read and tokenized. Let's look at the following example, which we will use for preparing our <kbd>IMDB</kbd> dataset:</p>
+<pre>from torchtext import data<br/>TEXT = data.Field(lower=True, batch_first=True,fix_length=20)<br/>LABEL = data.Field(sequential=False)</pre>
+<p>In the preceding code, we define two <kbd>Field</kbd> objects, one for actual text and another for the label data. For actual text, we expect <kbd>torchtext</kbd> to lowercase all the text, tokenize the text, and trim it to a maximum length of <kbd>20</kbd>. If we are building the application for a production environment, we may fix the length to a much larger number. But, for the toy example it works well. The <kbd>Field</kbd> constructor also accepts another argument called <strong>tokenize</strong>, which by default uses the <kbd>str.split</kbd> function. We can also specify spaCy as the argument, or any other tokenizer. For our example we will stick with <kbd>str.split</kbd>. </p>
+
+
+            </article>
+
+            
+        </section>
+    </div>
+</body>
+</html>

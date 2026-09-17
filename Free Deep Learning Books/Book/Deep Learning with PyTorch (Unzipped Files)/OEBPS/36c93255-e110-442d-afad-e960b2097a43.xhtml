@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xmlns:m="http://www.w3.org/1998/Math/MathML" xmlns:pls="http://www.w3.org/2005/01/pronunciation-lexicon" xmlns:ssml="http://www.w3.org/2001/10/synthesis" xmlns:svg="http://www.w3.org/2000/svg">
+<head>
+  <meta charset="UTF-8" />
+  <title>Building the network architecture</title>
+  <link type="text/css" rel="stylesheet" media="all" href="style.css" />
+  <link type="text/css" rel="stylesheet" media="all" href="core.css" />
+</head>
+<body>
+  <div id="sbo-rt-content"><section>
+
+                            <header>
+                    <h1 class="header-title">Building the network architecture</h1>
+                </header>
+            
+            <article>
+                
+<p class="mce-root">For most of the real-world use cases, particularly in computer vision, we rarely build our own architecture. There are different architectures that can be quickly used to solve our real-world problems. For our example, we use a popular deep learning algorithm called <strong>ResNet</strong>, which won the first prize in 2015 in different competitions, such as ImageNet, related to computer vision. For a simpler understanding, let's assume that this algorithm is a bunch of different PyTorch layers carefully tied together and not focus on what happens inside this algorithm. We will see some of the key building blocks of the ResNet algorithm in <a href="3cce1bbe-6d1c-4164-b1ef-8b0688126519.xhtml" target="_blank">Chapter 5</a>, <em>Deep Learning for Computer Vision</em>, when we learn about CNNs. PyTorch makes it easier to use a lot of these popular algorithms by providing them off the shelf in the <kbd>torchvision.models</kbd> module. So, for this example, let's quickly take a look at how to use this algorithm and then walk through each line of code:</p>
+<pre>model_ft = models.resnet18(pretrained=True)<br/>num_ftrs = model_ft.fc.in_features<br/>model_ft.fc = nn.Linear(num_ftrs, 2)<br/><br/>if is_cuda:<br/>    model_ft = model_ft.cuda()</pre>
+<p class="mce-root">The <kbd>models.resnet18(pertrained = True)</kbd> object creates an instance of the algorithm, which is a collection of PyTorch layers. We can take a quick look at what constitutes the ResNet algorithm by printing <kbd>model_ft</kbd>. A small portion of the algorithm looks like the following screenshot. I am not including the full algorithm as it could run for several pages:</p>
+<div class="CDPAlignCenter CDPAlign"><img height="327" width="612" class="alignnone size-full wp-image-344 image-border" src="images/09088b50-3dab-4b63-996f-498a5c52bfe2.png" /></div>
+<p>As we can see, the ResNet architecture is a collection of layers, namely <kbd>Conv2d</kbd>, <kbd>BatchNorm2d</kbd>, and <kbd>MaxPool2d</kbd>, stitched in a particular way. All these algorithms will accept an argument called <strong>pretrained</strong>. When <kbd>pretrained</kbd> is <kbd>True</kbd>, the weights of the algorithm are already tuned for a particular ImageNet classification problem of predicting 1,000 different categories, which include cars, ships, fish, cats, and dogs. This algorithm is trained to predict the 1,000 ImageNet categories and the weights are adjusted to a certain point where the algorithm achieves state-of-art accuracy. These weights are stored and shared with the model that we are using for the use case. Algorithms tend to work better when started with fine-tuned weights, rather than when started with random weights. So, for our use case, we start with pretrained weights.</p>
+<p>The ResNet algorithm cannot be used directly, as it is trained to predict one of the 1,000 categories. For our use case, we need to predict only one of the two categories of dogs and cats. To achieve this, we take the last layer of the ResNet model, which is a <kbd>linear</kbd> layer and change the output features to two, as shown in the following code:</p>
+<pre>model_ft.fc = nn.Linear(num_ftrs, 2)</pre>
+<p>If you are running this algorithm on a GPU-based machine, then to make the algorithm run on a GPU we call the <kbd>cuda</kbd> method on the model. It is strongly recommended that you run these programs on a GPU-powered machine; it is easy to spin a cloud instance with a GPU for less than a dollar. The last line in the following code snippet tells PyTorch to run the code on the GPU:</p>
+<pre>if is_cuda:<br/>    model_ft = model_ft.cuda()</pre>
+
+
+            </article>
+
+            
+        </section>
+    </div>
+</body>
+</html>

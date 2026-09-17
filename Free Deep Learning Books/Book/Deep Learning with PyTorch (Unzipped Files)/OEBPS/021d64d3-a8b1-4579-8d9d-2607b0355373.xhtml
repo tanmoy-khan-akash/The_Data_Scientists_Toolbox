@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xmlns:m="http://www.w3.org/1998/Math/MathML" xmlns:pls="http://www.w3.org/2005/01/pronunciation-lexicon" xmlns:ssml="http://www.w3.org/2001/10/synthesis" xmlns:svg="http://www.w3.org/2000/svg">
+<head>
+  <meta charset="UTF-8" />
+  <title>Slicing tensors&#xA0;</title>
+  <link type="text/css" rel="stylesheet" media="all" href="style.css" />
+  <link type="text/css" rel="stylesheet" media="all" href="core.css" />
+</head>
+<body>
+  <div id="sbo-rt-content"><section>
+
+                            <header>
+                    <h1 class="header-title">Slicing tensors </h1>
+                </header>
+            
+            <article>
+                
+<p>A common thing to do with a tensor is to slice a portion of it. A simple example could be choosing the first five elements of a one-dimensional tensor; let's call the tensor <kbd>sales</kbd>. We use a simple notation, <kbd>sales[:slice_index]</kbd> where <kbd>slice_index</kbd> represents the index where you want to slice the tensor:</p>
+<pre>sales = torch.FloatTensor([1000.0,323.2,333.4,444.5,1000.0,323.2,333.4,444.5])<br/><br/>sales[:5]<br/> 1000.0000<br/>  323.2000<br/>  333.4000<br/>  444.5000<br/> 1000.0000<br/>[torch.FloatTensor of size 5]<br/><br/>sales[:-5]<br/> 1000.0000<br/>  323.2000<br/>  333.4000<br/>[torch.FloatTensor of size 3]<br/><br/></pre>
+<p><span>Let's do more interesting things with our panda image, such as see what the panda image looks like when only one channel is chosen and see how to select the face of the panda.</span></p>
+<p>Here, we select only one channel from the panda image:</p>
+<pre>plt.imshow(panda_tensor[:,:,0].numpy())<br/>#0 represents the first channel of RGB</pre>
+<p> The output is as follows:</p>
+<div class="CDPAlignCenter CDPAlign"><img height="233" width="249" src="images/21adcb3c-80af-424f-9cc0-16258a64e071.png" /></div>
+<p>Now, lets crop the image. Say we want to build a face detector for pandas and we need just the face of a panda for that. We crop the tensor image such that it contains only the panda's face:</p>
+<pre class="mce-root">plt.imshow(panda_tensor[25:175,60:130,0].numpy())</pre>
+<p class="mce-root"> The output is as follows: </p>
+<div class="CDPAlignCenter CDPAlign"><img height="256" width="146" class="alignnone size-full wp-image-690 image-border" src="images/47dea173-616d-4538-89fd-c376e409ff73.png" /></div>
+<p>Another common example would be where you need to pick a specific element of a tensor:</p>
+<pre>#torch.eye(shape) produces an diagonal matrix with 1 as it diagonal #elements.<br/>sales = torch.eye(3,3)<br/>sales[0,1]<br/><br/>Output- 0.00.0</pre>
+<p>We will revisit image data in <a href="3cce1bbe-6d1c-4164-b1ef-8b0688126519.xhtml" target="_blank">Chapter 5</a>, <em>Deep Learning for Computer Vision,</em> when we discuss using CNNs to build image classifiers.</p>
+<div class="packt_infobox"><span>Most of the PyTorch tensor operations are very similar to</span> <kbd>NumPy</kbd> operations<span>.</span></div>
+
+
+            </article>
+
+            
+        </section>
+    </div>
+</body>
+</html>

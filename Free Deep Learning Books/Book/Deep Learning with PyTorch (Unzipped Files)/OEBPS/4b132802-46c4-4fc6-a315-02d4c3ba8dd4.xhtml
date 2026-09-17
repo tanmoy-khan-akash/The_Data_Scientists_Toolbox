@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xmlns:m="http://www.w3.org/1998/Math/MathML" xmlns:pls="http://www.w3.org/2005/01/pronunciation-lexicon" xmlns:ssml="http://www.w3.org/2001/10/synthesis" xmlns:svg="http://www.w3.org/2000/svg">
+<head>
+  <meta charset="UTF-8" />
+  <title>Loading the embeddings in the model</title>
+  <link type="text/css" rel="stylesheet" media="all" href="style.css" />
+  <link type="text/css" rel="stylesheet" media="all" href="core.css" />
+</head>
+<body>
+  <div id="sbo-rt-content"><section>
+
+                            <header>
+                    <h1 class="header-title">Loading the embeddings in the model</h1>
+                </header>
+            
+            <article>
+                
+<p>The <kbd>vectors</kbd> variable returns a torch tensor of shape <kbd>vocab_size x dimensions</kbd> containing the pretrained embeddings. We have to store the embeddings to the weights of our embedding layer. We can assign the weights of the embeddings by accessing the weights of the embeddings layer as demonstrated by the following code.</p>
+<pre>model.embedding.weight.data = TEXT.vocab.vectors</pre>
+<p><kbd>model</kbd> represents the object of our network, and <kbd>embedding</kbd> represents the embedding layer. As we are using the embedding layer with new dimensions, there will be a small change in the input to the linear layer that comes after the embedding layer. The following code has the new architecture, which is similar to the previously-used architecture where we trained our embeddings: </p>
+<pre>class EmbNet(nn.Module):<br/>    def __init__(self,emb_size,hidden_size1,hidden_size2=400):<br/>        super().__init__()<br/>        self.embedding = nn.Embedding(emb_size,hidden_size1)<br/>        self.fc1 = nn.Linear(hidden_size2,3)<br/><br/>        <br/>    def forward(self,x):<br/>        embeds = self.embedding(x).view(x.size(0),-1)<br/>        out = self.fc1(embeds)<br/>        return F.log_softmax(out,dim=-1)<br/><br/>model = EmbNet(len(TEXT.vocab.stoi),300,12000)</pre>
+<p>Once the embeddings are loaded, we have to ensure that, during training, we do not change the embedding weights. Let's discuss how to achieve that.</p>
+
+
+            </article>
+
+            
+        </section>
+    </div>
+</body>
+</html>

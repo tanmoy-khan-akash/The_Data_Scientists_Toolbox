@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xmlns:m="http://www.w3.org/1998/Math/MathML" xmlns:pls="http://www.w3.org/2005/01/pronunciation-lexicon" xmlns:ssml="http://www.w3.org/2001/10/synthesis" xmlns:svg="http://www.w3.org/2000/svg">
+<head>
+  <meta charset="UTF-8" />
+  <title>Large model enough to overfit</title>
+  <link type="text/css" rel="stylesheet" media="all" href="style.css" />
+  <link type="text/css" rel="stylesheet" media="all" href="core.css" />
+</head>
+<body>
+  <div id="sbo-rt-content"><section>
+
+                            <header>
+                    <h1 class="header-title">Large model enough to overfit</h1>
+                </header>
+            
+            <article>
+                
+<p>Once you have a model that has enough capacity to beat your baseline score, increase your baseline capacity. A few simple tricks to increase the capacity of your architecture are as follows:</p>
+<ul>
+<li>Add more layers to your existing architecture</li>
+<li>Add more weights to the existing layers</li>
+<li>Train it for more epochs </li>
+</ul>
+<p>We generally train the model for an adequate number of epochs. Stop it when the training accuracy keeps increasing and the validation accuracy stops increasing and probably starts dropping; that's where the model starts overfitting. Once we reach this stage, we need to apply regularization techniques.</p>
+<p>Remember, the number of layers, size of layers, and number of epochs may change from problem to problem. A smaller architecture can work for a simple classification problem, but for a complex problem such as facial recognition, we would need enough expressiveness in our architecture and the model needs to be trained for more epochs than for a simple classification problem.</p>
+
+
+            </article>
+
+            
+        </section>
+    </div>
+</body>
+</html>

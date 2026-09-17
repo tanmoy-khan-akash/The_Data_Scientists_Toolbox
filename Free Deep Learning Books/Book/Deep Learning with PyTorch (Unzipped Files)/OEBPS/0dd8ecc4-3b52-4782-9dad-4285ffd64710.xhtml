@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xmlns:m="http://www.w3.org/1998/Math/MathML" xmlns:pls="http://www.w3.org/2005/01/pronunciation-lexicon" xmlns:ssml="http://www.w3.org/2001/10/synthesis" xmlns:svg="http://www.w3.org/2000/svg">
+<head>
+  <meta charset="UTF-8" />
+  <title>PyTorch non-linear activations</title>
+  <link type="text/css" rel="stylesheet" media="all" href="style.css" />
+  <link type="text/css" rel="stylesheet" media="all" href="core.css" />
+</head>
+<body>
+  <div id="sbo-rt-content"><section>
+
+                            <header>
+                    <h1 class="header-title">PyTorch non-linear activations</h1>
+                </header>
+            
+            <article>
+                
+<p>PyTorch has most of the common non-linear activation functions implemented for us already and it can be used like any other layer. Let's see a quick example of how to use the <kbd>ReLU</kbd> function in PyTorch:</p>
+<pre>sample_data = Variable(torch.Tensor([[1,2,-1,-1]]))<br/>myRelu = ReLU()<br/>myRelu(sample_data)<br/><br/>Output:<br/><br/>Variable containing:<br/> 1 2 0 0<br/>[torch.FloatTensor of size 1x4]</pre>
+<p>In the preceding example, we take a tensor with two positive values and two negative values and apply a <kbd>ReLU</kbd> on it, which thresholds the negative numbers to <kbd>0</kbd> and retains the positive numbers as they are.</p>
+<p class="mce-root">Now we have covered most of the details required for building a network architecture, let's build a deep learning architecture that can be used to solve real-world problems. In the previous chapter, we used a simple approach so that we could focus only on how a deep learning algorithm works. We will not be using that style to build our architecture anymore; rather, we will be building the architecture in the way it is supposed to be built in PyTorch.</p>
+
+
+            </article>
+
+            
+        </section>
+    </div>
+</body>
+</html>

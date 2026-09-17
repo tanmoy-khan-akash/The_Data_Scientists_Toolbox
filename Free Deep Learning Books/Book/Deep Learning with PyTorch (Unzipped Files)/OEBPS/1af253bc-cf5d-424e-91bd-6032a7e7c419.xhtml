@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xmlns:m="http://www.w3.org/1998/Math/MathML" xmlns:pls="http://www.w3.org/2005/01/pronunciation-lexicon" xmlns:ssml="http://www.w3.org/2001/10/synthesis" xmlns:svg="http://www.w3.org/2000/svg">
+<head>
+  <meta charset="UTF-8" />
+  <title>Tensors on GPU</title>
+  <link type="text/css" rel="stylesheet" media="all" href="style.css" />
+  <link type="text/css" rel="stylesheet" media="all" href="core.css" />
+</head>
+<body>
+  <div id="sbo-rt-content"><section>
+
+                            <header>
+                    <h1 class="header-title">Tensors on GPU</h1>
+                </header>
+            
+            <article>
+                
+<p>We have learned how to represent different forms of data in tensor representation. Some of the common operations we perform once we have data in the form of tensors are addition, subtraction, multiplication, dot product, and matrix multiplication. All of these operations can be either performed on the CPU or the GPU. PyTorch provides a simple function called <kbd>cuda()</kbd> to copy a tensor on the CPU to the GPU. We will take a look at some of the operations and compare the performance between matrix multiplication operations on the CPU and GPU.</p>
+<p>Tensor addition can be obtained by using the following code:</p>
+<pre>#Various ways you can perform tensor addition<br/>a = torch.rand(2,2) <br/>b = torch.rand(2,2)<br/>c = a + b<br/>d = torch.add(a,b)<br/>#For in-place addition<br/>a.add_(5)<br/><br/>#Multiplication of different tensors<br/><br/>a*b<br/>a.mul(b)<br/>#For in-place multiplication<br/>a.mul_(b)</pre>
+<p>For tensor matrix multiplication, lets compare the code performance on CPU and GPU. Any tensor can be moved to the GPU by calling the <kbd>.cuda()</kbd> function.</p>
+<p><span>M</span>ultiplication on the GPU runs as follows:</p>
+<pre>a = torch.rand(10000,10000)<br/>b = torch.rand(10000,10000)<br/><br/>a.matmul(b)<br/><br/>Time taken: 3.23 s<br/><br/>#Move the tensors to GPU<br/>a = a.cuda()<br/>b = b.cuda()<br/><br/>a.matmul(b)<br/><br/>Time taken: 11.2 µs</pre>
+<p>These fundamental operations of addition, subtraction, and matrix multiplication can be used to build complex operations, such as a <strong>Convolution Neural Network</strong> (<strong>CNN</strong>) and a <strong>recurrent neural network</strong> (<strong>RNN</strong>), which we will learn about in the later chapters of the book. </p>
+
+
+            </article>
+
+            
+        </section>
+    </div>
+</body>
+</html>

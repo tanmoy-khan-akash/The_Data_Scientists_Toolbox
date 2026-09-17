@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xmlns:m="http://www.w3.org/1998/Math/MathML" xmlns:pls="http://www.w3.org/2005/01/pronunciation-lexicon" xmlns:ssml="http://www.w3.org/2001/10/synthesis" xmlns:svg="http://www.w3.org/2000/svg">
+<head>
+  <meta charset="UTF-8" />
+  <title>The PyTorch way of building deep learning algorithms</title>
+  <link type="text/css" rel="stylesheet" media="all" href="style.css" />
+  <link type="text/css" rel="stylesheet" media="all" href="core.css" />
+</head>
+<body>
+  <div id="sbo-rt-content"><section>
+
+                            <header>
+                    <h1 class="header-title">The PyTorch way of building deep learning algorithms</h1>
+                </header>
+            
+            <article>
+                
+<p>All the networks in PyTorch are implemented as classes, subclassing a PyTorch class called <kbd>nn.Module</kbd>, and should implement <kbd>__init__</kbd> and <kbd>forward</kbd> methods. Inside the <kbd>init</kbd> function, we initialize any layers, such as the <kbd>linear</kbd> layer, which we covered in the previous section. In the <kbd>forward</kbd> method, we pass our input data into the layers that we initialized in our <kbd>init</kbd> method and return our final output. The non-linear functions are often directly used in the <kbd>forward</kbd> function and some use it in the <kbd>init</kbd> method too. The following code snippet shows how a deep learning architecture is implemented in PyTorch:</p>
+<pre>class MyFirstNetwork(nn.Module):<br/>    <br/>    def __init__(self,input_size,hidden_size,output_size):<br/>        super(MyFirstNetwork,self).__init__()<br/>        self.layer1 = nn.Linear(input_size,hidden_size)<br/>        self.layer2 = nn.Linear(hidden_size,output_size)<br/>        <br/>    def __forward__(self,input): <br/>        out = self.layer1(input)<br/>        out = nn.ReLU(out)<br/>        out = self.layer2(out)<br/>        return out<br/><br/></pre>
+<p>If you are new to Python, some of the preceding code could be difficult to understand, but all it is doing is inheriting a parent class and implementing two methods in it. In Python, we subclass by passing the parent class as an argument to the class name. The <kbd>init</kbd> method acts as a constructor in Python and <kbd>super</kbd> is used to pass on arguments of the child class to the parent class, which in our case is <kbd>nn.Module</kbd>.</p>
+
+
+            </article>
+
+            
+        </section>
+    </div>
+</body>
+</html>

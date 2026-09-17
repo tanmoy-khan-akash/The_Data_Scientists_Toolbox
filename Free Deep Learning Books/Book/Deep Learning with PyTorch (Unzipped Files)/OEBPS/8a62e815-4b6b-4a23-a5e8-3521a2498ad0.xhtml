@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xmlns:m="http://www.w3.org/1998/Math/MathML" xmlns:pls="http://www.w3.org/2005/01/pronunciation-lexicon" xmlns:ssml="http://www.w3.org/2001/10/synthesis" xmlns:svg="http://www.w3.org/2000/svg">
+<head>
+  <meta charset="UTF-8" />
+  <title>Matrix (2-D tensors)</title>
+  <link type="text/css" rel="stylesheet" media="all" href="style.css" />
+  <link type="text/css" rel="stylesheet" media="all" href="core.css" />
+</head>
+<body>
+  <div id="sbo-rt-content"><section>
+
+                            <header>
+                    <h1 class="header-title">Matrix (2-D tensors)</h1>
+                </header>
+            
+            <article>
+                
+<p>Most of the structured data is represented in the form of tables or matrices. We will use a dataset called <kbd>Boston House Prices</kbd>, which is readily available in the Python scikit-learn machine learning library. The dataset is a <kbd>numpy</kbd> array consisting of <kbd>506</kbd> samples or rows and <kbd>13</kbd> features representing each sample. Torch provides a utility function called <kbd>from_numpy()</kbd>, which converts a <kbd>numpy</kbd> array into a <kbd>torch</kbd> tensor. The shape of the resulting tensor is <kbd>506</kbd> rows x <kbd>13</kbd> columns:</p>
+<pre>boston_tensor = torch.from_numpy(boston.data)<br/>boston_tensor.size()<br/><br/>Output: torch.Size([506, 13])<br/><br/>boston_tensor[:2]<br/><br/>Output:<br/>Columns 0 to 7 <br/>   0.0063 18.0000 2.3100 0.0000 0.5380 6.5750 65.2000 4.0900<br/>   0.0273 0.0000 7.0700 0.0000 0.4690 6.4210 78.9000 4.9671<br/><br/>Columns 8 to 12 <br/>   1.0000 296.0000 15.3000 396.9000 4.9800<br/>   2.0000 242.0000 17.8000 396.9000 9.1400<br/>[torch.DoubleTensor of size 2x13]</pre>
+
+
+            </article>
+
+            
+        </section>
+    </div>
+</body>
+</html>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xmlns:m="http://www.w3.org/1998/Math/MathML" xmlns:pls="http://www.w3.org/2005/01/pronunciation-lexicon" xmlns:ssml="http://www.w3.org/2001/10/synthesis" xmlns:svg="http://www.w3.org/2000/svg">
+<head>
+  <meta charset="UTF-8" />
+  <title>Creating a network model with embedding</title>
+  <link type="text/css" rel="stylesheet" media="all" href="style.css" />
+  <link type="text/css" rel="stylesheet" media="all" href="core.css" />
+</head>
+<body>
+  <div id="sbo-rt-content"><section>
+
+                            <header>
+                    <h1 class="header-title">Creating a network model with embedding</h1>
+                </header>
+            
+            <article>
+                
+<p>We discussed word embeddings briefly earlier. In this section, we create word embeddings as part of our network architecture and train the entire model to predict the sentiment of each review. At the end of the training, we will have a sentiment classifier model and also the word embeddings for the <kbd>IMDB</kbd> datasets. The following code demonstrates how to create a network architecture to predict the sentiment using word embeddings:</p>
+<pre>class EmbNet(nn.Module):<br/>    def __init__(self,emb_size,hidden_size1,hidden_size2=400):<br/>        super().__init__()<br/>        self.embedding = nn.Embedding(emb_size,hidden_size1)<br/>        self.fc = nn.Linear(hidden_size2,3)<br/>        <br/>    def forward(self,x):<br/>        embeds = self.embedding(x).view(x.size(0),-1)<br/>        out = self.fc(embeds)<br/>        return F.log_softmax(out,dim=-1)</pre>
+<p>In the preceding code, <kbd>EmbNet</kbd> creates the model for sentiment classification. Inside the <kbd>__init__</kbd> function, we initialize an object of the <kbd>nn.Embedding</kbd> class, which takes two arguments, namely, the size of the vocabulary and the dimensions that we wish to create for each word. As we have limited the number of unique words, the vocabulary size will be 10,000 and we can start with a small embedding size of <kbd>10</kbd>. For running the program quickly, a small embedding size is useful, but when you are trying to build applications for production systems, use embeddings of a large size. We also have a linear layer that maps the word embeddings to the category (positive, negative, or unknown). </p>
+<p>The <kbd>forward</kbd> function determines how the input data is processed. For a batch size of 32 and sentences of a maximum length of 20 words, we will have inputs of the shape 32 x 20. The first embedding layer acts as a lookup table, replacing each word with the corresponding embedding vector. For an embedding dimension of 10, the output becomes 32 x 20 x 10 as each word is replaced with its corresponding embedding. The <kbd>view()</kbd> function will flatten the result from the embedding layer. The first argument passed to <kbd>view</kbd> will keep that dimension intact. In our case, we do not want to combine data from different batches, so we preserve the first dimension and flatten the rest of the values in the tensor. After the <kbd>view</kbd> function is applied, the tensor shape changes to 32 x 200. A dense layer maps the flattened embeddings to the number of categories. Once the network is defined, we can train the network as usual.</p>
+<div class="packt_infobox">Remember that in this network, we lose the sequential nature of the text and we just use them as a bag of words. </div>
+
+
+            </article>
+
+            
+        </section>
+    </div>
+</body>
+</html>

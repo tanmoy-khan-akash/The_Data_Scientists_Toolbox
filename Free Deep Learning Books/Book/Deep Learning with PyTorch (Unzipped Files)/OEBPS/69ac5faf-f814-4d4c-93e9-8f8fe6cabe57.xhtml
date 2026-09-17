@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xmlns:m="http://www.w3.org/1998/Math/MathML" xmlns:pls="http://www.w3.org/2005/01/pronunciation-lexicon" xmlns:ssml="http://www.w3.org/2001/10/synthesis" xmlns:svg="http://www.w3.org/2000/svg">
+<head>
+  <meta charset="UTF-8" />
+  <title>Batch normalization</title>
+  <link type="text/css" rel="stylesheet" media="all" href="style.css" />
+  <link type="text/css" rel="stylesheet" media="all" href="core.css" />
+</head>
+<body>
+  <div id="sbo-rt-content"><section>
+
+                            <header>
+                    <h1 class="header-title">Batch normalization</h1>
+                </header>
+            
+            <article>
+                
+<p>We have already observed a couple of times that all the features that are being passed to either machine learning or deep learning algorithms are normalized; that is, the values of the features are centered to zero by subtracting the mean from the data, and giving the data a unit standard deviation by dividing the data by its standard deviation. We would generally do this by using the PyTorch <kbd>torchvision.Normalize</kbd> method. The following code shows an example:</p>
+<pre>transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))</pre>
+<p>In all the examples we have seen, the data is <span>normalized</span> just before it enters a neural network; there is no guarantee that the intermediate layers get a normalized input. The following figure shows how the <span>intermediate layers in the neural network fail to get normalized data:</span></p>
+<div class="CDPAlignCenter CDPAlign">            <img height="336" width="284" class="alignnone size-full wp-image-386 image-border" src="images/e372928f-ab49-46db-984a-1f70580ec361.png" /></div>
+<p>Batch normalization acts like an intermediate function, or a layer which normalizes the intermediate data when the mean and variance are changing over time during training. Batch normalization was introduced in 2015 by Ioffe and Szegedy (<a href="https://arxiv.org/abs/1502.03167" target="_blank">https://arxiv.org/abs/1502.03167</a>). Batch normalization behaves differently during training and validation or testing. During training, the mean and variance is calculated for the data in the batch. For validation and testing, the global values are used. All we need to understand to use it is that it normalizes the intermediate data. Some of the key advantages of using batch normalization are that it:</p>
+<ul>
+<li><span>Improves gradient flow through the network, thus helping us build deeper networks</span></li>
+<li>Allows higher learning rates</li>
+<li>Reduces the strong dependency of initialization</li>
+<li>Acts as a form of regularization and reduces the dependency of dropout</li>
+</ul>
+<p>Most of the modern architectures, such as ResNet and Inception, extensively use batch normalization in their architectures. Batch normalization layers are introduced after a convolution layer or linear/fully connected layers, as shown in the following image:</p>
+<div class="CDPAlignCenter CDPAlign"><img height="390" width="268" class="alignnone size-full wp-image-387 image-border" src="images/c4e85ded-f3db-4d45-a984-ef54a8a6aeed.png" /></div>
+<p>By now, we have an intuitive understanding of the key components of a generator network. </p>
+
+
+            </article>
+
+            
+        </section>
+    </div>
+</body>
+</html>

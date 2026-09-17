@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xmlns:m="http://www.w3.org/1998/Math/MathML" xmlns:pls="http://www.w3.org/2005/01/pronunciation-lexicon" xmlns:ssml="http://www.w3.org/2001/10/synthesis" xmlns:svg="http://www.w3.org/2000/svg">
+<head>
+  <meta charset="UTF-8" />
+  <title>Creating loss function for each layers</title>
+  <link type="text/css" rel="stylesheet" media="all" href="style.css" />
+  <link type="text/css" rel="stylesheet" media="all" href="core.css" />
+</head>
+<body>
+  <div id="sbo-rt-content"><section>
+
+                            <header>
+                    <h1 class="header-title">Creating loss function for each layers</h1>
+                </header>
+            
+            <article>
+                
+<p>We have already defined <kbd>loss</kbd> functions as PyTorch layers. So, let's create the loss layers for different style losses and content losses. The following code defines the function:</p>
+<pre>loss_fns = [StyleLoss()] * len(style_layers) + [nn.MSELoss()] * len(content_layers)</pre>
+<p>The <kbd>loss_fns</kbd> is a list containing a bunch of style loss objects and content loss objects based on the lengths of the arrays created.</p>
+
+
+            </article>
+
+            
+        </section>
+    </div>
+</body>
+</html>

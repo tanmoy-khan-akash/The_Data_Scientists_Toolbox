@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xmlns:m="http://www.w3.org/1998/Math/MathML" xmlns:pls="http://www.w3.org/2005/01/pronunciation-lexicon" xmlns:ssml="http://www.w3.org/2001/10/synthesis" xmlns:svg="http://www.w3.org/2000/svg">
+<head>
+  <meta charset="UTF-8" />
+  <title>Style loss</title>
+  <link type="text/css" rel="stylesheet" media="all" href="style.css" />
+  <link type="text/css" rel="stylesheet" media="all" href="core.css" />
+</head>
+<body>
+  <div id="sbo-rt-content"><section>
+
+                            <header>
+                    <h1 class="header-title">Style loss</h1>
+                </header>
+            
+            <article>
+                
+<p>The <strong>style loss</strong> is calculated across multiple layers. Style loss is the MSE of the gram matrix generated for each feature map. The gram matrix represents the correlation value of its features. Let's understand how gram matrix works by using the following diagram and a code implementation.</p>
+<p>The following table shows the output of a feature map of dimension [2, 3, 3, 3], having the column attributes <kbd>Batch_size</kbd>, <kbd>Channels</kbd>, and <kbd>Values</kbd>:</p>
+<div class="CDPAlignCenter CDPAlign"><img height="314" width="422" src="images/94d34d01-e524-467e-a53e-3d298fa4cd44.png" /></div>
+<p>To calculate the gram matrix, we flatten all the values per channel and then find correlation by multiplying with its transpose, as shown in the following table:</p>
+<div class="CDPAlignCenter CDPAlign"><img height="126" width="396" src="images/d265a566-7480-49d0-8639-aff72d4d6a81.png" /></div>
+<p>All we did is flatten all the values, with respect to each channel, to a single vector or tensor. The following code implements this:</p>
+<pre>class GramMatrix(nn.Module):<br/>    <br/>    def forward(self,input):<br/>        b,c,h,w = input.size()<br/>        features = input.view(b,c,h*w)<br/>        gram_matrix = torch.bmm(features,features.transpose(1,2))<br/>        gram_matrix.div_(h*w)<br/>        return gram_matrix</pre>
+<p>We implement the <kbd>GramMatrix</kbd> as another PyTorch module with a <kbd>forward</kbd> function so that we can use it like a PyTorch layer. We are extracting the different dimensions from the input image in this line:</p>
+<pre>b,c,h,w = input.size()</pre>
+<p>Here, <kbd>b</kbd> represents batch, <kbd>c</kbd> represents filters or channels, <kbd>h</kbd> represents height, and <kbd>w</kbd> represents width. In the next step, we will use the following code to keep the batch and channel dimensions intact and flatten all the values along the height and width dimension, as shown in the preceding figure:</p>
+<pre>features = input.view(b,c,h*w)</pre>
+<p>The gram matrix is calculated by multiplying the flattening values along with its transposed vector. We can do it by using the PyTorch batch matrix multiplication function, provided as <kbd>torch.bmm()</kbd>, as shown in the following code:</p>
+<pre>gram_matrix = torch.bmm(features,features.transpose(1,2))</pre>
+<p>We finish normalizing the values of the gram matrix by dividing it by the number of elements. This prevents a particular feature map with a lot of values dominating the score. Once <kbd>GramMatrix</kbd> is calculated, it becomes simple to calculate style loss, which is implemented in this code:</p>
+<pre>class StyleLoss(nn.Module):<br/>    <br/>    def forward(self,inputs,targets):<br/>        out = nn.MSELoss()(GramMatrix()(inputs),targets)<br/>        return (out)</pre>
+<p>The <kbd>StyleLoss</kbd> is implemented as another PyTorch layer. It calculates the MSE between the input <kbd>GramMatrix</kbd> values and the style image <kbd>GramMatrix</kbd> values.</p>
+
+
+            </article>
+
+            
+        </section>
+    </div>
+</body>
+</html>

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xmlns:m="http://www.w3.org/1998/Math/MathML" xmlns:pls="http://www.w3.org/2005/01/pronunciation-lexicon" xmlns:ssml="http://www.w3.org/2001/10/synthesis" xmlns:svg="http://www.w3.org/2000/svg">
+<head>
+  <meta charset="UTF-8" />
+  <title>DenseBlock</title>
+  <link type="text/css" rel="stylesheet" media="all" href="style.css" />
+  <link type="text/css" rel="stylesheet" media="all" href="core.css" />
+</head>
+<body>
+  <div id="sbo-rt-content"><section>
+
+                            <header>
+                    <h1 class="header-title">DenseBlock</h1>
+                </header>
+            
+            <article>
+                
+<p>Let's look at the code for <kbd>DenseBlock</kbd> and then walk through it:</p>
+<pre>class _DenseBlock(nn.Sequential):<br/>    def __init__(self, num_layers, num_input_features, bn_size, growth_rate, drop_rate):<br/>        super(_DenseBlock, self).__init__()<br/>        for i in range(num_layers):<br/>            layer = _DenseLayer(num_input_features + i * growth_rate, growth_rate, bn_size, drop_rate)<br/>            self.add_module('denselayer%d' % (i + 1), layer)</pre>
+<p><kbd>DenseBlock</kbd> is a sequential module where we add layers in a sequential order. Based on the number of layers (<kbd><span>num_layers</span></kbd>) in the block, we add that number of <kbd>_Denselayer</kbd> objects along with a name to it. All the magic is happening inside the <kbd>DenseLayer</kbd>. Let's look at what goes on inside the <kbd>DenseLayer</kbd>.</p>
+
+
+            </article>
+
+            
+        </section>
+    </div>
+</body>
+</html>

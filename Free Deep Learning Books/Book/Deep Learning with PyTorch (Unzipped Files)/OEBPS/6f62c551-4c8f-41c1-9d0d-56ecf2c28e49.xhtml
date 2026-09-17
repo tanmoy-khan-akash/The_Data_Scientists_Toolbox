@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xmlns:m="http://www.w3.org/1998/Math/MathML" xmlns:pls="http://www.w3.org/2005/01/pronunciation-lexicon" xmlns:ssml="http://www.w3.org/2001/10/synthesis" xmlns:svg="http://www.w3.org/2000/svg">
+<head>
+  <meta charset="UTF-8" />
+  <title>Batches&#xA0;</title>
+  <link type="text/css" rel="stylesheet" media="all" href="style.css" />
+  <link type="text/css" rel="stylesheet" media="all" href="core.css" />
+</head>
+<body>
+  <div id="sbo-rt-content"><section>
+
+                            <header>
+                    <h1 class="header-title">Batches </h1>
+                </header>
+            
+            <article>
+                
+<p>Processing the entire data as a sequence is quite challenging and not computationally efficient. So, we break the sequence data into multiple batches, and treat each as a separate sequence. Though it may not sound straightforward, it works a lot better, as the model can learn quicker from batches of data. Let's take the example where the English alphabet is sequenced and we split it into batches. </p>
+<p>Sequence: a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y, z. </p>
+<p>When we convert the preceding alphabet sequence into four batches, we get:</p>
+<p><em>a    g    m    s    y</em></p>
+<p><em>b    h    n    t    z</em></p>
+<p><em>c    i     o    u</em></p>
+<p><em>d   j     p     v</em></p>
+<p><em>e   k    q     w</em></p>
+<p><em>f    l     r     x</em></p>
+<p>In most of the cases, we would end up trimming the last extra words or tokens that form a small batch, since it doesn't have a great effect on text modeling. </p>
+<p><span>For the example <kbd>WikiText2</kbd>, when we split the data into 20 batches, we would get each batch with elements 104431. </span></p>
+
+
+            </article>
+
+            
+        </section>
+    </div>
+</body>
+</html>

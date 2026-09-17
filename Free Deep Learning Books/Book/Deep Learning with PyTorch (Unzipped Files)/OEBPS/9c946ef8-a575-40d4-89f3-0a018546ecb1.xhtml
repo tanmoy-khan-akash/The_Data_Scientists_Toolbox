@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xmlns:m="http://www.w3.org/1998/Math/MathML" xmlns:pls="http://www.w3.org/2005/01/pronunciation-lexicon" xmlns:ssml="http://www.w3.org/2001/10/synthesis" xmlns:svg="http://www.w3.org/2000/svg">
+<head>
+  <meta charset="UTF-8" />
+  <title>Training the model</title>
+  <link type="text/css" rel="stylesheet" media="all" href="style.css" />
+  <link type="text/css" rel="stylesheet" media="all" href="core.css" />
+</head>
+<body>
+  <div id="sbo-rt-content"><section>
+
+                            <header>
+                    <h1 class="header-title">Training the model</h1>
+                </header>
+            
+            <article>
+                
+<p class="mce-root">Training the model is the same process as for our previous dogs and cats image classification problems. The following code snippet does the training of our model on the provided dataset:</p>
+<pre>def fit(epoch,model,data_loader,phase='training',volatile=False):<br/>    if phase == 'training':<br/>        model.train()<br/>    if phase == 'validation':<br/>        model.eval()<br/>        volatile=True<br/>    running_loss = 0.0<br/>    running_correct = 0<br/>    for batch_idx , (data,target) in enumerate(data_loader):<br/>        if is_cuda:<br/>            data,target = data.cuda(),target.cuda()<br/>        data , target = Variable(data,volatile),Variable(target)<br/>        if phase == 'training':<br/>            optimizer.zero_grad()<br/>        output = model(data)<br/>        loss = F.nll_loss(output,target)<br/>        <br/>        running_loss += F.nll_loss(output,target,size_average=False).data[0]<br/>        preds = output.data.max(dim=1,keepdim=True)[1]<br/>        running_correct += preds.eq(target.data.view_as(preds)).cpu().sum()<br/>        if phase == 'training':<br/>            loss.backward()<br/>            optimizer.step()<br/>    <br/>    loss = running_loss/len(data_loader.dataset)<br/>    accuracy = 100. * running_correct/len(data_loader.dataset)<br/>    <br/>    print(f'{phase} loss is {loss:{5}.{2}} and {phase} accuracy is {running_correct}/{len(data_loader.dataset)}{accuracy:{10}.{4}}')<br/>    return loss,accuracy</pre>
+<p>This method has different logic for <kbd>training</kbd> and <kbd>validation</kbd>. There are primarily two reasons for using different modes:</p>
+<ul>
+<li>In <kbd>train</kbd> mode, dropout removes a percentage of values, which should not happen in the validation or testing phase </li>
+<li>For <kbd>training</kbd> mode, we calculate gradients and change the model's parameters value, but backpropagation is not required during the testing or validation phases</li>
+</ul>
+<p>Most of the code in the previous function is self-explanatory, as discussed in previous chapters. At the end of the function, we return the <kbd>loss</kbd> and <kbd>accuracy</kbd> of the model for that particular epoch.</p>
+<p>Let's run the model through the preceding function for 20 iterations and plot the <kbd>loss</kbd> and <kbd>accuracy</kbd> of <kbd>train</kbd> and <kbd>validation</kbd>, to understand how our network performed. The following code runs the <kbd>fit</kbd> method for the <kbd>train</kbd> and <kbd>test</kbd> dataset for <kbd>20</kbd> iterations: </p>
+<pre>model = Net()<br/>if is_cuda:<br/>    model.cuda()<br/><br/>optimizer = optim.SGD(model.parameters(),lr=0.01,momentum=0.5)<br/>train_losses , train_accuracy = [],[]<br/>val_losses , val_accuracy = [],[]<br/>for epoch in range(1,20):<br/>    epoch_loss, epoch_accuracy = fit(epoch,model,train_loader,phase='training')<br/>    val_epoch_loss , val_epoch_accuracy = fit(epoch,model,test_loader,phase='validation')<br/>    train_losses.append(epoch_loss)<br/>    train_accuracy.append(epoch_accuracy)<br/>    val_losses.append(val_epoch_loss)<br/>    val_accuracy.append(val_epoch_accuracy)</pre>
+<p>The following code plots the <kbd>training</kbd> and <kbd>test loss</kbd>:</p>
+<pre>plt.plot(range(1,len(train_losses)+1),train_losses,'bo',label = 'training loss')<br/>plt.plot(range(1,len(val_losses)+1),val_losses,'r',label = 'validation loss')<br/>plt.legend()</pre>
+<p class="mce-root CDPAlignLeft CDPAlign"> The preceding code generates the following graph:                 </p>
+<div class="CDPAlignCenter CDPAlign"><img height="235" width="349" class="alignnone size-full wp-image-485 image-border" src="images/9a1a319b-9b66-4479-a4d2-014ded3303c5.png" /></div>
+<p>The following code plots the training and test accuracy:</p>
+<pre>plt.plot(range(1,len(train_accuracy)+1),train_accuracy,'bo',label = 'train accuracy')<br/>plt.plot(range(1,len(val_accuracy)+1),val_accuracy,'r',label = 'val accuracy')<br/>plt.legend()</pre>
+<p>The preceding code<span> generates the following graph: </span></p>
+<div class="CDPAlignCenter CDPAlign">  <img height="231" width="348" class="alignnone size-full wp-image-486 image-border" src="images/3a360060-04a5-41f8-8dcf-bffc2a6229c0.png" /></div>
+<p>At the end of the 20<sup>th</sup> epoch, we achieve a <kbd>test</kbd> accuracy of 98.9%. We have got our simple convolutional model working and almost achieving state-of-the-art results. Let's take a look at what happens when we try the same network architecture on the previously-used <kbd>Dogs vs. Cats</kbd> dataset. We will use the data from our previous chapter, <a href="5a68470a-8fdb-4dc8-9613-e38a9b4354d5.xhtml" target="_blank">Chapter 3</a>, <em>Building Blocks of Neural Networks,</em> and architecture from the MNIST example with some minor changes. Once we train the model, let's evaluate it to understand how well our simple architecture performs.</p>
+
+
+            </article>
+
+            
+        </section>
+    </div>
+</body>
+</html>

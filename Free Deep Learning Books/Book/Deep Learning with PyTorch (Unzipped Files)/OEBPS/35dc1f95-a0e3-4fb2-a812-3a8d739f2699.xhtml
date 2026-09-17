@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xmlns:m="http://www.w3.org/1998/Math/MathML" xmlns:pls="http://www.w3.org/2005/01/pronunciation-lexicon" xmlns:ssml="http://www.w3.org/2001/10/synthesis" xmlns:svg="http://www.w3.org/2000/svg">
+<head>
+  <meta charset="UTF-8" />
+  <title>Training the generator network&#xA0;</title>
+  <link type="text/css" rel="stylesheet" media="all" href="style.css" />
+  <link type="text/css" rel="stylesheet" media="all" href="core.css" />
+</head>
+<body>
+  <div id="sbo-rt-content"><section>
+
+                            <header>
+                    <h1 class="header-title">Training the generator network </h1>
+                </header>
+            
+            <article>
+                
+<p><span>Let's look at the code for it and then explore the important features:</span></p>
+<pre>netG.zero_grad()<br/>labelv = Variable(label.fill_(real_label)) # fake labels are real for generator cost<br/>output = netD(fake)<br/>errG = criterion(output, labelv)<br/>errG.backward()<br/>optimizerG.step()</pre>
+<p>It looks similar to what we did while we trained the discriminator on fake images, except for some key differences. We are passing the same fake images created by the generator, but this time we are not detaching it from the graph that produced it, because we want the generator to be trained. We calculate the loss (<kbd>errG</kbd>) and calculate the gradients. Then we call the generator optimizer, as we want only the generator to be trained, and we repeat this entire process for several iterations before we have the generator producing slightly realistic images. </p>
+
+
+            </article>
+
+            
+        </section>
+    </div>
+</body>
+</html>

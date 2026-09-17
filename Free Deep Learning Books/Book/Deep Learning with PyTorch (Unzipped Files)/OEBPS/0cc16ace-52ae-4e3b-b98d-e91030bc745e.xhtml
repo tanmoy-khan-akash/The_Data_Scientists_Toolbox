@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xmlns:m="http://www.w3.org/1998/Math/MathML" xmlns:pls="http://www.w3.org/2005/01/pronunciation-lexicon" xmlns:ssml="http://www.w3.org/2001/10/synthesis" xmlns:svg="http://www.w3.org/2000/svg">
+<head>
+  <meta charset="UTF-8" />
+  <title>Simple holdout validation</title>
+  <link type="text/css" rel="stylesheet" media="all" href="style.css" />
+  <link type="text/css" rel="stylesheet" media="all" href="core.css" />
+</head>
+<body>
+  <div id="sbo-rt-content"><section>
+
+                            <header>
+                    <h1 class="header-title">Simple holdout validation</h1>
+                </header>
+            
+            <article>
+                
+<p>Set apart a fraction of the data as your test dataset. What fraction to keep may be very problem-specific and could largely depend on the amount of data available. For problems particularly in the fields of computer vision and NLP, collecting labeled data could be very expensive, so to hold out a large fraction of 30% may make it difficult for the algorithm to learn, as it will have less data to train on. So, depending on the data availability, choose the fraction of it wisely. Once the test data is split, keep it apart until you freeze the algorithm and its hyper parameters. For choosing the best hyper parameters for the problem, choose a separate validation dataset. <span>To avoid overfitting, we generally divide available data into three different sets, as shown in following image:</span></p>
+<div class="CDPAlignCenter CDPAlign"><img height="248" width="604" class="alignnone size-full wp-image-346 image-border" src="images/6a1f5457-52c5-4365-bed5-c7e4f4315177.png" /></div>
+<p>We used a simple implementation of the <span>preceding figure</span> in the last chapter to create our validation set. Let's look at a snapshot of the implementation:</p>
+<pre>files = glob(os.path.join(path,'*/*.jpg'))<br/>no_of_images = len(files)<br/>shuffle = np.random.permutation(no_of_images)<br/>train = files[shuffle[:int(no_of_images*0.8)]]<br/>valid = files[shuffle[int(no_of_images*0.8):]]</pre>
+<p>This is one of the simplest holdout strategies and is commonly used to start with. There is a disadvantage of using this with small datasets. The validation dataset or test dataset may not be statistically representative of the data at hand. We can easily recognize this by shuffling the data before holding out. If the results obtained are not consistent, then we need to use a better approach. To avoid this issue, we often end up using k-fold or iterated k-fold validation. </p>
+
+
+            </article>
+
+            
+        </section>
+    </div>
+</body>
+</html>

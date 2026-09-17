@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xmlns:m="http://www.w3.org/1998/Math/MathML" xmlns:pls="http://www.w3.org/2005/01/pronunciation-lexicon" xmlns:ssml="http://www.w3.org/2001/10/synthesis" xmlns:svg="http://www.w3.org/2000/svg">
+<head>
+  <meta charset="UTF-8" />
+  <title>Calculating pre-convoluted features</title>
+  <link type="text/css" rel="stylesheet" media="all" href="style.css" />
+  <link type="text/css" rel="stylesheet" media="all" href="core.css" />
+</head>
+<body>
+  <div id="sbo-rt-content"><section>
+
+                            <header>
+                    <h1 class="header-title">Calculating pre-convoluted features</h1>
+                </header>
+            
+            <article>
+                
+<p>When we freeze the convolution layers and the train model, the input to the fully connected layers, or dense layers, (<kbd>vgg.classifier</kbd>) is always the same. To understand better, let's treat the convolution block, in our example the <kbd>vgg.features</kbd> block, as a function that has learned weights and does not change during training. So, calculating the convolution features and storing them will help us to improve the training speed. The time to train the model decreases, as we calculate these features only once instead of calculating for each epoch. Let's visually understand and implement the same:</p>
+<div class="CDPAlignCenter CDPAlign"><img height="463" width="754" class="alignnone size-full wp-image-492 image-border" src="images/d1cb4fa0-d566-42fb-8b27-f45abadeca02.png" /></div>
+<p>The first box depicts how training is done in general, which could be slow, as we calculate the convolutional features for every epoch, though the values do not change. In the bottom box, we calculate the convolutional features once and train only the linear layers. To calculate the pre-convoluted features, we will pass all the training data through the convolution blocks and store them. To perform this, we need to select the convolution blocks of the VGG model. Fortunately, the PyTorch implementation of VGG16 has two sequential models, so just picking the first sequential model's features is enough. The following code does that:</p>
+<pre>vgg = models.vgg16(pretrained=True)<br/>vgg = vgg.cuda()<br/>features = vgg.features<br/><br/>train_data_loader = torch.utils.data.DataLoader(train,batch_size=32,num_workers=3,shuffle=False)<br/>valid_data_loader = torch.utils.data.DataLoader(valid,batch_size=32,num_workers=3,shuffle=False)<br/><br/>def preconvfeat(dataset,model):<br/>    conv_features = []<br/>    labels_list = []<br/>    for data in dataset:<br/>        inputs,labels = data<br/>        if is_cuda:<br/>            inputs , labels = inputs.cuda(),labels.cuda() <br/>        inputs , labels = Variable(inputs),Variable(labels)<br/>        output = model(inputs)<br/>        conv_features.extend(output.data.cpu().numpy())<br/>        labels_list.extend(labels.data.cpu().numpy())<br/>    conv_features = np.concatenate([[feat] for feat in conv_features])<br/>    <br/>    return (conv_features,labels_list)<br/><br/>conv_feat_train,labels_train = preconvfeat(train_data_loader,features)<br/>conv_feat_val,labels_val = preconvfeat(valid_data_loader,features)</pre>
+<p>In the previous code, the <kbd>preconvfeat</kbd> method takes in the dataset and <kbd>vgg</kbd> model and returns the convoluted features along with the labels associated with it. The rest of the code is similar to what we have used in the other examples for creating data loaders and datasets.</p>
+<p>Once we have the convolutional features for the <kbd>train</kbd> and <kbd>validation</kbd> sets, let's create a PyTorch dataset and <kbd>DataLoader</kbd> classes, which will ease up our training process. The following code creates the <kbd>Dataset</kbd> and <kbd>DataLoader</kbd> for our convolution features:</p>
+<pre>class My_dataset(Dataset):<br/>    def __init__(self,feat,labels):<br/>        self.conv_feat = feat<br/>        self.labels = labels<br/>    <br/>    def __len__(self):<br/>        return len(self.conv_feat)<br/>    <br/>    def __getitem__(self,idx):<br/>        return self.conv_feat[idx],self.labels[idx]<br/><br/>train_feat_dataset = My_dataset(conv_feat_train,labels_train)<br/>val_feat_dataset = My_dataset(conv_feat_val,labels_val)<br/><br/>train_feat_loader = <br/>  DataLoader(train_feat_dataset,batch_size=64,shuffle=True)<br/>val_feat_loader = <br/>  DataLoader(val_feat_dataset,batch_size=64,shuffle=True)</pre>
+<p>As we have our new data loaders that generate batches of convoluted features along with the labels, we can use the same <kbd>train</kbd> function that we have been using in the other examples. Now we will use <kbd>vgg.classifier</kbd> as the model for creating the <kbd>optimizer</kbd> and <kbd>fit</kbd> methods. The following code trains the classifier module to identify dogs and cats. On a Titan X GPU, each epoch takes less than five seconds, which would otherwise take a few minutes:</p>
+<pre>train_losses , train_accuracy = [],[]<br/>val_losses , val_accuracy = [],[]<br/>for epoch in range(1,20):<br/>    epoch_loss, epoch_accuracy = fit_numpy(epoch,vgg.classifier,train_feat_loader,phase='training')<br/>    val_epoch_loss , val_epoch_accuracy = fit_numpy(epoch,vgg.classifier,val_feat_loader,phase='validation')<br/>    train_losses.append(epoch_loss)<br/>    train_accuracy.append(epoch_accuracy)<br/>    val_losses.append(val_epoch_loss)<br/>    val_accuracy.append(val_epoch_accuracy)</pre>
+
+
+            </article>
+
+            
+        </section>
+    </div>
+</body>
+</html>

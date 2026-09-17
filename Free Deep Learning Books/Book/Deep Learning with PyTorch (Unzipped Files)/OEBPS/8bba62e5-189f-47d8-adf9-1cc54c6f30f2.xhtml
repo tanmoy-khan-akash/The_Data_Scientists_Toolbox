@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xmlns:m="http://www.w3.org/1998/Math/MathML" xmlns:pls="http://www.w3.org/2005/01/pronunciation-lexicon" xmlns:ssml="http://www.w3.org/2001/10/synthesis" xmlns:svg="http://www.w3.org/2000/svg">
+<head>
+  <meta charset="UTF-8" />
+  <title>Training the model</title>
+  <link type="text/css" rel="stylesheet" media="all" href="style.css" />
+  <link type="text/css" rel="stylesheet" media="all" href="core.css" />
+</head>
+<body>
+  <div id="sbo-rt-content"><section>
+
+                            <header>
+                    <h1 class="header-title">Training the model</h1>
+                </header>
+            
+            <article>
+                
+<p>The training steps for the model are the same as the previous example. Let's just look at the code to call the <kbd>fit</kbd> method and the results it generated:</p>
+<pre>train_losses , train_accuracy = [],[]<br/>val_losses , val_accuracy = [],[]<br/><br/>for epoch in range(1,5):<br/><br/>    epoch_loss, epoch_accuracy = fit(epoch,model,train_iter,phase='training')<br/>    val_epoch_loss , val_epoch_accuracy = fit(epoch,model,test_iter,phase='validation')<br/>    train_losses.append(epoch_loss)<br/>    train_accuracy.append(epoch_accuracy)<br/>    val_losses.append(val_epoch_loss)<br/>    val_accuracy.append(val_epoch_accuracy)</pre>
+<p>We ran the model for four epochs, which gave approximately 83% accuracy. Here are the results of running the model:</p>
+<pre>training loss is  0.59 and training accuracy is 16724/25000      66.9
+validation loss is  0.45 and validation accuracy is 19687/25000     78.75
+training loss is  0.38 and training accuracy is 20876/25000      83.5
+validation loss is   0.4 and validation accuracy is 20618/25000     82.47
+training loss is  0.28 and training accuracy is 22109/25000     88.44
+validation loss is  0.41 and validation accuracy is 20713/25000     82.85
+training loss is  0.22 and training accuracy is 22820/25000     91.28
+validation loss is  0.44 and validation accuracy is 20641/25000     82.56</pre>
+<p>Since the <kbd>validation loss</kbd> started increasing after three epochs, I stopped running the model. A couple of things that we could try to improve the results are using pretrained weights, adding another convolution layer, and trying a <kbd>MaxPool1d</kbd> layer between the convolutions. I leave it to you to try this and see if that helps improve the accuracy.</p>
+
+
+            </article>
+
+            
+        </section>
+    </div>
+</body>
+</html>

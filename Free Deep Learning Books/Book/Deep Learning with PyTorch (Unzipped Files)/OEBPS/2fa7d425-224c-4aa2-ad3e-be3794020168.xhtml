@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xmlns:m="http://www.w3.org/1998/Math/MathML" xmlns:pls="http://www.w3.org/2005/01/pronunciation-lexicon" xmlns:ssml="http://www.w3.org/2001/10/synthesis" xmlns:svg="http://www.w3.org/2000/svg">
+<head>
+  <meta charset="UTF-8" />
+  <title>Installing PyTorch</title>
+  <link type="text/css" rel="stylesheet" media="all" href="style.css" />
+  <link type="text/css" rel="stylesheet" media="all" href="core.css" />
+</head>
+<body>
+  <div id="sbo-rt-content"><section>
+
+                            <header>
+                    <h1 class="header-title">Installing PyTorch</h1>
+                </header>
+            
+            <article>
+                
+<p>PyTorch is available as a Python package and you can either use <kbd>pip</kbd>, or <kbd>conda</kbd>, to build it or you can build it from source. The recommended approach for this book is to use the Anaconda Python 3 distribution. To install Anaconda, please refer to the Anaconda official documentation at <a href="https://conda.io/docs/user-guide/install/index.html" target="_blank">https://conda.io/docs/user-guide/install/index.html</a>. All the examples will be available as Jupyter Notebooks in the book's GitHub repository. I would strongly recommend you use Jupyter Notebook, since it allows you to experiment interactively. If you already have Anaconda Python installed, then you can proceed with the following steps for PyTorch installation.</p>
+<p>For GPU-based installation with Cuda 8:</p>
+<pre><strong>conda install pytorch torchvision cuda80 -c soumith</strong></pre>
+<p>For GPU-based installation with Cuda 7.5:</p>
+<pre><strong>conda install pytorch torchvision -c soumith</strong></pre>
+<p>For non-GPU-based installation:</p>
+<pre><strong>conda install pytorch torchvision -c soumith</strong></pre>
+<p>At the time of writing, PyTorch does not work on a Windows machine, so you can try a <strong>virtual machine</strong> (<strong>VM</strong>) or Docker image.</p>
+
+
+            </article>
+
+            
+        </section>
+    </div>
+</body>
+</html>

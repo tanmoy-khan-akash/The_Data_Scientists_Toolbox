@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xmlns:m="http://www.w3.org/1998/Math/MathML" xmlns:pls="http://www.w3.org/2005/01/pronunciation-lexicon" xmlns:ssml="http://www.w3.org/2001/10/synthesis" xmlns:svg="http://www.w3.org/2000/svg">
+<head>
+  <meta charset="UTF-8" />
+  <title>Visualizing weights of the CNN layer</title>
+  <link type="text/css" rel="stylesheet" media="all" href="style.css" />
+  <link type="text/css" rel="stylesheet" media="all" href="core.css" />
+</head>
+<body>
+  <div id="sbo-rt-content"><section>
+
+                            <header>
+                    <h1 class="header-title">Visualizing weights of the CNN layer</h1>
+                </header>
+            
+            <article>
+                
+<p>Getting model weights for a particular layer is straightforward. All the model weights can be accessed through the <kbd>state_dict</kbd> function. The <kbd>state_dict</kbd> function returns a dictionary, with keys as its layers and weights as its values. The following code demonstrates how to pull weights for a particular layer and visualize them:</p>
+<pre>vgg.state_dict().keys()<br/>cnn_weights = vgg.state_dict()['features.0.weight'].cpu()</pre>
+<p>The preceding code provides us with the following output:</p>
+<div class="CDPAlignCenter CDPAlign"><img height="167" width="454" class="alignnone size-full wp-image-496 image-border" src="images/bf5cc2da-6e75-49fa-9e3a-ee8f83c1ad2c.png" /></div>
+<p>Each box represents weights of a filter that is of size <em>3 x 3</em>. Each filter is trained to identify certain patterns in the images.</p>
+
+
+            </article>
+
+            
+        </section>
+    </div>
+</body>
+</html>

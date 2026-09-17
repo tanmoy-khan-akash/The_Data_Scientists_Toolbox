@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xmlns:m="http://www.w3.org/1998/Math/MathML" xmlns:pls="http://www.w3.org/2005/01/pronunciation-lexicon" xmlns:ssml="http://www.w3.org/2001/10/synthesis" xmlns:svg="http://www.w3.org/2000/svg">
+<head>
+  <meta charset="UTF-8" />
+  <title>4-D tensors</title>
+  <link type="text/css" rel="stylesheet" media="all" href="style.css" />
+  <link type="text/css" rel="stylesheet" media="all" href="core.css" />
+</head>
+<body>
+  <div id="sbo-rt-content"><section>
+
+                            <header>
+                    <h1 class="header-title">4-D tensors</h1>
+                </header>
+            
+            <article>
+                
+<p><span>One common example for four-dimensional tensor types is a batch of images. Modern CPUs and GPUs are optimized to perform the same operations on multiple examples faster. So, they take a similar time to process one image or a batch of images. So, it is common to use a batch of examples rather than use a single image at a time. Choosing the batch size is not straightforward; it depends on several factors. One major restriction for using a bigger batch or the complete dataset is GPU memory limitations—<em>16</em>, <em>32</em>, and <em>64</em> are commonly used batch sizes.</span></p>
+<p><span>Let's look at an example where we load a batch of cat images of size <kbd>64</kbd> x <kbd>224</kbd> x <kbd>224</kbd> x <kbd>3</kbd> where <em>64</em> represents the batch size or the number of images, <em>244</em> represents height and width, and <em>3</em> represents channels:</span></p>
+<pre><span>#Read cat images from disk<br/>cats = glob(data_path+'*.jpg')<br/>#Convert images into numpy arrays<br/>cat_imgs = np.array([np.array(Image.open(cat).resize((224,224))) for cat in cats[:64]]) <br/>cat_imgs = cat_imgs.reshape(-1,224,224,3)<br/>cat_tensors = torch.from_numpy(cat_imgs)<br/>cat_tensors.size()<br/><br/>Output - torch.Size([64, 224, 224, 3])</span></pre>
+
+
+            </article>
+
+            
+        </section>
+    </div>
+</body>
+</html>

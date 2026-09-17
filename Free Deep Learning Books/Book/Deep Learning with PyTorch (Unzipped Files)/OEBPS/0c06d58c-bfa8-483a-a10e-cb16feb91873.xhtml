@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xmlns:m="http://www.w3.org/1998/Math/MathML" xmlns:pls="http://www.w3.org/2005/01/pronunciation-lexicon" xmlns:ssml="http://www.w3.org/2001/10/synthesis" xmlns:svg="http://www.w3.org/2000/svg">
+<head>
+  <meta charset="UTF-8" />
+  <title>Preparing the data&#xA0;</title>
+  <link type="text/css" rel="stylesheet" media="all" href="style.css" />
+  <link type="text/css" rel="stylesheet" media="all" href="core.css" />
+</head>
+<body>
+  <div id="sbo-rt-content"><section>
+
+                            <header>
+                    <h1 class="header-title">Preparing the data </h1>
+                </header>
+            
+            <article>
+                
+<p>For this example, we use a dataset called <kbd>WikiText2</kbd>. <span>The</span> <kbd>WikiText language modeling</kbd> dataset is a <span>collection of over 100 million tokens extracted from the set of verified </span>Good<span> and </span>Featured<span> articles on Wikipedia. Compared to the preprocessed version of <strong>Penn Treebank</strong></span> (<strong>PTB</strong>), <span>another popularly-used dataset, <kbd>WikiText-2</kbd> is over two times larger. The <kbd>WikiText</kbd> dataset also features a far larger vocabulary and retains the original case, punctuation, and numbers. The dataset contains full articles and, as a result, it is well suited for models that take advantage of long term dependency.</span></p>
+<p>The dataset was introduced in a paper called <em>Pointer Sentinel Mixture Models</em> (<a href="https://arxiv.org/abs/1609.07843" target="_blank">https://arxiv.org/abs/1609.07843</a>). The paper talks about solutions that can be used for solving a specific problem, where the LSTM with a softmax layer has difficulty in predicting rare words, though the context is unclear. Let's not worry about this for now, as it is an advanced concept and out of the scope of this book. </p>
+<p>The following screenshot shows what the data looks like inside the WikiText dump:</p>
+<div class="CDPAlignCenter CDPAlign"><img height="206" width="804" class="alignnone size-full wp-image-388 image-border" src="images/f6b3f8a6-97b7-48a4-b2c7-58d38ef172af.png" /></div>
+<p>As usual, <kbd>torchtext</kbd> makes it easier to use the dataset, by providing abstractions over downloading and reading the dataset. Let's look at the code that does that:</p>
+<pre>TEXT = d.Field(lower=True, batch_first=True)<br/>train, valid, test = datasets.WikiText2.splits(TEXT,root='data')</pre>
+<p>The previous code takes care of downloading the <kbd>WikiText2</kbd> data and splits it into <kbd>train</kbd>, <kbd>valid</kbd>, and <kbd>test</kbd> datasets. The key difference in language modeling is how the data is processed. All the text data that we had in <kbd>WikiText2</kbd> is stored in one long tensor. Let's look at the following code and the results, to understand how the data is processed better:</p>
+<pre>print(len(train[0].text))<br/><br/>#output<br/>2088628</pre>
+<p>As we can see from the previous results, we have only one example field and it contains all the text. Let's also quickly look at how the text is represented:</p>
+<pre>print(train[0].text[:100])<br/><br/>#Results of first 100 tokens<br/><br/>'&lt;eos&gt;', '=', 'valkyria', 'chronicles', 'iii', '=', '&lt;eos&gt;', '&lt;eos&gt;', 'senjō', 'no', 'valkyria', '3', ':', '&lt;unk&gt;', 'chronicles', '(', 'japanese', ':', '3', ',', 'lit', '.', 'valkyria', 'of', 'the', 'battlefield', '3', ')', ',', 'commonly', 'referred', 'to', 'as', 'valkyria', 'chronicles', 'iii', 'outside', 'japan', ',', 'is', 'a', 'tactical', 'role', '@-@', 'playing', 'video', 'game', 'developed', 'by', 'sega', 'and', 'media.vision', 'for', 'the', 'playstation', 'portable', '.', 'released', 'in', 'january', '2011', 'in', 'japan', ',', 'it', 'is', 'the', 'third', 'game', 'in', 'the', 'valkyria', 'series', '.', '&lt;unk&gt;', 'the', 'same', 'fusion', 'of', 'tactical', 'and', 'real', '@-@', 'time', 'gameplay', 'as', 'its', 'predecessors', ',', 'the', 'story', 'runs', 'parallel', 'to', 'the', 'first', 'game', 'and', 'follows', 'the'</pre>
+<p>Now, take a quick look at the image that showed the initial text and how it is being tokenized. Now we have a long sequence, of length <kbd>2088628</kbd>, representing <kbd>WikiText2</kbd>. The next important thing is how we batch the data.</p>
+
+
+            </article>
+
+            
+        </section>
+    </div>
+</body>
+</html>
