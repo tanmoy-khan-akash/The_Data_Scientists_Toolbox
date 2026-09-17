@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>RNNs with Deeplearning4j</title><link rel="stylesheet" href="epub.css" type="text/css"/><meta name="generator" content="DocBook XSL Stylesheets V1.75.2"/>
+<!-- kobo-style -->
+<link xmlns="http://www.w3.org/1999/xhtml" rel="stylesheet" type="text/css" href="css/kobo.css"/>
+<script xmlns="http://www.w3.org/1999/xhtml" type="text/javascript" src="js/kobo.js"/>
+<style xmlns="http://www.w3.org/1999/xhtml" type="text/css" id="kobostylehacks">div#book-inner p, div#book-inner div { font-size: 1.0em; } a { color: black; } a:link, a:visited, a:hover, a:active { color: blue; } div#book-inner * { margin-top: 0 !important; margin-bottom: 0 !important;}</style>
+
+</head><body id="page"><div xmlns="http://www.w3.org/1999/xhtml" id="book-columns"><div xmlns="http://www.w3.org/1999/xhtml" id="book-inner"><div class="section" title="RNNs with Deeplearning4j"><div class="titlepage"><div><div><h1 class="title"><a id="ch04lvl1sec30"/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.1.1">RNNs with Deeplearning4j</span></h1></div></div></div><p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.2.1">Training a RNN is not a simple task, and it can be extremely computationally demanding sometimes. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.2.2">With long sequences of training data involving many time steps, the training, sometimes becomes extremely difficult. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.2.3">As of now, you have got a better theoretical understanding of how and why backpropagation through time is primarily used for training a RNN. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.2.4">In this section, we will consider a practical example of the use of a RNN and its implementation using Deeplearning4j.</span></p><p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.3.1">We now take an example to give an idea of how to do the sentiment analysis of a movie review dataset using RNN. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.3.2">The main problem statement of this network is to take some raw text of a movie review as input, and classify that movie review as either positive or negative based on the contents present. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.3.3">Each word of the raw review text is converted to vectors using the Word2Vec model, and then fed into a RNN. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.3.4">The example uses a large-scale dataset of raw movie reviews taken from </span><a class="ulink" href="http://ai.stanford.edu/~amaas/data/sentiment/"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.4.1">
+http://ai.stanford.edu/~amaas/data/sentiment/
+</span></a><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.5.1">.</span></p><p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.6.1">The whole implementation of this model using DL4J can be split into the following few steps:</span></p><div class="orderedlist"><ol class="orderedlist arabic"><li class="listitem"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.7.1">Download and extract the raw movie reviews data.</span></li><li class="listitem"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.8.1">Configure the network configuration needed for training, and evaluate the performance.</span></li><li class="listitem"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.9.1">Load each review and convert the words to vectors using the Word2Vec model.</span></li><li class="listitem"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.10.1">Perform training for multiple predefined epochs. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.10.2">For each epoch, the performance is evaluated on the test set.</span></li><li class="listitem"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.11.1">To download and extract the movie reviews' data, we need to set up the download configuration first. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.11.2">The following code snippet sets all the things needed to do so:</span><pre class="programlisting"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.12.1">        public static final String DATA_URL = 
+        "http://ai.stanford.edu/~amaas/data/sentiment/*"; 
+</span></pre></li><li class="listitem"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.13.1">Location to save and extract the training and testing data in the local file path is set as follows:</span><pre class="programlisting"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.14.1">        public static final String DATA_PATH = FilenameUtils.concat
+        (System.getProperty("java.io.tmpdir"),local_file_path); 
+</span></pre></li><li class="listitem"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.15.1">Location of the local filesystem for the Google News vectors is given as follows:</span><pre class="programlisting"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.16.1">        public static final String WORD_VECTORS_PATH =    
+        "/PATH_TO_YOUR_VECTORS/GoogleNews-vectors-negative300.bin"; 
+</span></pre></li><li class="listitem"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.17.1">The following code helps to download the data from the web URL to the local file path:</span><pre class="programlisting"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.18.1">        if( !archiveFile.exists() )
+        { 
+         System.out.println("Starting data download (80MB)..."); 
+         FileUtils.copyURLToFile(new URL(DATA_URL), archiveFile); 
+         System.out.println("Data (.tar.gz file) downloaded to " +  
+         archiveFile.getAbsolutePath()); 
+        
+         extractTarGz(archizePath, DATA_PATH); 
+        }
+        else 
+        {       
+         System.out.println("Data (.tar.gz file) already exists at " +  
+         archiveFile.getAbsolutePath()); 
+         if( !extractedFile.exists())
+           { 
+            extractTarGz(archizePath, DATA_PATH); 
+           } 
+         else 
+           { 
+            System.out.println("Data (extracted) already exists at " +   
+            extractedFile.getAbsolutePath()); 
+           } 
+         } 
+         } 
+</span></pre></li><li class="listitem"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.19.1">Now, as we have downloaded the raw movie reviews' data, we can now move to set up our RNN to perform the training of this data. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.19.2">The downloaded data is split on a number of examples used in each mini batch to work on each worker of Hadoop for distributed training purposes. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.19.3">We need to declare a variable, </span><code class="literal"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.20.1">batchSize</span></code><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.21.1">, for this purpose. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.21.2">Here, as a sample, we use each batch of 50 examples, which will be split across multiple blocks of Hadoop, where the workers will run in parallel:</span><pre class="programlisting"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.22.1">      int batchSize = 50;      
+      int vectorSize = 300; 
+      int nEpochs = 5;  
+      int truncateReviewsToLength = 300; 
+</span><span class="strong"><strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.23.1">      MultiLayerConfiguration conf = new             
+      NeuralNetConfiguration.Builder()</span></strong></span>
+<span class="strong"><strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.24.1">        .optimizationAlgo(OptimizationAlgorithm.STOCHASTIC_GRADIENT_
+         DESCENT)</span></strong></span>
+<span class="strong"><strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.25.1">        .iterations(1)
+        .updater(Updater.RMSPROP) 
+        .regularization(true).l2(1e-5) 
+        .weightInit(WeightInit.XAVIER) 
+        .gradientNormalization(GradientNormalization
+        .ClipElementWiseAbsoluteValue).gradientNormalizationThreshold
+        (1.0) 
+        .learningRate(0.0018) 
+        .list() 
+        .layer(0, new GravesLSTM.Builder()
+              .nIn(vectorSize)
+              .nOut(200) 
+              .activation("softsign")
+              .build()) 
+        .layer(1, new RnnOutputLayer.Builder()
+              .activation("softmax") 
+              .lossFunction(LossFunctions.LossFunction.MCXENT)
+              .nIn(200)
+              .nOut(2)
+              .build()) 
+        .pretrain(false)
+        .backprop(true)
+        .build();</span></strong></span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.26.1"> 
+ 
+      MultiLayerNetwork net = new MultiLayerNetwork(conf); 
+      </span><span class="strong"><strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.27.1">net.init();</span></strong></span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.28.1"> 
+      net.setListeners(new ScoreIterationListener(1)); 
+</span></pre></li><li class="listitem"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.29.1">As we set the network configuration for a RNN, we can now move on to the training operation as follows:</span><pre class="programlisting"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.30.1">      DataSetIterator train = new AsyncDataSetIterator(new    
+      SentimentExampleIterator(DATA_PATH,wordVectors,
+      batchSize,truncateReviewsToLength,true),1);
+      DataSetIterator test = new AsyncDataSetIterator(new          
+      SentimentExampleIterator(DATA_PATH,wordVectors,100,
+      truncateReviewsToLength,false),1); 
+      for( int i=0; i&lt;nEpochs; i++ )
+      { 
+        </span><span class="strong"><strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.31.1">net.fit(train); 
+        train.reset();</span></strong></span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.32.1"> 
+        System.out.println("Epoch " + i + " complete. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.32.2">Starting    
+        evaluation:"); 
+</span></pre><p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.33.1">The testing of the network is performed by creating an object of the </span><code class="literal"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.34.1">Evaluation</span></code><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.35.1"> class as follows:</span></p><pre class="programlisting"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.36.1">        Evaluation evaluation = new Evaluation(); 
+        while(test.hasNext())
+        { 
+          DataSet t = test.next(); 
+          INDArray features = t.getFeatureMatrix(); 
+          INDArray lables = t.getLabels(); 
+          INDArray inMask = t.getFeaturesMaskArray(); 
+          INDArray outMask = t.getLabelsMaskArray(); 
+          INDArray predicted =  
+          net.output(features,false,inMask,outMask); 
+          evaluation.evalTimeSeries(lables,predicted,outMask); 
+        } 
+      test.reset(); 
+ 
+      System.out.println(evaluation.stats()); 
+      } 
+</span></pre></li></ol></div></div></div></div></body></html>

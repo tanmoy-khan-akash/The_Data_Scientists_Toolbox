@@ -1,0 +1,261 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>Setting up Deeplearning4j on Hadoop YARN</title><link rel="stylesheet" href="epub.css" type="text/css"/><meta name="generator" content="DocBook XSL Stylesheets V1.75.2"/>
+<!-- kobo-style -->
+<link xmlns="http://www.w3.org/1999/xhtml" rel="stylesheet" type="text/css" href="css/kobo.css"/>
+<script xmlns="http://www.w3.org/1999/xhtml" type="text/javascript" src="js/kobo.js"/>
+<style xmlns="http://www.w3.org/1999/xhtml" type="text/css" id="kobostylehacks">div#book-inner p, div#book-inner div { font-size: 1.0em; } a { color: black; } a:link, a:visited, a:hover, a:active { color: blue; } div#book-inner * { margin-top: 0 !important; margin-bottom: 0 !important;}</style>
+
+</head><body id="page"><div xmlns="http://www.w3.org/1999/xhtml" id="book-columns"><div xmlns="http://www.w3.org/1999/xhtml" id="book-inner"><div class="section" title="Setting up Deeplearning4j on Hadoop YARN"><div class="titlepage"><div><div><h1 class="title"><a id="ch02lvl1sec16"/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.1.1">Setting up Deeplearning4j on Hadoop YARN</span></h1></div></div></div><p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.2.1">Deeplearning4j primarily works on networks having multiple layers. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.2.2">To get started working with Deeplearning4j, one needs to get accustomed with the prerequisites, and how to install all the dependent software. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.2.3">Most of the documentation can be easily found on the official website of Deeplearning4j at </span><a class="ulink" href="https://deeplearning4j.org/"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.3.1">https://deeplearning4j.org/</span></a><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.4.1"> [88].</span></p><p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.5.1">In this section of the chapter, we will help you to get familiar with the code of Deeplearning4j. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.5.2">Initially, we will show the implementation of a simple operation of a multilayer neural network with Deeplearning4j. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.5.3">The later part of the section will discuss distributed deep learning with Deeplearning4j library. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.5.4">Deeplearning4j trains distributed deep neural network on multiple distributed GPUs using Apache Spark. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.5.5">The later part of this section will also introduce the setup of Apache Spark for Deeplearning4j.</span></p><div class="section" title="Getting familiar with Deeplearning4j"><div class="titlepage"><div><div><h2 class="title"><a id="ch02lvl2sec21"/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.6.1">Getting familiar with Deeplearning4j</span></h2></div></div></div><p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.7.1">This part will mainly introduce the 'Hello World' programs of deep learning with deeplearning4j. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.7.2">We will explain the basic functions of the library with the help of two simple deep learning problems.</span></p><p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.8.1">In Deeplearning4j, </span><code class="literal"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.9.1">MultiLayerConfiguration</span></code><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.10.1">, a class of the library can be considered as the base of the building block, which is responsible for organizing the layers and the corresponding hyperparameters of a neural network. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.10.2">This class can be considered as the core building block of Deeplearning4j for neural networks. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.10.3">Throughout the book, we will use this class to configure different multilayer neural networks.</span></p><div class="note" title="Note" style=""><div class="inner"><h3 class="title"><a id="note11"/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.11.1">Note</span></h3><p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.12.1">Hyperparameters are the main backbone to determine the learning process of a neural network. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.12.2">They mostly include how to initialize the weights of the models, how many times they should be updated, the learning rate of the model, which optimization algorithms to use, and so on.</span></p></div></div><p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.13.1">In the first example, we will show how to classify data patterns for the multilayer perceptron classifier with the help of Deeplearning4j.</span></p><p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.14.1">The following is the sample training dataset that will be used in this program:</span></p><pre class="programlisting"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.15.1">  0, -0.500568579838,  0.687106471955 
+  1,  0.190067977988, -0.341116711905 
+  0,  0.995019651532,  0.663292952846 
+  0, -1.03053733564,   0.342392729177 
+  1,  0.0376749555484,-0.836548188848 
+  0, -0.113745482508,  0.740204108847 
+  1,  0.56769119889,  -0.375810486522 
+</span></pre><p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.16.1">Initially, we need to initialize the various hyperparameters of the networks. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.16.2">The following piece of code will set the ND4J environment for the program:</span></p><pre class="programlisting"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.17.1">Nd4j.ENFORCE_NUMERICAL_STABILITY = true; 
+int batchSize = 50; 
+int seed = 123; 
+double learningRate = 0.005; 
+</span></pre><p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.18.1">Number of epochs is set to </span><code class="literal"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.19.1">30</span></code><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.20.1">:</span></p><pre class="programlisting"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.21.1">int nEpochs = 30;  
+int numInputs = 2; 
+int numOutputs = 2; 
+int numHiddenNodes = 20; 
+</span></pre><p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.22.1">The following piece of code will load the training data to the network:</span></p><pre class="programlisting"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.23.1">RecordReader rr = new CSVRecordReader(); 
+rr.initialize(new FileSplit(new File("saturn_data_train.csv"))); 
+DataSetIterator trainIter = new RecordReaderDataSetIterator      
+                            (rr,batchSize,0,2); 
+</span></pre><p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.24.1">As the training data is loaded next we load the test data into the model with the following code:</span></p><pre class="programlisting"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.25.1">RecordReader rrTest = new CSVRecordReader(); 
+rrTest.initialize(new FileSplit(new File("saturn_data_eval.csv"))); 
+DataSetIterator trainIter = new RecordReaderDataSetIterator
+                            (rrTest,batchSize,0,2); 
+</span></pre><p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.26.1">Organization of all the layers of the network model as well as setting up the hyperparameters can be done with the following piece of code:</span></p><pre class="programlisting"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.27.1">MultiLayerConfiguration conf = new NeuralNetConfiguration.Builder() 
+.seed(seed)
+.iterations(1)                          
+.optimizationAlgo(OptimizationAlgorithm.STOCHASTIC_GRADIENT_DESCENT) 
+.learningRate(learningRate) 
+.updater(Updater.NESTEROVS).momentum(0.9)
+.list() 
+.layer(0, new DenseLayer.Builder().nIn(numInputs).nOut(numHiddenNodes) 
+   .weightInit(WeightInit.XAVIER) 
+   .activation("relu")
+   .build()) 
+ .layer(1, new OutputLayer.Builder(LossFunction.NEGATIVELOGLIKELIHOOD) 
+   .weightInit(WeightInit.XAVIER)                         
+   .activation("softmax")
+   .nIn(numHiddenNodes).nOut(numOutputs).build())
+ .pretrain(false)
+ .backprop(true)
+ .build(); 
+</span></pre><p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.28.1">Now, we have loaded the training and test dataset, the initialization of the model can be done by calling the </span><code class="literal"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.29.1">init()</span></code><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.30.1"> method. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.30.2">This will also start the training of the model from the given inputs:</span></p><pre class="programlisting"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.31.1">MultiLayerNetwork model = new MultiLayerNetwork(conf); 
+</span><span class="strong"><strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.32.1">model.init(); 
+</span></strong></span>
+</pre><p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.33.1">To check the output after a certain internal, let's print the scores every </span><code class="literal"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.34.1">5</span></code><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.35.1"> parameter updates:</span></p><pre class="programlisting"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.36.1">model.setListeners(new ScoreIterationListener(5));      
+for ( int n = 0; n &lt; nEpochs; n++) 
+{ 
+</span></pre><p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.37.1">Finally, the network is trained by calling the </span><code class="literal"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.38.1">.fit()</span></code><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.39.1"> method:</span></p><pre class="programlisting">
+<span class="strong"><strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.40.1">  model.fit( trainIter );</span></strong></span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.41.1"> 
+}  
+System.out.println("Evaluating the model....");  
+Evaluation eval = new Evaluation(numOutputs); 
+while(testIter.hasNext())
+  { 
+    DataSet t = testIter.next(); 
+    INDArray features = t.getFeatureMatrix(); 
+    INDArray lables = t.getLabels(); 
+    INDArray predicted = model.output(features,false); 
+    eval.eval(lables, predicted); 
+  } 
+System.out.println(eval.stats()); 
+</span></pre><p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.42.1">So the training of the model is done. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.42.2">In the next part, the data points will be plotted and the corresponding accuracy of the data will be calculated as shown in the following code:</span></p><pre class="programlisting"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.43.1">double xMin = -15;
+double xMax = 15; 
+double yMin = -15; 
+double yMax = 15; 
+ 
+   
+int nPointsPerAxis = 100; 
+double[][] evalPoints = new double[nPointsPerAxis*nPointsPerAxis][2]; 
+int count = 0; 
+for( int i=0; i&lt;nPointsPerAxis; i++ )
+{ 
+ for( int j=0; j&lt;nPointsPerAxis; j++ )
+ { 
+   double x = i * (xMax-xMin)/(nPointsPerAxis-1) + xMin; 
+   double y = j * (yMax-yMin)/(nPointsPerAxis-1) + yMin; 
+ 
+   evalPoints[count][0] = x; 
+   evalPoints[count][1] = y; 
+ 
+   count++; 
+ } 
+} 
+ 
+INDArray allXYPoints = Nd4j.create(evalPoints); 
+ 
+INDArray predictionsAtXYPoints = model.output(allXYPoints); 
+</span></pre><p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.44.1">The following code will store all the training data in an array before plotting those in the graph:</span></p><pre class="programlisting"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.45.1">         
+rr.initialize(new FileSplit(new File("saturn_data_train.csv"))); 
+rr.reset(); 
+int nTrainPoints = 500; 
+trainIter = new RecordReaderDataSetIterator(rr,nTrainPoints,0,2); 
+DataSet ds = trainIter.next(); 
+PlotUtil.plotTrainingData(ds.getFeatures(), ds.getLabels(),allXYPoints, predictionsAtXYPoints, nPointsPerAxis); 
+</span></pre><p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.46.1">Running the test data through the network and generating the prediction can be done with the following code:</span></p><pre class="programlisting"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.47.1">rrTest.initialize(new FileSplit(new File("saturn_data_eval.csv"))); 
+rrTest.reset(); 
+int nTestPoints = 100; 
+testIter = new RecordReaderDataSetIterator(rrTest,nTestPoints,0,2); 
+ds = testIter.next(); 
+INDArray testPredicted = model.output(ds.getFeatures()); 
+PlotUtil.plotTestData(ds.getFeatures(), ds.getLabels(), testPredicted, allXYPoints, predictionsAtXYPoints, nPointsPerAxis); 
+</span></pre><p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.48.1">When the preceding code is executed, it will run for approximately 5-10 seconds, depending upon your system configuration. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.48.2">During that time, you can check the console, which will display the updated score of training for your model.</span></p><p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.49.1">A piece of evaluation is displayed as follows:</span></p><pre class="programlisting"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.50.1">o.d.o.l.ScoreIterationListener - Score at iteration 0 is    
+                                 0.6313823699951172 
+o.d.o.l.ScoreIterationListener - Score at iteration 5 is 
+                                 0.6154170989990234 
+o.d.o.l.ScoreIterationListener - Score at iteration 10 is     
+                                 0.4763660430908203 
+o.d.o.l.ScoreIterationListener - Score at iteration 15 is 
+                                 0.52469970703125 
+o.d.o.l.ScoreIterationListener - Score at iteration 20 is    
+                                 0.4296367645263672 
+o.d.o.l.ScoreIterationListener - Score at iteration 25 is 
+                                 0.4755714416503906 
+o.d.o.l.ScoreIterationListener - Score at iteration 30 is 
+                                 0.3985047912597656 
+o.d.o.l.ScoreIterationListener - Score at iteration 35 is 
+                                 0.4304619598388672 
+o.d.o.l.ScoreIterationListener - Score at iteration 40 is   
+                                 0.3672477722167969 
+o.d.o.l.ScoreIterationListener - Score at iteration 45 is 
+                                 0.39150180816650393 
+o.d.o.l.ScoreIterationListener - Score at iteration 50 is 
+                                 0.3353725051879883 
+o.d.o.l.ScoreIterationListener - Score at iteration 55 is 
+                                 0.3596681213378906 
+</span></pre><p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.51.1">Finally, the program will output the different statistics of the training for the model using Deeplearning4j as follows:</span></p><pre class="programlisting"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.52.1">Evaluating the model.... 
+</span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.52.2">Examples labeled as 0 classified by model as 0: 48 times 
+Examples labeled as 1 classified by model as 1: 52 times 
+</span></pre><p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.53.1">In the background, we can visualize the plotting of the data, which will give an impression of what the planet Saturn looks like. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.53.2">In the next part, we will show how to integrate Hadoop YARN and Spark with Deeplearning4j. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.53.3">The following </span><span class="emphasis"><em><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.54.1">Figure 2.8</span></em></span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.55.1"> shows the output of the program in graphical representation:</span></p><p>
+</p><div class="mediaobject"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.56.1"><img src="graphics/image_02_008.jpg" alt="Getting familiar with Deeplearning4j"/></span></div><p>
+</p><p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.57.1">Figure 2.8: The scattered data points are plotted when the preceding program is executed. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.57.2">The data points give an impression of the planet Saturn</span></p></div><div class="section" title="Integration of Hadoop YARN and Spark for distributed deep learning"><div class="titlepage"><div><div><h2 class="title"><a id="ch02lvl2sec22"/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.58.1">Integration of Hadoop YARN and Spark for distributed deep learning</span></h2></div></div></div><p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.59.1">To use Deeplearning4j on Hadoop, we need to include the </span><code class="literal"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.60.1">deeplearning-hadoop</span></code><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.61.1"> dependency as shown in the following code:</span></p><pre class="programlisting"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.62.1">&lt;!-- https://mvnrepository.com/artifact/org.Deeplearning4j/Deeplearning4j-hadoop --&gt; 
+&lt;dependency&gt; 
+    &lt;groupId&gt;org.Deeplearning4j&lt;/groupId&gt; 
+    &lt;artifactId&gt;Deeplearning4j-hadoop&lt;/artifactId&gt; 
+    &lt;version&gt;0.0.3.2.7&lt;/version&gt; 
+&lt;/dependency&gt; 
+</span></pre><p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.63.1">Similarly, for Spark, we have to include the </span><code class="literal"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.64.1">deeplearning-spark</span></code><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.65.1"> dependency as shown in the following code:</span></p><pre class="programlisting"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.66.1">&lt;!-- https://mvnrepository.com/artifact/org.Deeplearning4j/dl4j-spark-nlp_2.11 --&gt; 
+&lt;dependency&gt; 
+    &lt;groupId&gt;org.Deeplearning4j&lt;/groupId&gt; 
+    &lt;artifactId&gt;dl4j-spark-nlp_2.11&lt;/artifactId&gt; 
+    &lt;version&gt;0.5.0&lt;/version&gt; 
+&lt;/dependency&gt; 
+</span></pre><p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.67.1">Explaining the detailed functionalities of Apache Spark is beyond the scope of this book. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.67.2">Interested readers can catch up on the same at </span><a class="ulink" href="http://spark.apache.org/"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.68.1">
+http://spark.apache.org/
+</span></a><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.69.1">.</span></p></div><div class="section" title="Rules to configure memory allocation for Spark on Hadoop YARN"><div class="titlepage"><div><div><h2 class="title"><a id="ch02lvl2sec23"/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.70.1">Rules to configure memory allocation for Spark on Hadoop YARN</span></h2></div></div></div><p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.71.1">As already stated in the previous section, Apache Hadoop YARN is a cluster resource manager. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.71.2">When Deeplearning4j submits a training job to a YARN cluster via Spark, it is the responsibility of YARN to manage the allocation of resources such as CPU cores, amount of memory consumed by each executor, and so on. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.71.3">However, to extract the best performance from Deeplearning4j on YARN, some careful memory configuration is desired. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.71.4">This is done as follows:</span></p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem" style="list-style-type: disc"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.72.1">The executer JVM memory amount needs to be specified using </span><code class="literal"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.73.1">spark.executor.memory</span></code><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.74.1">.</span></li><li class="listitem" style="list-style-type: disc"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.75.1">The YARN container memory overhead needs to be specified using </span><code class="literal"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.76.1">spark.yarn.executor.memoryOverhead</span></code><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.77.1">.</span></li><li class="listitem" style="list-style-type: disc"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.78.1">The sum of </span><code class="literal"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.79.1">spark.executor.memory</span></code><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.80.1"> and </span><code class="literal"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.81.1">spark.yarn.executor.memoryOverhead</span></code><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.82.1"> must always be less than the amount of memory allocated to a container by the YARN.</span></li><li class="listitem" style="list-style-type: disc"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.83.1">ND4j and JavaCPP should know the allotment of the off-heap memory; this can be done using the </span><code class="literal"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.84.1">org.bytedeco.javacpp.maxbytes</span></code><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.85.1"> system property.</span></li><li class="listitem" style="list-style-type: disc"><code class="literal"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.86.1">org.bytedeco.javacpp.maxbytes</span></code><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.87.1"> must be less than </span><code class="literal"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.88.1">spark.yarn.executor.memoryOverhead</span></code><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.89.1">.</span></li></ul></div><p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.90.1">The current version of Deeplearning4j uses parameter averaging to perform distributed training of the neural network. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.90.2">The following operation is performed exactly the way it is described in the parameter averaging part of the earlier section:</span></p><pre class="programlisting"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.91.1">SparkDl4jMultiLayer sparkNet = new SparkDl4jMultiLayer(sc,conf, 
+                               new ParameterAveragingTrainingMaster
+                              .Builder(numExecutors(),dataSetObjSize 
+                              .batchSizePerWorker(batchSizePerExecutor) 
+                              .averagingFrequency(1) 
+                              .repartionData(Repartition.Always) 
+                              .build()); 
+sparkNet.setCollectTrainingStats(true); 
+</span></pre><p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.92.1">To list all the files from HDFS so as to run the code on different nodes, run the following code:</span></p><pre class="programlisting"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.93.1">Configuration config = new Configuration(); 
+FileSystem hdfs = FileSystem.get(tempDir.toUri(), config); 
+RemoteIterator&lt;LocatedFileStatus&gt; fileIter = hdfs.listFiles
+  (new org.apache.hadoop.fs.Path(tempDir.toString()),false); 
+ 
+List&lt;String&gt; paths = new ArrayList&lt;&gt;(); 
+while(fileIter.hasNext())
+  { 
+   String path = fileIter.next().getPath().toString(); 
+   paths.add(path); 
+  } 
+</span></pre><p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.94.1">A complete code for how to set up Spark with YARN and HDFS will be provided along with the code bundle. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.94.2">For simplicity, only part of the code is shown here for the purpose of understanding.</span></p><p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.95.1">Now, we will show an example to demonstrate how to use Spark and load the data into memory with Deeplearning4j. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.95.2">We will use a basic DataVec example to show some pre-processing operation on some CSV data.</span></p><p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.96.1">The sample dataset will look as like the following:</span></p><pre class="programlisting"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.97.1">2016-01-01 17:00:00.000,830a7u3,u323fy8902,1,USA,100.00,Legit 
+2016-01-01 18:03:01.256,830a7u3,9732498oeu,3,FR,73.20,Legit 
+2016-01-03 02:53:32.231,78ueoau32,w234e989,1,USA,1621.00,Fraud 
+2016-01-03 09:30:16.832,t842uocd,9732498oeu,4,USA,43.19,Legit 
+2016-01-04 23:01:52.920,t842uocd,cza8873bm,10,MX,159.65,Legit 
+2016-01-05 02:28:10.648,t842uocd,fgcq9803,6,CAN,26.33,Fraud 
+2016-01-05 10:15:36.483,rgc707ke3,tn342v7,2,USA,-0.90,Legit 
+</span></pre><p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.98.1">The problem statement of the program is as follows:</span></p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem" style="list-style-type: disc"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.99.1">Remove some unnecessary columns</span></li><li class="listitem" style="list-style-type: disc"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.100.1">Filter out data, and keep only examples with values </span><code class="literal"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.101.1">USA</span></code><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.102.1"> and </span><code class="literal"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.103.1">MX</span></code><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.104.1"> for the </span><code class="literal"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.105.1">MerchantCountryCode</span></code><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.106.1"> column</span></li><li class="listitem" style="list-style-type: disc"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.107.1">Replace the invalid entries in the </span><code class="literal"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.108.1">TransactionAmountUSD</span></code><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.109.1"> column</span></li><li class="listitem" style="list-style-type: disc"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.110.1">Parse the data string, and collect the hour of day from it to create a new </span><code class="literal"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.111.1">HourOfDay</span></code><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.112.1"> column</span></li></ul></div><pre class="programlisting"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.113.1">Schema inputDataSchema = new Schema.Builder() 
+     .addColumnString("DateTimeString") 
+     .addColumnsString("CustomerID", "MerchantID")  
+     .addColumnInteger("NumItemsInTransaction") 
+     .addColumnCategorical("MerchantCountryCode",  
+      Arrays.asList("USA","CAN","FR","MX")) 
+     .addColumnDouble("TransactionAmountUSD",0.0,null,false,false)  
+     .addColumnCategorical("FraudLabel",Arrays.asList("Fraud","Legit"))
+     .build(); 
+  
+System.out.println("\n\nOther information obtainable from schema:"); 
+System.out.println("Number of columns: " + 
+                   inputDataSchema.numColumns()); 
+System.out.println("Column names: " +              
+                   inputDataSchema.getColumnNames()); 
+System.out.println("Column types: " +  
+                   inputDataSchema.getColumnTypes()); 
+</span></pre><p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.114.1">The following part will define the operations that we want to perform on the dataset:</span></p><pre class="programlisting"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.115.1">TransformProcess tp = new TransformProcess.Builder(inputDataSchema) 
+.removeColumns("CustomerID","MerchantID") 
+.filter(new ConditionFilter(
+ new CategoricalColumnCondition("MerchantCountryCode", 
+ ConditionOp.NotInSet, new HashSet&lt;&gt;(Arrays.asList("USA","MX"))))) 
+</span></pre><p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.116.1">In unstructured data, the datasets are generally noisy, and so we need to take care of some of the invalid data. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.116.2">In case of negative dollar value, the program will replace those to </span><code class="literal"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.117.1">0.0</span></code><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.118.1">. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.118.2">We will keep the positive dollar amounts intact.</span></p><pre class="programlisting"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.119.1">.conditionalReplaceValueTransform( 
+  "TransactionAmountUSD",       
+  new DoubleWritable(0.0),      
+  new DoubleColumnCondition("TransactionAmountUSD",ConditionOp.LessThan
+  , 0.0))   
+</span></pre><p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.120.1">Now, to format the </span><code class="literal"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.121.1">DateTime</span></code><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.122.1"> format as per the problem statement, the following piece of code is used:</span></p><pre class="programlisting"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.123.1">.stringToTimeTransform("DateTimeString","YYYY-MM-DD HH:mm:ss.SSS",            
+ DateTimeZone.UTC) 
+.renameColumn("DateTimeString", "DateTime") 
+.transform(new DeriveColumnsFromTimeTransform.Builder("DateTime") 
+   .addIntegerDerivedColumn("HourOfDay", DateTimeFieldType.hourOfDay()) 
+   .build())
+.removeColumns("DateTime")
+.build(); 
+</span></pre><p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.124.1">A different schema is created after execution of the all these operations as follows:</span></p><pre class="programlisting"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.125.1">Schema outputSchema = tp.getFinalSchema(); 
+ 
+System.out.println("\nSchema after transforming data:"); 
+System.out.println(outputSchema); 
+</span></pre><p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.126.1">The following piece of code will set Spark to perform all the operations:</span></p><pre class="programlisting"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.127.1">SparkConf conf = new SparkConf(); 
+conf.setMaster("local[*]"); 
+conf.setAppName("DataVec Example"); 
+ 
+JavaSparkContext sc = new JavaSparkContext(conf); 
+ 
+String directory = new  ClassPathResource("exampledata.csv").getFile()
+.getParent(); 
+</span></pre><p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.128.1">To take the data directly from HDFS, one has to pass </span><code class="literal"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.129.1">hdfs://{the filepath name}</span></code><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.130.1">:</span></p><pre class="programlisting"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.131.1">JavaRDD&lt;String&gt; stringData = sc.textFile(directory); 
+</span></pre><p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.132.1">The input data are parsed using </span><code class="literal"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.133.1">CSVRecordReader()</span></code><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.134.1"> method as follows:</span></p><pre class="programlisting"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.135.1">RecordReader rr = new CSVRecordReader(); 
+JavaRDD&lt;List&lt;Writable&gt;&gt; parsedInputData = stringData.map(new  StringToWritablesFunction(rr)); 
+</span></pre><p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.136.1">The pre-defined transformation of Spark is performed as follows:</span></p><pre class="programlisting"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.137.1">SparkTransformExecutor exec = new SparkTransformExecutor(); 
+JavaRDD&lt;List&lt;Writable&gt;&gt; processedData = exec.execute(parsedInputData, 
+tp); 
+  
+JavaRDD&lt;String&gt; processedAsString = processedData.map(new 
+WritablesToStringFunction(","));  
+</span></pre><p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.138.1">As mentioned, to save the data back to HDFS, just putting the file path after </span><code class="literal"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.139.1">hdfs://</span></code><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.140.1"> will do:</span></p><pre class="programlisting">
+<span class="strong"><strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.141.1">processedAsString.saveAsTextFile("hdfs://your/hdfs/save/path/here")</span></strong></span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.142.1"> 
+ 
+List&lt;String&gt; processedCollected = processedAsString.collect(); 
+List&lt;String&gt; inputDataCollected = stringData.collect(); 
+ 
+ 
+System.out.println("\n ---- Original Data ----"); 
+for(String s : inputDataCollected) System.out.println(s); 
+ 
+System.out.println("\n ---- Processed Data ----"); 
+for(String s : processedCollected) System.out.println(s); 
+</span></pre><p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.143.1">When the program is executed with Spark using Deeplearning4j, we will get the following output:</span></p><pre class="programlisting"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.144.1">14:20:12 INFO MemoryStore: Block broadcast_0 stored as values in memory (estimated size 104.0 KB, free 1390.9 MB) 
+16/08/27 14:20:12 INFO MemoryStore: ensureFreeSpace(10065) called with curMem=106480, maxMem=1458611159 
+16/08/27 14:20:12 INFO MemoryStore: Block broadcast_0_piece0 stored as bytes in memory (estimated size 9.8 KB, free 1390.9 MB) 
+16/08/27 14:20:12 INFO BlockManagerInfo: Added broadcast_0_piece0 in memory on localhost:46336 (size: 9.8 KB, free: 1391.0 MB) 
+16/08/27 14:20:12 INFO SparkContext: Created broadcast 0 from textFile at BasicDataVecExample.java:144 
+16/08/27 14:20:13 INFO SparkTransformExecutor: Starting execution of stage 1 of 7 
+16/08/27 14:20:13 INFO SparkTransformExecutor: Starting execution of stage 2 of 7 
+16/08/27 14:20:13 INFO SparkTransformExecutor: Starting execution of stage 3 of 7 
+16/08/27 14:20:13 INFO SparkTransformExecutor: Starting execution of stage 4 of 7 
+16/08/27 14:20:13 INFO SparkTransformExecutor: Starting execution of stage 5 of 7 
+</span></pre><p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.145.1">The following is the output:</span></p><pre class="programlisting"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.146.1">---- Processed Data ---- 
+17,1,USA,100.00,Legit 
+2,1,USA,1621.00,Fraud 
+9,4,USA,43.19,Legit 
+23,10,MX,159.65,Legit 
+10,2,USA,0.0,Legit 
+</span></pre><p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.147.1">Similar to this example, lots of other datasets can be processed in a customized way in Spark. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.147.2">From the next chapter, we will show the Deeplearning4j codes for specific deep neural networks. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.147.3">The implementation of Apache Spark and Hadoop YARN is a generic procedure, and will not change according to neural network. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.147.4">Readers can use that code to deploy the deep network code in cluster or locally, based on their requirements.</span></p></div></div></div></div></body></html>

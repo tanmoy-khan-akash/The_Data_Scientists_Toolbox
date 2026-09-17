@@ -1,0 +1,962 @@
+<?xml version="1.0" encoding="UTF-8"?><ncx:ncx xmlns:ncx="http://www.daisy.org/z3986/2005/ncx/" version="2005-1">
+  <ncx:head>
+    <ncx:meta name="cover" content="cover"/>
+    <ncx:meta name="dtb:depth" content="-1"/>
+    <ncx:meta name="dtb:totalPageCount" content="0"/>
+    <ncx:meta name="dtb:maxPageNumber" content="0"/>
+    <ncx:meta name="dtb:uid" content="9781787124769"/>
+  </ncx:head>
+  <ncx:docTitle>
+    <ncx:text>Deep Learning with Hadoop</ncx:text>
+  </ncx:docTitle>
+  <ncx:navMap>
+    <ncx:navPoint id="id286448482" playOrder="1">
+      <ncx:navLabel>
+        <ncx:text>Deep Learning with Hadoop</ncx:text>
+      </ncx:navLabel>
+      <ncx:content src="index.html"/>
+      <ncx:navPoint id="id286448498" playOrder="2">
+        <ncx:navLabel>
+          <ncx:text>Deep Learning with Hadoop</ncx:text>
+        </ncx:navLabel>
+        <ncx:content src="pr01.html"/>
+      </ncx:navPoint>
+      <ncx:navPoint id="id286691994" playOrder="3">
+        <ncx:navLabel>
+          <ncx:text>Credits</ncx:text>
+        </ncx:navLabel>
+        <ncx:content src="pr02.html"/>
+      </ncx:navPoint>
+      <ncx:navPoint id="id286697373" playOrder="4">
+        <ncx:navLabel>
+          <ncx:text>About the Author</ncx:text>
+        </ncx:navLabel>
+        <ncx:content src="pr03.html"/>
+      </ncx:navPoint>
+      <ncx:navPoint id="id286697401" playOrder="5">
+        <ncx:navLabel>
+          <ncx:text>About the Reviewers</ncx:text>
+        </ncx:navLabel>
+        <ncx:content src="pr04.html"/>
+      </ncx:navPoint>
+      <ncx:navPoint id="id286697460" playOrder="6">
+        <ncx:navLabel>
+          <ncx:text>www.PacktPub.com</ncx:text>
+        </ncx:navLabel>
+        <ncx:content src="pr05.html"/>
+        <ncx:navPoint id="id286697528" playOrder="7">
+          <ncx:navLabel>
+            <ncx:text>Why subscribe?</ncx:text>
+          </ncx:navLabel>
+          <ncx:content src="pr05.html#pf06lvl2sec0"/>
+        </ncx:navPoint>
+      </ncx:navPoint>
+      <ncx:navPoint id="id286697555" playOrder="8">
+        <ncx:navLabel>
+          <ncx:text>Customer Feedback</ncx:text>
+        </ncx:navLabel>
+        <ncx:content src="pr06.html"/>
+      </ncx:navPoint>
+      <ncx:navPoint id="id286697579" playOrder="9">
+        <ncx:navLabel>
+          <ncx:text>Dedication</ncx:text>
+        </ncx:navLabel>
+        <ncx:content src="pr07.html"/>
+      </ncx:navPoint>
+      <ncx:navPoint id="id286697606" playOrder="10">
+        <ncx:navLabel>
+          <ncx:text>Preface</ncx:text>
+        </ncx:navLabel>
+        <ncx:content src="pr08.html"/>
+        <ncx:navPoint id="id286697623" playOrder="11">
+          <ncx:navLabel>
+            <ncx:text>What this book covers</ncx:text>
+          </ncx:navLabel>
+          <ncx:content src="pr08.html#pf11lvl1sec1"/>
+        </ncx:navPoint>
+        <ncx:navPoint id="id286697762" playOrder="12">
+          <ncx:navLabel>
+            <ncx:text>What you need for this book</ncx:text>
+          </ncx:navLabel>
+          <ncx:content src="pr08s02.html"/>
+        </ncx:navPoint>
+        <ncx:navPoint id="id286697782" playOrder="13">
+          <ncx:navLabel>
+            <ncx:text>Who this book is for</ncx:text>
+          </ncx:navLabel>
+          <ncx:content src="pr08s03.html"/>
+        </ncx:navPoint>
+        <ncx:navPoint id="id286697793" playOrder="14">
+          <ncx:navLabel>
+            <ncx:text>Conventions</ncx:text>
+          </ncx:navLabel>
+          <ncx:content src="pr08s04.html"/>
+        </ncx:navPoint>
+        <ncx:navPoint id="id286697875" playOrder="15">
+          <ncx:navLabel>
+            <ncx:text>Reader feedback</ncx:text>
+          </ncx:navLabel>
+          <ncx:content src="pr08s05.html"/>
+        </ncx:navPoint>
+        <ncx:navPoint id="id286697896" playOrder="16">
+          <ncx:navLabel>
+            <ncx:text>Customer support</ncx:text>
+          </ncx:navLabel>
+          <ncx:content src="pr08s06.html"/>
+          <ncx:navPoint id="id286697907" playOrder="17">
+            <ncx:navLabel>
+              <ncx:text>Downloading the example code</ncx:text>
+            </ncx:navLabel>
+            <ncx:content src="pr08s06.html#pf11lvl2sec1"/>
+          </ncx:navPoint>
+          <ncx:navPoint id="id286698094" playOrder="18">
+            <ncx:navLabel>
+              <ncx:text>Downloading the color images of this book</ncx:text>
+            </ncx:navLabel>
+            <ncx:content src="pr08s06.html#pf11lvl2sec2"/>
+          </ncx:navPoint>
+          <ncx:navPoint id="id286698112" playOrder="19">
+            <ncx:navLabel>
+              <ncx:text>Errata</ncx:text>
+            </ncx:navLabel>
+            <ncx:content src="pr08s06.html#pf11lvl2sec3"/>
+          </ncx:navPoint>
+          <ncx:navPoint id="id286698147" playOrder="20">
+            <ncx:navLabel>
+              <ncx:text>Piracy</ncx:text>
+            </ncx:navLabel>
+            <ncx:content src="pr08s06.html#pf11lvl2sec4"/>
+          </ncx:navPoint>
+          <ncx:navPoint id="id286722266" playOrder="21">
+            <ncx:navLabel>
+              <ncx:text>Questions</ncx:text>
+            </ncx:navLabel>
+            <ncx:content src="pr08s06.html#pf11lvl2sec5"/>
+          </ncx:navPoint>
+        </ncx:navPoint>
+      </ncx:navPoint>
+      <ncx:navPoint id="id286722282" playOrder="22">
+        <ncx:navLabel>
+          <ncx:text>1. Introduction to Deep Learning</ncx:text>
+        </ncx:navLabel>
+        <ncx:content src="ch01.html"/>
+        <ncx:navPoint id="id286722646" playOrder="23">
+          <ncx:navLabel>
+            <ncx:text>Getting started with deep learning</ncx:text>
+          </ncx:navLabel>
+          <ncx:content src="ch01.html#ch01lvl1sec7"/>
+          <ncx:navPoint id="id286722670" playOrder="24">
+            <ncx:navLabel>
+              <ncx:text>Deep feed-forward networks</ncx:text>
+            </ncx:navLabel>
+            <ncx:content src="ch01.html#ch01lvl2sec6"/>
+          </ncx:navPoint>
+          <ncx:navPoint id="id286457399" playOrder="25">
+            <ncx:navLabel>
+              <ncx:text>Various learning algorithms</ncx:text>
+            </ncx:navLabel>
+            <ncx:content src="ch01.html#ch01lvl2sec7"/>
+            <ncx:navPoint id="id286722925" playOrder="26">
+              <ncx:navLabel>
+                <ncx:text>Unsupervised learning</ncx:text>
+              </ncx:navLabel>
+              <ncx:content src="ch01.html#ch01lvl3sec0"/>
+            </ncx:navPoint>
+            <ncx:navPoint id="id286723271" playOrder="27">
+              <ncx:navLabel>
+                <ncx:text>Supervised learning</ncx:text>
+              </ncx:navLabel>
+              <ncx:content src="ch01.html#ch01lvl3sec1"/>
+            </ncx:navPoint>
+            <ncx:navPoint id="id286723381" playOrder="28">
+              <ncx:navLabel>
+                <ncx:text>Semi-supervised learning</ncx:text>
+              </ncx:navLabel>
+              <ncx:content src="ch01.html#ch01lvl3sec2"/>
+            </ncx:navPoint>
+          </ncx:navPoint>
+        </ncx:navPoint>
+        <ncx:navPoint id="id286723474" playOrder="29">
+          <ncx:navLabel>
+            <ncx:text>Deep learning terminologies</ncx:text>
+          </ncx:navLabel>
+          <ncx:content src="ch01s02.html"/>
+        </ncx:navPoint>
+        <ncx:navPoint id="id286723838" playOrder="30">
+          <ncx:navLabel>
+            <ncx:text>Deep learning: A revolution in Artificial Intelligence</ncx:text>
+          </ncx:navLabel>
+          <ncx:content src="ch01s03.html"/>
+          <ncx:navPoint id="id286723940" playOrder="31">
+            <ncx:navLabel>
+              <ncx:text>Motivations for deep learning</ncx:text>
+            </ncx:navLabel>
+            <ncx:content src="ch01s03.html#ch01lvl2sec8"/>
+            <ncx:navPoint id="id286723954" playOrder="32">
+              <ncx:navLabel>
+                <ncx:text>The curse of dimensionality</ncx:text>
+              </ncx:navLabel>
+              <ncx:content src="ch01s03.html#ch01lvl3sec3"/>
+            </ncx:navPoint>
+            <ncx:navPoint id="id286724098" playOrder="33">
+              <ncx:navLabel>
+                <ncx:text>The vanishing gradient problem</ncx:text>
+              </ncx:navLabel>
+              <ncx:content src="ch01s03.html#ch01lvl3sec4"/>
+            </ncx:navPoint>
+            <ncx:navPoint id="id286724265" playOrder="34">
+              <ncx:navLabel>
+                <ncx:text>Distributed representation</ncx:text>
+              </ncx:navLabel>
+              <ncx:content src="ch01s03.html#ch01lvl3sec5"/>
+            </ncx:navPoint>
+          </ncx:navPoint>
+        </ncx:navPoint>
+        <ncx:navPoint id="id286724366" playOrder="35">
+          <ncx:navLabel>
+            <ncx:text>Classification of deep learning networks</ncx:text>
+          </ncx:navLabel>
+          <ncx:content src="ch01s04.html"/>
+          <ncx:navPoint id="id286750804" playOrder="36">
+            <ncx:navLabel>
+              <ncx:text>Deep generative or unsupervised models</ncx:text>
+            </ncx:navLabel>
+            <ncx:content src="ch01s04.html#ch01lvl2sec9"/>
+          </ncx:navPoint>
+          <ncx:navPoint id="id286750989" playOrder="37">
+            <ncx:navLabel>
+              <ncx:text>Deep discriminate models</ncx:text>
+            </ncx:navLabel>
+            <ncx:content src="ch01s04.html#ch01lvl2sec10"/>
+          </ncx:navPoint>
+        </ncx:navPoint>
+        <ncx:navPoint id="id286751110" playOrder="38">
+          <ncx:navLabel>
+            <ncx:text>Summary</ncx:text>
+          </ncx:navLabel>
+          <ncx:content src="ch01s05.html"/>
+        </ncx:navPoint>
+      </ncx:navPoint>
+      <ncx:navPoint id="id286751125" playOrder="39">
+        <ncx:navLabel>
+          <ncx:text>2. Distributed Deep Learning for Large-Scale Data</ncx:text>
+        </ncx:navLabel>
+        <ncx:content src="ch02.html"/>
+        <ncx:navPoint id="id286751190" playOrder="40">
+          <ncx:navLabel>
+            <ncx:text>Deep learning for massive amounts of data</ncx:text>
+          </ncx:navLabel>
+          <ncx:content src="ch02.html#ch02lvl1sec12"/>
+        </ncx:navPoint>
+        <ncx:navPoint id="id286751635" playOrder="41">
+          <ncx:navLabel>
+            <ncx:text>Challenges of deep learning for big data</ncx:text>
+          </ncx:navLabel>
+          <ncx:content src="ch02s02.html"/>
+          <ncx:navPoint id="id286751649" playOrder="42">
+            <ncx:navLabel>
+              <ncx:text>Challenges of deep learning due to massive volumes of data (first V)</ncx:text>
+            </ncx:navLabel>
+            <ncx:content src="ch02s02.html#ch02lvl2sec11"/>
+          </ncx:navPoint>
+          <ncx:navPoint id="id286751666" playOrder="43">
+            <ncx:navLabel>
+              <ncx:text>Challenges of deep learning from a high variety of data (second V)</ncx:text>
+            </ncx:navLabel>
+            <ncx:content src="ch02s02.html#ch02lvl2sec12"/>
+          </ncx:navPoint>
+          <ncx:navPoint id="id286751688" playOrder="44">
+            <ncx:navLabel>
+              <ncx:text>Challenges of deep learning from a high velocity of data (third V)</ncx:text>
+            </ncx:navLabel>
+            <ncx:content src="ch02s02.html#ch02lvl2sec13"/>
+          </ncx:navPoint>
+          <ncx:navPoint id="id286751702" playOrder="45">
+            <ncx:navLabel>
+              <ncx:text>Challenges of deep learning to maintain the veracity of data (fourth V)</ncx:text>
+            </ncx:navLabel>
+            <ncx:content src="ch02s02.html#ch02lvl2sec14"/>
+          </ncx:navPoint>
+        </ncx:navPoint>
+        <ncx:navPoint id="id286751715" playOrder="46">
+          <ncx:navLabel>
+            <ncx:text>Distributed deep learning and Hadoop</ncx:text>
+          </ncx:navLabel>
+          <ncx:content src="ch02s03.html"/>
+          <ncx:navPoint id="id286752236" playOrder="47">
+            <ncx:navLabel>
+              <ncx:text>Map-Reduce</ncx:text>
+            </ncx:navLabel>
+            <ncx:content src="ch02s03.html#ch02lvl2sec15"/>
+          </ncx:navPoint>
+          <ncx:navPoint id="id286752254" playOrder="48">
+            <ncx:navLabel>
+              <ncx:text>Iterative Map-Reduce</ncx:text>
+            </ncx:navLabel>
+            <ncx:content src="ch02s03.html#ch02lvl2sec16"/>
+          </ncx:navPoint>
+          <ncx:navPoint id="id286752334" playOrder="49">
+            <ncx:navLabel>
+              <ncx:text>Yet Another Resource Negotiator (YARN)</ncx:text>
+            </ncx:navLabel>
+            <ncx:content src="ch02s03.html#ch02lvl2sec17"/>
+          </ncx:navPoint>
+          <ncx:navPoint id="id286752369" playOrder="50">
+            <ncx:navLabel>
+              <ncx:text>Important characteristics for distributed deep learning design</ncx:text>
+            </ncx:navLabel>
+            <ncx:content src="ch02s03.html#ch02lvl2sec18"/>
+          </ncx:navPoint>
+        </ncx:navPoint>
+        <ncx:navPoint id="id286752513" playOrder="51">
+          <ncx:navLabel>
+            <ncx:text>Deeplearning4j - an open source distributed framework for deep learning</ncx:text>
+          </ncx:navLabel>
+          <ncx:content src="ch02s04.html"/>
+          <ncx:navPoint id="id286752562" playOrder="52">
+            <ncx:navLabel>
+              <ncx:text>Major features of Deeplearning4j</ncx:text>
+            </ncx:navLabel>
+            <ncx:content src="ch02s04.html#ch02lvl2sec19"/>
+          </ncx:navPoint>
+          <ncx:navPoint id="id286752681" playOrder="53">
+            <ncx:navLabel>
+              <ncx:text>Summary of functionalities of Deeplearning4j</ncx:text>
+            </ncx:navLabel>
+            <ncx:content src="ch02s04.html#ch02lvl2sec20"/>
+          </ncx:navPoint>
+        </ncx:navPoint>
+        <ncx:navPoint id="id286752724" playOrder="54">
+          <ncx:navLabel>
+            <ncx:text>Setting up Deeplearning4j on Hadoop YARN</ncx:text>
+          </ncx:navLabel>
+          <ncx:content src="ch02s05.html"/>
+          <ncx:navPoint id="id286752742" playOrder="55">
+            <ncx:navLabel>
+              <ncx:text>Getting familiar with Deeplearning4j</ncx:text>
+            </ncx:navLabel>
+            <ncx:content src="ch02s05.html#ch02lvl2sec21"/>
+          </ncx:navPoint>
+          <ncx:navPoint id="id286753082" playOrder="56">
+            <ncx:navLabel>
+              <ncx:text>Integration of Hadoop YARN and Spark for distributed deep learning</ncx:text>
+            </ncx:navLabel>
+            <ncx:content src="ch02s05.html#ch02lvl2sec22"/>
+          </ncx:navPoint>
+          <ncx:navPoint id="id286753123" playOrder="57">
+            <ncx:navLabel>
+              <ncx:text>Rules to configure memory allocation for Spark on Hadoop YARN</ncx:text>
+            </ncx:navLabel>
+            <ncx:content src="ch02s05.html#ch02lvl2sec23"/>
+          </ncx:navPoint>
+        </ncx:navPoint>
+        <ncx:navPoint id="id286753863" playOrder="58">
+          <ncx:navLabel>
+            <ncx:text>Summary</ncx:text>
+          </ncx:navLabel>
+          <ncx:content src="ch02s06.html"/>
+        </ncx:navPoint>
+      </ncx:navPoint>
+      <ncx:navPoint id="id286753878" playOrder="59">
+        <ncx:navLabel>
+          <ncx:text>3. Convolutional Neural Network</ncx:text>
+        </ncx:navLabel>
+        <ncx:content src="ch03.html"/>
+        <ncx:navPoint id="id286753960" playOrder="60">
+          <ncx:navLabel>
+            <ncx:text>Understanding convolution</ncx:text>
+          </ncx:navLabel>
+          <ncx:content src="ch03.html#ch03lvl1sec18"/>
+        </ncx:navPoint>
+        <ncx:navPoint id="id286754307" playOrder="61">
+          <ncx:navLabel>
+            <ncx:text>Background of a CNN</ncx:text>
+          </ncx:navLabel>
+          <ncx:content src="ch03s02.html"/>
+          <ncx:navPoint id="id286754320" playOrder="62">
+            <ncx:navLabel>
+              <ncx:text>Architecture overview</ncx:text>
+            </ncx:navLabel>
+            <ncx:content src="ch03s02.html#ch03lvl2sec24"/>
+          </ncx:navPoint>
+        </ncx:navPoint>
+        <ncx:navPoint id="id286754412" playOrder="63">
+          <ncx:navLabel>
+            <ncx:text>Basic layers of CNN</ncx:text>
+          </ncx:navLabel>
+          <ncx:content src="ch03s03.html"/>
+          <ncx:navPoint id="id286754470" playOrder="64">
+            <ncx:navLabel>
+              <ncx:text>Importance of depth in a CNN</ncx:text>
+            </ncx:navLabel>
+            <ncx:content src="ch03s03.html#ch03lvl2sec25"/>
+          </ncx:navPoint>
+          <ncx:navPoint id="id286754484" playOrder="65">
+            <ncx:navLabel>
+              <ncx:text>Convolutional layer</ncx:text>
+            </ncx:navLabel>
+            <ncx:content src="ch03s03.html#ch03lvl2sec26"/>
+            <ncx:navPoint id="id286754516" playOrder="66">
+              <ncx:navLabel>
+                <ncx:text>Sparse connectivity</ncx:text>
+              </ncx:navLabel>
+              <ncx:content src="ch03s03.html#ch03lvl3sec6"/>
+              <ncx:navPoint id="id286754619" playOrder="67">
+                <ncx:navLabel>
+                  <ncx:text>Improved time complexity</ncx:text>
+                </ncx:navLabel>
+                <ncx:content src="ch03s03.html#ch03lvl4sec0"/>
+              </ncx:navPoint>
+            </ncx:navPoint>
+            <ncx:navPoint id="id286754658" playOrder="68">
+              <ncx:navLabel>
+                <ncx:text>Parameter sharing</ncx:text>
+              </ncx:navLabel>
+              <ncx:content src="ch03s03.html#ch03lvl3sec7"/>
+              <ncx:navPoint id="id286754691" playOrder="69">
+                <ncx:navLabel>
+                  <ncx:text>Improved space complexity</ncx:text>
+                </ncx:navLabel>
+                <ncx:content src="ch03s03.html#ch03lvl4sec1"/>
+              </ncx:navPoint>
+            </ncx:navPoint>
+            <ncx:navPoint id="id286754727" playOrder="70">
+              <ncx:navLabel>
+                <ncx:text>Equivariant representations</ncx:text>
+              </ncx:navLabel>
+              <ncx:content src="ch03s03.html#ch03lvl3sec8"/>
+            </ncx:navPoint>
+          </ncx:navPoint>
+          <ncx:navPoint id="id286754872" playOrder="71">
+            <ncx:navLabel>
+              <ncx:text>Choosing the hyperparameters for Convolutional layers</ncx:text>
+            </ncx:navLabel>
+            <ncx:content src="ch03s03.html#ch03lvl2sec27"/>
+            <ncx:navPoint id="id286754889" playOrder="72">
+              <ncx:navLabel>
+                <ncx:text>Depth</ncx:text>
+              </ncx:navLabel>
+              <ncx:content src="ch03s03.html#ch03lvl3sec9"/>
+            </ncx:navPoint>
+            <ncx:navPoint id="id286754900" playOrder="73">
+              <ncx:navLabel>
+                <ncx:text>Stride</ncx:text>
+              </ncx:navLabel>
+              <ncx:content src="ch03s03.html#ch03lvl3sec10"/>
+            </ncx:navPoint>
+            <ncx:navPoint id="id286755000" playOrder="74">
+              <ncx:navLabel>
+                <ncx:text>Zero-padding</ncx:text>
+              </ncx:navLabel>
+              <ncx:content src="ch03s03.html#ch03lvl3sec11"/>
+            </ncx:navPoint>
+            <ncx:navPoint id="id286755101" playOrder="75">
+              <ncx:navLabel>
+                <ncx:text>Mathematical formulation of hyperparameters</ncx:text>
+              </ncx:navLabel>
+              <ncx:content src="ch03s03.html#ch03lvl3sec12"/>
+              <ncx:navPoint id="id286755301" playOrder="76">
+                <ncx:navLabel>
+                  <ncx:text>Effect of zero-padding</ncx:text>
+                </ncx:navLabel>
+                <ncx:content src="ch03s03.html#ch03lvl4sec2"/>
+              </ncx:navPoint>
+            </ncx:navPoint>
+          </ncx:navPoint>
+          <ncx:navPoint id="id286755397" playOrder="77">
+            <ncx:navLabel>
+              <ncx:text>ReLU (Rectified Linear Units) layers</ncx:text>
+            </ncx:navLabel>
+            <ncx:content src="ch03s03.html#ch03lvl2sec28"/>
+            <ncx:navPoint id="id286755482" playOrder="78">
+              <ncx:navLabel>
+                <ncx:text>Advantages of ReLU over the sigmoid function</ncx:text>
+              </ncx:navLabel>
+              <ncx:content src="ch03s03.html#ch03lvl3sec13"/>
+            </ncx:navPoint>
+          </ncx:navPoint>
+          <ncx:navPoint id="id286755816" playOrder="79">
+            <ncx:navLabel>
+              <ncx:text>Pooling layer</ncx:text>
+            </ncx:navLabel>
+            <ncx:content src="ch03s03.html#ch03lvl2sec29"/>
+            <ncx:navPoint id="id286755872" playOrder="80">
+              <ncx:navLabel>
+                <ncx:text>Where is it useful, and where is it not?</ncx:text>
+              </ncx:navLabel>
+              <ncx:content src="ch03s03.html#ch03lvl3sec14"/>
+            </ncx:navPoint>
+          </ncx:navPoint>
+          <ncx:navPoint id="id286755894" playOrder="81">
+            <ncx:navLabel>
+              <ncx:text>Fully connected layer</ncx:text>
+            </ncx:navLabel>
+            <ncx:content src="ch03s03.html#ch03lvl2sec30"/>
+          </ncx:navPoint>
+        </ncx:navPoint>
+        <ncx:navPoint id="id286755912" playOrder="82">
+          <ncx:navLabel>
+            <ncx:text>Distributed deep CNN</ncx:text>
+          </ncx:navLabel>
+          <ncx:content src="ch03s04.html"/>
+          <ncx:navPoint id="id286755922" playOrder="83">
+            <ncx:navLabel>
+              <ncx:text>Most popular aggressive deep neural networks and their configurations</ncx:text>
+            </ncx:navLabel>
+            <ncx:content src="ch03s04.html#ch03lvl2sec31"/>
+          </ncx:navPoint>
+          <ncx:navPoint id="id286756215" playOrder="84">
+            <ncx:navLabel>
+              <ncx:text>Training time - major challenges associated with deep neural networks</ncx:text>
+            </ncx:navLabel>
+            <ncx:content src="ch03s04.html#ch03lvl2sec32"/>
+          </ncx:navPoint>
+          <ncx:navPoint id="id286756229" playOrder="85">
+            <ncx:navLabel>
+              <ncx:text>Hadoop for deep CNNs</ncx:text>
+            </ncx:navLabel>
+            <ncx:content src="ch03s04.html#ch03lvl2sec33"/>
+          </ncx:navPoint>
+        </ncx:navPoint>
+        <ncx:navPoint id="id286756438" playOrder="86">
+          <ncx:navLabel>
+            <ncx:text>Convolutional layer using Deeplearning4j</ncx:text>
+          </ncx:navLabel>
+          <ncx:content src="ch03s05.html"/>
+          <ncx:navPoint id="id286756451" playOrder="87">
+            <ncx:navLabel>
+              <ncx:text>Loading data</ncx:text>
+            </ncx:navLabel>
+            <ncx:content src="ch03s05.html#ch03lvl2sec34"/>
+          </ncx:navPoint>
+          <ncx:navPoint id="id286756518" playOrder="88">
+            <ncx:navLabel>
+              <ncx:text>Model configuration</ncx:text>
+            </ncx:navLabel>
+            <ncx:content src="ch03s05.html#ch03lvl2sec35"/>
+          </ncx:navPoint>
+          <ncx:navPoint id="id286756734" playOrder="89">
+            <ncx:navLabel>
+              <ncx:text>Training and evaluation</ncx:text>
+            </ncx:navLabel>
+            <ncx:content src="ch03s05.html#ch03lvl2sec36"/>
+          </ncx:navPoint>
+        </ncx:navPoint>
+        <ncx:navPoint id="id286756910" playOrder="90">
+          <ncx:navLabel>
+            <ncx:text>Summary</ncx:text>
+          </ncx:navLabel>
+          <ncx:content src="ch03s06.html"/>
+        </ncx:navPoint>
+      </ncx:navPoint>
+      <ncx:navPoint id="id286756925" playOrder="91">
+        <ncx:navLabel>
+          <ncx:text>4. Recurrent Neural Network</ncx:text>
+        </ncx:navLabel>
+        <ncx:content src="ch04.html"/>
+        <ncx:navPoint id="id286757111" playOrder="92">
+          <ncx:navLabel>
+            <ncx:text>What makes recurrent networks distinctive from others?</ncx:text>
+          </ncx:navLabel>
+          <ncx:content src="ch04.html#ch04lvl1sec24"/>
+        </ncx:navPoint>
+        <ncx:navPoint id="id286757228" playOrder="93">
+          <ncx:navLabel>
+            <ncx:text>Recurrent neural networks(RNNs)</ncx:text>
+          </ncx:navLabel>
+          <ncx:content src="ch04s02.html"/>
+          <ncx:navPoint id="id286757238" playOrder="94">
+            <ncx:navLabel>
+              <ncx:text>Unfolding recurrent computations</ncx:text>
+            </ncx:navLabel>
+            <ncx:content src="ch04s02.html#ch04lvl2sec37"/>
+            <ncx:navPoint id="id286757452" playOrder="95">
+              <ncx:navLabel>
+                <ncx:text>Advantages of a model unfolded in time</ncx:text>
+              </ncx:navLabel>
+              <ncx:content src="ch04s02.html#ch04lvl3sec15"/>
+            </ncx:navPoint>
+          </ncx:navPoint>
+          <ncx:navPoint id="id286757485" playOrder="96">
+            <ncx:navLabel>
+              <ncx:text>Memory of RNNs</ncx:text>
+            </ncx:navLabel>
+            <ncx:content src="ch04s02.html#ch04lvl2sec38"/>
+          </ncx:navPoint>
+          <ncx:navPoint id="id286757860" playOrder="97">
+            <ncx:navLabel>
+              <ncx:text>Architecture</ncx:text>
+            </ncx:navLabel>
+            <ncx:content src="ch04s02.html#ch04lvl2sec39"/>
+          </ncx:navPoint>
+        </ncx:navPoint>
+        <ncx:navPoint id="id286758126" playOrder="98">
+          <ncx:navLabel>
+            <ncx:text>Backpropagation through time (BPTT)</ncx:text>
+          </ncx:navLabel>
+          <ncx:content src="ch04s03.html"/>
+          <ncx:navPoint id="id286758206" playOrder="99">
+            <ncx:navLabel>
+              <ncx:text>Error computation</ncx:text>
+            </ncx:navLabel>
+            <ncx:content src="ch04s03.html#ch04lvl2sec40"/>
+          </ncx:navPoint>
+        </ncx:navPoint>
+        <ncx:navPoint id="id286758467" playOrder="100">
+          <ncx:navLabel>
+            <ncx:text>Long short-term memory</ncx:text>
+          </ncx:navLabel>
+          <ncx:content src="ch04s04.html"/>
+          <ncx:navPoint id="id286758485" playOrder="101">
+            <ncx:navLabel>
+              <ncx:text>Problem with deep backpropagation with time</ncx:text>
+            </ncx:navLabel>
+            <ncx:content src="ch04s04.html#ch04lvl2sec41"/>
+          </ncx:navPoint>
+          <ncx:navPoint id="id286758506" playOrder="102">
+            <ncx:navLabel>
+              <ncx:text>Long short-term memory</ncx:text>
+            </ncx:navLabel>
+            <ncx:content src="ch04s04.html#ch04lvl2sec42"/>
+          </ncx:navPoint>
+        </ncx:navPoint>
+        <ncx:navPoint id="id286758720" playOrder="103">
+          <ncx:navLabel>
+            <ncx:text>Bi-directional RNNs</ncx:text>
+          </ncx:navLabel>
+          <ncx:content src="ch04s05.html"/>
+          <ncx:navPoint id="id286758729" playOrder="104">
+            <ncx:navLabel>
+              <ncx:text>Shortfalls of RNNs</ncx:text>
+            </ncx:navLabel>
+            <ncx:content src="ch04s05.html#ch04lvl2sec43"/>
+          </ncx:navPoint>
+          <ncx:navPoint id="id286758811" playOrder="105">
+            <ncx:navLabel>
+              <ncx:text>Solutions to overcome</ncx:text>
+            </ncx:navLabel>
+            <ncx:content src="ch04s05.html#ch04lvl2sec44"/>
+          </ncx:navPoint>
+        </ncx:navPoint>
+        <ncx:navPoint id="id286758867" playOrder="106">
+          <ncx:navLabel>
+            <ncx:text>Distributed deep RNNs</ncx:text>
+          </ncx:navLabel>
+          <ncx:content src="ch04s06.html"/>
+        </ncx:navPoint>
+        <ncx:navPoint id="id286758905" playOrder="107">
+          <ncx:navLabel>
+            <ncx:text>RNNs with Deeplearning4j</ncx:text>
+          </ncx:navLabel>
+          <ncx:content src="ch04s07.html"/>
+        </ncx:navPoint>
+        <ncx:navPoint id="id286759467" playOrder="108">
+          <ncx:navLabel>
+            <ncx:text>Summary</ncx:text>
+          </ncx:navLabel>
+          <ncx:content src="ch04s08.html"/>
+        </ncx:navPoint>
+      </ncx:navPoint>
+      <ncx:navPoint id="id286759482" playOrder="109">
+        <ncx:navLabel>
+          <ncx:text>5. Restricted Boltzmann Machines</ncx:text>
+        </ncx:navLabel>
+        <ncx:content src="ch05.html"/>
+        <ncx:navPoint id="id286759605" playOrder="110">
+          <ncx:navLabel>
+            <ncx:text>Energy-based models</ncx:text>
+          </ncx:navLabel>
+          <ncx:content src="ch05.html#ch05lvl1sec32"/>
+        </ncx:navPoint>
+        <ncx:navPoint id="id286759793" playOrder="111">
+          <ncx:navLabel>
+            <ncx:text>Boltzmann machines</ncx:text>
+          </ncx:navLabel>
+          <ncx:content src="ch05s02.html"/>
+          <ncx:navPoint id="id286760014" playOrder="112">
+            <ncx:navLabel>
+              <ncx:text>How Boltzmann machines learn</ncx:text>
+            </ncx:navLabel>
+            <ncx:content src="ch05s02.html#ch05lvl2sec45"/>
+          </ncx:navPoint>
+          <ncx:navPoint id="id286760025" playOrder="113">
+            <ncx:navLabel>
+              <ncx:text>Shortfall</ncx:text>
+            </ncx:navLabel>
+            <ncx:content src="ch05s02.html#ch05lvl2sec46"/>
+          </ncx:navPoint>
+        </ncx:navPoint>
+        <ncx:navPoint id="id286760040" playOrder="114">
+          <ncx:navLabel>
+            <ncx:text>Restricted Boltzmann machine</ncx:text>
+          </ncx:navLabel>
+          <ncx:content src="ch05s03.html"/>
+          <ncx:navPoint id="id286760065" playOrder="115">
+            <ncx:navLabel>
+              <ncx:text>The basic architecture</ncx:text>
+            </ncx:navLabel>
+            <ncx:content src="ch05s03.html#ch05lvl2sec47"/>
+          </ncx:navPoint>
+          <ncx:navPoint id="id286760248" playOrder="116">
+            <ncx:navLabel>
+              <ncx:text>How RBMs work</ncx:text>
+            </ncx:navLabel>
+            <ncx:content src="ch05s03.html#ch05lvl2sec48"/>
+          </ncx:navPoint>
+        </ncx:navPoint>
+        <ncx:navPoint id="id286760442" playOrder="117">
+          <ncx:navLabel>
+            <ncx:text>Convolutional Restricted Boltzmann machines</ncx:text>
+          </ncx:navLabel>
+          <ncx:content src="ch05s04.html"/>
+          <ncx:navPoint id="id286760613" playOrder="118">
+            <ncx:navLabel>
+              <ncx:text>Stacked Convolutional Restricted Boltzmann machines</ncx:text>
+            </ncx:navLabel>
+            <ncx:content src="ch05s04.html#ch05lvl2sec49"/>
+          </ncx:navPoint>
+        </ncx:navPoint>
+        <ncx:navPoint id="id286760683" playOrder="119">
+          <ncx:navLabel>
+            <ncx:text>Deep Belief networks</ncx:text>
+          </ncx:navLabel>
+          <ncx:content src="ch05s05.html"/>
+          <ncx:navPoint id="id286760749" playOrder="120">
+            <ncx:navLabel>
+              <ncx:text>Greedy layer-wise training</ncx:text>
+            </ncx:navLabel>
+            <ncx:content src="ch05s05.html#ch05lvl2sec50"/>
+          </ncx:navPoint>
+        </ncx:navPoint>
+        <ncx:navPoint id="id286760781" playOrder="121">
+          <ncx:navLabel>
+            <ncx:text>Distributed Deep Belief network</ncx:text>
+          </ncx:navLabel>
+          <ncx:content src="ch05s06.html"/>
+          <ncx:navPoint id="id286760795" playOrder="122">
+            <ncx:navLabel>
+              <ncx:text>Distributed training of Restricted Boltzmann machines</ncx:text>
+            </ncx:navLabel>
+            <ncx:content src="ch05s06.html#ch05lvl2sec51"/>
+          </ncx:navPoint>
+          <ncx:navPoint id="id286760901" playOrder="123">
+            <ncx:navLabel>
+              <ncx:text>Distributed training of Deep Belief networks</ncx:text>
+            </ncx:navLabel>
+            <ncx:content src="ch05s06.html#ch05lvl2sec52"/>
+            <ncx:navPoint id="id286760969" playOrder="124">
+              <ncx:navLabel>
+                <ncx:text>Distributed back propagation algorithm</ncx:text>
+              </ncx:navLabel>
+              <ncx:content src="ch05s06.html#ch05lvl3sec16"/>
+            </ncx:navPoint>
+            <ncx:navPoint id="id286761034" playOrder="125">
+              <ncx:navLabel>
+                <ncx:text>Performance evaluation of RBMs and DBNs</ncx:text>
+              </ncx:navLabel>
+              <ncx:content src="ch05s06.html#ch05lvl3sec17"/>
+              <ncx:navPoint id="id286761044" playOrder="126">
+                <ncx:navLabel>
+                  <ncx:text>Drastic improvement in training time</ncx:text>
+                </ncx:navLabel>
+                <ncx:content src="ch05s06.html#ch05lvl4sec3"/>
+              </ncx:navPoint>
+            </ncx:navPoint>
+          </ncx:navPoint>
+        </ncx:navPoint>
+        <ncx:navPoint id="id286761113" playOrder="127">
+          <ncx:navLabel>
+            <ncx:text>Implementation using Deeplearning4j</ncx:text>
+          </ncx:navLabel>
+          <ncx:content src="ch05s07.html"/>
+          <ncx:navPoint id="id286761130" playOrder="128">
+            <ncx:navLabel>
+              <ncx:text>Restricted Boltzmann machines</ncx:text>
+            </ncx:navLabel>
+            <ncx:content src="ch05s07.html#ch05lvl2sec53"/>
+          </ncx:navPoint>
+          <ncx:navPoint id="id286761474" playOrder="129">
+            <ncx:navLabel>
+              <ncx:text>Deep Belief networks</ncx:text>
+            </ncx:navLabel>
+            <ncx:content src="ch05s07.html#ch05lvl2sec54"/>
+          </ncx:navPoint>
+        </ncx:navPoint>
+        <ncx:navPoint id="id286761546" playOrder="130">
+          <ncx:navLabel>
+            <ncx:text>Summary</ncx:text>
+          </ncx:navLabel>
+          <ncx:content src="ch05s08.html"/>
+        </ncx:navPoint>
+      </ncx:navPoint>
+      <ncx:navPoint id="id286761561" playOrder="131">
+        <ncx:navLabel>
+          <ncx:text>6. Autoencoders</ncx:text>
+        </ncx:navLabel>
+        <ncx:content src="ch06.html"/>
+        <ncx:navPoint id="id286761665" playOrder="132">
+          <ncx:navLabel>
+            <ncx:text>Autoencoder</ncx:text>
+          </ncx:navLabel>
+          <ncx:content src="ch06.html#ch06lvl1sec40"/>
+          <ncx:navPoint id="id286761892" playOrder="133">
+            <ncx:navLabel>
+              <ncx:text>Regularized autoencoders</ncx:text>
+            </ncx:navLabel>
+            <ncx:content src="ch06.html#ch06lvl2sec55"/>
+          </ncx:navPoint>
+        </ncx:navPoint>
+        <ncx:navPoint id="id286761910" playOrder="134">
+          <ncx:navLabel>
+            <ncx:text>Sparse autoencoders</ncx:text>
+          </ncx:navLabel>
+          <ncx:content src="ch06s02.html"/>
+          <ncx:navPoint id="id286762091" playOrder="135">
+            <ncx:navLabel>
+              <ncx:text>Sparse coding</ncx:text>
+            </ncx:navLabel>
+            <ncx:content src="ch06s02.html#ch06lvl2sec56"/>
+          </ncx:navPoint>
+          <ncx:navPoint id="id286762206" playOrder="136">
+            <ncx:navLabel>
+              <ncx:text>Sparse autoencoders</ncx:text>
+            </ncx:navLabel>
+            <ncx:content src="ch06s02.html#ch06lvl2sec57"/>
+            <ncx:navPoint id="id286762436" playOrder="137">
+              <ncx:navLabel>
+                <ncx:text>The k-Sparse autoencoder</ncx:text>
+              </ncx:navLabel>
+              <ncx:content src="ch06s02.html#ch06lvl3sec18"/>
+              <ncx:navPoint id="id286762465" playOrder="138">
+                <ncx:navLabel>
+                  <ncx:text>How to select the sparsity level k</ncx:text>
+                </ncx:navLabel>
+                <ncx:content src="ch06s02.html#ch06lvl4sec4"/>
+              </ncx:navPoint>
+              <ncx:navPoint id="id286762635" playOrder="139">
+                <ncx:navLabel>
+                  <ncx:text>Effect of sparsity level</ncx:text>
+                </ncx:navLabel>
+                <ncx:content src="ch06s02.html#ch06lvl4sec5"/>
+              </ncx:navPoint>
+            </ncx:navPoint>
+          </ncx:navPoint>
+        </ncx:navPoint>
+        <ncx:navPoint id="id286762672" playOrder="140">
+          <ncx:navLabel>
+            <ncx:text>Deep autoencoders</ncx:text>
+          </ncx:navLabel>
+          <ncx:content src="ch06s03.html"/>
+          <ncx:navPoint id="id286762710" playOrder="141">
+            <ncx:navLabel>
+              <ncx:text>Training of deep autoencoders</ncx:text>
+            </ncx:navLabel>
+            <ncx:content src="ch06s03.html#ch06lvl2sec58"/>
+          </ncx:navPoint>
+          <ncx:navPoint id="id286762986" playOrder="142">
+            <ncx:navLabel>
+              <ncx:text>Implementation of deep autoencoders using Deeplearning4j</ncx:text>
+            </ncx:navLabel>
+            <ncx:content src="ch06s03.html#ch06lvl2sec59"/>
+          </ncx:navPoint>
+        </ncx:navPoint>
+        <ncx:navPoint id="id286763304" playOrder="143">
+          <ncx:navLabel>
+            <ncx:text>Denoising autoencoder</ncx:text>
+          </ncx:navLabel>
+          <ncx:content src="ch06s04.html"/>
+          <ncx:navPoint id="id286763326" playOrder="144">
+            <ncx:navLabel>
+              <ncx:text>Architecture of a Denoising autoencoder</ncx:text>
+            </ncx:navLabel>
+            <ncx:content src="ch06s04.html#ch06lvl2sec60"/>
+          </ncx:navPoint>
+          <ncx:navPoint id="id286763448" playOrder="145">
+            <ncx:navLabel>
+              <ncx:text>Stacked denoising autoencoders</ncx:text>
+            </ncx:navLabel>
+            <ncx:content src="ch06s04.html#ch06lvl2sec61"/>
+          </ncx:navPoint>
+          <ncx:navPoint id="id286763493" playOrder="146">
+            <ncx:navLabel>
+              <ncx:text>Implementation of a stacked denoising autoencoder using Deeplearning4j</ncx:text>
+            </ncx:navLabel>
+            <ncx:content src="ch06s04.html#ch06lvl2sec62"/>
+          </ncx:navPoint>
+        </ncx:navPoint>
+        <ncx:navPoint id="id286763725" playOrder="147">
+          <ncx:navLabel>
+            <ncx:text>Applications of autoencoders</ncx:text>
+          </ncx:navLabel>
+          <ncx:content src="ch06s05.html"/>
+        </ncx:navPoint>
+        <ncx:navPoint id="id286763773" playOrder="148">
+          <ncx:navLabel>
+            <ncx:text>Summary</ncx:text>
+          </ncx:navLabel>
+          <ncx:content src="ch06s06.html"/>
+        </ncx:navPoint>
+      </ncx:navPoint>
+      <ncx:navPoint id="id286763788" playOrder="149">
+        <ncx:navLabel>
+          <ncx:text>7. Miscellaneous Deep Learning Operations using Hadoop</ncx:text>
+        </ncx:navLabel>
+        <ncx:content src="ch07.html"/>
+        <ncx:navPoint id="id286763868" playOrder="150">
+          <ncx:navLabel>
+            <ncx:text>Distributed video decoding in Hadoop</ncx:text>
+          </ncx:navLabel>
+          <ncx:content src="ch07.html#ch07lvl1sec46"/>
+        </ncx:navPoint>
+        <ncx:navPoint id="id286722738" playOrder="151">
+          <ncx:navLabel>
+            <ncx:text>Large-scale image processing using Hadoop</ncx:text>
+          </ncx:navLabel>
+          <ncx:content src="ch07s02.html"/>
+          <ncx:navPoint id="id286722757" playOrder="152">
+            <ncx:navLabel>
+              <ncx:text>Application of Map-Reduce jobs</ncx:text>
+            </ncx:navLabel>
+            <ncx:content src="ch07s02.html#ch07lvl2sec63"/>
+          </ncx:navPoint>
+        </ncx:navPoint>
+        <ncx:navPoint id="id286722786" playOrder="153">
+          <ncx:navLabel>
+            <ncx:text>Natural language processing using Hadoop</ncx:text>
+          </ncx:navLabel>
+          <ncx:content src="ch07s03.html"/>
+          <ncx:navPoint id="id286722830" playOrder="154">
+            <ncx:navLabel>
+              <ncx:text>Web crawler</ncx:text>
+            </ncx:navLabel>
+            <ncx:content src="ch07s03.html#ch07lvl2sec64"/>
+          </ncx:navPoint>
+          <ncx:navPoint id="id286764446" playOrder="155">
+            <ncx:navLabel>
+              <ncx:text>Extraction of keyword and module for natural language processing</ncx:text>
+            </ncx:navLabel>
+            <ncx:content src="ch07s03.html#ch07lvl2sec65"/>
+          </ncx:navPoint>
+          <ncx:navPoint id="id286764483" playOrder="156">
+            <ncx:navLabel>
+              <ncx:text>Estimation of relevant keywords from a page</ncx:text>
+            </ncx:navLabel>
+            <ncx:content src="ch07s03.html#ch07lvl2sec66"/>
+          </ncx:navPoint>
+        </ncx:navPoint>
+        <ncx:navPoint id="id286764649" playOrder="157">
+          <ncx:navLabel>
+            <ncx:text>Summary</ncx:text>
+          </ncx:navLabel>
+          <ncx:content src="ch07s04.html"/>
+        </ncx:navPoint>
+      </ncx:navPoint>
+      <ncx:navPoint id="id286764661" playOrder="158">
+        <ncx:navLabel>
+          <ncx:text>1. References</ncx:text>
+        </ncx:navLabel>
+        <ncx:content src="apa.html"/>
+      </ncx:navPoint>
+    </ncx:navPoint>
+  </ncx:navMap>
+</ncx:ncx>

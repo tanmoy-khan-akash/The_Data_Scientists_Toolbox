@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>Implementation using Deeplearning4j</title><link rel="stylesheet" href="epub.css" type="text/css"/><meta name="generator" content="DocBook XSL Stylesheets V1.75.2"/>
+<!-- kobo-style -->
+<link xmlns="http://www.w3.org/1999/xhtml" rel="stylesheet" type="text/css" href="css/kobo.css"/>
+<script xmlns="http://www.w3.org/1999/xhtml" type="text/javascript" src="js/kobo.js"/>
+<style xmlns="http://www.w3.org/1999/xhtml" type="text/css" id="kobostylehacks">div#book-inner p, div#book-inner div { font-size: 1.0em; } a { color: black; } a:link, a:visited, a:hover, a:active { color: blue; } div#book-inner * { margin-top: 0 !important; margin-bottom: 0 !important;}</style>
+
+</head><body id="page"><div xmlns="http://www.w3.org/1999/xhtml" id="book-columns"><div xmlns="http://www.w3.org/1999/xhtml" id="book-inner"><div class="section" title="Implementation using Deeplearning4j"><div class="titlepage"><div><div><h1 class="title"><a id="ch05lvl1sec38"/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.1.1">Implementation using Deeplearning4j</span></h1></div></div></div><p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.2.1">This section of the chapter will provide a basic idea of how to write the code for RBMs and DBNs using Deeplearning4j. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.2.2">Readers will be able to learn the syntax for using the various hyperparameters mentioned in this chapter.</span></p><p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.3.1">To implement RBMs and DBNs using Deeplearning4j, the whole idea is very simple. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.3.2">The overall implementation can be split into three core phases: loading data or preparation of the data, network configuration, and training and evaluation of the model.</span></p><p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.4.1">In this section, we will first discuss RBMs on IrisDataSet, and then we will come to the implementation of DBNs.</span></p><div class="section" title="Restricted Boltzmann machines"><div class="titlepage"><div><div><h2 class="title"><a id="ch05lvl2sec53"/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.5.1">Restricted Boltzmann machines</span></h2></div></div></div><p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.6.1">For the building and training of RBMs, first we need to define and initialize the hyperparameter needed for the model:</span></p><pre class="programlisting">
+<span class="strong"><strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.7.1">Nd4j.MAX_SLICES_TO_PRINT = -1;       </span></strong></span>
+<span class="strong"><strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.8.1">Nd4j.MAX_ELEMENTS_PER_SLICE = -1;       </span></strong></span>
+<span class="strong"><strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.9.1">Nd4j.ENFORCE_NUMERICAL_STABILITY = true;       </span></strong></span>
+<span class="strong"><strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.10.1">final int numRows = 4;       </span></strong></span>
+<span class="strong"><strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.11.1">final int numColumns = 1;       </span></strong></span>
+<span class="strong"><strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.12.1">int outputNum = 10;       </span></strong></span>
+<span class="strong"><strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.13.1">int numSamples = 150;   </span></strong></span>
+</pre><p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.14.1">The batchsize here can be initialized as </span><code class="literal"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.15.1">150</span></code><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.16.1">, which means </span><code class="literal"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.17.1">150</span></code><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.18.1"> samples of the dataset will be submitted to the Hadoop framework at a time. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.18.2">Rest assured all other parameters are initialized just as we did it in the earlier chapters.</span></p><pre class="programlisting">
+<span class="strong"><strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.19.1">int batchSize = 150;       </span></strong></span>
+<span class="strong"><strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.20.1">int iterations = 100;       </span></strong></span>
+<span class="strong"><strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.21.1">int seed = 123;       </span></strong></span>
+<span class="strong"><strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.22.1">int listenerFreq = iterations/2;   </span></strong></span>
+</pre><p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.23.1">In the next phase, the Irisdataset is loaded into the system based on the defined </span><code class="literal"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.24.1">batchsize</span></code><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.25.1"> and number of samples per batch:</span></p><pre class="programlisting"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.26.1">log.info("Load data....");
+</span><span class="strong"><strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.27.1">DataSetIterator iter = new IrisDataSetIterator(batchSize, numSamples);       </span></strong></span>
+<span class="strong"><strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.28.1">DataSet iris = iter.next();</span></strong></span>
+</pre><p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.29.1">Here, the RBM is created as a layer using </span><code class="literal"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.30.1">NeuralNetConfiguration.Builder()</span></code><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.31.1">. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.31.2">Similarly, the object of Restricted Boltzmann is used to store properties such as the transforms applied to the observed and hidden layer - Gaussian and Rectified Linear Transforms, respectively:</span></p><pre class="programlisting"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.32.1">NeuralNetConfiguration conf = new NeuralNetConfiguration.Builder()
+.regularization(true)       
+</span><span class="strong"><strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.33.1">  .miniBatch(true)       </span></strong></span>
+<span class="strong"><strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.34.1">.layer(new RBM.Builder().l2(1e-1).l1(1e-3)       </span></strong></span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.35.1">
+    .nIn(numRows * numColumns)       
+    .nOut(outputNum)</span></pre><p>
+<code class="literal"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.36.1">ReLU</span></code><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.37.1"> is used for activation function:</span></p><pre class="programlisting">
+<span class="strong"><strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.38.1">.activation("relu")       </span></strong></span>
+</pre><p>
+<code class="literal"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.39.1">weightInit()</span></code><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.40.1"> function is used for initialization of the weight, which represents the starting value of the coefficients needed to amplify the input signal coming into each node:</span></p><pre class="programlisting">
+<span class="strong"><strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.41.1">.weightInit(WeightInit.RELU)    </span></strong></span>
+<span class="strong"><strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.42.1">    .lossFunction(LossFunctions.LossFunction.RECONSTRUCTION
+     _CROSSENTROPY.k(3)       </span></strong></span>
+</pre><p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.43.1">Gaussian Transformation is used for visible units and Rectified Linear Transformation is used for hidden layers. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.43.2">This is very simple in Deeplearning4j. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.43.3">We need to pass the parameters </span><code class="literal"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.44.1">VisibleUnit</span></code><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.45.1">.</span><code class="literal"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.46.1">GAUSSIAN</span></code><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.47.1"> and </span><code class="literal"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.48.1">HiddenUnit.RECTIFIED</span></code><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.49.1"> inside the </span><code class="literal"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.50.1">.visibleUnit</span></code><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.51.1"> and </span><code class="literal"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.52.1">.hiddenUnit</span></code><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.53.1"> methods:</span></p><pre class="programlisting">
+<span class="strong"><strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.54.1">.hiddenUnit(HiddenUnit.RECTIFIED).visibleUnit(VisibleUnit.GAUSSIAN)       </span></strong></span>
+<span class="strong"><strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.55.1">                          
+    .updater(Updater.ADAGRAD).gradientNormalization(Gradient
+     Normalization.ClipL2PerLayer)       </span></strong></span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.56.1">
+    .build())       
+  .seed(seed)    
+  .iterations(iterations) 
+</span></pre><p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.57.1">The Backpropagation step size is defined here:</span></p><pre class="programlisting">
+<span class="strong"><strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.58.1">.learningRate(1e-3)</span></strong></span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.59.1">
+  .optimizationAlgo(OptimizationAlgorithm.LBFGS)       
+  .build();       
+    
+Layer model = LayerFactories.getFactory(conf.getLayer()).create(conf);       
+model.setListeners(new ScoreIterationListener(listenerFreq));
+    
+log.info("Evaluate weights....");       
+INDArray w = model.getParam(DefaultParamInitializer.WEIGHT_KEY);       
+log.info("Weights: " + w);</span></pre><p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.60.1">To scale to dataset, </span><code class="literal"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.61.1">scale()</span></code><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.62.1"> can be called with the object of the Dataset class:</span></p><pre class="programlisting">
+<span class="strong"><strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.63.1">iris.scale();   </span></strong></span>
+</pre><p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.64.1">After the evaluation was done in the earlier process, the model is now completely ready to be trained. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.64.2">It can be trained in a similar manner using the </span><code class="literal"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.65.1">fit()</span></code><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.66.1"> method, as done for the earlier models, and passing </span><code class="literal"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.67.1">getFeatureMatrix</span></code><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.68.1"> as the parameter:</span></p><pre class="programlisting"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.69.1">log.info("Train model....");       
+for(int i = 0; i &lt; 20; i++)
+  {       
+   log.info("Epoch "+i+":");</span><span class="strong"><strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.70.1">model.fit(iris.getFeatureMatrix());
+  </span></strong></span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.71.1">}</span></pre></div><div class="section" title="Deep Belief networks"><div class="titlepage"><div><div><h2 class="title"><a id="ch05lvl2sec54"/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.72.1">Deep Belief networks</span></h2></div></div></div><p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.73.1">As explained in this chapter, a DBN is a stacked version of the number of RBMs. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.73.2">In this part, we will show how to deploy DBNs programmatically using Deeplearning4j. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.73.3">The flow of the program will follow the standard procedure as with other models. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.73.4">The implementation of simple DBNs is pretty simple using Deeplearning4j. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.73.5">The example will show how to train and traverse the input MNIST data with DBNs.</span></p><p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.74.1">For MNIST dataset, the following line specifies the batchsize and number of examples, which one user will specify to load the data in HDFS at one time:</span></p><pre class="programlisting">
+<span class="strong"><strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.75.1">log.info("Load data....");</span></strong></span>
+<span class="strong"><strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.76.1">DataSetIterator iter = new MnistDataSetIterator(batchSize,numSamples,
+true);</span></strong></span>
+</pre><p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.77.1">In the next phase, the model will be built by stacking 10 RBMs together. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.77.2">The following piece of code will specify the way this should be done using Deeplearning4j:</span></p><pre class="programlisting"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.78.1">log.info("Build model....");
+MultiLayerConfiguration conf = new NeuralNetConfiguration.Builder()
+  .seed(seed)
+  .iterations(iterations)
+  </span><span class="strong"><strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.79.1">.optimizationAlgo(OptimizationAlgorithm.LINE_GRADIENT_DESCENT)</span></strong></span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.80.1">
+  .list()
+  .layer(0, new RBM.Builder().nIn(numRows * numColumns).nOut(1000)
+  .lossFunction(LossFunctions.LossFunction.RMSE_XENT).build())
+  .layer(1, new RBM.Builder().nIn(1000).nOut(500)
+  .lossFunction(LossFunctions.LossFunction.RMSE_XENT).build())
+  .layer(2, new RBM.Builder().nIn(500).nOut(250)
+  .lossFunction(LossFunctions.LossFunction.RMSE_XENT).build())
+  .layer(3, new RBM.Builder().nIn(250).nOut(100)
+  .lossFunction(LossFunctions.LossFunction.RMSE_XENT).build())
+  .layer(4, new RBM.Builder().nIn(100).nOut(30)
+  .lossFunction(LossFunctions.LossFunction.RMSE_XENT).build())  
+  .layer(5, new RBM.Builder().nIn(30).nOut(100)
+  .lossFunction(LossFunctions.LossFunction.RMSE_XENT).build())  
+  .layer(6, new RBM.Builder().nIn(100).nOut(250)
+  .lossFunction(LossFunctions.LossFunction.RMSE_XENT).build())
+  .layer(7, new RBM.Builder().nIn(250).nOut(500)
+  .lossFunction(LossFunctions.LossFunction.RMSE_XENT).build())
+  .layer(8, new  RBM.Builder().nIn(500).nOut(1000)
+  .lossFunction(LossFunctions.LossFunction.RMSE_XENT).build())
+  .layer(9, new OutputLayer.Builder(LossFunctions.LossFunction.
+   </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.80.2">RMSE_XENT).nIn(1000).nOut(numRows*numColumns).build())
+  </span><span class="strong"><strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.81.1">.pretrain(true)
+  .backprop(true)</span></strong></span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.82.1">
+  .build();
+    
+MultiLayerNetwork model = new MultiLayerNetwork(conf);
+model.init();
+</span></pre><p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.83.1">In the last part, the code will be trained using the loaded MNIST dataset, by calling the </span><code class="literal"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.84.1">fit()</span></code><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.85.1"> method:</span></p><pre class="programlisting"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.86.1">log.info("Train model....");
+while(iter.hasNext())
+  {
+   DataSet next = iter.next();
+   </span><span class="strong"><strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.87.1">model.fit(new DataSet(next.getFeatureMatrix(),next.
+   </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.87.2">getFeatureMatrix()));</span></strong></span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.88.1">
+  }
+</span></pre><p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.89.1">Upon executing the code, the process will give a following output:</span></p><pre class="programlisting"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.90.1">Load data.... 
+</span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.90.2">Build model.... 
+</span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.90.3">Train model.... 
+ 
+ 
+</span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.90.4">o.d.e.u.d.DeepAutoEncoderExample - Train model.... 
+</span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.90.5">o.d.n.m.MultiLayerNetwork - Training on layer 1 with 1000 examples 
+o.d.o.l.ScoreIterationListener - Score at iteration 0 is 394.462 
+o.d.n.m.MultiLayerNetwork - Training on layer 2 with 1000 examples 
+o.d.o.l.ScoreIterationListener - Score at iteration 1 is 506.785 
+o.d.n.m.MultiLayerNetwork - Training on layer 3 with 1000 examples 
+o.d.o.l.ScoreIterationListener - Score at iteration 2 is 255.582 
+o.d.n.m.MultiLayerNetwork - Training on layer 4 with 1000 examples 
+o.d.o.l.ScoreIterationListener - Score at iteration 3 is 128.227 
+ 
+......................................... 
+ 
+ 
+</span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.90.6">o.d.n.m.MultiLayerNetwork - Finetune phase 
+o.d.o.l.ScoreIterationListener - Score at iteration 9 is 132.45428125 
+ 
+ 
+........................... 
+ 
+</span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.90.7">o.d.n.m.MultiLayerNetwork - Finetune phase 
+o.d.o.l.ScoreIterationListener - Score at iteration 31 is 135.949859375 
+o.d.o.l.ScoreIterationListener - Score at iteration 32 is 135.9501875 
+o.d.n.m.MultiLayerNetwork - Training on layer 1 with 1000 examples 
+o.d.o.l.ScoreIterationListener - Score at iteration 33 is 394.182 
+o.d.n.m.MultiLayerNetwork - Training on layer 2 with 1000 examples 
+o.d.o.l.ScoreIterationListener - Score at iteration 34 is 508.769 
+o.d.n.m.MultiLayerNetwork - Training on layer 3 with 1000 examples 
+ 
+ 
+ 
+............................ 
+ 
+ 
+</span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.90.8">o.d.n.m.MultiLayerNetwork - Finetune phase 
+o.d.o.l.ScoreIterationListener - Score at iteration 658 is 142.4304375 
+o.d.o.l.ScoreIterationListener - Score at iteration 659 is 142.4311875 
+</span></pre></div></div></div></div></body></html>
