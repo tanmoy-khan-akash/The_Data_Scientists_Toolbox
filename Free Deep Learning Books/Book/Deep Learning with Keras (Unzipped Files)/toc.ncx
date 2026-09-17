@@ -1,0 +1,981 @@
+<?xml version='1.0' encoding='utf-8'?>
+<ncx xmlns="http://www.daisy.org/z3986/2005/ncx/" version="2005-1" xml:lang="eng">
+  <head>
+    <meta content="02ef117a-d066-41b8-a84f-c600e26ef98d" name="dtb:uid"/>
+    <meta content="6" name="dtb:depth"/>
+    <meta content="calibre (1.31.0)" name="dtb:generator"/>
+    <meta content="0" name="dtb:totalPageCount"/>
+    <meta content="0" name="dtb:maxPageNumber"/>
+  </head>
+  <docTitle>
+    <text>Deep Learning with Keras</text>
+  </docTitle>
+  <navMap>
+    <navPoint class="chapter" id="num_1" playOrder="1">
+      <navLabel>
+        <text>Preface</text>
+      </navLabel>
+      <content src="text/part0008.html"/>
+      <navPoint class="chapter" id="num_2" playOrder="2">
+        <navLabel>
+          <text>Mission</text>
+        </navLabel>
+        <content src="text/part0009.html"/>
+      </navPoint>
+      <navPoint class="chapter" id="num_3" playOrder="3">
+        <navLabel>
+          <text>How deep learning is different from machine learning and artificial intelligence</text>
+        </navLabel>
+        <content src="text/part0010.html"/>
+      </navPoint>
+      <navPoint class="chapter" id="num_4" playOrder="4">
+        <navLabel>
+          <text>What this book covers</text>
+        </navLabel>
+        <content src="text/part0011.html"/>
+      </navPoint>
+      <navPoint class="chapter" id="num_5" playOrder="5">
+        <navLabel>
+          <text>What you need for this book</text>
+        </navLabel>
+        <content src="text/part0012.html"/>
+      </navPoint>
+      <navPoint class="chapter" id="num_6" playOrder="6">
+        <navLabel>
+          <text>Who this book is for</text>
+        </navLabel>
+        <content src="text/part0013.html"/>
+      </navPoint>
+      <navPoint class="chapter" id="num_7" playOrder="7">
+        <navLabel>
+          <text>Conventions</text>
+        </navLabel>
+        <content src="text/part0014.html"/>
+      </navPoint>
+      <navPoint class="chapter" id="num_8" playOrder="8">
+        <navLabel>
+          <text>Reader feedback</text>
+        </navLabel>
+        <content src="text/part0015.html"/>
+      </navPoint>
+      <navPoint class="chapter" id="num_9" playOrder="9">
+        <navLabel>
+          <text>Customer support</text>
+        </navLabel>
+        <content src="text/part0016.html"/>
+        <navPoint class="chapter" id="num_10" playOrder="10">
+          <navLabel>
+            <text>Downloading the example code</text>
+          </navLabel>
+          <content src="text/part0017.html"/>
+        </navPoint>
+        <navPoint class="chapter" id="num_11" playOrder="11">
+          <navLabel>
+            <text>Downloading the color images of this book</text>
+          </navLabel>
+          <content src="text/part0018.html"/>
+        </navPoint>
+        <navPoint class="chapter" id="num_12" playOrder="12">
+          <navLabel>
+            <text>Errata</text>
+          </navLabel>
+          <content src="text/part0019.html"/>
+        </navPoint>
+        <navPoint class="chapter" id="num_13" playOrder="13">
+          <navLabel>
+            <text>Piracy</text>
+          </navLabel>
+          <content src="text/part0020.html"/>
+        </navPoint>
+        <navPoint class="chapter" id="num_14" playOrder="14">
+          <navLabel>
+            <text>Questions</text>
+          </navLabel>
+          <content src="text/part0021.html"/>
+        </navPoint>
+      </navPoint>
+    </navPoint>
+    <navPoint class="chapter" id="num_15" playOrder="15">
+      <navLabel>
+        <text>Neural Networks Foundations</text>
+      </navLabel>
+      <content src="text/part0022.html"/>
+      <navPoint class="chapter" id="num_16" playOrder="16">
+        <navLabel>
+          <text>Perceptron</text>
+        </navLabel>
+        <content src="text/part0023.html"/>
+        <navPoint class="chapter" id="num_17" playOrder="17">
+          <navLabel>
+            <text>The first example of Keras code</text>
+          </navLabel>
+          <content src="text/part0024.html"/>
+        </navPoint>
+      </navPoint>
+      <navPoint class="chapter" id="num_18" playOrder="18">
+        <navLabel>
+          <text>Multilayer perceptron — the first example of a network</text>
+        </navLabel>
+        <content src="text/part0025.html"/>
+        <navPoint class="chapter" id="num_19" playOrder="19">
+          <navLabel>
+            <text>Problems in training the perceptron and a solution</text>
+          </navLabel>
+          <content src="text/part0026.html"/>
+        </navPoint>
+        <navPoint class="chapter" id="num_20" playOrder="20">
+          <navLabel>
+            <text>Activation function — sigmoid</text>
+          </navLabel>
+          <content src="text/part0027.html"/>
+        </navPoint>
+        <navPoint class="chapter" id="num_21" playOrder="21">
+          <navLabel>
+            <text>Activation function — ReLU</text>
+          </navLabel>
+          <content src="text/part0028.html"/>
+        </navPoint>
+        <navPoint class="chapter" id="num_22" playOrder="22">
+          <navLabel>
+            <text>Activation functions</text>
+          </navLabel>
+          <content src="text/part0029.html"/>
+        </navPoint>
+      </navPoint>
+      <navPoint class="chapter" id="num_23" playOrder="23">
+        <navLabel>
+          <text>A real example — recognizing handwritten digits</text>
+        </navLabel>
+        <content src="text/part0030.html"/>
+        <navPoint class="chapter" id="num_24" playOrder="24">
+          <navLabel>
+            <text>One-hot encoding — OHE</text>
+          </navLabel>
+          <content src="text/part0031.html"/>
+        </navPoint>
+        <navPoint class="chapter" id="num_25" playOrder="25">
+          <navLabel>
+            <text>Defining a simple neural net in Keras</text>
+          </navLabel>
+          <content src="text/part0032.html"/>
+        </navPoint>
+        <navPoint class="chapter" id="num_26" playOrder="26">
+          <navLabel>
+            <text>Running a simple Keras net and establishing a baseline</text>
+          </navLabel>
+          <content src="text/part0033.html"/>
+        </navPoint>
+        <navPoint class="chapter" id="num_27" playOrder="27">
+          <navLabel>
+            <text>Improving the simple net in Keras with hidden layers</text>
+          </navLabel>
+          <content src="text/part0034.html"/>
+        </navPoint>
+        <navPoint class="chapter" id="num_28" playOrder="28">
+          <navLabel>
+            <text>Further improving the simple net in Keras with dropout</text>
+          </navLabel>
+          <content src="text/part0035.html"/>
+        </navPoint>
+        <navPoint class="chapter" id="num_29" playOrder="29">
+          <navLabel>
+            <text>Testing different optimizers in Keras</text>
+          </navLabel>
+          <content src="text/part0036.html"/>
+        </navPoint>
+        <navPoint class="chapter" id="num_30" playOrder="30">
+          <navLabel>
+            <text>Increasing the number of epochs</text>
+          </navLabel>
+          <content src="text/part0037.html"/>
+        </navPoint>
+        <navPoint class="chapter" id="num_31" playOrder="31">
+          <navLabel>
+            <text>Controlling the optimizer learning rate</text>
+          </navLabel>
+          <content src="text/part0038.html"/>
+        </navPoint>
+        <navPoint class="chapter" id="num_32" playOrder="32">
+          <navLabel>
+            <text>Increasing the number of internal hidden neurons</text>
+          </navLabel>
+          <content src="text/part0039.html"/>
+        </navPoint>
+        <navPoint class="chapter" id="num_33" playOrder="33">
+          <navLabel>
+            <text>Increasing the size of batch computation</text>
+          </navLabel>
+          <content src="text/part0040.html"/>
+        </navPoint>
+        <navPoint class="chapter" id="num_34" playOrder="34">
+          <navLabel>
+            <text>Summarizing the experiments run for recognizing handwritten charts</text>
+          </navLabel>
+          <content src="text/part0041.html"/>
+        </navPoint>
+        <navPoint class="chapter" id="num_35" playOrder="35">
+          <navLabel>
+            <text>Adopting regularization for avoiding overfitting</text>
+          </navLabel>
+          <content src="text/part0042.html"/>
+        </navPoint>
+        <navPoint class="chapter" id="num_36" playOrder="36">
+          <navLabel>
+            <text>Hyperparameters tuning</text>
+          </navLabel>
+          <content src="text/part0043.html"/>
+        </navPoint>
+        <navPoint class="chapter" id="num_37" playOrder="37">
+          <navLabel>
+            <text>Predicting output</text>
+          </navLabel>
+          <content src="text/part0044.html"/>
+        </navPoint>
+      </navPoint>
+      <navPoint class="chapter" id="num_38" playOrder="38">
+        <navLabel>
+          <text>A practical overview of backpropagation</text>
+        </navLabel>
+        <content src="text/part0045.html"/>
+      </navPoint>
+      <navPoint class="chapter" id="num_39" playOrder="39">
+        <navLabel>
+          <text>Towards a deep learning approach</text>
+        </navLabel>
+        <content src="text/part0046.html"/>
+      </navPoint>
+      <navPoint class="chapter" id="num_40" playOrder="40">
+        <navLabel>
+          <text>Summary</text>
+        </navLabel>
+        <content src="text/part0047.html"/>
+      </navPoint>
+    </navPoint>
+    <navPoint class="chapter" id="num_41" playOrder="41">
+      <navLabel>
+        <text>Keras Installation and API</text>
+      </navLabel>
+      <content src="text/part0048.html"/>
+      <navPoint class="chapter" id="num_42" playOrder="42">
+        <navLabel>
+          <text>Installing Keras</text>
+        </navLabel>
+        <content src="text/part0049.html"/>
+        <navPoint class="chapter" id="num_43" playOrder="43">
+          <navLabel>
+            <text>Step 1 — install some useful dependencies</text>
+          </navLabel>
+          <content src="text/part0050.html"/>
+        </navPoint>
+        <navPoint class="chapter" id="num_44" playOrder="44">
+          <navLabel>
+            <text>Step 2 — install Theano</text>
+          </navLabel>
+          <content src="text/part0051.html"/>
+        </navPoint>
+        <navPoint class="chapter" id="num_45" playOrder="45">
+          <navLabel>
+            <text>Step 3 — install TensorFlow</text>
+          </navLabel>
+          <content src="text/part0052.html"/>
+        </navPoint>
+        <navPoint class="chapter" id="num_46" playOrder="46">
+          <navLabel>
+            <text>Step 4 — install Keras</text>
+          </navLabel>
+          <content src="text/part0053.html"/>
+        </navPoint>
+        <navPoint class="chapter" id="num_47" playOrder="47">
+          <navLabel>
+            <text>Step 5 — testing Theano, TensorFlow, and Keras</text>
+          </navLabel>
+          <content src="text/part0054.html"/>
+        </navPoint>
+      </navPoint>
+      <navPoint class="chapter" id="num_48" playOrder="48">
+        <navLabel>
+          <text>Configuring Keras</text>
+        </navLabel>
+        <content src="text/part0055.html"/>
+      </navPoint>
+      <navPoint class="chapter" id="num_49" playOrder="49">
+        <navLabel>
+          <text>Installing Keras on Docker</text>
+        </navLabel>
+        <content src="text/part0056.html"/>
+      </navPoint>
+      <navPoint class="chapter" id="num_50" playOrder="50">
+        <navLabel>
+          <text>Installing Keras on Google Cloud ML</text>
+        </navLabel>
+        <content src="text/part0057.html"/>
+      </navPoint>
+      <navPoint class="chapter" id="num_51" playOrder="51">
+        <navLabel>
+          <text>Installing Keras on Amazon AWS</text>
+        </navLabel>
+        <content src="text/part0058.html"/>
+      </navPoint>
+      <navPoint class="chapter" id="num_52" playOrder="52">
+        <navLabel>
+          <text>Installing Keras on Microsoft Azure</text>
+        </navLabel>
+        <content src="text/part0059.html"/>
+      </navPoint>
+      <navPoint class="chapter" id="num_53" playOrder="53">
+        <navLabel>
+          <text>Keras API</text>
+        </navLabel>
+        <content src="text/part0060.html"/>
+        <navPoint class="chapter" id="num_54" playOrder="54">
+          <navLabel>
+            <text>Getting started with Keras architecture</text>
+          </navLabel>
+          <content src="text/part0061.html"/>
+          <navPoint class="chapter" id="num_55" playOrder="55">
+            <navLabel>
+              <text>What is a tensor?</text>
+            </navLabel>
+            <content src="text/part0062.html"/>
+          </navPoint>
+          <navPoint class="chapter" id="num_56" playOrder="56">
+            <navLabel>
+              <text>Composing models in Keras</text>
+            </navLabel>
+            <content src="text/part0063.html"/>
+            <navPoint class="chapter" id="num_57" playOrder="57">
+              <navLabel>
+                <text>Sequential composition</text>
+              </navLabel>
+              <content src="text/part0064.html"/>
+            </navPoint>
+            <navPoint class="chapter" id="num_58" playOrder="58">
+              <navLabel>
+                <text>Functional composition</text>
+              </navLabel>
+              <content src="text/part0065.html"/>
+            </navPoint>
+          </navPoint>
+        </navPoint>
+        <navPoint class="chapter" id="num_59" playOrder="59">
+          <navLabel>
+            <text>An overview of predefined neural network layers</text>
+          </navLabel>
+          <content src="text/part0066.html"/>
+          <navPoint class="chapter" id="num_60" playOrder="60">
+            <navLabel>
+              <text>Regular dense</text>
+            </navLabel>
+            <content src="text/part0067.html"/>
+          </navPoint>
+          <navPoint class="chapter" id="num_61" playOrder="61">
+            <navLabel>
+              <text>Recurrent neural networks — simple, LSTM, and GRU</text>
+            </navLabel>
+            <content src="text/part0068.html"/>
+          </navPoint>
+          <navPoint class="chapter" id="num_62" playOrder="62">
+            <navLabel>
+              <text>Convolutional and pooling layers</text>
+            </navLabel>
+            <content src="text/part0069.html"/>
+          </navPoint>
+          <navPoint class="chapter" id="num_63" playOrder="63">
+            <navLabel>
+              <text>Regularization</text>
+            </navLabel>
+            <content src="text/part0070.html"/>
+          </navPoint>
+          <navPoint class="chapter" id="num_64" playOrder="64">
+            <navLabel>
+              <text>Batch normalization</text>
+            </navLabel>
+            <content src="text/part0071.html"/>
+          </navPoint>
+        </navPoint>
+        <navPoint class="chapter" id="num_65" playOrder="65">
+          <navLabel>
+            <text>An overview of predefined activation functions</text>
+          </navLabel>
+          <content src="text/part0072.html"/>
+        </navPoint>
+        <navPoint class="chapter" id="num_66" playOrder="66">
+          <navLabel>
+            <text>An overview of losses functions</text>
+          </navLabel>
+          <content src="text/part0073.html"/>
+        </navPoint>
+        <navPoint class="chapter" id="num_67" playOrder="67">
+          <navLabel>
+            <text>An overview of metrics</text>
+          </navLabel>
+          <content src="text/part0074.html"/>
+        </navPoint>
+        <navPoint class="chapter" id="num_68" playOrder="68">
+          <navLabel>
+            <text>An overview of optimizers</text>
+          </navLabel>
+          <content src="text/part0075.html"/>
+        </navPoint>
+        <navPoint class="chapter" id="num_69" playOrder="69">
+          <navLabel>
+            <text>Some useful operations</text>
+          </navLabel>
+          <content src="text/part0076.html"/>
+        </navPoint>
+        <navPoint class="chapter" id="num_70" playOrder="70">
+          <navLabel>
+            <text>Saving and loading the weights and the architecture of a model</text>
+          </navLabel>
+          <content src="text/part0077.html"/>
+        </navPoint>
+      </navPoint>
+      <navPoint class="chapter" id="num_71" playOrder="71">
+        <navLabel>
+          <text>Callbacks for customizing the training process</text>
+        </navLabel>
+        <content src="text/part0078.html"/>
+        <navPoint class="chapter" id="num_72" playOrder="72">
+          <navLabel>
+            <text>Checkpointing</text>
+          </navLabel>
+          <content src="text/part0079.html"/>
+        </navPoint>
+        <navPoint class="chapter" id="num_73" playOrder="73">
+          <navLabel>
+            <text>Using TensorBoard and Keras</text>
+          </navLabel>
+          <content src="text/part0080.html"/>
+        </navPoint>
+        <navPoint class="chapter" id="num_74" playOrder="74">
+          <navLabel>
+            <text>Using Quiver and Keras</text>
+          </navLabel>
+          <content src="text/part0081.html"/>
+        </navPoint>
+      </navPoint>
+      <navPoint class="chapter" id="num_75" playOrder="75">
+        <navLabel>
+          <text>Summary</text>
+        </navLabel>
+        <content src="text/part0082.html"/>
+      </navPoint>
+    </navPoint>
+    <navPoint class="chapter" id="num_76" playOrder="76">
+      <navLabel>
+        <text>Deep Learning with ConvNets</text>
+      </navLabel>
+      <content src="text/part0083.html"/>
+      <navPoint class="chapter" id="num_77" playOrder="77">
+        <navLabel>
+          <text>Deep convolutional neural network — DCNN</text>
+        </navLabel>
+        <content src="text/part0084.html"/>
+        <navPoint class="chapter" id="num_78" playOrder="78">
+          <navLabel>
+            <text>Local receptive fields</text>
+          </navLabel>
+          <content src="text/part0085.html"/>
+        </navPoint>
+        <navPoint class="chapter" id="num_79" playOrder="79">
+          <navLabel>
+            <text>Shared weights and bias</text>
+          </navLabel>
+          <content src="text/part0086.html"/>
+        </navPoint>
+        <navPoint class="chapter" id="num_80" playOrder="80">
+          <navLabel>
+            <text>Pooling layers</text>
+          </navLabel>
+          <content src="text/part0087.html"/>
+          <navPoint class="chapter" id="num_81" playOrder="81">
+            <navLabel>
+              <text>Max-pooling</text>
+            </navLabel>
+            <content src="text/part0088.html"/>
+          </navPoint>
+          <navPoint class="chapter" id="num_82" playOrder="82">
+            <navLabel>
+              <text>Average pooling</text>
+            </navLabel>
+            <content src="text/part0089.html"/>
+          </navPoint>
+          <navPoint class="chapter" id="num_83" playOrder="83">
+            <navLabel>
+              <text>ConvNets summary</text>
+            </navLabel>
+            <content src="text/part0090.html"/>
+          </navPoint>
+        </navPoint>
+      </navPoint>
+      <navPoint class="chapter" id="num_84" playOrder="84">
+        <navLabel>
+          <text>An example of DCNN — LeNet</text>
+        </navLabel>
+        <content src="text/part0091.html"/>
+        <navPoint class="chapter" id="num_85" playOrder="85">
+          <navLabel>
+            <text>LeNet code in Keras</text>
+          </navLabel>
+          <content src="text/part0092.html"/>
+        </navPoint>
+        <navPoint class="chapter" id="num_86" playOrder="86">
+          <navLabel>
+            <text>Understanding the power of deep learning</text>
+          </navLabel>
+          <content src="text/part0093.html"/>
+        </navPoint>
+      </navPoint>
+      <navPoint class="chapter" id="num_87" playOrder="87">
+        <navLabel>
+          <text>Recognizing CIFAR-10 images with deep learning</text>
+        </navLabel>
+        <content src="text/part0094.html"/>
+        <navPoint class="chapter" id="num_88" playOrder="88">
+          <navLabel>
+            <text>Improving the CIFAR-10 performance with deeper a network</text>
+          </navLabel>
+          <content src="text/part0095.html"/>
+        </navPoint>
+        <navPoint class="chapter" id="num_89" playOrder="89">
+          <navLabel>
+            <text>Improving the CIFAR-10 performance with data augmentation</text>
+          </navLabel>
+          <content src="text/part0096.html"/>
+        </navPoint>
+        <navPoint class="chapter" id="num_90" playOrder="90">
+          <navLabel>
+            <text>Predicting with CIFAR-10</text>
+          </navLabel>
+          <content src="text/part0097.html"/>
+        </navPoint>
+      </navPoint>
+      <navPoint class="chapter" id="num_91" playOrder="91">
+        <navLabel>
+          <text>Very deep convolutional networks for large-scale image recognition</text>
+        </navLabel>
+        <content src="text/part0098.html"/>
+        <navPoint class="chapter" id="num_92" playOrder="92">
+          <navLabel>
+            <text>Recognizing cats with a VGG-16 net</text>
+          </navLabel>
+          <content src="text/part0099.html"/>
+        </navPoint>
+        <navPoint class="chapter" id="num_93" playOrder="93">
+          <navLabel>
+            <text>Utilizing Keras built-in VGG-16 net module</text>
+          </navLabel>
+          <content src="text/part0100.html"/>
+        </navPoint>
+        <navPoint class="chapter" id="num_94" playOrder="94">
+          <navLabel>
+            <text>Recycling pre-built deep learning models for extracting features</text>
+          </navLabel>
+          <content src="text/part0101.html"/>
+        </navPoint>
+        <navPoint class="chapter" id="num_95" playOrder="95">
+          <navLabel>
+            <text>Very deep inception-v3 net used for transfer learning</text>
+          </navLabel>
+          <content src="text/part0102.html"/>
+        </navPoint>
+      </navPoint>
+      <navPoint class="chapter" id="num_96" playOrder="96">
+        <navLabel>
+          <text>Summary</text>
+        </navLabel>
+        <content src="text/part0103.html"/>
+      </navPoint>
+    </navPoint>
+    <navPoint class="chapter" id="num_97" playOrder="97">
+      <navLabel>
+        <text>Generative Adversarial Networks and WaveNet</text>
+      </navLabel>
+      <content src="text/part0104.html"/>
+      <navPoint class="chapter" id="num_98" playOrder="98">
+        <navLabel>
+          <text>What is a GAN?</text>
+        </navLabel>
+        <content src="text/part0105.html"/>
+        <navPoint class="chapter" id="num_99" playOrder="99">
+          <navLabel>
+            <text>Some GAN applications</text>
+          </navLabel>
+          <content src="text/part0106.html"/>
+        </navPoint>
+      </navPoint>
+      <navPoint class="chapter" id="num_100" playOrder="100">
+        <navLabel>
+          <text>Deep convolutional generative adversarial networks</text>
+        </navLabel>
+        <content src="text/part0107.html"/>
+      </navPoint>
+      <navPoint class="chapter" id="num_101" playOrder="101">
+        <navLabel>
+          <text>Keras adversarial GANs for forging MNIST</text>
+        </navLabel>
+        <content src="text/part0108.html"/>
+      </navPoint>
+      <navPoint class="chapter" id="num_102" playOrder="102">
+        <navLabel>
+          <text>Keras adversarial GANs for forging CIFAR</text>
+        </navLabel>
+        <content src="text/part0109.html"/>
+      </navPoint>
+      <navPoint class="chapter" id="num_103" playOrder="103">
+        <navLabel>
+          <text>WaveNet — a generative model for learning how to produce audio</text>
+        </navLabel>
+        <content src="text/part0110.html"/>
+      </navPoint>
+      <navPoint class="chapter" id="num_104" playOrder="104">
+        <navLabel>
+          <text>Summary</text>
+        </navLabel>
+        <content src="text/part0111.html"/>
+      </navPoint>
+    </navPoint>
+    <navPoint class="chapter" id="num_105" playOrder="105">
+      <navLabel>
+        <text>Word Embeddings</text>
+      </navLabel>
+      <content src="text/part0112.html"/>
+      <navPoint class="chapter" id="num_106" playOrder="106">
+        <navLabel>
+          <text>Distributed representations</text>
+        </navLabel>
+        <content src="text/part0113.html"/>
+      </navPoint>
+      <navPoint class="chapter" id="num_107" playOrder="107">
+        <navLabel>
+          <text>word2vec</text>
+        </navLabel>
+        <content src="text/part0114.html"/>
+        <navPoint class="chapter" id="num_108" playOrder="108">
+          <navLabel>
+            <text>The skip-gram word2vec model</text>
+          </navLabel>
+          <content src="text/part0115.html"/>
+        </navPoint>
+        <navPoint class="chapter" id="num_109" playOrder="109">
+          <navLabel>
+            <text>The CBOW word2vec model</text>
+          </navLabel>
+          <content src="text/part0116.html"/>
+        </navPoint>
+        <navPoint class="chapter" id="num_110" playOrder="110">
+          <navLabel>
+            <text>Extracting word2vec embeddings from the model</text>
+          </navLabel>
+          <content src="text/part0117.html"/>
+        </navPoint>
+        <navPoint class="chapter" id="num_111" playOrder="111">
+          <navLabel>
+            <text>Using third-party implementations of word2vec</text>
+          </navLabel>
+          <content src="text/part0118.html"/>
+        </navPoint>
+      </navPoint>
+      <navPoint class="chapter" id="num_112" playOrder="112">
+        <navLabel>
+          <text>Exploring GloVe</text>
+        </navLabel>
+        <content src="text/part0119.html"/>
+      </navPoint>
+      <navPoint class="chapter" id="num_113" playOrder="113">
+        <navLabel>
+          <text>Using pre-trained embeddings</text>
+        </navLabel>
+        <content src="text/part0120.html"/>
+        <navPoint class="chapter" id="num_114" playOrder="114">
+          <navLabel>
+            <text>Learn embeddings from scratch</text>
+          </navLabel>
+          <content src="text/part0121.html"/>
+        </navPoint>
+        <navPoint class="chapter" id="num_115" playOrder="115">
+          <navLabel>
+            <text>Fine-tuning learned embeddings from word2vec</text>
+          </navLabel>
+          <content src="text/part0122.html"/>
+        </navPoint>
+        <navPoint class="chapter" id="num_116" playOrder="116">
+          <navLabel>
+            <text>Fine-tune learned embeddings from GloVe</text>
+          </navLabel>
+          <content src="text/part0123.html"/>
+        </navPoint>
+        <navPoint class="chapter" id="num_117" playOrder="117">
+          <navLabel>
+            <text>Look up embeddings</text>
+          </navLabel>
+          <content src="text/part0124.html"/>
+        </navPoint>
+      </navPoint>
+      <navPoint class="chapter" id="num_118" playOrder="118">
+        <navLabel>
+          <text>Summary</text>
+        </navLabel>
+        <content src="text/part0125.html"/>
+      </navPoint>
+    </navPoint>
+    <navPoint class="chapter" id="num_119" playOrder="119">
+      <navLabel>
+        <text>Recurrent Neural Network — RNN</text>
+      </navLabel>
+      <content src="text/part0126.html"/>
+      <navPoint class="chapter" id="num_120" playOrder="120">
+        <navLabel>
+          <text>SimpleRNN cells</text>
+        </navLabel>
+        <content src="text/part0127.html"/>
+        <navPoint class="chapter" id="num_121" playOrder="121">
+          <navLabel>
+            <text>SimpleRNN with Keras — generating text</text>
+          </navLabel>
+          <content src="text/part0128.html"/>
+        </navPoint>
+      </navPoint>
+      <navPoint class="chapter" id="num_122" playOrder="122">
+        <navLabel>
+          <text>RNN topologies</text>
+        </navLabel>
+        <content src="text/part0129.html"/>
+      </navPoint>
+      <navPoint class="chapter" id="num_123" playOrder="123">
+        <navLabel>
+          <text>Vanishing and exploding gradients</text>
+        </navLabel>
+        <content src="text/part0130.html"/>
+      </navPoint>
+      <navPoint class="chapter" id="num_124" playOrder="124">
+        <navLabel>
+          <text>Long short term memory — LSTM</text>
+        </navLabel>
+        <content src="text/part0131.html"/>
+        <navPoint class="chapter" id="num_125" playOrder="125">
+          <navLabel>
+            <text>LSTM with Keras — sentiment analysis</text>
+          </navLabel>
+          <content src="text/part0132.html"/>
+        </navPoint>
+      </navPoint>
+      <navPoint class="chapter" id="num_126" playOrder="126">
+        <navLabel>
+          <text>Gated recurrent unit — GRU</text>
+        </navLabel>
+        <content src="text/part0133.html"/>
+        <navPoint class="chapter" id="num_127" playOrder="127">
+          <navLabel>
+            <text>GRU with Keras — POS tagging</text>
+          </navLabel>
+          <content src="text/part0134.html"/>
+        </navPoint>
+      </navPoint>
+      <navPoint class="chapter" id="num_128" playOrder="128">
+        <navLabel>
+          <text>Bidirectional RNNs</text>
+        </navLabel>
+        <content src="text/part0135.html"/>
+      </navPoint>
+      <navPoint class="chapter" id="num_129" playOrder="129">
+        <navLabel>
+          <text>Stateful RNNs</text>
+        </navLabel>
+        <content src="text/part0136.html"/>
+        <navPoint class="chapter" id="num_130" playOrder="130">
+          <navLabel>
+            <text>Stateful LSTM with Keras — predicting electricity consumption</text>
+          </navLabel>
+          <content src="text/part0137.html"/>
+        </navPoint>
+      </navPoint>
+      <navPoint class="chapter" id="num_131" playOrder="131">
+        <navLabel>
+          <text>Other RNN variants</text>
+        </navLabel>
+        <content src="text/part0138.html"/>
+      </navPoint>
+      <navPoint class="chapter" id="num_132" playOrder="132">
+        <navLabel>
+          <text>Summary</text>
+        </navLabel>
+        <content src="text/part0139.html"/>
+      </navPoint>
+    </navPoint>
+    <navPoint class="chapter" id="num_133" playOrder="133">
+      <navLabel>
+        <text>Additional Deep Learning Models</text>
+      </navLabel>
+      <content src="text/part0140.html"/>
+      <navPoint class="chapter" id="num_134" playOrder="134">
+        <navLabel>
+          <text>Keras functional API</text>
+        </navLabel>
+        <content src="text/part0141.html"/>
+      </navPoint>
+      <navPoint class="chapter" id="num_135" playOrder="135">
+        <navLabel>
+          <text>Regression networks</text>
+        </navLabel>
+        <content src="text/part0142.html"/>
+        <navPoint class="chapter" id="num_136" playOrder="136">
+          <navLabel>
+            <text>Keras regression example — predicting benzene levels in the air</text>
+          </navLabel>
+          <content src="text/part0143.html"/>
+        </navPoint>
+      </navPoint>
+      <navPoint class="chapter" id="num_137" playOrder="137">
+        <navLabel>
+          <text>Unsupervised learning — autoencoders</text>
+        </navLabel>
+        <content src="text/part0144.html"/>
+        <navPoint class="chapter" id="num_138" playOrder="138">
+          <navLabel>
+            <text>Keras autoencoder example — sentence vectors</text>
+          </navLabel>
+          <content src="text/part0145.html"/>
+        </navPoint>
+      </navPoint>
+      <navPoint class="chapter" id="num_139" playOrder="139">
+        <navLabel>
+          <text>Composing deep networks</text>
+        </navLabel>
+        <content src="text/part0146.html"/>
+        <navPoint class="chapter" id="num_140" playOrder="140">
+          <navLabel>
+            <text>Keras example — memory network for question answering</text>
+          </navLabel>
+          <content src="text/part0147.html"/>
+        </navPoint>
+      </navPoint>
+      <navPoint class="chapter" id="num_141" playOrder="141">
+        <navLabel>
+          <text>Customizing Keras</text>
+        </navLabel>
+        <content src="text/part0148.html"/>
+        <navPoint class="chapter" id="num_142" playOrder="142">
+          <navLabel>
+            <text>Keras example — using the lambda layer</text>
+          </navLabel>
+          <content src="text/part0149.html"/>
+        </navPoint>
+        <navPoint class="chapter" id="num_143" playOrder="143">
+          <navLabel>
+            <text>Keras example — building a custom normalization layer</text>
+          </navLabel>
+          <content src="text/part0150.html"/>
+        </navPoint>
+      </navPoint>
+      <navPoint class="chapter" id="num_144" playOrder="144">
+        <navLabel>
+          <text>Generative models</text>
+        </navLabel>
+        <content src="text/part0151.html"/>
+        <navPoint class="chapter" id="num_145" playOrder="145">
+          <navLabel>
+            <text>Keras example — deep dreaming</text>
+          </navLabel>
+          <content src="text/part0152.html"/>
+        </navPoint>
+        <navPoint class="chapter" id="num_146" playOrder="146">
+          <navLabel>
+            <text>Keras example — style transfer</text>
+          </navLabel>
+          <content src="text/part0153.html"/>
+        </navPoint>
+      </navPoint>
+      <navPoint class="chapter" id="num_147" playOrder="147">
+        <navLabel>
+          <text>Summary</text>
+        </navLabel>
+        <content src="text/part0154.html"/>
+      </navPoint>
+    </navPoint>
+    <navPoint class="chapter" id="num_148" playOrder="148">
+      <navLabel>
+        <text>AI Game Playing</text>
+      </navLabel>
+      <content src="text/part0155.html"/>
+      <navPoint class="chapter" id="num_149" playOrder="149">
+        <navLabel>
+          <text>Reinforcement learning</text>
+        </navLabel>
+        <content src="text/part0156.html"/>
+        <navPoint class="chapter" id="num_150" playOrder="150">
+          <navLabel>
+            <text>Maximizing future rewards</text>
+          </navLabel>
+          <content src="text/part0157.html"/>
+        </navPoint>
+        <navPoint class="chapter" id="num_151" playOrder="151">
+          <navLabel>
+            <text>Q-learning</text>
+          </navLabel>
+          <content src="text/part0158.html"/>
+        </navPoint>
+        <navPoint class="chapter" id="num_152" playOrder="152">
+          <navLabel>
+            <text>The deep Q-network as a Q-function</text>
+          </navLabel>
+          <content src="text/part0159.html"/>
+        </navPoint>
+        <navPoint class="chapter" id="num_153" playOrder="153">
+          <navLabel>
+            <text>Balancing exploration with exploitation</text>
+          </navLabel>
+          <content src="text/part0160.html"/>
+        </navPoint>
+        <navPoint class="chapter" id="num_154" playOrder="154">
+          <navLabel>
+            <text>Experience replay, or the value of experience</text>
+          </navLabel>
+          <content src="text/part0161.html"/>
+        </navPoint>
+      </navPoint>
+      <navPoint class="chapter" id="num_155" playOrder="155">
+        <navLabel>
+          <text>Example - Keras deep Q-network for catch</text>
+        </navLabel>
+        <content src="text/part0162.html"/>
+      </navPoint>
+      <navPoint class="chapter" id="num_156" playOrder="156">
+        <navLabel>
+          <text>The road ahead</text>
+        </navLabel>
+        <content src="text/part0163.html"/>
+      </navPoint>
+      <navPoint class="chapter" id="num_157" playOrder="157">
+        <navLabel>
+          <text>Summary</text>
+        </navLabel>
+        <content src="text/part0164.html"/>
+      </navPoint>
+    </navPoint>
+    <navPoint class="chapter" id="num_158" playOrder="158">
+      <navLabel>
+        <text>Conclusion</text>
+      </navLabel>
+      <content src="text/part0165.html"/>
+      <navPoint class="chapter" id="num_159" playOrder="159">
+        <navLabel>
+          <text>Keras 2.0 — what is new</text>
+        </navLabel>
+        <content src="text/part0166.html"/>
+        <navPoint class="chapter" id="num_160" playOrder="160">
+          <navLabel>
+            <text>Installing Keras 2.0</text>
+          </navLabel>
+          <content src="text/part0167.html"/>
+        </navPoint>
+        <navPoint class="chapter" id="num_161" playOrder="161">
+          <navLabel>
+            <text>API changes</text>
+          </navLabel>
+          <content src="text/part0168.html"/>
+        </navPoint>
+      </navPoint>
+    </navPoint>
+  </navMap>
+</ncx>
