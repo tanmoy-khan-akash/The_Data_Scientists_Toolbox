@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xmlns:m="http://www.w3.org/1998/Math/MathML" xmlns:pls="http://www.w3.org/2005/01/pronunciation-lexicon" xmlns:ssml="http://www.w3.org/2001/10/synthesis" xmlns:svg="http://www.w3.org/2000/svg">
+<head>
+  <meta charset="UTF-8" />
+  <title>Training the discriminator with real images</title>
+  <link type="text/css" rel="stylesheet" media="all" href="style.css" />
+  <link type="text/css" rel="stylesheet" media="all" href="core.css" />
+</head>
+<body>
+  <div id="sbo-rt-content"><section>
+
+                            <header>
+                    <h1 class="header-title">Training the discriminator with real images</h1>
+                </header>
+            
+            <article>
+                
+<p>Let's pass some real images as ground truth to train discriminator.</p>
+<p>First, we will take a look at the code for doing the same <span>and then explore the important features:</span></p>
+<pre>output = netD(inputv)<br/>errD_real = criterion(output, labelv)<br/>errD_real.backward()</pre>
+<p>In the previous code, we are calculating the loss and the gradients required for the discriminator image. The <kbd>inputv</kbd> and <kbd>labelv</kbd> represent the input image from the <kbd>CIFAR10</kbd> dataset and labels, which is one for real images. It is pretty straightforward, as it is similar to what we do for other image classifier networks.</p>
+
+
+            </article>
+
+            
+        </section>
+    </div>
+</body>
+</html>

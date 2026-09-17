@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xmlns:m="http://www.w3.org/1998/Math/MathML" xmlns:pls="http://www.w3.org/2005/01/pronunciation-lexicon" xmlns:ssml="http://www.w3.org/2001/10/synthesis" xmlns:svg="http://www.w3.org/2000/svg">
+<head>
+  <meta charset="UTF-8" />
+  <title>View</title>
+  <link type="text/css" rel="stylesheet" media="all" href="style.css" />
+  <link type="text/css" rel="stylesheet" media="all" href="core.css" />
+</head>
+<body>
+  <div id="sbo-rt-content"><section>
+
+                            <header>
+                    <h1 class="header-title">View</h1>
+                </header>
+            
+            <article>
+                
+<p>It is a common practice to use a fully connected, or linear, layer at the end of most networks for an image classification problem. We are using a two-dimensional convolution that takes a matrix of numbers as input and outputs another matrix of numbers. To apply a linear layer, we need to flatten the matrix which is a tensor of two-dimensions to a vector of one-dimension. The following example will show you how <kbd>view</kbd> works:     </p>
+<div class="CDPAlignCenter CDPAlign">        <img height="100" width="327" class="alignnone size-full wp-image-482 image-border" src="images/b74f354c-6690-4b8a-96fc-fad0537ac50d.png" /></div>
+<p>Let's look at the code used in our network that does the same:</p>
+<pre>x.view(-1, 320)</pre>
+<p>As we saw earlier, the <kbd>view</kbd> method will flatten an <em>n</em>-dimension tensor to a one-dimensional tensor. In our network, the first dimension is of each image. The input data after batching will have a dimension of <em>32 x 1 x 28 x 28,</em> where the first number, <em>32,</em> will denote that there are <em>32</em> images of size <em>28</em> height, <em>28</em> width, and <em>1</em> channel since it is a black-and-white image. When we flatten, we do not want to flatten or mix the data for different images. So, the first argument that we pass to the <kbd>view</kbd> function will instruct PyTorch to avoid flattening the data on the first dimension. Let's take a look at how this works in the following image:</p>
+<div class="CDPAlignCenter CDPAlign">  <img height="180" width="277" class="alignnone size-full wp-image-483 image-border" src="images/f0a8f523-4a29-4ee8-8ef0-a10d54b777df.png" /></div>
+<p>In the preceding example, we have data of size <em>2 x 1 x 2 x 2</em>; after we apply the <kbd>view</kbd> function, it converts to a tensor of size <em>2 x 1 x 4</em>. Let's also look at another example where we don't mention the <em>- 1</em>: </p>
+<div class="mce-root CDPAlignCenter CDPAlign"><img height="162" width="345" class="alignnone size-full wp-image-484 image-border" src="images/73b8a6ca-1268-4c68-a0c2-8a27606a991e.png" /></div>
+<p>If we ever forget to mention which dimension to flatten, we may end up with unexpected results. So be extra careful at this step.</p>
+
+
+            </article>
+
+            
+        </section>
+    </div>
+</body>
+</html>

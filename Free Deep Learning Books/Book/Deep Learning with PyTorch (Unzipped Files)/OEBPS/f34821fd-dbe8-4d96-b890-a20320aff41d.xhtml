@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xmlns:m="http://www.w3.org/1998/Math/MathML" xmlns:pls="http://www.w3.org/2005/01/pronunciation-lexicon" xmlns:ssml="http://www.w3.org/2001/10/synthesis" xmlns:svg="http://www.w3.org/2000/svg">
+<head>
+  <meta charset="UTF-8" />
+  <title>Model architecture for different machine learning problems</title>
+  <link type="text/css" rel="stylesheet" media="all" href="style.css" />
+  <link type="text/css" rel="stylesheet" media="all" href="core.css" />
+</head>
+<body>
+  <div id="sbo-rt-content"><section>
+
+                            <header>
+                    <h1 class="header-title">Model architecture for different machine learning problems</h1>
+                </header>
+            
+            <article>
+                
+<p>The kind of problem we are solving will decide mostly what layers we will use, starting from a linear layer to <strong>Long Short-Term Memory</strong> (<strong>LSTM</strong>) for sequential data. Based on the type of the problem you are trying to solve, your last layer is determined. There are three problems that we generally solve using any machine learning or deep learning algorithms. Let's look at what the last layer would look like:</p>
+<ul>
+<li>For a regression problem, such as predicting the price of a t-shirt to sell, we would use the last layer as a linear layer with an output of one, which outputs a continuous value.</li>
+<li>For classifying a given image as t-shirt or shirt, you would use a sigmoid activation function, as it outputs values either closer to one or zero, which is generally called a <strong>binary classification problem</strong>.</li>
+<li>For a multi-class classification, where we have to classify whether a given image is a t-shirt, jeans, shirt, or dress, we would use a softmax layer at the end our network. Let's try to understand intuitively what softmax does without going into the math of it. It takes inputs from the previous linear layer, for example, and outputs the probabilities for a given number of examples. In our example, it would be trained to predict four probabilities for each type of image. Remember, all these probabilities always add up to one.</li>
+</ul>
+
+
+            </article>
+
+            
+        </section>
+    </div>
+</body>
+</html>

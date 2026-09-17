@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xmlns:m="http://www.w3.org/1998/Math/MathML" xmlns:pls="http://www.w3.org/2005/01/pronunciation-lexicon" xmlns:ssml="http://www.w3.org/2001/10/synthesis" xmlns:svg="http://www.w3.org/2000/svg">
+<head>
+  <meta charset="UTF-8" />
+  <title>Neural style transfer&#xA0;</title>
+  <link type="text/css" rel="stylesheet" media="all" href="style.css" />
+  <link type="text/css" rel="stylesheet" media="all" href="core.css" />
+</head>
+<body>
+  <div id="sbo-rt-content"><section>
+
+                            <header>
+                    <h1 class="header-title">Neural style transfer </h1>
+                </header>
+            
+            <article>
+                
+<p>We humans generate artwork with different levels of accuracy and complexity. Though the process of creating art could be a very complex process, it can be seen as a combination of the two most important factors, namely, what to draw and how to draw. What to draw is inspired by what we see around us, and how we draw will also take influences from certain things that are found around us. This could be an oversimplification from an artist's perspective, but for understanding how we can create artwork using deep learning algorithms, it is very useful. We will train a deep learning algorithm to take content from one image and then draw it according to a specific artistic style. If you are an artist or in the creative industry, you can directly use the amazing research that has gone on in recent years to improve this and create something cool within the domain you work in. Even if you are not, it still introduces you to the field of generative models, where networks generate new content. </p>
+<p>Let's understand what is done in neural style transfer at a high-level, and then dive into details, along with the PyTorch code required to build it. The style transfer algorithm is provided with a content <em>image (C)</em> and a style <em>image (S);</em> the algorithm has to generate a new image (O) which has the content from the content image and the style from the style image. This process of creating neural style transfer was introduced by Leon Gates and others in 2015 (<a href="https://arxiv.org/pdf/1508.06576.pdf" target="_blank">A Neural Algorithm of Artistic Style)</a>. <span>The following is the content image (C) that we will be using:</span></p>
+<div class="CDPAlignCenter CDPAlign"><img height="271" width="271" src="images/641807cd-e2af-47f7-a88f-e5a9b09b2cb0.png" /></div>
+<div class="mce-root CDPAlignCenter CDPAlign packt_figref"><span>Image source: https://arxiv.org/pdf/1508.06576.pdf</span></div>
+<p>And the following is the style image (S):</p>
+<div class="CDPAlignCenter CDPAlign"><img height="308" width="308" src="images/92227a6d-1e3f-42ee-98a9-5ba6bb7c9d0d.png" /></div>
+<div class="mce-root CDPAlignCenter CDPAlign packt_figref"><span>Image source: https://arxiv.org/pdf/1508.06576.pdf</span></div>
+<p>And this is the image that we are going to generate:</p>
+<div class="CDPAlignCenter CDPAlign"><img height="229" width="306" src="images/2dc624aa-47c9-454a-bf16-b2a170dfb1cd.png" /></div>
+<div class="packt_figref CDPAlignCenter CDPAlign">Image source: https://arxiv.org/pdf/1508.06576.pdf</div>
+<p>The idea behind style transfer becomes intuitive from understanding how <strong>Convolutional Neural Networks</strong> (<strong>CNNs</strong>) work. When CNNs are trained for object recognition, the early layers of a trained CNN learn very generic information like lines, curves, and shapes. The last layers in a CNN capture the higher-level concepts from an image such as eyes, buildings, and trees. So the values of the last layers of similar images tend to be closer. We take the same concept and apply it for content loss. The last layer for the content image and the generated image should be similar, and we calculate the similarity using <strong>mean square error </strong>(<strong>MSE</strong>). We use our optimization algorithms to bring down the loss value. </p>
+<p>The style of the image is generally captured across multiple layers in a CNN by a technique called <strong>gram matrix</strong>. Gram matrix calculates the correlation between the feature maps captured across multiple layers. Gram matrix gives a measure of calculating the style. Similarly styled images have similar values for gram matrix. The style loss is also calculated using MSE between the gram matrix of the style image and the generated image. </p>
+<p>We will use a pretrained VGG19 model, provided in the torchvision models. The steps required for training a style transfer model are similar to any other deep learning model, except for the fact that calculating losses is more involved than for a classification or a regression model. The training of the neural style algorithm can be broken down to the following steps:</p>
+<ol>
+<li>Loading data.</li>
+<li>Creating a VGG19 model.</li>
+<li>Defining content loss.</li>
+<li>Defining style loss.</li>
+<li>Extracting losses across layers from VGG model.</li>
+<li>Creating an optimizer.</li>
+<li>Training—generating an image similar to the content image, and style similar to the style image. </li>
+</ol>
+
+
+            </article>
+
+            
+        </section>
+    </div>
+</body>
+</html>

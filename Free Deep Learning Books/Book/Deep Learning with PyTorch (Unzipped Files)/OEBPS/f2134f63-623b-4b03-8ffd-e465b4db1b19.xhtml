@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xmlns:m="http://www.w3.org/1998/Math/MathML" xmlns:pls="http://www.w3.org/2005/01/pronunciation-lexicon" xmlns:ssml="http://www.w3.org/2001/10/synthesis" xmlns:svg="http://www.w3.org/2000/svg">
+<head>
+  <meta charset="UTF-8" />
+  <title>torchtext.datasets</title>
+  <link type="text/css" rel="stylesheet" media="all" href="style.css" />
+  <link type="text/css" rel="stylesheet" media="all" href="core.css" />
+</head>
+<body>
+  <div id="sbo-rt-content"><section>
+
+                            <header>
+                    <h1 class="header-title">torchtext.datasets</h1>
+                </header>
+            
+            <article>
+                
+<p>The <kbd>torchtext.datasets</kbd> instance provide wrappers for using different datasets like IMDB, TREC (question classification), language modeling (WikiText-2), and a few other datasets. We will use <kbd>torch.datasets</kbd> to download the <kbd>IMDB</kbd> dataset and split it into <kbd>train</kbd> and <kbd>test</kbd> datasets. The following code does that, and when you run it for the first time it could take several minutes, depending on your broadband connection, as it downloads the <kbd>IMDB</kbd> datasets from the internet:</p>
+<pre>train, test = datasets.IMDB.splits(TEXT, LABEL)</pre>
+<p>The previous dataset's <kbd>IMDB</kbd> class abstracts away all the complexity involved in downloading, tokenizing, and splitting the database into <kbd>train</kbd> and <kbd>test</kbd> datasets. <kbd>train.fields</kbd> contains a dictionary where <kbd>TEXT</kbd> is the key and the value <kbd>LABEL</kbd>. Let's look at <kbd>train.fields</kbd> and each element of <kbd>train</kbd> contains: </p>
+<pre>print('train.fields', train.fields)<br/><br/>#Results <br/>train.fields {'text': &lt;torchtext.data.field.Field object at 0x1129db160&gt;, 'label': &lt;torchtext.data.field.Field object at 0x1129db1d0&gt;}<br/><br/>print(vars(train[0]))<br/><br/>#Results <br/><br/>vars(train[0]) {'text': ['for', 'a', 'movie', 'that', 'gets', 'no', 'respect', 'there', 'sure', 'are', 'a', 'lot', 'of', 'memorable', 'quotes', 'listed', 'for', 'this', 'gem.', 'imagine', 'a', 'movie', 'where', 'joe', 'piscopo', 'is', 'actually', 'funny!', 'maureen', 'stapleton', 'is', 'a', 'scene', 'stealer.', 'the', 'moroni', 'character', 'is', 'an', 'absolute', 'scream.', 'watch', 'for', 'alan', '"the', 'skipper"', 'hale', 'jr.', 'as', 'a', 'police', 'sgt.'], 'label': 'pos'}</pre>
+<p>We can see from these results that a single element contains a field, <kbd>text</kbd>, along with all the tokens representing the <kbd>text</kbd>, and a <kbd>label</kbd> field that contains the label of the text. Now we have the <kbd>IMDB</kbd> dataset ready for batching. </p>
+
+
+            </article>
+
+            
+        </section>
+    </div>
+</body>
+</html>

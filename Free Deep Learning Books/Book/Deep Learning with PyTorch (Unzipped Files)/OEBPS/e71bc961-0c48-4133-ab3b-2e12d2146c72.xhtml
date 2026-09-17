@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xmlns:m="http://www.w3.org/1998/Math/MathML" xmlns:pls="http://www.w3.org/2005/01/pronunciation-lexicon" xmlns:ssml="http://www.w3.org/2001/10/synthesis" xmlns:svg="http://www.w3.org/2000/svg">
+<head>
+  <meta charset="UTF-8" />
+  <title>Extracting DenseNet features</title>
+  <link type="text/css" rel="stylesheet" media="all" href="style.css" />
+  <link type="text/css" rel="stylesheet" media="all" href="core.css" />
+</head>
+<body>
+  <div id="sbo-rt-content"><section>
+
+                            <header>
+                    <h1 class="header-title">Extracting DenseNet features</h1>
+                </header>
+            
+            <article>
+                
+<p>It is quite similar to what we did for Inception, except we are not using <kbd>register_forward_hook</kbd> to extract features. The following code shows how the DenseNet features are extracted:</p>
+<pre>#For training data<br/>trn_labels = []<br/>trn_features = []<br/><br/>#code to store densenet features for train dataset.<br/>for d,la in train_loader:<br/>    o = my_densenet(Variable(d.cuda()))<br/>    o = o.view(o.size(0),-1)<br/>    trn_labels.extend(la)<br/>    trn_features.extend(o.cpu().data)<br/><br/>#For validation data<br/>val_labels = []<br/>val_features = []<br/><br/>#Code to store densenet features for validation dataset. <br/>for d,la in val_loader:<br/>    o = my_densenet(Variable(d.cuda()))<br/>    o = o.view(o.size(0),-1)<br/>    val_labels.extend(la)<br/>    val_features.extend(o.cpu().data)</pre>
+<p>The preceding code is similar to what we have seen for Inception and ResNet. </p>
+
+
+            </article>
+
+            
+        </section>
+    </div>
+</body>
+</html>

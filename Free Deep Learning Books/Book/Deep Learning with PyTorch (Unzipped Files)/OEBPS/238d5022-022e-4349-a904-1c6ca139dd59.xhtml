@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xmlns:m="http://www.w3.org/1998/Math/MathML" xmlns:pls="http://www.w3.org/2005/01/pronunciation-lexicon" xmlns:ssml="http://www.w3.org/2001/10/synthesis" xmlns:svg="http://www.w3.org/2000/svg">
+<head>
+  <meta charset="UTF-8" />
+  <title>Training the VGG16 model&#xA0;</title>
+  <link type="text/css" rel="stylesheet" media="all" href="style.css" />
+  <link type="text/css" rel="stylesheet" media="all" href="core.css" />
+</head>
+<body>
+  <div id="sbo-rt-content"><section>
+
+                            <header>
+                    <h1 class="header-title">Training the VGG16 model </h1>
+                </header>
+            
+            <article>
+                
+<p>We have created the model and optimizer. Since we are using the <kbd>Dogs vs. Cats</kbd> dataset, we can use the same data loaders and the <kbd>train</kbd> function to train our model. Remember, when we train the model, only the parameters inside the classifier change. The following code snippet will train the model for <kbd>20</kbd> epochs, reaching a validation accuracy of 98.45%:</p>
+<pre>train_losses , train_accuracy = [],[]<br/>val_losses , val_accuracy = [],[]<br/>for epoch in range(1,20):<br/>    epoch_loss, epoch_accuracy = fit(epoch,vgg,train_data_loader,phase='training')<br/>    val_epoch_loss , val_epoch_accuracy = fit(epoch,vgg,valid_data_loader,phase='validation')<br/>    train_losses.append(epoch_loss)<br/>    train_accuracy.append(epoch_accuracy)<br/>    val_losses.append(val_epoch_loss)<br/>    val_accuracy.append(val_epoch_accuracy)</pre>
+<p>Let's visualize the training and validation loss:</p>
+<div class="CDPAlignCenter CDPAlign">              <img height="252" width="382" class="alignnone size-full wp-image-490 image-border" src="images/f8d58fda-2db4-4327-9ebc-f4a1a7a02416.png" /></div>
+<p>Let's visualize the training and validation accuracy:</p>
+<div class="CDPAlignCenter CDPAlign">              <img height="252" width="382" class="alignnone size-full wp-image-491 image-border" src="images/914a6a81-d15d-45db-8e35-bebf67f2ccb8.png" /></div>
+<p>We can apply a couple of tricks, such as data augmentation and playing with different values of the dropout to improve the model's generalization capabilities. The following code snippet changes the dropout, value in the classifier module of VGG to <kbd>0.2</kbd> from <kbd>0.5</kbd> and trains the model:</p>
+<pre>for layer in vgg.classifier.children():<br/>    if(type(layer) == nn.Dropout):<br/>        layer.p = 0.2<br/><br/>#Training<br/>train_losses , train_accuracy = [],[]<br/>val_losses , val_accuracy = [],[]<br/>for epoch in range(1,3):<br/>    epoch_loss, epoch_accuracy = fit(epoch,vgg,train_data_loader,phase='training')<br/>    val_epoch_loss , val_epoch_accuracy = fit(epoch,vgg,valid_data_loader,phase='validation')<br/>    train_losses.append(epoch_loss)<br/>    train_accuracy.append(epoch_accuracy)<br/>    val_losses.append(val_epoch_loss)<br/>    val_accuracy.append(val_epoch_accuracy)</pre>
+<p>Training this for a few epochs gave me a slight improvement; you can try playing with different dropout values. Another important trick to improve model generalization is to add more data or do data augmentation. We will do data augmentation, by randomly flipping the image horizontally or rotating the image by a small angle. The <kbd>torchvision</kbd> transforms provide different functionalities for doing data augmentation and they do it dynamically, changing for every epoch. We implement data augmentation using the following code: </p>
+<pre class="mce-root">train_transform =transforms.Compose([transforms.Resize((224,224)),<br/>                                     transforms.RandomHorizontalFlip(),<br/>                                     transforms.RandomRotation(0.2),<br/>                                     transforms.ToTensor(),<br/>                                     transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])<br/>                                      ])<br/><br/>train = ImageFolder('dogsandcats/train/',train_transform)<br/>valid = ImageFolder('dogsandcats/valid/',simple_transform)<br/><br/>#Training <br/><br/>train_losses , train_accuracy = [],[]<br/>val_losses , val_accuracy = [],[]<br/>for epoch in range(1,3):<br/>    epoch_loss, epoch_accuracy = fit(epoch,vgg,train_data_loader,phase='training')<br/>    val_epoch_loss , val_epoch_accuracy = fit(epoch,vgg,valid_data_loader,phase='validation')<br/>    train_losses.append(epoch_loss)<br/>    train_accuracy.append(epoch_accuracy)<br/>    val_losses.append(val_epoch_loss)<br/>    val_accuracy.append(val_epoch_accuracy)</pre>
+<p class="mce-root">The output of the preceding code is generated as follows:</p>
+<pre>#Results<br/><br/>training loss is 0.041 and training accuracy is 22657/23000 98.51 validation loss is 0.043 and validation accuracy is 1969/2000 98.45 training loss is 0.04 and training accuracy is 22697/23000 98.68 validation loss is 0.043 and validation accuracy is 1970/2000 98.5</pre>
+<p>Training the model with augmented data improved the model accuracy by 0.1% by running just two epochs; we can run it for a few more epochs to improve further. If you have been training these models while reading the book, you will have realized that training each epoch could take more than a couple of minutes, depending on the GPU you are running. Let's look at a technique where we can train each epoch in a few seconds.</p>
+
+
+            </article>
+
+            
+        </section>
+    </div>
+</body>
+</html>

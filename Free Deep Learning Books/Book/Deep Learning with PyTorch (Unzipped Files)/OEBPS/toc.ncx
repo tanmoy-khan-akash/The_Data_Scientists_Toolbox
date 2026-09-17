@@ -1,0 +1,1776 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ncx xmlns="http://www.daisy.org/z3986/2005/ncx/" version="2005-1">
+    <head>
+        <meta name="dtb:uid" content="9781788624336" />
+        <meta name="dtb:generator" content="epub-nicohaenggi"/>
+        <meta name="dtb:depth" content="1"/>
+        <meta name="dtb:totalPageCount" content="0"/>
+        <meta name="dtb:maxPageNumber" content="0"/>
+    </head>
+    <docTitle>
+        <text>Deep Learning with PyTorch</text>
+    </docTitle>
+    <docAuthor>
+        <text>Vishnu Subramanian</text>
+    </docAuthor>
+    <navMap>
+        
+                <navPoint id="tocxhtmlfile" playOrder="0" class="chapter">
+                    <navLabel>
+                        <text>Deep Learning with PyTorch</text>
+                    </navLabel>
+                    <content src="cover.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-6e158cb8-34f1-4f92-ab47-b4c879030af6" playOrder="1" class="chapter">
+                    <navLabel>
+                        <text>Title Page</text>
+                    </navLabel>
+                    <content src="6e158cb8-34f1-4f92-ab47-b4c879030af6.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-ccf7f3a1-0b30-487b-b8dc-d46ba935d6f8" playOrder="2" class="chapter">
+                    <navLabel>
+                        <text>Copyright and Credits</text>
+                    </navLabel>
+                    <content src="ccf7f3a1-0b30-487b-b8dc-d46ba935d6f8.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-ed7cb706-4052-4e17-8950-2652edbe228a" playOrder="3" class="chapter">
+                    <navLabel>
+                        <text>Deep Learning with PyTorch</text>
+                    </navLabel>
+                    <content src="ed7cb706-4052-4e17-8950-2652edbe228a.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-5aa88992-eafd-4fc3-9471-69f8d5632ac9" playOrder="4" class="chapter">
+                    <navLabel>
+                        <text>Dedication</text>
+                    </navLabel>
+                    <content src="5aa88992-eafd-4fc3-9471-69f8d5632ac9.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-33ee2e68-aa43-40d5-aceb-4ce60e2a0206" playOrder="5" class="chapter">
+                    <navLabel>
+                        <text>Packt Upsell</text>
+                    </navLabel>
+                    <content src="33ee2e68-aa43-40d5-aceb-4ce60e2a0206.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-c5ba30e1-46e2-481e-9b75-da67acc10d60" playOrder="6" class="chapter">
+                    <navLabel>
+                        <text>Why subscribe?</text>
+                    </navLabel>
+                    <content src="c5ba30e1-46e2-481e-9b75-da67acc10d60.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-16353cc2-ba8a-4492-95d5-156fa4a53917" playOrder="7" class="chapter">
+                    <navLabel>
+                        <text>PacktPub.com</text>
+                    </navLabel>
+                    <content src="16353cc2-ba8a-4492-95d5-156fa4a53917.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-a4564cb8-373e-4ede-b11f-653ff4861e52" playOrder="8" class="chapter">
+                    <navLabel>
+                        <text>Foreword</text>
+                    </navLabel>
+                    <content src="a4564cb8-373e-4ede-b11f-653ff4861e52.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-f811845f-903e-4dd5-8a1d-e96fb81ee457" playOrder="9" class="chapter">
+                    <navLabel>
+                        <text>Contributors</text>
+                    </navLabel>
+                    <content src="f811845f-903e-4dd5-8a1d-e96fb81ee457.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-5e4052f9-6758-4825-925c-ec4e1f4ef36b" playOrder="10" class="chapter">
+                    <navLabel>
+                        <text>About the author</text>
+                    </navLabel>
+                    <content src="5e4052f9-6758-4825-925c-ec4e1f4ef36b.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-d22cb566-df6a-45d9-8e5c-0718fbc4c8cc" playOrder="11" class="chapter">
+                    <navLabel>
+                        <text>About the reviewer</text>
+                    </navLabel>
+                    <content src="d22cb566-df6a-45d9-8e5c-0718fbc4c8cc.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-02e970fb-a193-4889-b93c-fc330d395b76" playOrder="12" class="chapter">
+                    <navLabel>
+                        <text>Packt is searching for authors like you</text>
+                    </navLabel>
+                    <content src="02e970fb-a193-4889-b93c-fc330d395b76.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="tocxhtmlfile" playOrder="0" class="chapter">
+                    <navLabel>
+                        <text>Table of Contents</text>
+                    </navLabel>
+                    <content src="toc.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-9fefffd2-97cd-4cf9-b4ff-4cdedec462ba" playOrder="13" class="chapter">
+                    <navLabel>
+                        <text>Preface</text>
+                    </navLabel>
+                    <content src="9fefffd2-97cd-4cf9-b4ff-4cdedec462ba.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-e3210314-b9d0-408e-a027-3aedafdf0234" playOrder="14" class="chapter">
+                    <navLabel>
+                        <text>Who this book is for</text>
+                    </navLabel>
+                    <content src="e3210314-b9d0-408e-a027-3aedafdf0234.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-bb1cac74-2e3e-435c-8ecd-19b39ff98b5b" playOrder="15" class="chapter">
+                    <navLabel>
+                        <text>What this book covers</text>
+                    </navLabel>
+                    <content src="bb1cac74-2e3e-435c-8ecd-19b39ff98b5b.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-1e80f94a-fec8-4388-8b42-a99b1f6404c0" playOrder="16" class="chapter">
+                    <navLabel>
+                        <text>To get the most out of this book</text>
+                    </navLabel>
+                    <content src="1e80f94a-fec8-4388-8b42-a99b1f6404c0.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-1370e5e4-abde-4daa-9136-ef74627a90ed" playOrder="17" class="chapter">
+                    <navLabel>
+                        <text>Download the example code files</text>
+                    </navLabel>
+                    <content src="1370e5e4-abde-4daa-9136-ef74627a90ed.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-bae4bd29-61d8-4da0-bf5a-72e5fffc04ec" playOrder="18" class="chapter">
+                    <navLabel>
+                        <text>Download the color images</text>
+                    </navLabel>
+                    <content src="bae4bd29-61d8-4da0-bf5a-72e5fffc04ec.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-cec998d7-4947-48ab-984b-0141e3489266" playOrder="19" class="chapter">
+                    <navLabel>
+                        <text>Conventions used</text>
+                    </navLabel>
+                    <content src="cec998d7-4947-48ab-984b-0141e3489266.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-b95ad5a6-3a36-45b6-80b1-dd666b6dd7d9" playOrder="20" class="chapter">
+                    <navLabel>
+                        <text>Get in touch</text>
+                    </navLabel>
+                    <content src="b95ad5a6-3a36-45b6-80b1-dd666b6dd7d9.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-3b8ca6b5-f31c-44ac-b04f-de7c714c83c0" playOrder="21" class="chapter">
+                    <navLabel>
+                        <text>Reviews</text>
+                    </navLabel>
+                    <content src="3b8ca6b5-f31c-44ac-b04f-de7c714c83c0.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-14abb16b-86be-4209-8a96-79da5268b8dd" playOrder="22" class="chapter">
+                    <navLabel>
+                        <text>Getting Started with Deep Learning Using PyTorch</text>
+                    </navLabel>
+                    <content src="14abb16b-86be-4209-8a96-79da5268b8dd.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-10b6f1ef-daee-4153-b588-0fbe57d6e978" playOrder="23" class="chapter">
+                    <navLabel>
+                        <text>Artificial intelligence</text>
+                    </navLabel>
+                    <content src="10b6f1ef-daee-4153-b588-0fbe57d6e978.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-151a9c5e-c023-4e6d-bf73-a4d2e3284f48" playOrder="24" class="chapter">
+                    <navLabel>
+                        <text>The history of AI</text>
+                    </navLabel>
+                    <content src="151a9c5e-c023-4e6d-bf73-a4d2e3284f48.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-a7a045c6-b0e2-437c-892d-1e61c11446bf" playOrder="25" class="chapter">
+                    <navLabel>
+                        <text>Machine learning</text>
+                    </navLabel>
+                    <content src="a7a045c6-b0e2-437c-892d-1e61c11446bf.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-e1026c5a-c172-4e01-aeea-0cd9e264373d" playOrder="26" class="chapter">
+                    <navLabel>
+                        <text>Examples of machine learning in real life</text>
+                    </navLabel>
+                    <content src="e1026c5a-c172-4e01-aeea-0cd9e264373d.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-62444f40-7331-4443-b055-615d675a95c8" playOrder="27" class="chapter">
+                    <navLabel>
+                        <text>Deep learning</text>
+                    </navLabel>
+                    <content src="62444f40-7331-4443-b055-615d675a95c8.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-359df382-3518-4cfc-9681-848fef573bbe" playOrder="28" class="chapter">
+                    <navLabel>
+                        <text>Applications of deep learning</text>
+                    </navLabel>
+                    <content src="359df382-3518-4cfc-9681-848fef573bbe.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-84405c65-d433-40a2-87c6-0ab2a363e67c" playOrder="29" class="chapter">
+                    <navLabel>
+                        <text>Hype associated with deep learning&amp;#xA0;</text>
+                    </navLabel>
+                    <content src="84405c65-d433-40a2-87c6-0ab2a363e67c.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-8ad3b503-6edd-4bcb-8dd0-5ce90f19ccbe" playOrder="30" class="chapter">
+                    <navLabel>
+                        <text>The history of deep learning&amp;#xA0;</text>
+                    </navLabel>
+                    <content src="8ad3b503-6edd-4bcb-8dd0-5ce90f19ccbe.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-1d35b28e-248f-4494-9dbc-10eb9242dfc8" playOrder="31" class="chapter">
+                    <navLabel>
+                        <text>Why now?</text>
+                    </navLabel>
+                    <content src="1d35b28e-248f-4494-9dbc-10eb9242dfc8.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-00fa6b07-1e3a-4e76-b8a2-97e511edab50" playOrder="32" class="chapter">
+                    <navLabel>
+                        <text>Hardware availability</text>
+                    </navLabel>
+                    <content src="00fa6b07-1e3a-4e76-b8a2-97e511edab50.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-583a9d8a-9e4d-4ec3-a773-a0cca0f3d6b6" playOrder="33" class="chapter">
+                    <navLabel>
+                        <text>Data and algorithms</text>
+                    </navLabel>
+                    <content src="583a9d8a-9e4d-4ec3-a773-a0cca0f3d6b6.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-7594ebd3-ab11-400f-b4f4-efb72ff06f90" playOrder="34" class="chapter">
+                    <navLabel>
+                        <text>Deep learning frameworks</text>
+                    </navLabel>
+                    <content src="7594ebd3-ab11-400f-b4f4-efb72ff06f90.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-df734b7c-80a6-434b-a273-62f32b0e2c34" playOrder="35" class="chapter">
+                    <navLabel>
+                        <text>PyTorch</text>
+                    </navLabel>
+                    <content src="df734b7c-80a6-434b-a273-62f32b0e2c34.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-13d22f8e-0f7f-4aa1-9a8e-87ff700ab308" playOrder="36" class="chapter">
+                    <navLabel>
+                        <text>Summary</text>
+                    </navLabel>
+                    <content src="13d22f8e-0f7f-4aa1-9a8e-87ff700ab308.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-5a68470a-8fdb-4dc8-9613-e38a9b4354d5" playOrder="37" class="chapter">
+                    <navLabel>
+                        <text>Building Blocks of Neural Networks</text>
+                    </navLabel>
+                    <content src="5a68470a-8fdb-4dc8-9613-e38a9b4354d5.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-2fa7d425-224c-4aa2-ad3e-be3794020168" playOrder="38" class="chapter">
+                    <navLabel>
+                        <text>Installing PyTorch</text>
+                    </navLabel>
+                    <content src="2fa7d425-224c-4aa2-ad3e-be3794020168.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-4a0e5fc7-6788-4545-a82b-0e858b2cc0f9" playOrder="39" class="chapter">
+                    <navLabel>
+                        <text>Our first neural network</text>
+                    </navLabel>
+                    <content src="4a0e5fc7-6788-4545-a82b-0e858b2cc0f9.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-16f13ec2-45d7-4cd0-b372-af23b5966d5f" playOrder="40" class="chapter">
+                    <navLabel>
+                        <text>Data preparation</text>
+                    </navLabel>
+                    <content src="16f13ec2-45d7-4cd0-b372-af23b5966d5f.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-2e4ac25f-3b3e-48e2-8534-329189f1081f" playOrder="41" class="chapter">
+                    <navLabel>
+                        <text>Scalar (0-D tensors)&amp;#xA0;</text>
+                    </navLabel>
+                    <content src="2e4ac25f-3b3e-48e2-8534-329189f1081f.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-67877cf3-2f1d-4a02-a017-20ab1db77056" playOrder="42" class="chapter">
+                    <navLabel>
+                        <text>Vectors (1-D tensors)</text>
+                    </navLabel>
+                    <content src="67877cf3-2f1d-4a02-a017-20ab1db77056.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-8a62e815-4b6b-4a23-a5e8-3521a2498ad0" playOrder="43" class="chapter">
+                    <navLabel>
+                        <text>Matrix (2-D tensors)</text>
+                    </navLabel>
+                    <content src="8a62e815-4b6b-4a23-a5e8-3521a2498ad0.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-784f5d5f-6af3-4fdd-aa4b-aca5e0bb571b" playOrder="44" class="chapter">
+                    <navLabel>
+                        <text>3-D tensors</text>
+                    </navLabel>
+                    <content src="784f5d5f-6af3-4fdd-aa4b-aca5e0bb571b.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-021d64d3-a8b1-4579-8d9d-2607b0355373" playOrder="45" class="chapter">
+                    <navLabel>
+                        <text>Slicing tensors&amp;#xA0;</text>
+                    </navLabel>
+                    <content src="021d64d3-a8b1-4579-8d9d-2607b0355373.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-6db2859c-a47a-4e0f-bd6e-84d461c7d316" playOrder="46" class="chapter">
+                    <navLabel>
+                        <text>4-D tensors</text>
+                    </navLabel>
+                    <content src="6db2859c-a47a-4e0f-bd6e-84d461c7d316.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-cc00e76d-1861-42a0-8be8-5427a2da16f2" playOrder="47" class="chapter">
+                    <navLabel>
+                        <text>5-D tensors</text>
+                    </navLabel>
+                    <content src="cc00e76d-1861-42a0-8be8-5427a2da16f2.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-1af253bc-cf5d-424e-91bd-6032a7e7c419" playOrder="48" class="chapter">
+                    <navLabel>
+                        <text>Tensors on GPU</text>
+                    </navLabel>
+                    <content src="1af253bc-cf5d-424e-91bd-6032a7e7c419.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-04621ce7-b316-427e-b03c-eb65fd40d049" playOrder="49" class="chapter">
+                    <navLabel>
+                        <text>Variables</text>
+                    </navLabel>
+                    <content src="04621ce7-b316-427e-b03c-eb65fd40d049.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-dddd6a5e-b5e1-4183-a633-7cc454d0ec81" playOrder="50" class="chapter">
+                    <navLabel>
+                        <text>Creating data for our neural network</text>
+                    </navLabel>
+                    <content src="dddd6a5e-b5e1-4183-a633-7cc454d0ec81.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-561c431c-85e6-424e-af96-58f8225f3cad" playOrder="51" class="chapter">
+                    <navLabel>
+                        <text>Creating learnable parameters</text>
+                    </navLabel>
+                    <content src="561c431c-85e6-424e-af96-58f8225f3cad.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-7279a8ad-b6e2-441a-896d-dde8e75ee55b" playOrder="52" class="chapter">
+                    <navLabel>
+                        <text>Neural network model</text>
+                    </navLabel>
+                    <content src="7279a8ad-b6e2-441a-896d-dde8e75ee55b.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-fcb95979-d570-474c-88ee-9a1260274b77" playOrder="53" class="chapter">
+                    <navLabel>
+                        <text>Network implementation&amp;#xA0;</text>
+                    </navLabel>
+                    <content src="fcb95979-d570-474c-88ee-9a1260274b77.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-1ab22b24-0841-4bda-958a-c37c3e1b118e" playOrder="54" class="chapter">
+                    <navLabel>
+                        <text>Loss function</text>
+                    </navLabel>
+                    <content src="1ab22b24-0841-4bda-958a-c37c3e1b118e.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-982e36c2-0c94-465f-bd86-adbe7d3006c7" playOrder="55" class="chapter">
+                    <navLabel>
+                        <text>Optimize the neural network&amp;#xA0;</text>
+                    </navLabel>
+                    <content src="982e36c2-0c94-465f-bd86-adbe7d3006c7.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-86c7fdd0-540e-4f48-b701-f87e0954e49e" playOrder="56" class="chapter">
+                    <navLabel>
+                        <text>Loading data&amp;#xA0;</text>
+                    </navLabel>
+                    <content src="86c7fdd0-540e-4f48-b701-f87e0954e49e.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-d2f3da63-8f52-4269-bae4-fcfdc89fcbc4" playOrder="57" class="chapter">
+                    <navLabel>
+                        <text>Dataset class</text>
+                    </navLabel>
+                    <content src="d2f3da63-8f52-4269-bae4-fcfdc89fcbc4.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-2739e44b-db6e-4996-b7ea-ec2708ccb593" playOrder="58" class="chapter">
+                    <navLabel>
+                        <text>DataLoader class</text>
+                    </navLabel>
+                    <content src="2739e44b-db6e-4996-b7ea-ec2708ccb593.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-30cf1ef5-f06f-44cc-988f-399bc62a0c53" playOrder="59" class="chapter">
+                    <navLabel>
+                        <text>Summary&amp;#xA0;</text>
+                    </navLabel>
+                    <content src="30cf1ef5-f06f-44cc-988f-399bc62a0c53.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-1de63bb8-4140-4d2d-b93c-5b6bdc42ec03" playOrder="60" class="chapter">
+                    <navLabel>
+                        <text>Diving Deep into Neural Networks</text>
+                    </navLabel>
+                    <content src="1de63bb8-4140-4d2d-b93c-5b6bdc42ec03.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-ac600cd6-1ad8-4f7c-90d1-040edb8bf11a" playOrder="61" class="chapter">
+                    <navLabel>
+                        <text>Deep dive into the building blocks of neural networks</text>
+                    </navLabel>
+                    <content src="ac600cd6-1ad8-4f7c-90d1-040edb8bf11a.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-aaf05442-56b6-4982-9e60-5fa375eb4fa0" playOrder="62" class="chapter">
+                    <navLabel>
+                        <text>Layers &amp;#x2013; fundamental blocks of neural networks</text>
+                    </navLabel>
+                    <content src="aaf05442-56b6-4982-9e60-5fa375eb4fa0.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-d243358b-35c6-4bee-a3f9-4f1afe9b9fdf" playOrder="63" class="chapter">
+                    <navLabel>
+                        <text>Non-linear activations</text>
+                    </navLabel>
+                    <content src="d243358b-35c6-4bee-a3f9-4f1afe9b9fdf.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-903b30d5-bb92-4f5a-9d89-2afa16f33fa1" playOrder="64" class="chapter">
+                    <navLabel>
+                        <text>Sigmoid</text>
+                    </navLabel>
+                    <content src="903b30d5-bb92-4f5a-9d89-2afa16f33fa1.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-a289c2c9-90b0-4b0e-9413-59c536b5e474" playOrder="65" class="chapter">
+                    <navLabel>
+                        <text>Tanh</text>
+                    </navLabel>
+                    <content src="a289c2c9-90b0-4b0e-9413-59c536b5e474.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-36917348-6e28-4d75-ab8e-56ea74e5dee3" playOrder="66" class="chapter">
+                    <navLabel>
+                        <text>ReLU</text>
+                    </navLabel>
+                    <content src="36917348-6e28-4d75-ab8e-56ea74e5dee3.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-d19a4c7e-c2b4-494a-8f4f-d580b8a40ca9" playOrder="67" class="chapter">
+                    <navLabel>
+                        <text>Leaky ReLU</text>
+                    </navLabel>
+                    <content src="d19a4c7e-c2b4-494a-8f4f-d580b8a40ca9.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-0dd8ecc4-3b52-4782-9dad-4285ffd64710" playOrder="68" class="chapter">
+                    <navLabel>
+                        <text>PyTorch non-linear activations</text>
+                    </navLabel>
+                    <content src="0dd8ecc4-3b52-4782-9dad-4285ffd64710.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-60ca32e8-9f44-4ac8-8246-106d32d12ce7" playOrder="69" class="chapter">
+                    <navLabel>
+                        <text>The PyTorch way of building deep learning algorithms</text>
+                    </navLabel>
+                    <content src="60ca32e8-9f44-4ac8-8246-106d32d12ce7.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-f34821fd-dbe8-4d96-b890-a20320aff41d" playOrder="70" class="chapter">
+                    <navLabel>
+                        <text>Model architecture for different machine learning problems</text>
+                    </navLabel>
+                    <content src="f34821fd-dbe8-4d96-b890-a20320aff41d.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-f5056d1f-abef-4c20-9b74-3f2400502898" playOrder="71" class="chapter">
+                    <navLabel>
+                        <text>Loss functions</text>
+                    </navLabel>
+                    <content src="f5056d1f-abef-4c20-9b74-3f2400502898.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-2014789d-f6fb-4fc2-8491-585443acd2ec" playOrder="72" class="chapter">
+                    <navLabel>
+                        <text>Optimizing network architecture</text>
+                    </navLabel>
+                    <content src="2014789d-f6fb-4fc2-8491-585443acd2ec.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-20077ed3-27f5-4a88-bae2-8da74836ce47" playOrder="73" class="chapter">
+                    <navLabel>
+                        <text>Image classification using deep learning</text>
+                    </navLabel>
+                    <content src="20077ed3-27f5-4a88-bae2-8da74836ce47.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-06de82d7-fb22-4b43-9149-1ea6c3fd7769" playOrder="74" class="chapter">
+                    <navLabel>
+                        <text>Loading data into PyTorch tensors</text>
+                    </navLabel>
+                    <content src="06de82d7-fb22-4b43-9149-1ea6c3fd7769.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-333b65d5-fce4-4055-9a73-7902bf2e9487" playOrder="75" class="chapter">
+                    <navLabel>
+                        <text>Loading PyTorch tensors as batches</text>
+                    </navLabel>
+                    <content src="333b65d5-fce4-4055-9a73-7902bf2e9487.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-36c93255-e110-442d-afad-e960b2097a43" playOrder="76" class="chapter">
+                    <navLabel>
+                        <text>Building the network architecture</text>
+                    </navLabel>
+                    <content src="36c93255-e110-442d-afad-e960b2097a43.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-deff7c61-6a4c-49b5-abda-69ab38641457" playOrder="77" class="chapter">
+                    <navLabel>
+                        <text>Training the model&amp;#xA0;</text>
+                    </navLabel>
+                    <content src="deff7c61-6a4c-49b5-abda-69ab38641457.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-1ce35d34-0cba-4e97-9b73-f0e3cef0ba8b" playOrder="78" class="chapter">
+                    <navLabel>
+                        <text>Summary</text>
+                    </navLabel>
+                    <content src="1ce35d34-0cba-4e97-9b73-f0e3cef0ba8b.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-821004b7-d246-4aac-b883-9ab634ae0aea" playOrder="79" class="chapter">
+                    <navLabel>
+                        <text>Fundamentals of Machine Learning</text>
+                    </navLabel>
+                    <content src="821004b7-d246-4aac-b883-9ab634ae0aea.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-55f23014-2a8e-4ba7-ae8d-3737ee267af0" playOrder="80" class="chapter">
+                    <navLabel>
+                        <text>Three kinds of machine learning problems</text>
+                    </navLabel>
+                    <content src="55f23014-2a8e-4ba7-ae8d-3737ee267af0.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-69f54d80-d187-4287-a4e9-12ee1ee7d304" playOrder="81" class="chapter">
+                    <navLabel>
+                        <text>Supervised learning</text>
+                    </navLabel>
+                    <content src="69f54d80-d187-4287-a4e9-12ee1ee7d304.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-1ddbd464-dc5d-4da5-a715-34891fbee9ec" playOrder="82" class="chapter">
+                    <navLabel>
+                        <text>Unsupervised learning</text>
+                    </navLabel>
+                    <content src="1ddbd464-dc5d-4da5-a715-34891fbee9ec.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-e056862f-874e-43c3-bb93-1a8a563e76f0" playOrder="83" class="chapter">
+                    <navLabel>
+                        <text>Reinforcement learning</text>
+                    </navLabel>
+                    <content src="e056862f-874e-43c3-bb93-1a8a563e76f0.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-8f93c4ac-61d9-4f49-8578-2e24d80d5ec8" playOrder="84" class="chapter">
+                    <navLabel>
+                        <text>Machine learning glossary</text>
+                    </navLabel>
+                    <content src="8f93c4ac-61d9-4f49-8578-2e24d80d5ec8.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-23005787-17dd-4fdb-9878-3acbecd19765" playOrder="85" class="chapter">
+                    <navLabel>
+                        <text>Evaluating machine learning models</text>
+                    </navLabel>
+                    <content src="23005787-17dd-4fdb-9878-3acbecd19765.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-9309c678-c571-423a-923f-75605b97cb05" playOrder="86" class="chapter">
+                    <navLabel>
+                        <text>Training, validation, and test split</text>
+                    </navLabel>
+                    <content src="9309c678-c571-423a-923f-75605b97cb05.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-0cc16ace-52ae-4e3b-b98d-e91030bc745e" playOrder="87" class="chapter">
+                    <navLabel>
+                        <text>Simple holdout validation</text>
+                    </navLabel>
+                    <content src="0cc16ace-52ae-4e3b-b98d-e91030bc745e.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-15ee1a37-19be-4ef6-ae23-65f54fa09ae5" playOrder="88" class="chapter">
+                    <navLabel>
+                        <text>K-fold validation</text>
+                    </navLabel>
+                    <content src="15ee1a37-19be-4ef6-ae23-65f54fa09ae5.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-638c278a-dcd8-452f-9e52-85c5795b8908" playOrder="89" class="chapter">
+                    <navLabel>
+                        <text>K-fold validation with shuffling&amp;#xA0;</text>
+                    </navLabel>
+                    <content src="638c278a-dcd8-452f-9e52-85c5795b8908.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-4c5f10a7-061f-4dd8-af11-c02240f72140" playOrder="90" class="chapter">
+                    <navLabel>
+                        <text>Data representativeness&amp;#xA0;</text>
+                    </navLabel>
+                    <content src="4c5f10a7-061f-4dd8-af11-c02240f72140.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-d2aff1a4-59d6-43ae-8d98-40f3defc9b22" playOrder="91" class="chapter">
+                    <navLabel>
+                        <text>Time sensitivity</text>
+                    </navLabel>
+                    <content src="d2aff1a4-59d6-43ae-8d98-40f3defc9b22.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-5237aa75-0e62-4097-a27d-93199fb45be1" playOrder="92" class="chapter">
+                    <navLabel>
+                        <text>Data redundancy</text>
+                    </navLabel>
+                    <content src="5237aa75-0e62-4097-a27d-93199fb45be1.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-a3a3c4db-05b5-436f-ab46-686f7ca706ad" playOrder="93" class="chapter">
+                    <navLabel>
+                        <text>Data preprocessing and feature engineering</text>
+                    </navLabel>
+                    <content src="a3a3c4db-05b5-436f-ab46-686f7ca706ad.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-d650fafb-6d11-43d5-83de-fc96bc4d9396" playOrder="94" class="chapter">
+                    <navLabel>
+                        <text>Vectorization</text>
+                    </navLabel>
+                    <content src="d650fafb-6d11-43d5-83de-fc96bc4d9396.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-a3179fcd-c6c0-4cb2-8d5c-8dce6a246a31" playOrder="95" class="chapter">
+                    <navLabel>
+                        <text>Value normalization</text>
+                    </navLabel>
+                    <content src="a3179fcd-c6c0-4cb2-8d5c-8dce6a246a31.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-15a82e7b-853b-4032-bcc6-ed1d9c64b504" playOrder="96" class="chapter">
+                    <navLabel>
+                        <text>Handling missing values</text>
+                    </navLabel>
+                    <content src="15a82e7b-853b-4032-bcc6-ed1d9c64b504.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-a2c0e09d-c180-4fea-9741-89de7474ccf2" playOrder="97" class="chapter">
+                    <navLabel>
+                        <text>Feature engineering</text>
+                    </navLabel>
+                    <content src="a2c0e09d-c180-4fea-9741-89de7474ccf2.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-2e53dbce-15b8-4070-bd11-c07ad288e63e" playOrder="98" class="chapter">
+                    <navLabel>
+                        <text>Overfitting and underfitting</text>
+                    </navLabel>
+                    <content src="2e53dbce-15b8-4070-bd11-c07ad288e63e.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-9bd33865-f877-4483-a0ff-154d0f49cf8b" playOrder="99" class="chapter">
+                    <navLabel>
+                        <text>Getting more data</text>
+                    </navLabel>
+                    <content src="9bd33865-f877-4483-a0ff-154d0f49cf8b.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-77178fc9-271a-403d-872f-f3008ee37e79" playOrder="100" class="chapter">
+                    <navLabel>
+                        <text>Reducing the size of the network</text>
+                    </navLabel>
+                    <content src="77178fc9-271a-403d-872f-f3008ee37e79.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-bcab2744-e66e-4867-8f68-4497a7e04cb9" playOrder="101" class="chapter">
+                    <navLabel>
+                        <text>Applying weight regularization</text>
+                    </navLabel>
+                    <content src="bcab2744-e66e-4867-8f68-4497a7e04cb9.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-55521829-2a29-4ada-9901-bbd433de7ca6" playOrder="102" class="chapter">
+                    <navLabel>
+                        <text>Dropout</text>
+                    </navLabel>
+                    <content src="55521829-2a29-4ada-9901-bbd433de7ca6.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-651ea32a-0aa0-4616-85c8-cc9f5f87d00c" playOrder="103" class="chapter">
+                    <navLabel>
+                        <text>Underfitting</text>
+                    </navLabel>
+                    <content src="651ea32a-0aa0-4616-85c8-cc9f5f87d00c.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-84ef1e7a-c41a-402a-a23f-b3bfe1dd426b" playOrder="104" class="chapter">
+                    <navLabel>
+                        <text>Workflow of a machine learning project</text>
+                    </navLabel>
+                    <content src="84ef1e7a-c41a-402a-a23f-b3bfe1dd426b.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-794e571c-51b3-408b-b9d7-382486e48b18" playOrder="105" class="chapter">
+                    <navLabel>
+                        <text>Problem definition and dataset creation</text>
+                    </navLabel>
+                    <content src="794e571c-51b3-408b-b9d7-382486e48b18.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-4b46a7dc-1598-4104-bf31-68df4009533a" playOrder="106" class="chapter">
+                    <navLabel>
+                        <text>Measure of success&amp;#xA0;</text>
+                    </navLabel>
+                    <content src="4b46a7dc-1598-4104-bf31-68df4009533a.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-3eb97a18-6d8b-4302-b030-0ea2f60d3c06" playOrder="107" class="chapter">
+                    <navLabel>
+                        <text>Evaluation protocol</text>
+                    </navLabel>
+                    <content src="3eb97a18-6d8b-4302-b030-0ea2f60d3c06.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-8ccd59b2-c523-4bdf-ac30-f6e25c36f1ea" playOrder="108" class="chapter">
+                    <navLabel>
+                        <text>Prepare your data</text>
+                    </navLabel>
+                    <content src="8ccd59b2-c523-4bdf-ac30-f6e25c36f1ea.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-9ac1f2ab-f8d7-4a8d-b97e-896760ab0363" playOrder="109" class="chapter">
+                    <navLabel>
+                        <text>Baseline model</text>
+                    </navLabel>
+                    <content src="9ac1f2ab-f8d7-4a8d-b97e-896760ab0363.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-35eea630-504f-4607-8824-9e5958a22f42" playOrder="110" class="chapter">
+                    <navLabel>
+                        <text>Large model enough to overfit</text>
+                    </navLabel>
+                    <content src="35eea630-504f-4607-8824-9e5958a22f42.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-869f9c73-9cf5-4fe0-9bc1-474091b55d59" playOrder="111" class="chapter">
+                    <navLabel>
+                        <text>Applying regularization</text>
+                    </navLabel>
+                    <content src="869f9c73-9cf5-4fe0-9bc1-474091b55d59.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-798fee83-d4d8-4003-8ea5-f48738e87b6a" playOrder="112" class="chapter">
+                    <navLabel>
+                        <text>Learning rate picking strategies&amp;#xA0;</text>
+                    </navLabel>
+                    <content src="798fee83-d4d8-4003-8ea5-f48738e87b6a.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-59deb36e-2556-4202-b0db-ef0f9419063a" playOrder="113" class="chapter">
+                    <navLabel>
+                        <text>Summary</text>
+                    </navLabel>
+                    <content src="59deb36e-2556-4202-b0db-ef0f9419063a.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-3cce1bbe-6d1c-4164-b1ef-8b0688126519" playOrder="114" class="chapter">
+                    <navLabel>
+                        <text>Deep Learning for Computer Vision</text>
+                    </navLabel>
+                    <content src="3cce1bbe-6d1c-4164-b1ef-8b0688126519.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-05043113-0cca-492f-87eb-51c3bcef487d" playOrder="115" class="chapter">
+                    <navLabel>
+                        <text>Introduction to neural networks</text>
+                    </navLabel>
+                    <content src="05043113-0cca-492f-87eb-51c3bcef487d.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-360e05b3-a932-44f9-b5a0-7592187be95b" playOrder="116" class="chapter">
+                    <navLabel>
+                        <text>MNIST &amp;#x2013; getting data</text>
+                    </navLabel>
+                    <content src="360e05b3-a932-44f9-b5a0-7592187be95b.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-ff426da2-11db-4603-b4d2-7bb9de11c2d8" playOrder="117" class="chapter">
+                    <navLabel>
+                        <text>Building a CNN model from scratch</text>
+                    </navLabel>
+                    <content src="ff426da2-11db-4603-b4d2-7bb9de11c2d8.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-49080a86-d6e5-44c7-b8a5-67f739409bb8" playOrder="118" class="chapter">
+                    <navLabel>
+                        <text>Conv2d</text>
+                    </navLabel>
+                    <content src="49080a86-d6e5-44c7-b8a5-67f739409bb8.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-8251c7a4-66f2-49ed-999a-85f5113375b3" playOrder="119" class="chapter">
+                    <navLabel>
+                        <text>Pooling</text>
+                    </navLabel>
+                    <content src="8251c7a4-66f2-49ed-999a-85f5113375b3.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-e6682c04-687a-4730-96c2-4b8d7515094f" playOrder="120" class="chapter">
+                    <navLabel>
+                        <text>Nonlinear activation &amp;#x2013; ReLU</text>
+                    </navLabel>
+                    <content src="e6682c04-687a-4730-96c2-4b8d7515094f.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-dcc966bd-e3ef-4a55-873a-a48c4315c203" playOrder="121" class="chapter">
+                    <navLabel>
+                        <text>View</text>
+                    </navLabel>
+                    <content src="dcc966bd-e3ef-4a55-873a-a48c4315c203.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-2d44551f-b231-4b51-9b14-1837e2234747" playOrder="122" class="chapter">
+                    <navLabel>
+                        <text>Linear layer</text>
+                    </navLabel>
+                    <content src="2d44551f-b231-4b51-9b14-1837e2234747.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-9c946ef8-a575-40d4-89f3-0a018546ecb1" playOrder="123" class="chapter">
+                    <navLabel>
+                        <text>Training the model</text>
+                    </navLabel>
+                    <content src="9c946ef8-a575-40d4-89f3-0a018546ecb1.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-ba6b6483-a362-4340-ba20-4d6ce0ab9663" playOrder="124" class="chapter">
+                    <navLabel>
+                        <text>Classifying dogs and cats &amp;#x2013; CNN from scratch</text>
+                    </navLabel>
+                    <content src="ba6b6483-a362-4340-ba20-4d6ce0ab9663.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-5089ad12-0217-4bed-9a72-f389fe260a86" playOrder="125" class="chapter">
+                    <navLabel>
+                        <text>Classifying dogs and cats using transfer learning</text>
+                    </navLabel>
+                    <content src="5089ad12-0217-4bed-9a72-f389fe260a86.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-5e0891cf-b493-460f-8f06-9b7251f5fca6" playOrder="126" class="chapter">
+                    <navLabel>
+                        <text>Creating and exploring a VGG16 model&amp;#xA0;</text>
+                    </navLabel>
+                    <content src="5e0891cf-b493-460f-8f06-9b7251f5fca6.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-beca2ac8-8abe-44d2-96e6-4721031c1bde" playOrder="127" class="chapter">
+                    <navLabel>
+                        <text>Freezing the layers</text>
+                    </navLabel>
+                    <content src="beca2ac8-8abe-44d2-96e6-4721031c1bde.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-d7213794-1c1c-4abc-be5b-2b3e1ca845e1" playOrder="128" class="chapter">
+                    <navLabel>
+                        <text>Fine-tuning VGG16</text>
+                    </navLabel>
+                    <content src="d7213794-1c1c-4abc-be5b-2b3e1ca845e1.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-238d5022-022e-4349-a904-1c6ca139dd59" playOrder="129" class="chapter">
+                    <navLabel>
+                        <text>Training the VGG16 model&amp;#xA0;</text>
+                    </navLabel>
+                    <content src="238d5022-022e-4349-a904-1c6ca139dd59.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-18caa8e3-c414-421b-b1ea-458c6f8796ee" playOrder="130" class="chapter">
+                    <navLabel>
+                        <text>Calculating pre-convoluted features</text>
+                    </navLabel>
+                    <content src="18caa8e3-c414-421b-b1ea-458c6f8796ee.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-4a1eb3fd-95d6-4c82-8197-c26e2f24e4a6" playOrder="131" class="chapter">
+                    <navLabel>
+                        <text>Understanding what a CNN model learns&amp;#xA0;</text>
+                    </navLabel>
+                    <content src="4a1eb3fd-95d6-4c82-8197-c26e2f24e4a6.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-b0965cb9-c489-4f8d-a73a-3a5d680dc8a6" playOrder="132" class="chapter">
+                    <navLabel>
+                        <text>Visualizing outputs from intermediate layers</text>
+                    </navLabel>
+                    <content src="b0965cb9-c489-4f8d-a73a-3a5d680dc8a6.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-23bf6d6f-a262-432f-9933-6e9d0723ef4a" playOrder="133" class="chapter">
+                    <navLabel>
+                        <text>Visualizing weights of the CNN layer</text>
+                    </navLabel>
+                    <content src="23bf6d6f-a262-432f-9933-6e9d0723ef4a.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-a44e6f23-324a-4e37-aebc-3a0e250215bd" playOrder="134" class="chapter">
+                    <navLabel>
+                        <text>Summary</text>
+                    </navLabel>
+                    <content src="a44e6f23-324a-4e37-aebc-3a0e250215bd.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-64a06d7f-a912-46cd-a059-e0e8e1092b63" playOrder="135" class="chapter">
+                    <navLabel>
+                        <text>Deep Learning with Sequence Data and Text</text>
+                    </navLabel>
+                    <content src="64a06d7f-a912-46cd-a059-e0e8e1092b63.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-5528fe0c-d870-46c6-923c-9a558587255e" playOrder="136" class="chapter">
+                    <navLabel>
+                        <text>Working with text data</text>
+                    </navLabel>
+                    <content src="5528fe0c-d870-46c6-923c-9a558587255e.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-7feee682-0bcb-43c2-9b16-fcd20f4bb6c3" playOrder="137" class="chapter">
+                    <navLabel>
+                        <text>Tokenization</text>
+                    </navLabel>
+                    <content src="7feee682-0bcb-43c2-9b16-fcd20f4bb6c3.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-ffa12555-8b92-476d-919a-498d02abae14" playOrder="138" class="chapter">
+                    <navLabel>
+                        <text>Converting text into characters</text>
+                    </navLabel>
+                    <content src="ffa12555-8b92-476d-919a-498d02abae14.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-17495d6c-a793-4726-82ee-f558a04cde29" playOrder="139" class="chapter">
+                    <navLabel>
+                        <text>Converting text into words</text>
+                    </navLabel>
+                    <content src="17495d6c-a793-4726-82ee-f558a04cde29.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-2f10cc7f-1c9a-44e3-bfb3-a5f1a09258f5" playOrder="140" class="chapter">
+                    <navLabel>
+                        <text>N-gram representation</text>
+                    </navLabel>
+                    <content src="2f10cc7f-1c9a-44e3-bfb3-a5f1a09258f5.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-af95c10f-90a9-4802-838a-3d012e54b049" playOrder="141" class="chapter">
+                    <navLabel>
+                        <text>Vectorization</text>
+                    </navLabel>
+                    <content src="af95c10f-90a9-4802-838a-3d012e54b049.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-e397c9a2-28a2-41fd-bcc2-a6bb49adfc44" playOrder="142" class="chapter">
+                    <navLabel>
+                        <text>One-hot encoding</text>
+                    </navLabel>
+                    <content src="e397c9a2-28a2-41fd-bcc2-a6bb49adfc44.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-32bc3f5e-7815-45c7-81e6-6056b5e9e115" playOrder="143" class="chapter">
+                    <navLabel>
+                        <text>Word embedding</text>
+                    </navLabel>
+                    <content src="32bc3f5e-7815-45c7-81e6-6056b5e9e115.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-a94dc110-87f0-43a9-a8ce-f32ac1c8de1e" playOrder="144" class="chapter">
+                    <navLabel>
+                        <text>Training word embedding&amp;#xA0;by building a sentiment classifier</text>
+                    </navLabel>
+                    <content src="a94dc110-87f0-43a9-a8ce-f32ac1c8de1e.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-b38b4ce9-d353-48f7-b915-2032a0ddd83e" playOrder="145" class="chapter">
+                    <navLabel>
+                        <text>Downloading IMDB data and performing text tokenization</text>
+                    </navLabel>
+                    <content src="b38b4ce9-d353-48f7-b915-2032a0ddd83e.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-8a3383dc-19ec-41ca-8194-1d82dfbd93d5" playOrder="146" class="chapter">
+                    <navLabel>
+                        <text>torchtext.data</text>
+                    </navLabel>
+                    <content src="8a3383dc-19ec-41ca-8194-1d82dfbd93d5.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-f2134f63-623b-4b03-8ffd-e465b4db1b19" playOrder="147" class="chapter">
+                    <navLabel>
+                        <text>torchtext.datasets</text>
+                    </navLabel>
+                    <content src="f2134f63-623b-4b03-8ffd-e465b4db1b19.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-90c4f487-455c-420f-87c0-09a5f56a1b35" playOrder="148" class="chapter">
+                    <navLabel>
+                        <text>Building vocabulary</text>
+                    </navLabel>
+                    <content src="90c4f487-455c-420f-87c0-09a5f56a1b35.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-719c6475-915a-4a2f-a5ce-a9dc7e071c3d" playOrder="149" class="chapter">
+                    <navLabel>
+                        <text>Generate batches of vectors</text>
+                    </navLabel>
+                    <content src="719c6475-915a-4a2f-a5ce-a9dc7e071c3d.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-0fefcebe-00a3-4a60-ac7f-079c46144ee3" playOrder="150" class="chapter">
+                    <navLabel>
+                        <text>Creating a network model with embedding</text>
+                    </navLabel>
+                    <content src="0fefcebe-00a3-4a60-ac7f-079c46144ee3.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-f98090fa-2c2f-40e7-ac18-45f9a5cec1ad" playOrder="151" class="chapter">
+                    <navLabel>
+                        <text>Training the model</text>
+                    </navLabel>
+                    <content src="f98090fa-2c2f-40e7-ac18-45f9a5cec1ad.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-f68fef21-03d8-453c-b6c0-d0be68ab4a41" playOrder="152" class="chapter">
+                    <navLabel>
+                        <text>Using pretrained word embeddings</text>
+                    </navLabel>
+                    <content src="f68fef21-03d8-453c-b6c0-d0be68ab4a41.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-f93321f7-272a-43f4-820f-da8af236fb9c" playOrder="153" class="chapter">
+                    <navLabel>
+                        <text>Downloading the embeddings</text>
+                    </navLabel>
+                    <content src="f93321f7-272a-43f4-820f-da8af236fb9c.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-4b132802-46c4-4fc6-a315-02d4c3ba8dd4" playOrder="154" class="chapter">
+                    <navLabel>
+                        <text>Loading the embeddings in the model</text>
+                    </navLabel>
+                    <content src="4b132802-46c4-4fc6-a315-02d4c3ba8dd4.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-fa953b7d-daac-4c4e-be74-66a7e94de98e" playOrder="155" class="chapter">
+                    <navLabel>
+                        <text>Freeze the embedding layer weights</text>
+                    </navLabel>
+                    <content src="fa953b7d-daac-4c4e-be74-66a7e94de98e.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-d462eb2f-618b-4579-8d10-fcae39bdfa72" playOrder="156" class="chapter">
+                    <navLabel>
+                        <text>Recursive neural networks</text>
+                    </navLabel>
+                    <content src="d462eb2f-618b-4579-8d10-fcae39bdfa72.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-df850dd5-2dd6-45ce-99ab-e4cd0c9c3319" playOrder="157" class="chapter">
+                    <navLabel>
+                        <text>Understanding how RNN works with an example&amp;#xA0;</text>
+                    </navLabel>
+                    <content src="df850dd5-2dd6-45ce-99ab-e4cd0c9c3319.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-911e357b-2975-4799-8fac-d7f074774ff6" playOrder="158" class="chapter">
+                    <navLabel>
+                        <text>LSTM</text>
+                    </navLabel>
+                    <content src="911e357b-2975-4799-8fac-d7f074774ff6.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-b621d921-4312-45a3-86c1-bbdc71f05548" playOrder="159" class="chapter">
+                    <navLabel>
+                        <text>Long-term dependency&amp;#xA0;</text>
+                    </navLabel>
+                    <content src="b621d921-4312-45a3-86c1-bbdc71f05548.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-05bde044-40af-4851-b18d-f2a5ec89e3e4" playOrder="160" class="chapter">
+                    <navLabel>
+                        <text>LSTM networks</text>
+                    </navLabel>
+                    <content src="05bde044-40af-4851-b18d-f2a5ec89e3e4.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-794a0b3d-f3de-43a4-a114-068cfe84c9ca" playOrder="161" class="chapter">
+                    <navLabel>
+                        <text>Preparing the data</text>
+                    </navLabel>
+                    <content src="794a0b3d-f3de-43a4-a114-068cfe84c9ca.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-4eadbd08-6192-4fc5-820f-fd51e118b07c" playOrder="162" class="chapter">
+                    <navLabel>
+                        <text>Creating batches</text>
+                    </navLabel>
+                    <content src="4eadbd08-6192-4fc5-820f-fd51e118b07c.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-41b82572-1d6c-4ab7-93ec-ea4fdf9d1ee8" playOrder="163" class="chapter">
+                    <navLabel>
+                        <text>Creating the network&amp;#xA0;</text>
+                    </navLabel>
+                    <content src="41b82572-1d6c-4ab7-93ec-ea4fdf9d1ee8.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-11f09d48-e3ba-4215-b736-f5f3b37d7e3c" playOrder="164" class="chapter">
+                    <navLabel>
+                        <text>Training the model</text>
+                    </navLabel>
+                    <content src="11f09d48-e3ba-4215-b736-f5f3b37d7e3c.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-354213e1-2f6f-455e-abf1-5829710e73b0" playOrder="165" class="chapter">
+                    <navLabel>
+                        <text>Convolutional network on sequence data</text>
+                    </navLabel>
+                    <content src="354213e1-2f6f-455e-abf1-5829710e73b0.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-8ba12c5d-83bb-4a1c-a3b5-b5ac819d0931" playOrder="166" class="chapter">
+                    <navLabel>
+                        <text>Understanding one-dimensional convolution for sequence data&amp;#xA0;</text>
+                    </navLabel>
+                    <content src="8ba12c5d-83bb-4a1c-a3b5-b5ac819d0931.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-888a0b77-a884-43d7-9b00-cbf79c21c82e" playOrder="167" class="chapter">
+                    <navLabel>
+                        <text>Creating the network</text>
+                    </navLabel>
+                    <content src="888a0b77-a884-43d7-9b00-cbf79c21c82e.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-8bba62e5-189f-47d8-adf9-1cc54c6f30f2" playOrder="168" class="chapter">
+                    <navLabel>
+                        <text>Training the model</text>
+                    </navLabel>
+                    <content src="8bba62e5-189f-47d8-adf9-1cc54c6f30f2.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-82aa2ebf-b8ff-4713-8b68-69aa4b71a14c" playOrder="169" class="chapter">
+                    <navLabel>
+                        <text>Summary</text>
+                    </navLabel>
+                    <content src="82aa2ebf-b8ff-4713-8b68-69aa4b71a14c.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-dc189b2e-5166-41a5-8203-aff8b367b53c" playOrder="170" class="chapter">
+                    <navLabel>
+                        <text>Generative Networks</text>
+                    </navLabel>
+                    <content src="dc189b2e-5166-41a5-8203-aff8b367b53c.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-658b31de-47c1-4af2-871e-807c9fa2c670" playOrder="171" class="chapter">
+                    <navLabel>
+                        <text>Neural style transfer&amp;#xA0;</text>
+                    </navLabel>
+                    <content src="658b31de-47c1-4af2-871e-807c9fa2c670.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-63252a9f-87db-4043-9429-23f7142b04e0" playOrder="172" class="chapter">
+                    <navLabel>
+                        <text>Loading the data</text>
+                    </navLabel>
+                    <content src="63252a9f-87db-4043-9429-23f7142b04e0.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-6922392d-04c9-4c53-9562-dd4bc08f5ad7" playOrder="173" class="chapter">
+                    <navLabel>
+                        <text>Creating the VGG model</text>
+                    </navLabel>
+                    <content src="6922392d-04c9-4c53-9562-dd4bc08f5ad7.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-932d624e-e8c3-4038-a441-f6f12944e5ef" playOrder="174" class="chapter">
+                    <navLabel>
+                        <text>Content loss</text>
+                    </navLabel>
+                    <content src="932d624e-e8c3-4038-a441-f6f12944e5ef.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-6d93f688-faff-4bd3-8369-dd376080b80d" playOrder="175" class="chapter">
+                    <navLabel>
+                        <text>Style loss</text>
+                    </navLabel>
+                    <content src="6d93f688-faff-4bd3-8369-dd376080b80d.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-f6c47a74-d0d1-498b-bd34-22c70deacf37" playOrder="176" class="chapter">
+                    <navLabel>
+                        <text>Extracting the losses&amp;#xA0;</text>
+                    </navLabel>
+                    <content src="f6c47a74-d0d1-498b-bd34-22c70deacf37.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-3c41d241-73a6-49bd-b45a-2cbe44e098de" playOrder="177" class="chapter">
+                    <navLabel>
+                        <text>Creating loss function for each layers</text>
+                    </navLabel>
+                    <content src="3c41d241-73a6-49bd-b45a-2cbe44e098de.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-2cc59626-5fc5-4542-a02c-572268e53a10" playOrder="178" class="chapter">
+                    <navLabel>
+                        <text>Creating the optimizer</text>
+                    </navLabel>
+                    <content src="2cc59626-5fc5-4542-a02c-572268e53a10.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-f867c901-8c75-4d6e-a399-5e81fb99710d" playOrder="179" class="chapter">
+                    <navLabel>
+                        <text>Training</text>
+                    </navLabel>
+                    <content src="f867c901-8c75-4d6e-a399-5e81fb99710d.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-1c67fa75-69d9-4229-a2ba-acde33096a96" playOrder="180" class="chapter">
+                    <navLabel>
+                        <text>Generative adversarial networks</text>
+                    </navLabel>
+                    <content src="1c67fa75-69d9-4229-a2ba-acde33096a96.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-d2451684-a088-40fe-b6bb-842f0b3d8a25" playOrder="181" class="chapter">
+                    <navLabel>
+                        <text>Deep convolutional GAN</text>
+                    </navLabel>
+                    <content src="d2451684-a088-40fe-b6bb-842f0b3d8a25.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-5066358f-4465-4f74-abc4-95b0ce381f88" playOrder="182" class="chapter">
+                    <navLabel>
+                        <text>Defining the generator network</text>
+                    </navLabel>
+                    <content src="5066358f-4465-4f74-abc4-95b0ce381f88.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-8e70d1b4-0248-48da-8aa4-91f0ec1ef0e3" playOrder="183" class="chapter">
+                    <navLabel>
+                        <text>Transposed convolutions</text>
+                    </navLabel>
+                    <content src="8e70d1b4-0248-48da-8aa4-91f0ec1ef0e3.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-69ac5faf-f814-4d4c-93e9-8f8fe6cabe57" playOrder="184" class="chapter">
+                    <navLabel>
+                        <text>Batch normalization</text>
+                    </navLabel>
+                    <content src="69ac5faf-f814-4d4c-93e9-8f8fe6cabe57.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-c1ba83e1-1f8d-40a9-b80c-c47aaf4dc736" playOrder="185" class="chapter">
+                    <navLabel>
+                        <text>Generator</text>
+                    </navLabel>
+                    <content src="c1ba83e1-1f8d-40a9-b80c-c47aaf4dc736.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-0e65ad7d-dd36-44f9-8c23-5e4d252402dc" playOrder="186" class="chapter">
+                    <navLabel>
+                        <text>Defining the discriminator network</text>
+                    </navLabel>
+                    <content src="0e65ad7d-dd36-44f9-8c23-5e4d252402dc.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-aa6e46dc-4cde-4081-9885-beff3709f0d4" playOrder="187" class="chapter">
+                    <navLabel>
+                        <text>Defining loss and optimizer</text>
+                    </navLabel>
+                    <content src="aa6e46dc-4cde-4081-9885-beff3709f0d4.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-68dbcac4-63f7-41dd-ab86-1d7c8ac00ffb" playOrder="188" class="chapter">
+                    <navLabel>
+                        <text>Training the discriminator</text>
+                    </navLabel>
+                    <content src="68dbcac4-63f7-41dd-ab86-1d7c8ac00ffb.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-256bc767-166f-4c58-9da5-a86afdd6d636" playOrder="189" class="chapter">
+                    <navLabel>
+                        <text>Training the discriminator with real images</text>
+                    </navLabel>
+                    <content src="256bc767-166f-4c58-9da5-a86afdd6d636.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-afa0f46c-0e9c-4718-981c-fda4bf0c1e7a" playOrder="190" class="chapter">
+                    <navLabel>
+                        <text>Training the discriminator with fake images</text>
+                    </navLabel>
+                    <content src="afa0f46c-0e9c-4718-981c-fda4bf0c1e7a.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-35dc1f95-a0e3-4fb2-a812-3a8d739f2699" playOrder="191" class="chapter">
+                    <navLabel>
+                        <text>Training the generator network&amp;#xA0;</text>
+                    </navLabel>
+                    <content src="35dc1f95-a0e3-4fb2-a812-3a8d739f2699.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-59211afe-3cdf-4f40-a1d5-cb2d43e79b2a" playOrder="192" class="chapter">
+                    <navLabel>
+                        <text>Training the complete network</text>
+                    </navLabel>
+                    <content src="59211afe-3cdf-4f40-a1d5-cb2d43e79b2a.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-e296dd73-f96f-49eb-b481-ce3337a91378" playOrder="193" class="chapter">
+                    <navLabel>
+                        <text>Inspecting the generated images</text>
+                    </navLabel>
+                    <content src="e296dd73-f96f-49eb-b481-ce3337a91378.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-55403d7c-0b30-48d2-b801-7c99eda1572a" playOrder="194" class="chapter">
+                    <navLabel>
+                        <text>Language modeling&amp;#xA0;</text>
+                    </navLabel>
+                    <content src="55403d7c-0b30-48d2-b801-7c99eda1572a.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-0c06d58c-bfa8-483a-a10e-cb16feb91873" playOrder="195" class="chapter">
+                    <navLabel>
+                        <text>Preparing the data&amp;#xA0;</text>
+                    </navLabel>
+                    <content src="0c06d58c-bfa8-483a-a10e-cb16feb91873.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-f2a2ff1b-55f0-4058-a240-f8e795e49455" playOrder="196" class="chapter">
+                    <navLabel>
+                        <text>Generating the batches&amp;#xA0;</text>
+                    </navLabel>
+                    <content src="f2a2ff1b-55f0-4058-a240-f8e795e49455.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-6f62c551-4c8f-41c1-9d0d-56ecf2c28e49" playOrder="197" class="chapter">
+                    <navLabel>
+                        <text>Batches&amp;#xA0;</text>
+                    </navLabel>
+                    <content src="6f62c551-4c8f-41c1-9d0d-56ecf2c28e49.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-d33128a4-2faf-4e93-9a6b-6db512af5ece" playOrder="198" class="chapter">
+                    <navLabel>
+                        <text>Backpropagation through time</text>
+                    </navLabel>
+                    <content src="d33128a4-2faf-4e93-9a6b-6db512af5ece.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-6969b454-54d3-4f99-a072-9b7bf734257b" playOrder="199" class="chapter">
+                    <navLabel>
+                        <text>Defining a model based on LSTM</text>
+                    </navLabel>
+                    <content src="6969b454-54d3-4f99-a072-9b7bf734257b.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-dd048041-7566-40a9-a331-6d27e2a5d716" playOrder="200" class="chapter">
+                    <navLabel>
+                        <text>Defining the train and evaluate functions</text>
+                    </navLabel>
+                    <content src="dd048041-7566-40a9-a331-6d27e2a5d716.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-c3c07b7c-ff41-4d4e-84f5-8080ecf25687" playOrder="201" class="chapter">
+                    <navLabel>
+                        <text>Training the model</text>
+                    </navLabel>
+                    <content src="c3c07b7c-ff41-4d4e-84f5-8080ecf25687.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-10a185b5-0c1d-42a6-b157-9fd39aac1d1c" playOrder="202" class="chapter">
+                    <navLabel>
+                        <text>Summary</text>
+                    </navLabel>
+                    <content src="10a185b5-0c1d-42a6-b157-9fd39aac1d1c.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-dc1e2ceb-37b3-423c-9fd7-ff8e7da24fe6" playOrder="203" class="chapter">
+                    <navLabel>
+                        <text>Modern Network Architectures</text>
+                    </navLabel>
+                    <content src="dc1e2ceb-37b3-423c-9fd7-ff8e7da24fe6.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-3f28702d-ec37-4eb8-9182-1dde15da4d20" playOrder="204" class="chapter">
+                    <navLabel>
+                        <text>Modern network architectures</text>
+                    </navLabel>
+                    <content src="3f28702d-ec37-4eb8-9182-1dde15da4d20.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-9be37dc9-80b6-4bb7-a6eb-4fc92b7fd3d9" playOrder="205" class="chapter">
+                    <navLabel>
+                        <text>ResNet&amp;#xA0;</text>
+                    </navLabel>
+                    <content src="9be37dc9-80b6-4bb7-a6eb-4fc92b7fd3d9.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-2cec2cb5-5685-4570-ab31-a26826271606" playOrder="206" class="chapter">
+                    <navLabel>
+                        <text>Creating PyTorch datasets</text>
+                    </navLabel>
+                    <content src="2cec2cb5-5685-4570-ab31-a26826271606.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-6f70b9f9-a2a8-49a9-a3b4-01a6a20a90bb" playOrder="207" class="chapter">
+                    <navLabel>
+                        <text>Creating loaders for training and validation</text>
+                    </navLabel>
+                    <content src="6f70b9f9-a2a8-49a9-a3b4-01a6a20a90bb.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-ebbcdf0e-5799-42e5-a5ef-a6fb2eff5517" playOrder="208" class="chapter">
+                    <navLabel>
+                        <text>Creating a ResNet model</text>
+                    </navLabel>
+                    <content src="ebbcdf0e-5799-42e5-a5ef-a6fb2eff5517.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-3efca9cc-be4d-4c1d-ac94-644f305ff61b" playOrder="209" class="chapter">
+                    <navLabel>
+                        <text>Extracting convolutional features</text>
+                    </navLabel>
+                    <content src="3efca9cc-be4d-4c1d-ac94-644f305ff61b.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-bb3c7028-dfa8-4ded-85ba-a022691f4182" playOrder="210" class="chapter">
+                    <navLabel>
+                        <text>Creating a custom PyTorch dataset class for the pre-convoluted features and loader</text>
+                    </navLabel>
+                    <content src="bb3c7028-dfa8-4ded-85ba-a022691f4182.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-584f3e6b-2dd6-474e-96bd-8e1c3f658b33" playOrder="211" class="chapter">
+                    <navLabel>
+                        <text>Creating a simple linear model</text>
+                    </navLabel>
+                    <content src="584f3e6b-2dd6-474e-96bd-8e1c3f658b33.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-b7fd6c9a-ef82-40c8-bb03-fe30bdb5ac43" playOrder="212" class="chapter">
+                    <navLabel>
+                        <text>Training and validating the model</text>
+                    </navLabel>
+                    <content src="b7fd6c9a-ef82-40c8-bb03-fe30bdb5ac43.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-e677e5a7-003c-4e3a-9d51-831913eb9427" playOrder="213" class="chapter">
+                    <navLabel>
+                        <text>Inception</text>
+                    </navLabel>
+                    <content src="e677e5a7-003c-4e3a-9d51-831913eb9427.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-e50b7466-e203-4497-ad7e-4ba4f378a4d8" playOrder="214" class="chapter">
+                    <navLabel>
+                        <text>Creating an Inception model</text>
+                    </navLabel>
+                    <content src="e50b7466-e203-4497-ad7e-4ba4f378a4d8.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-0645106b-4ecc-4c06-a46f-f8b7e4d7c4a0" playOrder="215" class="chapter">
+                    <navLabel>
+                        <text>Extracting convolutional features using register_forward_hook</text>
+                    </navLabel>
+                    <content src="0645106b-4ecc-4c06-a46f-f8b7e4d7c4a0.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-476fc7d5-479b-4294-bfb6-c896aeebc68a" playOrder="216" class="chapter">
+                    <navLabel>
+                        <text>Creating a new dataset for the convoluted features</text>
+                    </navLabel>
+                    <content src="476fc7d5-479b-4294-bfb6-c896aeebc68a.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-c9006b13-fe7c-44ed-90d5-9ef8533c8c6d" playOrder="217" class="chapter">
+                    <navLabel>
+                        <text>Creating a fully connected model</text>
+                    </navLabel>
+                    <content src="c9006b13-fe7c-44ed-90d5-9ef8533c8c6d.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-287c893c-d293-4de7-8cb9-0d56c94da1ae" playOrder="218" class="chapter">
+                    <navLabel>
+                        <text>Training and validating the model</text>
+                    </navLabel>
+                    <content src="287c893c-d293-4de7-8cb9-0d56c94da1ae.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-e586015c-dcee-4ed1-8f98-38614e71e805" playOrder="219" class="chapter">
+                    <navLabel>
+                        <text>Densely connected convolutional networks &amp;#x2013; DenseNet</text>
+                    </navLabel>
+                    <content src="e586015c-dcee-4ed1-8f98-38614e71e805.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-8a154368-58f5-4381-a639-8e76b0a788ee" playOrder="220" class="chapter">
+                    <navLabel>
+                        <text>DenseBlock</text>
+                    </navLabel>
+                    <content src="8a154368-58f5-4381-a639-8e76b0a788ee.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-d0ba7d89-c2bd-47f8-acdc-d12e39f4b7cd" playOrder="221" class="chapter">
+                    <navLabel>
+                        <text>DenseLayer</text>
+                    </navLabel>
+                    <content src="d0ba7d89-c2bd-47f8-acdc-d12e39f4b7cd.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-14ee70b9-523f-4698-a2d0-92b4f325a280" playOrder="222" class="chapter">
+                    <navLabel>
+                        <text>Creating a DenseNet model</text>
+                    </navLabel>
+                    <content src="14ee70b9-523f-4698-a2d0-92b4f325a280.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-e71bc961-0c48-4133-ab3b-2e12d2146c72" playOrder="223" class="chapter">
+                    <navLabel>
+                        <text>Extracting DenseNet features</text>
+                    </navLabel>
+                    <content src="e71bc961-0c48-4133-ab3b-2e12d2146c72.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-508c4283-e5c2-44cd-8cde-d44850eebc95" playOrder="224" class="chapter">
+                    <navLabel>
+                        <text>Creating a dataset and loaders</text>
+                    </navLabel>
+                    <content src="508c4283-e5c2-44cd-8cde-d44850eebc95.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-bf6952ab-78aa-45e2-a539-d9c1f3b3420e" playOrder="225" class="chapter">
+                    <navLabel>
+                        <text>Creating a fully connected model and train</text>
+                    </navLabel>
+                    <content src="bf6952ab-78aa-45e2-a539-d9c1f3b3420e.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-6259a89f-f321-4298-8373-8c031320b5c4" playOrder="226" class="chapter">
+                    <navLabel>
+                        <text>Model ensembling</text>
+                    </navLabel>
+                    <content src="6259a89f-f321-4298-8373-8c031320b5c4.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-93ae523f-43d8-4d45-a8ed-d6a7fb98b77f" playOrder="227" class="chapter">
+                    <navLabel>
+                        <text>Creating models</text>
+                    </navLabel>
+                    <content src="93ae523f-43d8-4d45-a8ed-d6a7fb98b77f.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-3e84b7d7-22a5-4e85-826a-8716428ba581" playOrder="228" class="chapter">
+                    <navLabel>
+                        <text>Extracting the image features</text>
+                    </navLabel>
+                    <content src="3e84b7d7-22a5-4e85-826a-8716428ba581.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-471a1f0b-4ea2-412f-b7d4-e78174607f9b" playOrder="229" class="chapter">
+                    <navLabel>
+                        <text>Creating a custom dataset along with data loaders</text>
+                    </navLabel>
+                    <content src="471a1f0b-4ea2-412f-b7d4-e78174607f9b.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-baa9b784-d725-43b0-a0e6-3b01252ffbe0" playOrder="230" class="chapter">
+                    <navLabel>
+                        <text>Creating an ensembling model</text>
+                    </navLabel>
+                    <content src="baa9b784-d725-43b0-a0e6-3b01252ffbe0.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-f3d2d3f1-3a11-446f-a798-6aa79c61a06f" playOrder="231" class="chapter">
+                    <navLabel>
+                        <text>Training and validating the model</text>
+                    </navLabel>
+                    <content src="f3d2d3f1-3a11-446f-a798-6aa79c61a06f.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-6b608843-0678-48f5-ac7c-c13a443bd86b" playOrder="232" class="chapter">
+                    <navLabel>
+                        <text>Encoder-decoder architecture&amp;#xA0;</text>
+                    </navLabel>
+                    <content src="6b608843-0678-48f5-ac7c-c13a443bd86b.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-1454c22f-ca16-4d9b-ad01-6163a8b3f48f" playOrder="233" class="chapter">
+                    <navLabel>
+                        <text>Encoder&amp;#xA0;</text>
+                    </navLabel>
+                    <content src="1454c22f-ca16-4d9b-ad01-6163a8b3f48f.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-1cc23ec6-432b-4425-b43e-dd51ad2557b0" playOrder="234" class="chapter">
+                    <navLabel>
+                        <text>Decoder</text>
+                    </navLabel>
+                    <content src="1cc23ec6-432b-4425-b43e-dd51ad2557b0.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-2f95fec5-ac46-4fee-b35c-441e4afa45c3" playOrder="235" class="chapter">
+                    <navLabel>
+                        <text>Summary</text>
+                    </navLabel>
+                    <content src="2f95fec5-ac46-4fee-b35c-441e4afa45c3.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-59c98b2f-bbac-4ddf-bf4e-3223f222f6c1" playOrder="236" class="chapter">
+                    <navLabel>
+                        <text>What Next?</text>
+                    </navLabel>
+                    <content src="59c98b2f-bbac-4ddf-bf4e-3223f222f6c1.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-0a7f0af1-4d88-4ab7-886e-09739af23033" playOrder="237" class="chapter">
+                    <navLabel>
+                        <text>What next?</text>
+                    </navLabel>
+                    <content src="0a7f0af1-4d88-4ab7-886e-09739af23033.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-84b3dd0b-50fe-4d0c-a62c-c8e84f6ef4e8" playOrder="238" class="chapter">
+                    <navLabel>
+                        <text>Overview</text>
+                    </navLabel>
+                    <content src="84b3dd0b-50fe-4d0c-a62c-c8e84f6ef4e8.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-304a9585-2811-4315-9a4f-a559df3032a5" playOrder="239" class="chapter">
+                    <navLabel>
+                        <text>Interesting ideas to explore</text>
+                    </navLabel>
+                    <content src="304a9585-2811-4315-9a4f-a559df3032a5.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-9302f793-aa48-4c67-b0e0-399c169fbee4" playOrder="240" class="chapter">
+                    <navLabel>
+                        <text>Object detection</text>
+                    </navLabel>
+                    <content src="9302f793-aa48-4c67-b0e0-399c169fbee4.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-20c13315-5bb0-43ca-8238-7e597ebeada7" playOrder="241" class="chapter">
+                    <navLabel>
+                        <text>Image segmentation</text>
+                    </navLabel>
+                    <content src="20c13315-5bb0-43ca-8238-7e597ebeada7.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-6e82aff3-030f-47f6-a860-0eba6aaaa11c" playOrder="242" class="chapter">
+                    <navLabel>
+                        <text>OpenNMT in PyTorch</text>
+                    </navLabel>
+                    <content src="6e82aff3-030f-47f6-a860-0eba6aaaa11c.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-b21bd67b-4c47-4775-be7f-cb1e2fbe55c4" playOrder="243" class="chapter">
+                    <navLabel>
+                        <text>Alien NLP</text>
+                    </navLabel>
+                    <content src="b21bd67b-4c47-4775-be7f-cb1e2fbe55c4.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-1c824e3f-16a5-431d-bbdc-0d2da69773e4" playOrder="244" class="chapter">
+                    <navLabel>
+                        <text>fast.ai &amp;#x2013; making neural nets uncool again</text>
+                    </navLabel>
+                    <content src="1c824e3f-16a5-431d-bbdc-0d2da69773e4.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-fa24c944-bd9a-4129-a30e-c1afd9dee6e7" playOrder="245" class="chapter">
+                    <navLabel>
+                        <text>Open Neural Network Exchange&amp;#xA0;</text>
+                    </navLabel>
+                    <content src="fa24c944-bd9a-4129-a30e-c1afd9dee6e7.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-afac2cfb-224b-4783-8ee4-11ea777792c0" playOrder="246" class="chapter">
+                    <navLabel>
+                        <text>How to keep yourself updated</text>
+                    </navLabel>
+                    <content src="afac2cfb-224b-4783-8ee4-11ea777792c0.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-908e892e-7bfc-4ce9-b85b-41ace497c1e1" playOrder="247" class="chapter">
+                    <navLabel>
+                        <text>Summary</text>
+                    </navLabel>
+                    <content src="908e892e-7bfc-4ce9-b85b-41ace497c1e1.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-9e9df510-d92e-4aa1-a2ab-ff4aec0c3d0e" playOrder="248" class="chapter">
+                    <navLabel>
+                        <text>Other Books You May Enjoy</text>
+                    </navLabel>
+                    <content src="9e9df510-d92e-4aa1-a2ab-ff4aec0c3d0e.xhtml"/>
+                </navPoint>
+        
+                <navPoint id="uuid-5271f113-9004-4334-aa89-f337e9dfd4c4" playOrder="249" class="chapter">
+                    <navLabel>
+                        <text>Leave a review - let other readers know what you think</text>
+                    </navLabel>
+                    <content src="5271f113-9004-4334-aa89-f337e9dfd4c4.xhtml"/>
+                </navPoint>
+        
+    </navMap>
+</ncx>

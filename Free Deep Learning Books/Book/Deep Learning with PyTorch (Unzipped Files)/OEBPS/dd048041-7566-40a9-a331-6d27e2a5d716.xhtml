@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xmlns:m="http://www.w3.org/1998/Math/MathML" xmlns:pls="http://www.w3.org/2005/01/pronunciation-lexicon" xmlns:ssml="http://www.w3.org/2001/10/synthesis" xmlns:svg="http://www.w3.org/2000/svg">
+<head>
+  <meta charset="UTF-8" />
+  <title>Defining the train and evaluate functions</title>
+  <link type="text/css" rel="stylesheet" media="all" href="style.css" />
+  <link type="text/css" rel="stylesheet" media="all" href="core.css" />
+</head>
+<body>
+  <div id="sbo-rt-content"><section>
+
+                            <header>
+                    <h1 class="header-title">Defining the train and evaluate functions</h1>
+                </header>
+            
+            <article>
+                
+<p class="mce-root">The training of the model is very similar to what we saw in all the previous examples in this book. There are a few important changes that we need to make so that the trained model works better. Let's look at the code and its key parts:</p>
+<pre>criterion = nn.CrossEntropyLoss()<br/><br/>def trainf():<br/>    # Turn on training mode which enables dropout.<br/>    lstm.train()<br/>    total_loss = 0<br/>    start_time = time.time()<br/>    hidden = lstm.init_hidden(batch_size)<br/>    for i,batch in enumerate(train_iter):<br/>        data, targets = batch.text,batch.target.view(-1)<br/>        # Starting each batch, we detach the hidden state from how it was previously produced.<br/>        # If we didn't, the model would try backpropagating all the way to start of the dataset.<br/>        hidden = repackage_hidden(hidden)<br/>        lstm.zero_grad()<br/>        output, hidden = lstm(data, hidden)<br/>        loss = criterion(output.view(-1, ntokens), targets)<br/>        loss.backward()<br/><br/>        # `clip_grad_norm` helps prevent the exploding gradient problem in RNNs / LSTMs.<br/>        torch.nn.utils.clip_grad_norm(lstm.parameters(), clip)<br/>        for p in lstm.parameters():<br/>            p.data.add_(-lr, p.grad.data)<br/><br/>        total_loss += loss.data<br/><br/>        if i % log_interval == 0 and i &gt; 0:<br/>            cur_loss = total_loss[0] / log_interval<br/>            elapsed = time.time() - start_time<br/>            (print('| epoch {:3d} | {:5d}/{:5d} batches | lr {:02.2f} | ms/batch {:5.2f} | loss {:5.2f} | ppl {:8.2f}'.format(epoch, i, len(train_iter), lr,elapsed * 1000 / log_interval, cur_loss, math.exp(cur_loss))))<br/>            total_loss = 0<br/>            start_time = time.time()</pre>
+<p>Since we are using dropout in our model, we need to use it differently during training and for validation/test datasets. Calling <kbd>train()</kbd> on the model will ensure dropout is active during training, and calling <kbd>eval()</kbd> on the model will ensure that dropout is used differently:</p>
+<pre>lstm.train()</pre>
+<p>For an LSTM model, along with the input, we also need to pass the hidden variables. The <kbd>init_hidden</kbd> function will take the batch size as input and then return a hidden variable, which can be used along with the inputs. We can iterate through the training data and pass the input data to the model. Since we are processing sequence data, starting with a new hidden state (randomly initialized) for every iteration will not make sense. So, we will use the hidden state from the previous iteration after removing it from the graph by calling the <kbd>detach</kbd> method. If we do not call the <kbd>detach</kbd> method, then we end up calculating gradients for a very long sequence until we run out of GPU memory.</p>
+<p>We then pass on the input to the LSTM model and calculate loss using <kbd>CrossEntropyLoss</kbd>. Using the previous values of the hidden state is implemented in the following <kbd>repackage_hidden</kbd> function:</p>
+<pre>def repackage_hidden(h):<br/>    """Wraps hidden states in new Variables, to detach them from their history."""<br/>    if type(h) == Variable:<br/>        return Variable(h.data)<br/>    else:<br/>        return tuple(repackage_hidden(v) for v in h)</pre>
+<p>RNNs and their variants, such as LSTM and the <strong>Gated Recurrent Unit </strong>(<strong>GRU</strong>), suffer from a problem called <strong>exploding gradients</strong>. One simple trick to avoid the problem is to clip the gradients, which is done in the following code:</p>
+<pre>torch.nn.utils.clip_grad_norm(lstm.parameters(), clip)</pre>
+<p>We manually adjust the values of the parameters by using the following code. Implementing an optimizer manually gives more flexibility than using a prebuilt optimizer:</p>
+<pre>  for p in lstm.parameters():<br/>      p.data.add_(-lr, p.grad.data)</pre>
+<p>We are iterating through all the parameters and adding up the value of the gradients, multiplied by the learning rate. Once we update all the parameters, we log all the statistics such as time, loss, and perplexity. </p>
+<p>We write a similar function for validation, where we call the <kbd>eval</kbd> method on the model. The <kbd>evaluate</kbd> function is defined using the following code:</p>
+<pre>def evaluate(data_source):<br/>    # Turn on evaluation mode which disables dropout.<br/>    lstm.eval()<br/>    total_loss = 0 <br/>    hidden = lstm.init_hidden(batch_size)<br/>    for batch in data_source: <br/>        data, targets = batch.text,batch.target.view(-1)<br/>        output, hidden = lstm(data, hidden)<br/>        output_flat = output.view(-1, ntokens)<br/>        total_loss += len(data) * criterion(output_flat, targets).data<br/>        hidden = repackage_hidden(hidden)<br/>    return total_loss[0]/(len(data_source.dataset[0].text)//batch_size)</pre>
+<p>Most of the training logic and evaluation logic is similar, except for calling <kbd>eval</kbd> and not updating the parameters of the model.</p>
+
+
+            </article>
+
+            
+        </section>
+    </div>
+</body>
+</html>

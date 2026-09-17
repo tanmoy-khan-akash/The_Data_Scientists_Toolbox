@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xmlns:m="http://www.w3.org/1998/Math/MathML" xmlns:pls="http://www.w3.org/2005/01/pronunciation-lexicon" xmlns:ssml="http://www.w3.org/2001/10/synthesis" xmlns:svg="http://www.w3.org/2000/svg">
+<head>
+  <meta charset="UTF-8" />
+  <title>Sigmoid</title>
+  <link type="text/css" rel="stylesheet" media="all" href="style.css" />
+  <link type="text/css" rel="stylesheet" media="all" href="core.css" />
+</head>
+<body>
+  <div id="sbo-rt-content"><section>
+
+                            <header>
+                    <h1 class="header-title">Sigmoid</h1>
+                </header>
+            
+            <article>
+                
+<p>The sigmoid activation function has a simple mathematical form, as follows:</p>
+<p style="padding-left: 150px"><span><img height="28" width="186" class="fm-editor-equation" src="images/aabbaeb0-9f60-44df-940e-9b3874c3ece2.png" /></span></p>
+<p>The sigmoid function intuitively takes a real-valued number and outputs a number in a range between zero and one. For a large negative number, it returns close to zero and, for a large positive number, it returns close to one. The following plot represents different sigmoid function outputs:</p>
+<div class="CDPAlignCenter CDPAlign"><img height="260" width="386" class="alignnone size-full wp-image-337 image-border" src="images/beb8c9f1-c75f-4e24-b654-5536c74ca248.png" /></div>
+<p>The sigmoid function has been historically used across different architectures, but in recent times it has gone out of popularity as it has one major drawback. When the output of the sigmoid function is close to zero or one, the gradients for the layers before the sigmoid function are close to zero and, hence, the learnable parameters of the previous layer get gradients close to zero and the weights do not get adjusted often, resulting in dead neurons.</p>
+
+
+            </article>
+
+            
+        </section>
+    </div>
+</body>
+</html>

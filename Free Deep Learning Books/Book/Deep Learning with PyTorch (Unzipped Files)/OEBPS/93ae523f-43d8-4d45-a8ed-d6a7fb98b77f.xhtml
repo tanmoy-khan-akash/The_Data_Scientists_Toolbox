@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xmlns:m="http://www.w3.org/1998/Math/MathML" xmlns:pls="http://www.w3.org/2005/01/pronunciation-lexicon" xmlns:ssml="http://www.w3.org/2001/10/synthesis" xmlns:svg="http://www.w3.org/2000/svg">
+<head>
+  <meta charset="UTF-8" />
+  <title>Creating models</title>
+  <link type="text/css" rel="stylesheet" media="all" href="style.css" />
+  <link type="text/css" rel="stylesheet" media="all" href="core.css" />
+</head>
+<body>
+  <div id="sbo-rt-content"><section>
+
+                            <header>
+                    <h1 class="header-title">Creating models</h1>
+                </header>
+            
+            <article>
+                
+<p>Let's create all the three required models, as shown in the following code: </p>
+<pre>#Create ResNet model<br/>my_resnet = resnet34(pretrained=True)<br/><br/>if is_cuda:<br/>    my_resnet = my_resnet.cuda()<br/><br/>my_resnet = nn.Sequential(*list(my_resnet.children())[:-1])<br/><br/>for p in my_resnet.parameters():<br/>    p.requires_grad = False<br/><br/>#Create inception model<br/><br/>my_inception = inception_v3(pretrained=True)<br/>my_inception.aux_logits = False<br/>if is_cuda:<br/>    my_inception = my_inception.cuda()<br/>for p in my_inception.parameters():<br/>    p.requires_grad = False<br/><br/>#Create densenet model<br/><br/>my_densenet = densenet121(pretrained=True).features<br/>if is_cuda:<br/>    my_densenet = my_densenet.cuda()<br/>    <br/>for p in my_densenet.parameters():<br/>    p.requires_grad = False</pre>
+<p>Now we have all the models, let's extract the features from the images. </p>
+
+
+            </article>
+
+            
+        </section>
+    </div>
+</body>
+</html>

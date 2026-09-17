@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xmlns:m="http://www.w3.org/1998/Math/MathML" xmlns:pls="http://www.w3.org/2005/01/pronunciation-lexicon" xmlns:ssml="http://www.w3.org/2001/10/synthesis" xmlns:svg="http://www.w3.org/2000/svg">
+<head>
+  <meta charset="UTF-8" />
+  <title>Creating an Inception model</title>
+  <link type="text/css" rel="stylesheet" media="all" href="style.css" />
+  <link type="text/css" rel="stylesheet" media="all" href="core.css" />
+</head>
+<body>
+  <div id="sbo-rt-content"><section>
+
+                            <header>
+                    <h1 class="header-title">Creating an Inception model</h1>
+                </header>
+            
+            <article>
+                
+<p>The Inception v3 model has two branches, each of which generates an output, and in the original model training, we would merge the losses as we did for style transfer. As of now we are interested in using only one branch to calculate <span>pre-convoluted features using Inception</span>. Getting into the details of this is outside the scope of the book. If you are interested in knowing more about how it works, then going through the paper and the source code (<a href="https://github.com/pytorch/vision/blob/master/torchvision/models/inception.py" target="_blank">https://github.com/pytorch/vision/blob/master/torchvision/models/inception.py</a>) of the Inception model would help. We can disable one of the branches by setting the <kbd>aux_logits</kbd> parameter to <kbd>False</kbd>. The following code explains how to create a model and set the <kbd>aux_logits</kbd> parameter to <kbd>False</kbd>:</p>
+<pre>my_inception = inception_v3(pretrained=True)<br/>my_inception.aux_logits = False<br/>if is_cuda:<br/>    my_inception = my_inception.cuda()</pre>
+<p>Extracting the convolution features from the Inception model is not straightforward, as with ResNet, so we will use the <kbd>register_forward_hook</kbd> to extract the activations.</p>
+
+
+            </article>
+
+            
+        </section>
+    </div>
+</body>
+</html>

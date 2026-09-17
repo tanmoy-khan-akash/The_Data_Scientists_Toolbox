@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xmlns:m="http://www.w3.org/1998/Math/MathML" xmlns:pls="http://www.w3.org/2005/01/pronunciation-lexicon" xmlns:ssml="http://www.w3.org/2001/10/synthesis" xmlns:svg="http://www.w3.org/2000/svg">
+<head>
+  <meta charset="UTF-8" />
+  <title>Building vocabulary</title>
+  <link type="text/css" rel="stylesheet" media="all" href="style.css" />
+  <link type="text/css" rel="stylesheet" media="all" href="core.css" />
+</head>
+<body>
+  <div id="sbo-rt-content"><section>
+
+                            <header>
+                    <h1 class="header-title">Building vocabulary</h1>
+                </header>
+            
+            <article>
+                
+<p>When we created one-hot encoding for <kbd>thor_review</kbd>, we created a <kbd>word2idx</kbd> dictionary, which is referred to as the vocabulary since it contains all the details of the unique words in the documents. The <kbd>torchtext</kbd> instance makes that easier for us. Once the data is loaded, we can call <kbd>build_vocab</kbd> and pass the necessary arguments that will take care of building the vocabulary for the data. The following code shows how the vocabulary is built:</p>
+<pre>TEXT.build_vocab(train, vectors=GloVe(name='6B', dim=300),max_size=10000,min_freq=10)<br/>LABEL.build_vocab(train)</pre>
+<p class="CDPAlignLeft CDPAlign">In the preceding code, we pass in the <kbd>train</kbd> object on which we need to build the vocabulary, and we also ask it to initialize vectors with pretrained embeddings of dimensions <kbd>300</kbd>. The <kbd>build_vocab</kbd> object just downloads and creates the dimension that will be used later, when we train the sentiment classifier using pretrained weights. The <kbd>max_size</kbd> instance limits the number of words in the vocabulary, and <kbd>min_freq</kbd> removes any word which has not occurred more than ten times, where <kbd>10</kbd> is configurable.</p>
+<p>Once the vocabulary is built, we can obtain different values such as frequency, word index, and the vector representation for each word. The following code demonstrates how to access these values:</p>
+<pre class="mce-root">print(TEXT.vocab.freqs)<br/><br/># A sample result <br/>Counter({"i'm": 4174,
+         'not': 28597,
+         'tired': 328,
+         'to': 133967,
+         'say': 4392,
+         'this': 69714,
+         'is': 104171,
+         'one': 22480,
+         'of': 144462,
+         'the': 322198,</pre>
+<p><span>The following code demonstrates how to access the results:</span></p>
+<pre><br/><br/>print(TEXT.vocab.vectors)<br/><br/>#Results displaying the 300 dimension vector for each word.<br/>0.0000 0.0000 0.0000 ... 0.0000 0.0000 0.0000<br/>0.0000 0.0000 0.0000 ... 0.0000 0.0000 0.0000<br/>0.0466 0.2132 -0.0074 ... 0.0091 -0.2099 0.0539<br/>      ... ⋱ ... <br/>0.0000 0.0000 0.0000 ... 0.0000 0.0000 0.0000<br/>0.7724 -0.1800 0.2072 ... 0.6736 0.2263 -0.2919<br/>0.0000 0.0000 0.0000 ... 0.0000 0.0000 0.0000<br/>[torch.FloatTensor of size 10002x300]<br/><br/>print(TEXT.vocab.stoi)<br/><br/># Sample results<br/>defaultdict(&lt;function torchtext.vocab._default_unk_index&gt;,<br/>            {'&lt;unk&gt;': 0,<br/>             '&lt;pad&gt;': 1,<br/>             'the': 2,<br/>             'a': 3,<br/>             'and': 4,<br/>             'of': 5,<br/>             'to': 6,<br/>             'is': 7,<br/>             'in': 8,<br/>             'i': 9,<br/>             'this': 10,<br/>             'that': 11,<br/>             'it': 12,</pre>
+<p>The <kbd>stoi</kbd> gives access to a dictionary containing words and their indexes. </p>
+
+
+            </article>
+
+            
+        </section>
+    </div>
+</body>
+</html>

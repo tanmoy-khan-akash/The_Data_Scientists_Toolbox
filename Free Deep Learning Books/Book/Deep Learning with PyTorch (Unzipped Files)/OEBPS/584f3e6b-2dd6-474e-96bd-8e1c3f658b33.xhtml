@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xmlns:m="http://www.w3.org/1998/Math/MathML" xmlns:pls="http://www.w3.org/2005/01/pronunciation-lexicon" xmlns:ssml="http://www.w3.org/2001/10/synthesis" xmlns:svg="http://www.w3.org/2000/svg">
+<head>
+  <meta charset="UTF-8" />
+  <title>Creating a simple linear model</title>
+  <link type="text/css" rel="stylesheet" media="all" href="style.css" />
+  <link type="text/css" rel="stylesheet" media="all" href="core.css" />
+</head>
+<body>
+  <div id="sbo-rt-content"><section>
+
+                            <header>
+                    <h1 class="header-title">Creating a simple linear model</h1>
+                </header>
+            
+            <article>
+                
+<p>We will create a simple linear model that will map the pre-convoluted features to the respective categories. In this case, the number of categories is two:</p>
+<pre>class FullyConnectedModel(nn.Module):<br/>    <br/>    def __init__(self,in_size,out_size):<br/>        super().__init__()<br/>        self.fc = nn.Linear(in_size,out_size)<br/><br/>    def forward(self,inp):<br/>        out = self.fc(inp)<br/>        return out<br/><br/>fc_in_size = 8192<br/><br/>fc = FullyConnectedModel(fc_in_size,classes)<br/>if is_cuda:<br/>    fc = fc.cuda()</pre>
+<p>Now, we are good to train our new model and validate the dataset.</p>
+
+
+            </article>
+
+            
+        </section>
+    </div>
+</body>
+</html>

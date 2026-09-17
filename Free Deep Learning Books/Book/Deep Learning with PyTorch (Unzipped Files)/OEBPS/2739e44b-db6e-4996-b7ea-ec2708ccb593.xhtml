@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xmlns:m="http://www.w3.org/1998/Math/MathML" xmlns:pls="http://www.w3.org/2005/01/pronunciation-lexicon" xmlns:ssml="http://www.w3.org/2001/10/synthesis" xmlns:svg="http://www.w3.org/2000/svg">
+<head>
+  <meta charset="UTF-8" />
+  <title>DataLoader class</title>
+  <link type="text/css" rel="stylesheet" media="all" href="style.css" />
+  <link type="text/css" rel="stylesheet" media="all" href="core.css" />
+</head>
+<body>
+  <div id="sbo-rt-content"><section>
+
+                            <header>
+                    <h1 class="header-title">DataLoader class</h1>
+                </header>
+            
+            <article>
+                
+<p>The <kbd>DataLoader</kbd> class present in PyTorch's <kbd>utils</kbd> class combines a dataset object along with different samplers, such as <kbd>SequentialSampler</kbd> and <kbd>RandomSampler</kbd>, and provides us with a batch of images, either using a single or multi-process iterators. Samplers are different strategies for providing data to algorithms. The following is an example of a <kbd>DataLoader</kbd> for our <kbd>Dogs vs. Cats</kbd> dataset:</p>
+<pre>dataloader = DataLoader(dogsdset,batch_size=32,num_workers=2)<br/>for imgs , labels in dataloader:<br/>     #Apply your DL on the dataset.<br/>     pass</pre>
+<p class="mce-root"><kbd>imgs</kbd> will contain a tensor of shape (32, 224, 224, 3), where <em>32</em> represents the batch size. </p>
+<p>The PyTorch team also maintains two useful libraries, called <kbd>torchvision</kbd> and <kbd>torchtext</kbd>, which are built on top of the <kbd>Dataset</kbd> and <kbd>DataLoader</kbd> classes. We will use them in the relevant chapters.</p>
+
+
+            </article>
+
+            
+        </section>
+    </div>
+</body>
+</html>

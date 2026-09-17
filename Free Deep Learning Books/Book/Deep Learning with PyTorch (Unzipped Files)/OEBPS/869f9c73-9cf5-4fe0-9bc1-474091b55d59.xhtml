@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xmlns:m="http://www.w3.org/1998/Math/MathML" xmlns:pls="http://www.w3.org/2005/01/pronunciation-lexicon" xmlns:ssml="http://www.w3.org/2001/10/synthesis" xmlns:svg="http://www.w3.org/2000/svg">
+<head>
+  <meta charset="UTF-8" />
+  <title>Applying regularization</title>
+  <link type="text/css" rel="stylesheet" media="all" href="style.css" />
+  <link type="text/css" rel="stylesheet" media="all" href="core.css" />
+</head>
+<body>
+  <div id="sbo-rt-content"><section>
+
+                            <header>
+                    <h1 class="header-title">Applying regularization</h1>
+                </header>
+            
+            <article>
+                
+<p>Finding the best way to regularize the model or algorithm is one of the trickiest parts of the process, since there are a lot of parameters to be tuned. Some of the parameters that we can tune to regularize the model are:</p>
+<ul>
+<li><strong>Adding dropout</strong>: This can be complex as this can be added between different layers, and finding the best place is usually done through experimentation. The percentage of dropout to be added is also tricky, as it is purely dependent on the problem statement we are trying to solve. It is often good practice to start with a small number such as 0.2.</li>
+<li><strong>Trying different architectures</strong>: We can try different architectures, activation functions, numbers of layers, weights, or parameters inside the layers.</li>
+<li><strong>Adding L1 or L2 regularization</strong>: We can make use of either one of regularization.</li>
+<li><strong>Trying different learning rates</strong>: There are different techniques that can be used, which we will discuss in the later sections of the chapter.</li>
+<li><strong>Adding more features or more data</strong>: This is probably done by acquiring more data or augmenting data.</li>
+</ul>
+<p>We will use our validation dataset to tune all the aforementioned hyper parameters. As we keep iterating and tweaking the hyper parameters, we may end up with the problem of data leakage. So, we should ensure that we have holdout data for testing. If the performance of the model on the test data is good in comparison to the training and validation, then there is a good chance that our model will perform well on unseen data. But, if the model fails to perform on the test data but performs on the validation and training data, then there is a chance that the validation data is not a good representation of the real-world dataset. In such scenarios, we can end up using k-fold validation or iterated k-fold validation datasets. </p>
+
+
+            </article>
+
+            
+        </section>
+    </div>
+</body>
+</html>

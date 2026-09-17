@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xmlns:m="http://www.w3.org/1998/Math/MathML" xmlns:pls="http://www.w3.org/2005/01/pronunciation-lexicon" xmlns:ssml="http://www.w3.org/2001/10/synthesis" xmlns:svg="http://www.w3.org/2000/svg">
+<head>
+  <meta charset="UTF-8" />
+  <title>3-D tensors</title>
+  <link type="text/css" rel="stylesheet" media="all" href="style.css" />
+  <link type="text/css" rel="stylesheet" media="all" href="core.css" />
+</head>
+<body>
+  <div id="sbo-rt-content"><section>
+
+                            <header>
+                    <h1 class="header-title">3-D tensors</h1>
+                </header>
+            
+            <article>
+                
+<p>When we add multiple matrices together, we get a <em>3-D tensor</em>. 3-D tensors are used to represent data-like images. Images can be represented as numbers in a matrix, which are stacked together. An example of an image shape is <kbd>224</kbd>, <kbd>224</kbd>, <kbd>3</kbd>, where the first index represents height, the second represents width, and the third represents a channel (RGB). Let's see how a computer sees a panda, using the next code snippet:</p>
+<pre>from PIL import Image<br/># Read a panda image from disk using a library called PIL and convert it to numpy array<br/>panda = np.array(Image.open('panda.jpg').resize((224,224)))<br/>panda_tensor = torch.from_numpy(panda)<br/>panda_tensor.size()<br/><br/>Output - torch.Size([224, 224, 3])<br/>#Display panda<br/>plt.imshow(panda)<br/><br/></pre>
+<p>Since displaying the tensor of size <kbd>224</kbd>, <kbd>224</kbd>, <kbd>3</kbd> would occupy a couple of pages in the book, we will display the image and learn to slice the image into smaller tensors to visualize it:</p>
+<div class="CDPAlignCenter"><img src="images/b5de7e6a-4c8a-4aed-91da-5d4180b3f9f3.png" /></div>
+<div class="mce-root CDPAlignCenter CDPAlign packt_figref">Displaying the image</div>
+
+
+            </article>
+
+            
+        </section>
+    </div>
+</body>
+</html>

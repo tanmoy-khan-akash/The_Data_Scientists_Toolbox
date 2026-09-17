@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xmlns:m="http://www.w3.org/1998/Math/MathML" xmlns:pls="http://www.w3.org/2005/01/pronunciation-lexicon" xmlns:ssml="http://www.w3.org/2001/10/synthesis" xmlns:svg="http://www.w3.org/2000/svg">
+<head>
+  <meta charset="UTF-8" />
+  <title>Training</title>
+  <link type="text/css" rel="stylesheet" media="all" href="style.css" />
+  <link type="text/css" rel="stylesheet" media="all" href="core.css" />
+</head>
+<body>
+  <div id="sbo-rt-content"><section>
+
+                            <header>
+                    <h1 class="header-title">Training</h1>
+                </header>
+            
+            <article>
+                
+<p>The <kbd>training</kbd> method is different compared to the other models that we have trained till now. Here, we need to calculate loss at multiple layers, and every time the optimizer is called, it will change the input image so that its content and style gets close to the target's content and style. Let's look at the code used for training, and then we will walk through the important steps in the training:</p>
+<pre>max_iter = 500<br/>show_iter = 50<br/>n_iter=[0]<br/><br/>while n_iter[0] &lt;= max_iter:<br/><br/>    def closure():<br/>        optimizer.zero_grad()<br/>        <br/>        out = extract_layers(loss_layers,opt_img,model=vgg)<br/>        layer_losses = [weights[a] * loss_fns[a](A, targets[a]) for a,A in enumerate(out)]<br/>        loss = sum(layer_losses)<br/>        loss.backward()<br/>        n_iter[0]+=1<br/>        #print loss<br/>        if n_iter[0]%show_iter == (show_iter-1):<br/>            print('Iteration: %d, loss: %f'%(n_iter[0]+1, loss.data[0]))<br/><br/>        return loss<br/>    <br/>    optimizer.step(closure)</pre>
+<p>We are running the training loop for <kbd>500</kbd> iterations. For every iteration, we calculate the output from different layers of the VGG model using our <kbd>extract_layers</kbd> function. In this case, the only thing that changes is the values of <kbd>opt_img</kbd>, which will contain our style image. Once the outputs are calculated, we are calculating the losses by iterating through the outputs and passing them to the corresponding <kbd>loss</kbd> functions along with their respective targets. We sum up all the losses and call the <kbd>backward</kbd> function. At the end of the <kbd>closure</kbd> function, loss is returned. The <kbd>closure</kbd> method is called along with the <kbd>optimizer.step</kbd> method for <kbd>max_iter</kbd>. If you are running on a GPU, it could take a few minutes to run; if you are running on a CPU, try reducing the size of the image to make it run faster. </p>
+<p>After running for 500 epochs, the resulting image on my machine looks as shown here. Try different combinations of content and style to generate interesting images:</p>
+<div class="CDPAlignCenter CDPAlign"><img height="294" width="390" src="images/e447d6b9-9bae-4cf2-8100-24a329cdea64.png" /></div>
+<p>In the next section, let's go ahead and generate human faces using <span><strong>deep convolutional generative adversarial networks</strong> (<strong>DCGANs</strong>)</span>. </p>
+
+
+            </article>
+
+            
+        </section>
+    </div>
+</body>
+</html>

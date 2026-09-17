@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xmlns:m="http://www.w3.org/1998/Math/MathML" xmlns:pls="http://www.w3.org/2005/01/pronunciation-lexicon" xmlns:ssml="http://www.w3.org/2001/10/synthesis" xmlns:svg="http://www.w3.org/2000/svg">
+<head>
+  <meta charset="UTF-8" />
+  <title>Densely connected convolutional networks &#x2013; DenseNet</title>
+  <link type="text/css" rel="stylesheet" media="all" href="style.css" />
+  <link type="text/css" rel="stylesheet" media="all" href="core.css" />
+</head>
+<body>
+  <div id="sbo-rt-content"><section>
+
+                            <header>
+                    <h1 class="header-title">Densely connected convolutional networks – DenseNet</h1>
+                </header>
+            
+            <article>
+                
+<p>Some of the successful and popular architectures, such as ResNet and Inception, have shown the importance of deeper and wider networks. ResNet uses shortcut connections to build deeper networks. DenseNet takes it to a new level by introducing connections from each layer to all other subsequent layers, that is a layer where one could receive all the feature maps from the <span>previous layers.</span> Symbolically, it would look like the following:</p>
+<p style="padding-left: 150px"><img height="20" width="207" class="fm-editor-equation" src="images/28672c69-1d67-410d-8e49-63158824882c.png" /></p>
+<p>The following figure describes what a five-layer dense block would look like:</p>
+<div class="CDPAlignCenter CDPAlign"><img height="390" width="542" src="images/f7f3e5fa-b3b5-49e3-968f-6423cba0e915.png" /></div>
+<div class="packt_figref CDPAlignCenter CDPAlign">Image source: https://arxiv.org/abs/1608.06993</div>
+<p>There is a DenseNet implementation of torchvision (<a href="https://github.com/pytorch/vision/blob/master/torchvision/models/densenet.py" target="_blank">https://github.com/pytorch/vision/blob/master/torchvision/models/densenet.py</a>). Let's look at two major functionalities, <kbd>_DenseBlock</kbd> and <kbd>_DenseLayer</kbd>.</p>
+
+
+            </article>
+
+            
+        </section>
+    </div>
+</body>
+</html>

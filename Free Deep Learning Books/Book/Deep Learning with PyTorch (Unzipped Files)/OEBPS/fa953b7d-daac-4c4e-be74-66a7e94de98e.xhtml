@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xmlns:m="http://www.w3.org/1998/Math/MathML" xmlns:pls="http://www.w3.org/2005/01/pronunciation-lexicon" xmlns:ssml="http://www.w3.org/2001/10/synthesis" xmlns:svg="http://www.w3.org/2000/svg">
+<head>
+  <meta charset="UTF-8" />
+  <title>Freeze the embedding layer weights</title>
+  <link type="text/css" rel="stylesheet" media="all" href="style.css" />
+  <link type="text/css" rel="stylesheet" media="all" href="core.css" />
+</head>
+<body>
+  <div id="sbo-rt-content"><section>
+
+                            <header>
+                    <h1 class="header-title">Freeze the embedding layer weights</h1>
+                </header>
+            
+            <article>
+                
+<p>It is a two-step process to tell PyTorch not to change the weights of the embedding layer:</p>
+<ol>
+<li>Set the <kbd>requires_grad</kbd> attribute to <kbd>False</kbd>, which instructs PyTorch that it does not need gradients for these weights.</li>
+<li>Remove the passing of the embedding layer parameters to the optimizer. If this step is not done, then the optimizer throws an error, as it expects all the parameters to have gradients. </li>
+</ol>
+<p>The following code demonstrates how easy it is to freeze the embedding layer weights and instruct the optimizer not to use those parameters:</p>
+<pre>model.embedding.weight.requires_grad = False<br/>optimizer = optim.SGD([ param for param in model.parameters() if param.requires_grad == True],lr=0.001)</pre>
+<p>We generally pass all the model parameters to the optimizer, but in the previous code we pass parameters which have <kbd>requires_grad</kbd> to be <kbd>True</kbd>.</p>
+<p>We can train the model using this exact code and should achieve similar accuracy. All these model architectures fail to take advantage of the sequential nature of the text. In the next section, we explore two popular techniques, namely RNN and Conv1D, that take advantage of the sequential nature of the data. </p>
+
+
+            </article>
+
+            
+        </section>
+    </div>
+</body>
+</html>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xmlns:m="http://www.w3.org/1998/Math/MathML" xmlns:pls="http://www.w3.org/2005/01/pronunciation-lexicon" xmlns:ssml="http://www.w3.org/2001/10/synthesis" xmlns:svg="http://www.w3.org/2000/svg">
+<head>
+  <meta charset="UTF-8" />
+  <title>Network implementation&#xA0;</title>
+  <link type="text/css" rel="stylesheet" media="all" href="style.css" />
+  <link type="text/css" rel="stylesheet" media="all" href="core.css" />
+</head>
+<body>
+  <div id="sbo-rt-content"><section>
+
+                            <header>
+                    <h1 class="header-title">Network implementation </h1>
+                </header>
+            
+            <article>
+                
+<p>As we have all the parameters (<kbd>x</kbd>, <kbd>w</kbd>, <kbd>b</kbd>, and <kbd>y</kbd>) required to implement the network, we perform a matrix multiplication between <kbd>w</kbd> and <kbd>x</kbd>. Then, sum the result with <kbd>b</kbd>. That will give our predicted <kbd>y</kbd>. The function is implemented as follows:</p>
+<pre>def simple_network(x):<br/>    y_pred = torch.matmul(x,w)+b<br/>    return y_pred</pre>
+<p>PyTorch also provides a higher-level abstraction in <kbd>torch.nn</kbd> called <strong>layers</strong>, which will take care of most of these underlying initialization and operations associated with most of the common techniques available in the neural network. We are using the lower-level operations to understand what happens inside these functions. In later chapters, that is <a href="3cce1bbe-6d1c-4164-b1ef-8b0688126519.xhtml" target="_blank">Chapter 5</a>, Deep Learning for Computer Vision and <a href="64a06d7f-a912-46cd-a059-e0e8e1092b63.xhtml" target="_blank">Chapter 6</a>, Deep Learning with Sequence Data and Text, we will be relying on the PyTorch abstractions to build complex neural networks or functions. The previous model can be represented as a <kbd>torch.nn</kbd> layer, as follows:</p>
+<pre>f = nn.Linear(17,1) # Much simpler.</pre>
+<p>Now that we have calculated the <kbd>y</kbd> values, we need to know how good our model is, which is done in the <kbd>loss</kbd> function.</p>
+
+
+            </article>
+
+            
+        </section>
+    </div>
+</body>
+</html>

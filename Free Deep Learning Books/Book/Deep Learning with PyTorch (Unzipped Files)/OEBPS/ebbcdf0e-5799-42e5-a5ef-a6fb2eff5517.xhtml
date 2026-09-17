@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xmlns:m="http://www.w3.org/1998/Math/MathML" xmlns:pls="http://www.w3.org/2005/01/pronunciation-lexicon" xmlns:ssml="http://www.w3.org/2001/10/synthesis" xmlns:svg="http://www.w3.org/2000/svg">
+<head>
+  <meta charset="UTF-8" />
+  <title>Creating a ResNet model</title>
+  <link type="text/css" rel="stylesheet" media="all" href="style.css" />
+  <link type="text/css" rel="stylesheet" media="all" href="core.css" />
+</head>
+<body>
+  <div id="sbo-rt-content"><section>
+
+                            <header>
+                    <h1 class="header-title">Creating a ResNet model</h1>
+                </header>
+            
+            <article>
+                
+<p>Using the layers of the <kbd>resnet34</kbd> pretrained model, we create a PyTorch sequential model by discarding the last linear layer. We will use this trained model for extracting features from our images. The following code demonstrates this:</p>
+<pre>#Create ResNet model<br/>my_resnet = resnet34(pretrained=True)<br/><br/>if is_cuda:<br/>    my_resnet = my_resnet.cuda()<br/><br/>my_resnet = nn.Sequential(*list(my_resnet.children())[:-1])<br/><br/>for p in my_resnet.parameters():<br/>    p.requires_grad = False</pre>
+<p>In the preceding code, we created a <kbd>resnet34</kbd> model available in <kbd>torchvision</kbd> models. In the following line, we pick all the ResNet layers, excluding the last layer, and create a new model using <kbd>nn.Sequential</kbd>:</p>
+<pre>for p in my_resnet.parameters():<br/>    p.requires_grad = False</pre>
+<p>The <kbd>nn.Sequential</kbd> instance allows us to quickly create a model using a bunch of PyTorch layers. Once the model is created, do not forget to set the <kbd>requires_grad</kbd> parameter to <kbd>False</kbd>, as this will allow PyTorch not to maintain any space for holding gradients. </p>
+
+
+            </article>
+
+            
+        </section>
+    </div>
+</body>
+</html>

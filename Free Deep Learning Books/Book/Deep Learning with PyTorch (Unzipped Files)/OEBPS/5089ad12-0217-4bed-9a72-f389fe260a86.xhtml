@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xmlns:m="http://www.w3.org/1998/Math/MathML" xmlns:pls="http://www.w3.org/2005/01/pronunciation-lexicon" xmlns:ssml="http://www.w3.org/2001/10/synthesis" xmlns:svg="http://www.w3.org/2000/svg">
+<head>
+  <meta charset="UTF-8" />
+  <title>Classifying dogs and cats using transfer learning</title>
+  <link type="text/css" rel="stylesheet" media="all" href="style.css" />
+  <link type="text/css" rel="stylesheet" media="all" href="core.css" />
+</head>
+<body>
+  <div id="sbo-rt-content"><section>
+
+                            <header>
+                    <h1 class="header-title">Classifying dogs and cats using transfer learning</h1>
+                </header>
+            
+            <article>
+                
+<p class="mce-root">Transfer learning is the ability to reuse a trained algorithm on a similar dataset without training it from scratch. We humans do not learn to recognize new images by analyzing thousands of similar images. We, as humans, just understand the different features that actually differentiate a particular animal, say a fox from a dog. We do not need to learn what a fox is from understanding what lines, eyes, and other smaller features are like. So we will learn how to use a pre-trained model to build state-of-the-art image classifiers with very little data. </p>
+<p>The first few layers of a CNN architecture focus on smaller features, such as how a line or curve looks. The filters in the later layers of a CNN learn higher-level features, such as eyes and fingers, and the last few layers learn to identify the exact category. A pre-trained model is an algorithm that is trained on a similar dataset. Most of the popular algorithms are pre-trained on the popular <kbd>ImageNet</kbd> dataset to identify 1,000 different categories. Such a pre-trained model will have filter weights tuned to identify various patterns. So, let's understand how can we take advantage of these pre-trained weights. We will look into an algorithm called <strong>VGG16</strong>, which was one of the earliest algorithms to find success in ImageNet competitions. Though there are more modern algorithms, this algorithm is still popular as it is simple to understand and use for transfer learning. Let's take a look at the architecture of the VGG16 model, and then try to understand the architecture and how we can use it to train our image classifier:</p>
+<div class="mce-root CDPAlignCenter CDPAlign"><img height="632" width="325" class="alignnone size-full wp-image-601 image-border" src="images/f76292fc-f90a-4a8e-92c0-328236a9d09d.png" /></div>
+<div class="packt_figref CDPAlignCenter CDPAlign"><span> Architecture of the VGG16 model</span></div>
+<p>The VGG16 architecture contains five VGG blocks. A block is a set of convolution layers, a nonlinear activation function, and a max-pooling function. All the algorithm parameters are tuned to achieve state-of-the-art results for classifying 1,000 categories. The algorithm takes input data in the form of batches, which are normalized by the mean and standard deviation of the <kbd>ImageNet</kbd> dataset. In transfer learning, we try to capture what the algorithm learns by freezing the learned parameters of most of the layers of the architecture. It is often a common practice to fine-tune only the last layers of the network. In this example, let's train only the last few linear layers and leave the convolutional layers intact, as the features learned by the convolutional features are mostly used for all kinds of image problems where the images share similar properties. Let's train a VGG16 model using transfer learning to classify dogs and cats. Let's walk through the different steps required to implement this. </p>
+
+
+            </article>
+
+            
+        </section>
+    </div>
+</body>
+</html>

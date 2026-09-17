@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xmlns:m="http://www.w3.org/1998/Math/MathML" xmlns:pls="http://www.w3.org/2005/01/pronunciation-lexicon" xmlns:ssml="http://www.w3.org/2001/10/synthesis" xmlns:svg="http://www.w3.org/2000/svg">
+<head>
+  <meta charset="UTF-8" />
+  <title>Training the model&#xA0;</title>
+  <link type="text/css" rel="stylesheet" media="all" href="style.css" />
+  <link type="text/css" rel="stylesheet" media="all" href="core.css" />
+</head>
+<body>
+  <div id="sbo-rt-content"><section>
+
+                            <header>
+                    <h1 class="header-title">Training the model </h1>
+                </header>
+            
+            <article>
+                
+<p>In the previous sections, we have created <kbd>DataLoader</kbd> instances and algorithms. Now, let's train the model. To do this we need a <kbd>loss</kbd> function and an <kbd>optimizer</kbd>:</p>
+<pre># Loss and Optimizer<br/>learning_rate = 0.001<br/>criterion = nn.CrossEntropyLoss()<br/>optimizer_ft = optim.SGD(model_ft.parameters(), lr=0.001, momentum=0.9)<br/>exp_lr_scheduler = lr_scheduler.StepLR(optimizer_ft, step_size=7,  <br/>  gamma=0.1)</pre>
+<p>In the preceding code, we created our <kbd>loss</kbd> function based on <kbd>CrossEntropyLoss</kbd> and the optimizer based on <kbd>SGD</kbd>. The <kbd>StepLR</kbd> function helps in dynamically changing the learning rate. We will discuss different strategies available to tune the learning rate in <a href="821004b7-d246-4aac-b883-9ab634ae0aea.xhtml" target="_blank">Chapter 4</a>, <em>Fundamentals of Machine Learning</em>.</p>
+<p>The following <kbd>train_model</kbd> function takes in a model and tunes the weights of our algorithm by running multiple epochs and reducing the loss:</p>
+<pre>def train_model(model, criterion, optimizer, scheduler, num_epochs=25):<br/>    since = time.time()<br/><br/>    best_model_wts = model.state_dict()<br/>    best_acc = 0.0<br/><br/>    for epoch in range(num_epochs):<br/>        print('Epoch {}/{}'.format(epoch, num_epochs - 1))<br/>        print('-' * 10)<br/><br/>        # Each epoch has a training and validation phase<br/>        for phase in ['train', 'valid']:<br/>            if phase == 'train':<br/>                scheduler.step()<br/>                model.train(True) # Set model to training mode<br/>            else:<br/>                model.train(False) # Set model to evaluate mode<br/><br/>            running_loss = 0.0<br/>            running_corrects = 0<br/><br/>            # Iterate over data.<br/>            for data in dataloaders[phase]:<br/>                # get the inputs<br/>                inputs, labels = data<br/><br/>                # wrap them in Variable<br/>                if is_cuda:<br/>                    inputs = Variable(inputs.cuda())<br/>                    labels = Variable(labels.cuda())<br/>                else:<br/>                    inputs, labels = Variable(inputs),                 Variable(labels)<br/><br/>                # zero the parameter gradients<br/>                optimizer.zero_grad()<br/><br/>                # forward<br/>                outputs = model(inputs)<br/>                _, preds = torch.max(outputs.data, 1)<br/>                loss = criterion(outputs, labels)<br/><br/>                # backward + optimize only if in training phase<br/>                if phase == 'train':<br/>                    loss.backward()<br/>                    optimizer.step()<br/><br/>                # statistics<br/>                running_loss += loss.data[0]<br/>                running_corrects += torch.sum(preds == labels.data)<br/><br/>            epoch_loss = running_loss / dataset_sizes[phase]<br/>            epoch_acc = running_corrects / dataset_sizes[phase]<br/><br/>            print('{} Loss: {:.4f} Acc: {:.4f}'.format(<br/>                phase, epoch_loss, epoch_acc))<br/><br/>            # deep copy the model<br/>            if phase == 'valid' and epoch_acc &gt; best_acc:<br/>                best_acc = epoch_acc<br/>                best_model_wts = model.state_dict()<br/><br/>        print()<br/><br/>    time_elapsed = time.time() - since<br/>    print('Training complete in {:.0f}m {:.0f}s'.format(<br/>        time_elapsed // 60, time_elapsed % 60))<br/>    print('Best val Acc: {:4f}'.format(best_acc))<br/><br/>    # load best model weights<br/>    model.load_state_dict(best_model_wts)<br/>    return model</pre>
+<p>The preceding function does the following:</p>
+<ol>
+<li>Passes the images through the model and calculates the loss.</li>
+<li>Backpropagates during the training phase. For the validation/testing phase, it does not adjust the weights.</li>
+<li>The loss is accumulated across batches for each epoch.</li>
+<li>The best model is stored and validation accuracy is printed.</li>
+</ol>
+<p>The preceding model, after running for <kbd>25</kbd> epochs, results in a validation accuracy of 87%. The following is the log generated by the preceding <kbd>train_model</kbd> function when run on our <kbd>Dogs vs. Cats</kbd> dataset; I am just including the result of the last few epochs to save space in the book:</p>
+<pre>Epoch 18/24
+----------
+train Loss: 0.0044 Acc: 0.9877
+valid Loss: 0.0059 Acc: 0.8740
+
+Epoch 19/24
+----------
+train Loss: 0.0043 Acc: 0.9914
+valid Loss: 0.0059 Acc: 0.8725
+
+Epoch 20/24
+----------
+train Loss: 0.0041 Acc: 0.9932
+valid Loss: 0.0060 Acc: 0.8725
+
+Epoch 21/24
+----------
+train Loss: 0.0041 Acc: 0.9937
+valid Loss: 0.0060 Acc: 0.8725
+
+Epoch 22/24
+----------
+train Loss: 0.0041 Acc: 0.9938
+valid Loss: 0.0060 Acc: 0.8725
+
+Epoch 23/24
+----------
+train Loss: 0.0041 Acc: 0.9938
+valid Loss: 0.0060 Acc: 0.8725
+
+Epoch 24/24
+----------
+train Loss: 0.0040 Acc: 0.9939
+valid Loss: 0.0060 Acc: 0.8725
+
+Training complete in 27m 8s
+Best val Acc: 0.874000</pre>
+<p>In the coming chapters, we will learn more advanced techniques that will help us in training more accurate models in a much faster way. The preceding model took around 30 minutes to run on a Titan X GPU. We will cover different techniques that will help in training the model faster.</p>
+
+
+            </article>
+
+            
+        </section>
+    </div>
+</body>
+</html>

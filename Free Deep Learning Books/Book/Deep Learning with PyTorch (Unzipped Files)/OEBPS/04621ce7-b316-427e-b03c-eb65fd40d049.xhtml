@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xmlns:m="http://www.w3.org/1998/Math/MathML" xmlns:pls="http://www.w3.org/2005/01/pronunciation-lexicon" xmlns:ssml="http://www.w3.org/2001/10/synthesis" xmlns:svg="http://www.w3.org/2000/svg">
+<head>
+  <meta charset="UTF-8" />
+  <title>Variables</title>
+  <link type="text/css" rel="stylesheet" media="all" href="style.css" />
+  <link type="text/css" rel="stylesheet" media="all" href="core.css" />
+</head>
+<body>
+  <div id="sbo-rt-content"><section>
+
+                            <header>
+                    <h1 class="header-title">Variables</h1>
+                </header>
+            
+            <article>
+                
+<p class="mce-root CDPAlignLeft CDPAlign">Deep learning algorithms are often represented as computation graphs. Here is a simple example of the variable computation graph that we built in our example:</p>
+<div class="CDPAlignCenter"><img height="242" width="170" class="alignnone size-full wp-image-332 image-border" src="images/4bffe8e5-599a-424e-8217-abbdee0cc8b2.png" /></div>
+<div class="mce-root packt_figref CDPAlignCenter CDPAlign"><span>Variable computation graph</span></div>
+<p>Each circle in the preceding computation graph represents a variable. A variable forms a thin wrapper around a tensor object, its gradients, and a reference to the function that created it. The following figure shows <kbd>Variable</kbd> class components:</p>
+<div class="CDPAlignCenter"><img height="98" width="141" class="alignnone size-full wp-image-333 image-border" src="images/c3cefc1f-2e5c-4d58-a488-f970ea340fa4.png" /></div>
+<div class="packt_figref CDPAlignCenter CDPAlign"><span>Variable class</span></div>
+<p>The gradients refer to the rate of the change of the <kbd>loss</kbd> function with respect to various parameters (<strong>W</strong>, <strong>b</strong>). For example, if the gradient of <strong>a</strong> is 2, then any change in the value of <strong>a</strong> would modify the value of <strong>Y</strong> by two times. If that is not clear, do not worry—most of the deep learning frameworks take care of calculating gradients for us. In this chapter, we learn how to use these gradients to improve the performance of our model.</p>
+<p>Apart from gradients, a variable also has a reference to the function that created it, which in turn refers to how each variable was created. For example, the variable <kbd>a</kbd> has information that it is generated as a result of the product between <kbd>X</kbd> and <kbd>W</kbd>. </p>
+<p>Let's look at an example where we create variables and check the gradients and the function reference:</p>
+<pre>x = Variable(torch.ones(2,2),requires_grad=True)<br/>y = x.mean()<br/><br/>y.backward()<br/><br/>x.grad<br/>Variable containing:
+ 0.2500  0.2500
+ 0.2500  0.2500
+[torch.FloatTensor of size 2x2]<br/><br/>x.grad_fn<br/>Output - None<br/><br/>x.data<br/> 1 1<br/> 1 1<br/>[torch.FloatTensor of size 2x2]<br/><br/>y.grad_fn<br/>&lt;torch.autograd.function.MeanBackward at 0x7f6ee5cfc4f8&gt;</pre>
+<p>In the preceding example, we called a <kbd>backward</kbd> operation on the variable to compute the gradients. By default, the gradients of the variables are none. </p>
+<p>The <kbd>grad_fn</kbd> of the variable points to the function it created. If the variable is created by a user, like the variable <kbd>x</kbd> in our case, then the function reference is <kbd>None</kbd>. In the case of variable <kbd>y,</kbd> it refers to its function reference, <kbd>MeanBackward</kbd>.</p>
+<p>The Data attribute accesses the tensor associated with the variable. </p>
+
+
+            </article>
+
+            
+        </section>
+    </div>
+</body>
+</html>

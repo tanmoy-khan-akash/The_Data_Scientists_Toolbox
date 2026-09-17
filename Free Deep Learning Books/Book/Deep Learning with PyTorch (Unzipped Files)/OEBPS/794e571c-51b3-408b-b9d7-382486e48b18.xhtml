@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xmlns:m="http://www.w3.org/1998/Math/MathML" xmlns:pls="http://www.w3.org/2005/01/pronunciation-lexicon" xmlns:ssml="http://www.w3.org/2001/10/synthesis" xmlns:svg="http://www.w3.org/2000/svg">
+<head>
+  <meta charset="UTF-8" />
+  <title>Problem definition and dataset creation</title>
+  <link type="text/css" rel="stylesheet" media="all" href="style.css" />
+  <link type="text/css" rel="stylesheet" media="all" href="core.css" />
+</head>
+<body>
+  <div id="sbo-rt-content"><section>
+
+                            <header>
+                    <h1 class="header-title">Problem definition and dataset creation</h1>
+                </header>
+            
+            <article>
+                
+<p>To define the problem, we need two important things; namely, the input data and the type of problem.</p>
+<p>What will be our input data and target labels? For example, say we want to classify restaurants based on their speciality—say Italian, Mexican, Chinese, and Indian food—from the reviews given by the customers. To start working with this kind of problem, we need to manually hand annotate the training data as one of the possible categories before we can train the algorithm on it. Data availability is often a challenging factor at this stage.</p>
+<p>Identifying the type of problem will help in deciding whether it is a binary classification, multi-classification, scalar regression (house pricing), or vector regression (bounding boxes). Sometimes, we may have to use some of the unsupervised techniques such as clustering and dimensionality reduction. Once the problem type is identified, then it becomes easier to determine what kind of architecture, loss function, and optimizer should be used.</p>
+<p>Once we have the inputs and have identified the type of the problem, then we can start building our models with the following assumptions:</p>
+<ul>
+<li>There are hidden patterns in the data that can help map the input with the output</li>
+<li>The data that we have is sufficient for the model to learn</li>
+</ul>
+<p>As machine learning practitioners, we need to understand that we may not be able to build a model with just some input data and target data. Let's take predicting stock prices as an example. Let's assume we have features representing historical prices, historical performance, and competition details, but we may still fail to build a meaningful model that can predict stock prices, as stock prices could actually be influenced by a variety of other factors such as the domestic political scenario, international political scenario, natural factors such as having a good monsoon, and many other factors that may not be represented by our input data. So, there is no way that any machine learning or deep learning model would be able to identify patterns. So, based on the domain, carefully pick features that can be real indicators of the target variable. All these could be reasons for the models to underfit.</p>
+<p>There is another important assumption that machine learning makes. Future or unseen data will be close to the patterns, as described by the historical data. Sometimes, our models could fail, as the patterns never existed in the historical data, or the data on which the model was trained did not cover certain seasonalities or patterns. </p>
+
+
+            </article>
+
+            
+        </section>
+    </div>
+</body>
+</html>

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xmlns:m="http://www.w3.org/1998/Math/MathML" xmlns:pls="http://www.w3.org/2005/01/pronunciation-lexicon" xmlns:ssml="http://www.w3.org/2001/10/synthesis" xmlns:svg="http://www.w3.org/2000/svg">
+<head>
+  <meta charset="UTF-8" />
+  <title>Creating learnable parameters</title>
+  <link type="text/css" rel="stylesheet" media="all" href="style.css" />
+  <link type="text/css" rel="stylesheet" media="all" href="core.css" />
+</head>
+<body>
+  <div id="sbo-rt-content"><section>
+
+                            <header>
+                    <h1 class="header-title">Creating learnable parameters</h1>
+                </header>
+            
+            <article>
+                
+<p>In our neural network example, we have two learnable parameters, <kbd>w</kbd> and <kbd>b</kbd>, and two fixed parameters, <kbd>x</kbd> and <kbd>y</kbd>. We have created variables <kbd>x</kbd> and <kbd>y</kbd> in our <kbd>get_data</kbd> function. Learnable parameters are created using random initialization and have the <kbd>require_grad</kbd> parameter set to <kbd>True</kbd>, unlike <kbd>x</kbd> and <kbd>y</kbd>, where it is set to <kbd>False</kbd>. There are different practices for initializing learnable parameters, which we will explore in the coming chapters. Let's take a look at our <kbd>get_weights</kbd> function:</p>
+<pre>def get_weights():<br/>    w = Variable(torch.randn(1),requires_grad = True)<br/>    b = Variable(torch.randn(1),requires_grad=True)<br/>    return w,b</pre>
+<p>Most of the preceding code is self-explanatory; <kbd>torch.randn</kbd> creates a random value of any given shape.</p>
+
+
+            </article>
+
+            
+        </section>
+    </div>
+</body>
+</html>

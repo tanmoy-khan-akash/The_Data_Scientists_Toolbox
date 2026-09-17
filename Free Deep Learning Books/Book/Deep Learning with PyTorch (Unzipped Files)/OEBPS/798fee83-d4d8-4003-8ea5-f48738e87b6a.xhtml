@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xmlns:m="http://www.w3.org/1998/Math/MathML" xmlns:pls="http://www.w3.org/2005/01/pronunciation-lexicon" xmlns:ssml="http://www.w3.org/2001/10/synthesis" xmlns:svg="http://www.w3.org/2000/svg">
+<head>
+  <meta charset="UTF-8" />
+  <title>Learning rate picking strategies&#xA0;</title>
+  <link type="text/css" rel="stylesheet" media="all" href="style.css" />
+  <link type="text/css" rel="stylesheet" media="all" href="core.css" />
+</head>
+<body>
+  <div id="sbo-rt-content"><section>
+
+                            <header>
+                    <h1 class="header-title">Learning rate picking strategies </h1>
+                </header>
+            
+            <article>
+                
+<p>Finding the right learning rate for training the model is an ongoing area of research where a lot of progress has been made. PyTorch provides some of the techniques to tune the learning rate, and they are provided in the <kbd>torch.optim.lr_sheduler</kbd> package. We will explore some of the techniques that PyTorch provides to choose the learning rates dynamically: </p>
+<ul>
+<li><strong>StepLR</strong>: This scheduler takes two important parameters. One is step size, which denotes for what number of epochs the learning rate has to change, and the second parameter is gamma, which decides how much the learning rate has to be changed. </li>
+</ul>
+<p style="padding-left: 60px">For a learning rate of <kbd>0.01</kbd>, step size of 10, and gamma size of <kbd>0.1</kbd>, for every 10 epochs the learning rate changes by gamma times. That is, for the first 10 epochs, the learning rate changes to 0.001, and by the end, on the next 10 epochs, it changes to 0.0001. <span>The following code explains the implementation of <kbd>StepLR</kbd>:</span></p>
+<pre style="padding-left: 60px"><span class="gp"> </span><span class="n">scheduler</span> <span class="o">=</span> <span class="n">StepLR</span><span class="p">(</span><span class="n">optimizer</span><span class="p">,</span> <span class="n">step_size</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="n">gamma</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
+<span class="gp"> </span><span class="k">for</span> <span class="n">epoch</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">100</span><span class="p">):</span>
+<span class="gp"> </span>    <span class="n">scheduler</span><span class="o">.</span><span class="n">step</span><span class="p">()</span>
+<span class="gp"> </span>    <span class="n">train</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
+<span class="gp"> </span>    <span class="n">validate</span><span class="p">(</span><span class="o">...</span><span class="p">)</span></pre>
+<ul>
+<li><strong>MultiStepLR</strong>: MultiStepLR works similarly to StepLR, except for the fact that the steps are not at regular intervals; steps are given as lists. For example, it is given as a list of 10, 15, 30, and for each step value, the learning rate is multiplied by its gamma value. The following code explains the implementation of <kbd>MultiStepLR</kbd>:</li>
+</ul>
+<pre style="padding-left: 60px"><span class="gp"> </span><span class="n">scheduler</span> <span class="o">=</span> <span class="n">MultiStepLR</span><span class="p">(</span><span class="n">optimizer</span><span class="p">,</span> <span class="n">milestones</span><span class="o">=</span><span class="p">[</span><span class="mi">30</span><span class="p">,</span><span class="mi">80</span><span class="p">],</span> <span class="n">gamma</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
+<span class="gp"> </span><span class="k">for</span> <span class="n">epoch</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">100</span><span class="p">):</span>
+<span class="gp"> </span>    <span class="n">scheduler</span><span class="o">.</span><span class="n">step</span><span class="p">()</span>
+<span class="gp"> </span>    <span class="n">train</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
+<span class="gp"> </span>    <span class="n">validate</span><span class="p">(</span><span class="o">...</span><span class="p">)</span></pre>
+<ul>
+<li><strong>ExponentialLR</strong>: This sets the learning rate to a multiple of the learning rate with gamma values for each epoch.</li>
+<li><strong>ReduceLROnPlateau</strong>: This is one of the commonly used learning rate strategies. In this case, the learning rate changes when a particular metric, such as training loss, validation loss, or accuracy stagnates. It is a common practice to reduce the learning rate by two to 10 times its original value. <kbd>ReduceLROnPlateau</kbd> can be implemented as follows:</li>
+</ul>
+<pre style="padding-left: 60px"><span class="gp"> </span><span class="n">optimizer</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">SGD</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">parameters</span><span class="p">(),</span> <span class="n">lr</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span>    <br/><span class="n">   momentum</span><span class="o">=</span><span class="mf">0.9</span><span class="p">)</span>
+<span class="gp"> </span><span class="n">scheduler</span> <span class="o">=</span> <span class="n">ReduceLROnPlateau</span><span class="p">(</span><span class="n">optimizer</span><span class="p">,</span> <span class="s1">'min'</span><span class="p">)</span>
+<span class="gp"> </span><span class="k">for</span> <span class="n">epoch</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">):</span>
+<span class="gp"> </span>    <span class="n">train</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
+<span class="gp"> </span>    <span class="n">val_loss</span> <span class="o">=</span> <span class="n">validate</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
+<span class="gp"> </span>    <span class="c1"># Note that step should be called after validate()</span>
+<span class="gp"> </span>    <span class="n">scheduler</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">val_loss</span><span class="p">)</span></pre>
+
+
+            </article>
+
+            
+        </section>
+    </div>
+</body>
+</html>

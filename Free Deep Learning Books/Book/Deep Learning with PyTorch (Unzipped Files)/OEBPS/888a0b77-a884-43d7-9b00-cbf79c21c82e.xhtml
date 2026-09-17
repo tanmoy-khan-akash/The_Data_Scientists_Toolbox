@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xmlns:m="http://www.w3.org/1998/Math/MathML" xmlns:pls="http://www.w3.org/2005/01/pronunciation-lexicon" xmlns:ssml="http://www.w3.org/2001/10/synthesis" xmlns:svg="http://www.w3.org/2000/svg">
+<head>
+  <meta charset="UTF-8" />
+  <title>Creating the network</title>
+  <link type="text/css" rel="stylesheet" media="all" href="style.css" />
+  <link type="text/css" rel="stylesheet" media="all" href="core.css" />
+</head>
+<body>
+  <div id="sbo-rt-content"><section>
+
+                            <header>
+                    <h1 class="header-title">Creating the network</h1>
+                </header>
+            
+            <article>
+                
+<p>Let's look at the network architecture and then walk through the code:</p>
+<pre>class IMDBCnn(nn.Module):<br/>    <br/>    def __init__(self,vocab,hidden_size,n_cat,bs=1,kernel_size=3,max_len=200):<br/>        super().__init__()<br/>        self.hidden_size = hidden_size<br/>        self.bs = bs<br/>    self.e = nn.Embedding(n_vocab,hidden_size)<br/>    self.cnn = nn.Conv1d(max_len,hidden_size,kernel_size)<br/>    self.avg = nn.AdaptiveAvgPool1d(10)<br/>        self.fc = nn.Linear(1000,n_cat)<br/>        self.softmax = nn.LogSoftmax(dim=-1)<br/>        <br/>    def forward(self,inp):<br/>        bs = inp.size()[0]<br/>        if bs != self.bs:<br/>            self.bs = bs<br/>        e_out = self.e(inp)<br/>        cnn_o = self.cnn(e_out) <br/>        cnn_avg = self.avg(cnn_o)<br/>        cnn_avg = cnn_avg.view(self.bs,-1)<br/>        fc = F.dropout(self.fc(cnn_avg),p=0.5)<br/>        return self.softmax(fc)</pre>
+<p>In the preceding code, instead of an LSTM layer we have a <kbd>Conv1d</kbd> layer and an <kbd>AdaptiveAvgPool1d</kbd> layer. The convolution layer accepts the sequence length as its input size, and the output size to the hidden size, as the kernel size three. Since we have to change the dimensions of the linear layer, every time we try to run it with different lengths we use an <kbd>AdaptiveAvgpool1d</kbd> which takes input of any size and generates an output of the given size. So, we can use a linear layer whose size is fixed. The rest of the code is similar to what we have seen in most of the network architectures. </p>
+
+
+            </article>
+
+            
+        </section>
+    </div>
+</body>
+</html>

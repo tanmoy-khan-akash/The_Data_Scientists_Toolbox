@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xmlns:m="http://www.w3.org/1998/Math/MathML" xmlns:pls="http://www.w3.org/2005/01/pronunciation-lexicon" xmlns:ssml="http://www.w3.org/2001/10/synthesis" xmlns:svg="http://www.w3.org/2000/svg">
+<head>
+  <meta charset="UTF-8" />
+  <title>Loading PyTorch tensors as batches</title>
+  <link type="text/css" rel="stylesheet" media="all" href="style.css" />
+  <link type="text/css" rel="stylesheet" media="all" href="core.css" />
+</head>
+<body>
+  <div id="sbo-rt-content"><section>
+
+                            <header>
+                    <h1 class="header-title">Loading PyTorch tensors as batches</h1>
+                </header>
+            
+            <article>
+                
+<p>It is a common practice in deep learning or machine learning to batch samples of images, as modern <strong>graphics processing units</strong> (<strong>GPUs</strong>) and CPUs are optimized to run operations faster on a batch of images. The batch size generally varies depending on the kind of GPU we use. Each GPU has its own memory, which can vary from 2 GB to 12 GB, and sometimes more for commercial GPUs. PyTorch provides the <kbd>DataLoader</kbd> class, which takes in a dataset and returns us a batch of images. It abstracts a lot of complexities in batching, such as the usage of multi-workers for applying transformation. The following code converts the previous <kbd>train</kbd> and <kbd>valid</kbd> datasets into data loaders:</p>
+<pre>train_data_gen =  <br/>  torch.utils.data.DataLoader(train,batch_size=64,num_workers=3)<br/>valid_data_gen = <br/>  torch.utils.data.DataLoader(valid,batch_size=64,num_workers=3)</pre>
+<p>The <kbd>DataLoader</kbd> class provides us with a lot of options and some of the most commonly used ones are as follows:</p>
+<ul>
+<li><kbd>shuffle</kbd>: When true, this shuffles the images every time the data loader is called.</li>
+<li><kbd>num_workers</kbd>: This is responsible for parallelization. It is common practice to use a number of workers fewer than the number of cores available in your machine.</li>
+</ul>
+
+
+            </article>
+
+            
+        </section>
+    </div>
+</body>
+</html>

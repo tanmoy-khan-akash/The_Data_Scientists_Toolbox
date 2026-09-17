@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xmlns:m="http://www.w3.org/1998/Math/MathML" xmlns:pls="http://www.w3.org/2005/01/pronunciation-lexicon" xmlns:ssml="http://www.w3.org/2001/10/synthesis" xmlns:svg="http://www.w3.org/2000/svg">
+<head>
+  <meta charset="UTF-8" />
+  <title>Loss functions</title>
+  <link type="text/css" rel="stylesheet" media="all" href="style.css" />
+  <link type="text/css" rel="stylesheet" media="all" href="core.css" />
+</head>
+<body>
+  <div id="sbo-rt-content"><section>
+
+                            <header>
+                    <h1 class="header-title">Loss functions</h1>
+                </header>
+            
+            <article>
+                
+<p>Once we have defined our network architecture, we are left with two important steps. One is calculating how good our network is at performing a particular task of regression, classification, and the next is optimizing the weight.</p>
+<p>The optimizer (gradient descent) generally accepts a scalar value, so our <kbd>loss</kbd> function should generate a scalar value that has to be minimized during our training. Certain use cases, such as predicting where an obstacle is on the road and classifying it to a pedestrian or not, would require two or more loss functions. Even in such scenarios, we need to combine the losses to a single scalar for the optimizer to minimize. We will discuss examples of combining multiple losses to a single scalar in detail with a real-world example in the last chapter.</p>
+<p>In the previous chapter, we defined our own <kbd>loss</kbd> function. PyTorch provides several implementations of commonly used <kbd>loss</kbd> functions. Let's take a look at the <kbd>loss</kbd> functions used for regression and classification.</p>
+<p>The commonly used <kbd>loss</kbd> function for regression problems is <strong>mean square error</strong> (<strong>MSE</strong>). It is the same <kbd>loss</kbd> function we implemented in our previous chapter. We can use the <kbd>loss</kbd> function implemented in PyTorch, as follows:</p>
+<pre>loss = nn.MSELoss()<br/>input = Variable(torch.randn(3, 5), requires_grad=True)<br/>target = Variable(torch.randn(3, 5))<br/>output = loss(input, target)<br/>output.backward()</pre>
+<p class="mce-root">For classification, we use a cross-entropy loss. Before looking at the math for cross-entropy, let's understand what a cross-entropy loss does. It calculates the loss of a classification network predicting the probabilities, which should sum up to one, like our softmax layer. A cross-entropy loss increases when the predicted probability diverges from the correct probability. For example, if our classification algorithm predicts 0.1 probability for the following image to be a cat, but it is actually a panda, then the cross-entropy loss will be higher. If it predicts similar to the actual labels, then the cross-entropy loss will be lower:</p>
+<div class="CDPAlignCenter CDPAlign"><img height="231" width="292" class="alignnone size-full wp-image-689 image-border" src="images/7f8abb0b-31dc-4e78-a06a-1a29631d7706.png" /></div>
+<p>Let's look at a sample implementation of how this actually happens in Python code:</p>
+<pre><span class="k">def</span> <span class="nf">cross_entropy</span><span class="p">(</span><span class="n">true_label</span><span class="p">,</span> <span class="n">prediction</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">true_label</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">return</span> <span class="o">-</span><span class="n">log</span><span class="p">(</span><span class="n">prediction</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="o">-</span><span class="n">log</span><span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">prediction</span><span class="p">)</span></pre>
+<p>To use a cross-entropy loss in a classification problem, we really do not need to be worried about what happens inside—all we have to remember is that, the loss will be high when our predictions are bad and low when predictions are good. PyTorch provides us with an implementation of the <kbd>loss</kbd>, which we can use, as follows:</p>
+<pre>loss = nn.CrossEntropyLoss()<br/>input = Variable(torch.randn(3, 5), requires_grad=True)<br/>target = Variable(torch.LongTensor(3).random_(5))<br/>output = loss(input, target)<br/>output.backward()</pre>
+<p>Some of the other <kbd>loss</kbd> functions that come as part of PyTorch are as follows:</p>
+<table>
+<tbody>
+<tr>
+<td>
+<p>L1 loss</p>
+</td>
+<td>
+<p class="mce-root">Mostly used as a regularizer. We will discuss it further in <a href="821004b7-d246-4aac-b883-9ab634ae0aea.xhtml" target="_blank">Chapter 4</a>, <em>Fundamentals of Machine Learning</em>.</p>
+</td>
+</tr>
+<tr>
+<td>
+<p>MSE loss</p>
+</td>
+<td>
+<p>Used as loss function for regression problems.</p>
+</td>
+</tr>
+<tr>
+<td>
+<p>Cross-entropy loss</p>
+</td>
+<td>
+<p class="mce-root">Used for binary and multi-class classification problems.</p>
+</td>
+</tr>
+<tr>
+<td>
+<p>NLL Loss</p>
+</td>
+<td>
+<p class="mce-root">Used for classification problems and allows us to use specific weights <span>to handle imbalanced datasets.</span></p>
+</td>
+</tr>
+<tr>
+<td>
+<p><span>NLL Loss2d</span></p>
+</td>
+<td>
+<p class="mce-root">Used for pixel-wise classification, mostly for problems related to image segmentation.</p>
+</td>
+</tr>
+</tbody>
+</table>
+
+
+            </article>
+
+            
+        </section>
+    </div>
+</body>
+</html>

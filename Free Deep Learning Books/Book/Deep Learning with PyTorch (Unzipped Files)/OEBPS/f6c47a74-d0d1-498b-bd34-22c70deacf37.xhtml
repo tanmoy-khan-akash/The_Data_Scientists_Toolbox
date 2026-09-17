@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xmlns:m="http://www.w3.org/1998/Math/MathML" xmlns:pls="http://www.w3.org/2005/01/pronunciation-lexicon" xmlns:ssml="http://www.w3.org/2001/10/synthesis" xmlns:svg="http://www.w3.org/2000/svg">
+<head>
+  <meta charset="UTF-8" />
+  <title>Extracting the losses&#xA0;</title>
+  <link type="text/css" rel="stylesheet" media="all" href="style.css" />
+  <link type="text/css" rel="stylesheet" media="all" href="core.css" />
+</head>
+<body>
+  <div id="sbo-rt-content"><section>
+
+                            <header>
+                    <h1 class="header-title">Extracting the losses </h1>
+                </header>
+            
+            <article>
+                
+<p>Just like we extracted the activation of a convolution layer using the <kbd>register_forward_hook()</kbd> function in <a href="3cce1bbe-6d1c-4164-b1ef-8b0688126519.xhtml" target="_blank">Chapter 5</a>, <em>Deep Learning for Computer Vision,</em> we can extract losses of different convolutional layers required to calculate style loss and content loss. The one difference in this case is that instead of extracting from one layer, we need to extract outputs of multiple layers. The following class integrates the required change:</p>
+<pre>class LayerActivations():<br/>    features=[]<br/>    <br/>    def __init__(self,model,layer_nums):<br/>        <br/>        self.hooks = []<br/>        for layer_num in layer_nums:<br/>            self.hooks.append(model[layer_num].register_forward_hook(self.hook_fn))<br/>    <br/>    def hook_fn(self,module,input,output):<br/>        self.features.append(output)<br/><br/>    def remove(self):<br/>        for hook in self.hooks:<br/>            hook.remove()</pre>
+<p>The <kbd>__init__</kbd> method takes the model on which we need to call the <kbd>register_forward_hook</kbd> method and the layer numbers for which we need to extract the outputs. The <kbd>for</kbd> loop in the <kbd>__init__</kbd> method iterates through the layer numbers and registers the forward hook required to pull the outputs. </p>
+<p>The <kbd>hook_fn</kbd> passed to the <kbd>register_forward_hook</kbd> method is called by PyTorch after that layer on which the <kbd>hook_fn</kbd> function is registered. Inside the function, we capture the output and store it in the <kbd>features</kbd> array.</p>
+<p>We need to call the <kbd>remove</kbd> function once when we don't want to capture the outputs. Forgetting to invoke the <kbd>remove</kbd> methods can cause out-of-memory exceptions as all the outputs get accumulated.</p>
+<p>Let's write another utility function which can extract the outputs required for style and content images. The following function does the same:</p>
+<pre>def extract_layers(layers,img,model=None):<br/>    <br/>    <br/>    la = LayerActivations(model,layers)<br/>    #Clearing the cache <br/>    la.features = []<br/>    out = model(img)<br/>    la.remove()<br/>    return la.features</pre>
+<p>Inside the <kbd>extract_layers</kbd> function, we create objects for the <kbd>LayerActivations</kbd> class by passing in the model and the layer numbers. The features list may contain outputs from previous runs, so we are reinitiating to an empty list. Then we pass in the image through the model, and we are not going to use the outputs. We are more interested in the outputs generated in the <kbd>features</kbd> array. We call the <kbd>remove</kbd> method to remove all the registered hooks from the model and return the features. The following code shows how we extract the targets required for style and content image:</p>
+<pre>content_targets = extract_layers(content_layers,content_img,model=vgg)<br/>style_targets = extract_layers(style_layers,style_img,model=vgg)</pre>
+<p>Once we extract the targets, we need to detach the outputs from the graphs that created them. Remember that all these outputs are PyTorch variables which maintain information of how they are created. But, for our case, we are interested in only the output values and not the graph, as we are not going to update either <kbd>style</kbd> image or the <kbd>content</kbd> image. The following code illustrates this technique:</p>
+<pre>content_targets = [t.detach() for t in content_targets]<br/>style_targets = [GramMatrix()(t).detach() for t in style_targets]</pre>
+<p>Once we have detached, let's add all the targets into one list. The following code illustrates this technique:</p>
+<pre>targets = style_targets + content_targets</pre>
+<p>When calculating the style loss and content loss, we passed on two lists called content layers and style layers. Different layer choices will have an impact on the quality of the image generated. Let's pick the same layers as the authors of the paper have mentioned. The following code shows the choice of layers that we are using here:</p>
+<pre>style_layers = [1,6,11,20,25]<br/>content_layers = [21]<br/>loss_layers = style_layers + content_layers</pre>
+<p>The optimizer expects a single scalar quantity to minimize. To achieve a single scalar value, we sum up all the losses that have arrived at different layers. It is common practice to do a weighted sum of these losses, and again we pick the same weights as used in the paper's implementation in the GitHub repository (<a href="https://github.com/leongatys/PytorchNeuralStyleTransfer" target="_blank">https://github.com/leongatys/PytorchNeuralStyleTransfer</a>). Our implementation is a slightly modified version of the author's implementation. The following code describes the weights being used, which are calculated by the number of filters in the selected layers:</p>
+<pre>style_weights = [1e3/n**2 for n in [64,128,256,512,512]]<br/>content_weights = [1e0]<br/>weights = style_weights + content_weights</pre>
+<p>To visualize this, we can print the VGG layers. Take a minute to observe what layers we are picking, and you can experiment with different layer combinations. We will use the following code to <kbd>print</kbd> the VGG layers:</p>
+<pre>print(vgg)<br/><br/>#Results <br/><br/>Sequential(
+  (0): Conv2d (3, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+  (1): ReLU(inplace)
+  (2): Conv2d (64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+  (3): ReLU(inplace)
+  (4): MaxPool2d(kernel_size=(2, 2), stride=(2, 2), dilation=(1, 1))
+  (5): Conv2d (64, 128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+  (6): ReLU(inplace)
+  (7): Conv2d (128, 128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+  (8): ReLU(inplace)
+  (9): MaxPool2d(kernel_size=(2, 2), stride=(2, 2), dilation=(1, 1))
+  (10): Conv2d (128, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+  (11): ReLU(inplace)
+  (12): Conv2d (256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+  (13): ReLU(inplace)
+  (14): Conv2d (256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+  (15): ReLU(inplace)
+  (16): Conv2d (256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+  (17): ReLU(inplace)
+  (18): MaxPool2d(kernel_size=(2, 2), stride=(2, 2), dilation=(1, 1))
+  (19): Conv2d (256, 512, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+  (20): ReLU(inplace)
+  (21): Conv2d (512, 512, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+  (22): ReLU(inplace)
+  (23): Conv2d (512, 512, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+  (24): ReLU(inplace)
+  (25): Conv2d (512, 512, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+  (26): ReLU(inplace)
+  (27): MaxPool2d(kernel_size=(2, 2), stride=(2, 2), dilation=(1, 1))
+  (28): Conv2d (512, 512, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+  (29): ReLU(inplace)
+  (30): Conv2d (512, 512, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+  (31): ReLU(inplace)
+  (32): Conv2d (512, 512, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+  (33): ReLU(inplace)
+  (34): Conv2d (512, 512, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+  (35): ReLU(inplace)
+  (36): MaxPool2d(kernel_size=(2, 2), stride=(2, 2), dilation=(1, 1))
+)</pre>
+<p>We have to define the <kbd>loss</kbd> functions and the <kbd>optimizer</kbd> to generate artistic images. We will initialize both of them in the following section.</p>
+
+
+            </article>
+
+            
+        </section>
+    </div>
+</body>
+</html>

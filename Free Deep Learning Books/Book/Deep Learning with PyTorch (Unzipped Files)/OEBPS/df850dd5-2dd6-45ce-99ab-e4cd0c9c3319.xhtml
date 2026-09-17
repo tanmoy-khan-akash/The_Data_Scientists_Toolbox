@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xmlns:m="http://www.w3.org/1998/Math/MathML" xmlns:pls="http://www.w3.org/2005/01/pronunciation-lexicon" xmlns:ssml="http://www.w3.org/2001/10/synthesis" xmlns:svg="http://www.w3.org/2000/svg">
+<head>
+  <meta charset="UTF-8" />
+  <title>Understanding how RNN works with an example&#xA0;</title>
+  <link type="text/css" rel="stylesheet" media="all" href="style.css" />
+  <link type="text/css" rel="stylesheet" media="all" href="core.css" />
+</head>
+<body>
+  <div id="sbo-rt-content"><section>
+
+                            <header>
+                    <h1 class="header-title">Understanding how RNN works with an example </h1>
+                </header>
+            
+            <article>
+                
+<p>Let's start with an assumption that we have an RNN model already built, and try to understand what functionality it provides. Once we understand what an RNN does, then let's explore what happens inside an RNN.</p>
+<p>Let's consider the Thor review as input to the RNN model. The example text we are looking at is <em>the action scenes were top notch in this movie....</em> . We first start by passing the first word, <strong>the</strong>, to our model; the model generates two different things, a <strong>State Vector</strong> and an <strong>Output</strong> vector. The state vector is passed to the model when it processes the next word in the review, and a new state vector is generated. We just consider the <strong>Output</strong> of the model generated during the last sequence. The following figure summarizes it: </p>
+<div class="mce-root CDPAlignCenter CDPAlign"><img height="366" width="523" class="alignnone size-full wp-image-449 image-border" src="images/428b553f-c7f7-4772-9354-f99487db93e1.png" /></div>
+<p>The preceding figure demonstrates the following:</p>
+<ul>
+<li>How RNN works by unfolding it and the image</li>
+<li>How the state is recursively passed to the same model </li>
+</ul>
+<p>By now you will have an idea of what RNN does, but not how it works. Before we get into how it works, let's look at a code snippet which showcases in more detail what we have learnt. We will still view RNN as a black box:</p>
+<pre><span class="k">rnn = RNN(input_size, hidden_size,output_size)<br/>for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(len(Thor_review</span><span class="p">):</span>
+        <span class="n">output</span><span class="p">,</span> <span class="n">hidden</span> <span class="o">=</span> <span class="n">rnn</span><span class="p">(thor_review[i]</span><span class="p">,</span> <span class="n">hidden</span><span class="p">)</span></pre>
+<p>In the preceding code, the <kbd>hidden</kbd> variable represents the state vector, sometimes called <strong>hidden state</strong>. By now we should have an idea of how RNN is used. Now, let's look at the code that implements RNN and understand what happens inside the RNN. The following code contains the <kbd>RNN</kbd> class:</p>
+<pre><span class="kn">import</span> <span class="nn">torch.nn</span> <span class="kn">as</span> <span class="nn">nn</span>
+<span class="kn">from</span> <span class="nn">torch.autograd</span> <span class="kn">import</span> <span class="n">Variable</span>
+
+<span class="k">class</span> <span class="nc">RNN</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">input_size</span><span class="p">,</span> <span class="n">hidden_size</span><span class="p">,</span> <span class="n">output_size</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">RNN</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">hidden_size</span> <span class="o">=</span> <span class="n">hidden_size</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">i2h</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">input_size</span> <span class="o">+</span> <span class="n">hidden_size</span><span class="p">,</span> <span class="n">hidden_size</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">i2o</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">input_size</span> <span class="o">+</span> <span class="n">hidden_size</span><span class="p">,</span> <span class="n">output_size</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">softmax</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">LogSoftmax</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">input</span><span class="p">,</span> <span class="n">hidden</span><span class="p">):</span>
+        <span class="n">combined</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">((</span><span class="nb">input</span><span class="p">,</span> <span class="n">hidden</span><span class="p">),</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">hidden</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">i2h</span><span class="p">(</span><span class="n">combined</span><span class="p">)</span>
+        <span class="n">output</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">i2o</span><span class="p">(</span><span class="n">combined</span><span class="p">)</span>
+        <span class="n">output</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">softmax</span><span class="p">(</span><span class="n">output</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">output</span><span class="p">,</span> <span class="n">hidden</span>
+
+    <span class="k">def</span> <span class="nf">initHidden</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">Variable</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">hidden_size</span><span class="p">))</span></pre>
+<p>Except for the word <kbd>RNN</kbd> in the preceding code, everything else would sound pretty similar to what we have used in the previous chapters, as PyTorch hides a lot of complexity of backpropagation. Let's walk through the <kbd>init</kbd> function and the <kbd>forward</kbd> function to understand what is happening. </p>
+<p>The <kbd>__init__</kbd> function initializes two linear layers, one for calculating the output and the other for calculating the state or hidden vector. </p>
+<p>The <kbd>forward</kbd> function combines the <kbd>input</kbd> vector and the <kbd>hidden</kbd> vector and passes it through the two linear layers, which generates an output vector and a hidden state. For the <kbd>output</kbd> layer, we apply a <kbd>log_softmax</kbd> function. </p>
+<p>The <kbd>initHidden</kbd> function helps in creating hidden vectors with no state for calling RNN the very first time. Let's take a visual look into what the <kbd>RNN</kbd> class does in the following figure:</p>
+<div class="CDPAlignCenter CDPAlign"> <img height="315" width="340" class="alignnone size-full wp-image-587 image-border" src="images/da427f73-3c11-40e1-8ac7-6b792031c8f2.png" /></div>
+<p>The preceding figure shows how an RNN works.</p>
+<div class="packt_infobox">The concepts of RNN are sometimes tricky to understand when you meet them for the first time, so I would strongly recommend some of the amazing blogs provided in the following links: <a href="http://karpathy.github.io/2015/05/21/rnn-effectiveness/" target="_blank">http://karpathy.github.io/2015/05/21/rnn-effectiveness/<br/></a>and <a href="http://colah.github.io/posts/2015-08-Understanding-LSTMs/" target="_blank">http://colah.github.io/posts/2015-08-Understanding-LSTMs/.</a></div>
+<p>In the next section, we will learn how to use a variant of RNN called <strong>LSTM</strong> to build a sentiment classifier on the <kbd>IMDB</kbd> dataset.</p>
+
+
+            </article>
+
+            
+        </section>
+    </div>
+</body>
+</html>

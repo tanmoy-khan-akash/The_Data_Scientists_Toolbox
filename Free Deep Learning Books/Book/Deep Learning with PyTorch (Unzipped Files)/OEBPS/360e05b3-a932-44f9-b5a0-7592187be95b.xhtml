@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xmlns:m="http://www.w3.org/1998/Math/MathML" xmlns:pls="http://www.w3.org/2005/01/pronunciation-lexicon" xmlns:ssml="http://www.w3.org/2001/10/synthesis" xmlns:svg="http://www.w3.org/2000/svg">
+<head>
+  <meta charset="UTF-8" />
+  <title>MNIST &#x2013; getting data</title>
+  <link type="text/css" rel="stylesheet" media="all" href="style.css" />
+  <link type="text/css" rel="stylesheet" media="all" href="core.css" />
+</head>
+<body>
+  <div id="sbo-rt-content"><section>
+
+                            <header>
+                    <h1 class="header-title">MNIST – getting data</h1>
+                </header>
+            
+            <article>
+                
+<p>The <kbd>MNIST</kbd> dataset contains 60,000 handwritten digits from 0 to 9 for training, and 10,000 images for a test set. The PyTorch <kbd>torchvision</kbd> library provides us with an <kbd>MNIST</kbd> dataset, which downloads the data and provides it in a readily-usable format. Let's use the dataset <kbd>MNIST</kbd> function to pull the dataset to our local machine, and then wrap it around a <kbd>DataLoader</kbd>. We will use torchvision transformations to convert the data into PyTorch tensors and do data normalization. The following code takes care of downloading, wrapping around the <kbd>DataLoader</kbd> and normalizing the data:</p>
+<pre>transformation = <br/>  transforms.Compose([transforms.ToTensor(),<br/>  transforms.Normalize((0.1307,), (0.3081,))])<br/><br/>train_dataset = <br/>  datasets.MNIST('data/',train=True,transform=transformation,<br/>    download=True)<br/>test_dataset =  <br/>  datasets.MNIST('data/',train=False,transform=transformation,<br/>    download=True)<br/><br/>train_loader =   <br/>  torch.utils.data.DataLoader(train_dataset,batch_size=32,shuffle=True)<br/>test_loader =  <br/>  torch.utils.data.DataLoader(test_dataset,batch_size=32,shuffle=True)</pre>
+<p>So, the previous code provides us with a <kbd>DataLoader</kbd> for the <kbd>train</kbd> and <kbd>test</kbd> datasets. Let's visualize a few images to get an understanding of what we are dealing with. The following code will help us in visualizing the MNIST images:</p>
+<pre>def plot_img(image):<br/>    image = image.numpy()[0]<br/>    mean = 0.1307<br/>    std = 0.3081<br/>    image = ((mean * image) + std)<br/>    plt.imshow(image,cmap='gray')</pre>
+<p>Now we can pass the <kbd>plot_img</kbd> method to visualize our dataset. We will pull a batch of records from the <kbd>DataLoader</kbd> using the following code, and plot the images:</p>
+<pre>sample_data = next(iter(train_loader))<br/>plot_img(sample_data[0][1])<br/>plot_img(sample_data[0][2])</pre>
+<p>The images are visualized as follows:</p>
+<div class="CDPAlignCenter CDPAlign"><img height="252" width="255" class="alignnone size-full wp-image-472 image-border" src="images/66ba4835-005a-43e1-9a0c-283ed4b18c65.png" />   <img height="252" width="255" class="alignnone size-full wp-image-473 image-border" src="images/92b0f189-a014-4814-96d8-395e79fe00ce.png" /></div>
+
+
+            </article>
+
+            
+        </section>
+    </div>
+</body>
+</html>

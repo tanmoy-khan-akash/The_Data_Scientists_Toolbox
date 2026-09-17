@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xmlns:m="http://www.w3.org/1998/Math/MathML" xmlns:pls="http://www.w3.org/2005/01/pronunciation-lexicon" xmlns:ssml="http://www.w3.org/2001/10/synthesis" xmlns:svg="http://www.w3.org/2000/svg">
+<head>
+  <meta charset="UTF-8" />
+  <title>Generate batches of vectors</title>
+  <link type="text/css" rel="stylesheet" media="all" href="style.css" />
+  <link type="text/css" rel="stylesheet" media="all" href="core.css" />
+</head>
+<body>
+  <div id="sbo-rt-content"><section>
+
+                            <header>
+                    <h1 class="header-title">Generate batches of vectors</h1>
+                </header>
+            
+            <article>
+                
+<p>Torchtext provides <kbd>BucketIterator</kbd>, which helps in batching all the text and replacing the words with the index number of the words. The <kbd>BucketIterator</kbd> instance comes with a lot of useful parameters like <kbd>batch_size</kbd>, <kbd>device</kbd> (GPU or CPU), and <kbd>shuffle</kbd> (whether data has to be shuffled). The following code demonstrates how to create iterators that generate batches for the <kbd>train</kbd> and <kbd>test</kbd> datasets:</p>
+<pre>train_iter, test_iter = data.BucketIterator.splits((train, test), batch_size=128, device=-1,shuffle=True)<br/>#device = -1 represents cpu , if u want gpu leave it to None.</pre>
+<p>The preceding code gives a <kbd>BucketIterator</kbd> object for <kbd>train</kbd> and <kbd>test</kbd> datasets. The following code will show how to create a <kbd>batch</kbd> and display the results of the <kbd>batch</kbd>:</p>
+<pre>batch = next(iter(train_iter))<br/>batch.text<br/><br/>#Results<br/>Variable containing:<br/> 5128 427 19 ... 1688 0 542<br/>   58 2 0 ... 2 0 1352<br/>    0 9 14 ... 2676 96 9<br/>       ... ⋱ ... <br/>  129 1181 648 ... 45 0 2<br/> 6484 0 627 ... 381 5 2<br/>  748 0 5052 ... 18 6660 9827<br/>[torch.LongTensor of size 128x20]<br/><br/>batch.label<br/><br/>#Results<br/>Variable containing:<br/> 2<br/> 1<br/> 2<br/> 1<br/> 2<br/> 1<br/> 1<br/> 1<br/>[torch.LongTensor of size 128]</pre>
+<p>From the results in the preceding code block, we can see how the text data is converted into a matrix of size (<kbd>batch_size</kbd> * <kbd>fix_len</kbd>), which is (<kbd>128x20</kbd>) .</p>
+
+
+            </article>
+
+            
+        </section>
+    </div>
+</body>
+</html>

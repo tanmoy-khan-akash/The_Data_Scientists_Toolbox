@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xmlns:m="http://www.w3.org/1998/Math/MathML" xmlns:pls="http://www.w3.org/2005/01/pronunciation-lexicon" xmlns:ssml="http://www.w3.org/2001/10/synthesis" xmlns:svg="http://www.w3.org/2000/svg">
+<head>
+  <meta charset="UTF-8" />
+  <title>Creating a custom dataset along with data loaders</title>
+  <link type="text/css" rel="stylesheet" media="all" href="style.css" />
+  <link type="text/css" rel="stylesheet" media="all" href="core.css" />
+</head>
+<body>
+  <div id="sbo-rt-content"><section>
+
+                            <header>
+                    <h1 class="header-title">Creating a custom dataset along with data loaders</h1>
+                </header>
+            
+            <article>
+                
+<p>We will not be able to use the <kbd>FeaturesDataset</kbd> class as it is, since it was developed to pick from the output of only one model. So, the following implementation contains minor changes to the <kbd>FeaturesDataset</kbd> class to accommodate all the three different generated features:</p>
+<pre>class FeaturesDataset(Dataset):<br/>    <br/>    def __init__(self,featlst1,featlst2,featlst3,labellst):<br/>        self.featlst1 = featlst1<br/>        self.featlst2 = featlst2<br/>        self.featlst3 = featlst3<br/>        self.labellst = labellst<br/>        <br/>    def __getitem__(self,index):<br/>        return (self.featlst1[index],self.featlst2[index],self.featlst3[index],self.labellst[index])<br/>    <br/>    def __len__(self):<br/>        return len(self.labellst)<br/><br/>trn_feat_dset = FeaturesDataset(trn_resnet_features,trn_inception_features.features,trn_densenet_features,trn_labels)<br/>val_feat_dset = FeaturesDataset(val_resnet_features,val_inception_features.features,val_densenet_features,val_labels)</pre>
+<p>We have made changes to the <kbd>__init__</kbd> method to store all the features generated from different models, and the <kbd>__getitem__</kbd> method to retrieve the features and label of an image. Using the <kbd>FeatureDataset</kbd> class, we created dataset instances for both training and validation data. Once the dataset is created, we can use the same data loader for batching data, as shown in the following code:</p>
+<pre>trn_feat_loader = DataLoader(trn_feat_dset,batch_size=64,shuffle=True)<br/>val_feat_loader = DataLoader(val_feat_dset,batch_size=64)</pre>
+
+
+            </article>
+
+            
+        </section>
+    </div>
+</body>
+</html>

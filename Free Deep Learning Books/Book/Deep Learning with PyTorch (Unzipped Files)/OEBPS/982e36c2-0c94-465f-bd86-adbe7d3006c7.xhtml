@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xmlns:m="http://www.w3.org/1998/Math/MathML" xmlns:pls="http://www.w3.org/2005/01/pronunciation-lexicon" xmlns:ssml="http://www.w3.org/2001/10/synthesis" xmlns:svg="http://www.w3.org/2000/svg">
+<head>
+  <meta charset="UTF-8" />
+  <title>Optimize the neural network&#xA0;</title>
+  <link type="text/css" rel="stylesheet" media="all" href="style.css" />
+  <link type="text/css" rel="stylesheet" media="all" href="core.css" />
+</head>
+<body>
+  <div id="sbo-rt-content"><section>
+
+                            <header>
+                    <h1 class="header-title">Optimize the neural network </h1>
+                </header>
+            
+            <article>
+                
+<p>We started with random weights to predict our targets and calculate loss for our algorithm. We calculate the gradients by calling the <kbd>backward</kbd> function on the final <kbd>loss</kbd> variable. This entire process repeats for one epoch, that is, for the entire set of examples. In most of the real-world examples, we will do the optimization step per iteration, which is a small subset of the total set. Once the loss is calculated, we optimize the values with the calculated gradients so that the loss reduces, which is implemented in the following function:</p>
+<pre>def optimize(learning_rate):<br/>    w.data -= learning_rate * w.grad.data<br/>    b.data -= learning_rate * b.grad.data</pre>
+<p>The learning rate is a hyper-parameter, which allows us to adjust the values in the variables by a small amount of the gradients, where the gradients denote the direction in which each variable (<kbd>w</kbd> and <kbd>b</kbd>) needs to be adjusted.</p>
+<p>Different optimizers, such as Adam, RmsProp, and SGD are already implemented for use in the <kbd>torch.optim</kbd> package. We will be making use of these optimizers in later chapters to reduce the loss or improve the accuracy.</p>
+
+
+            </article>
+
+            
+        </section>
+    </div>
+</body>
+</html>

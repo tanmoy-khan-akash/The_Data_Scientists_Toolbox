@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xmlns:m="http://www.w3.org/1998/Math/MathML" xmlns:pls="http://www.w3.org/2005/01/pronunciation-lexicon" xmlns:ssml="http://www.w3.org/2001/10/synthesis" xmlns:svg="http://www.w3.org/2000/svg">
+<head>
+  <meta charset="UTF-8" />
+  <title>One-hot encoding</title>
+  <link type="text/css" rel="stylesheet" media="all" href="style.css" />
+  <link type="text/css" rel="stylesheet" media="all" href="core.css" />
+</head>
+<body>
+  <div id="sbo-rt-content"><section>
+
+                            <header>
+                    <h1 class="header-title">One-hot encoding</h1>
+                </header>
+            
+            <article>
+                
+<p>In one-hot encoding, each token is represented by a vector of length N, where <em>N</em> is the size of the vocabulary. The vocabulary is the total number of unique words in the document. Let's take a simple sentence and observe how each token would be represented as one-hot encoded vectors. The following is the sentence and its associated token representation:</p>
+<p class="mce-root"><span><em>An apple a day keeps doctor away said the doctor</em>.</span></p>
+<p>One-hot encoding for the preceding sentence can be represented into a tabular format as follows:</p>
+<table>
+<tbody>
+<tr>
+<td>
+<p>An</p>
+</td>
+<td>
+<p class="mce-root">100000000</p>
+</td>
+</tr>
+<tr>
+<td>
+<p>apple</p>
+</td>
+<td>
+<p class="mce-root"><span>010000000</span></p>
+</td>
+</tr>
+<tr>
+<td>
+<p>a</p>
+</td>
+<td>
+<p class="mce-root"><span>001000000</span></p>
+</td>
+</tr>
+<tr>
+<td>
+<p>day</p>
+</td>
+<td>
+<p><span>000100000</span></p>
+</td>
+</tr>
+<tr>
+<td>
+<p>keeps</p>
+</td>
+<td>
+<p><span>000010000</span></p>
+</td>
+</tr>
+<tr>
+<td>
+<p>doctor</p>
+</td>
+<td>
+<p><span>000001000</span></p>
+</td>
+</tr>
+<tr>
+<td>
+<p>away</p>
+</td>
+<td>
+<p><span>000000100</span></p>
+</td>
+</tr>
+<tr>
+<td>
+<p>said</p>
+</td>
+<td>
+<p><span>000000010</span></p>
+</td>
+</tr>
+<tr>
+<td>
+<p>the</p>
+</td>
+<td>
+<p><span>000000001</span></p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>This table describes the tokens and their one-hot encoded representation. The vector length is 9, as there are nine unique words in the sentence. A lot of machine learning libraries have eased the process of creating one-hot encoding variables. We will write our own implementation to make it easier to understand, and we can use the same implementation to build other features required for later examples. The following code contains a <kbd>Dictionary</kbd> class, which contains functionality to create a dictionary of unique words along with a function to return a one-hot encoded vector for a particular word. Let's take a look at the code and then walk through each functionality:</p>
+<pre>class Dictionary(object):<br/>    def __init__(self):<br/>        self.word2idx = {}<br/>        self.idx2word = []<br/>        self.length = 0<br/>        <br/>    def add_word(self,word):<br/>        if word not in self.idx2word:<br/>            self.idx2word.append(word)<br/>            self.word2idx[word] = self.length + 1<br/>            self.length += 1<br/>        return self.word2idx[word]<br/>    <br/>    def __len__(self):<br/>        return len(self.idx2word)<br/>    <br/>    def onehot_encoded(self,word):<br/>        vec = np.zeros(self.length)<br/>        vec[self.word2idx[word]] = 1<br/>        return vec<br/>        <br/>        </pre>
+<p>The preceding code provides three important functionalities:</p>
+<ul>
+<li>The initialization function, <kbd>__init__</kbd>, creates a <kbd>word2idx</kbd> dictionary, which will store all unique words along with the index. The <kbd>idx2word</kbd> list stores all the unique words, and the <kbd>length</kbd> variable contains the total number of unique words in our documents.</li>
+<li>The <kbd>add_word</kbd> function takes a word and adds it to <kbd>word2idx</kbd> and <kbd>idx2word</kbd>, and increases the length of the vocabulary, provided the word is unique.</li>
+<li>The <kbd>onehot_encoded</kbd> function takes a word and returns a vector of length N with zeros throughout, except at the index of the word. If the index of the passed word is two, then the value of the vector at index two will be one, and all the remaining values will be zeros.</li>
+</ul>
+<p>As we have defined our <kbd>Dictionary</kbd> class, let's use it on our <kbd>thor_review</kbd> data. The following code demonstrates how the <kbd>word2idx</kbd> is built and how we can call our <kbd>onehot_encoded</kbd> function:</p>
+<pre class="mce-root">dic = Dictionary()<br/><br/>for tok in thor_review.split():<br/>    dic.add_word(tok)<br/><br/>print(dic.word2idx)</pre>
+<p class="mce-root">The output of the preceding code is as follows:</p>
+<pre># Results of word2idx<br/><br/>{'the': 1, 'action': 2, 'scenes': 3, 'were': 4, 'top': 5, 'notch': 6, 'in': 7, 'this': 8, 'movie.': 9, 'Thor': 10, 'has': 11, 'never': 12, 'been': 13, 'epic': 14, 'MCU.': 15, 'He': 16, 'does': 17, 'some': 18, 'pretty': 19, 'sh*t': 20, 'movie': 21, 'and': 22, 'he': 23, 'is': 24, 'definitely': 25, 'not': 26, 'under-powered': 27, 'anymore.': 28, 'unleashed': 29, 'this,': 30, 'I': 31, 'love': 32, 'that.': 33}<br/><br/></pre>
+<p>One-hot encoding for the word <kbd>were</kbd> is as follows:</p>
+<pre class="mce-root"># One-hot representation of the word 'were'<br/>dic.onehot_encoded('were')<br/>array([ 0.,  0.,  0.,  0.,  1.,  0.,  0.,  0.,  0.,  0.,  0.,  0.,  0.,
+        0.,  0.,  0.,  0.,  0.,  0.,  0.,  0.,  0.,  0.,  0.,  0.,  0.,
+        0.,  0.,  0.,  0.,  0.,  0.,  0.])</pre>
+<p>One of the challenges with one-hot representation is that the data is too sparse, and the size of the vector quickly grows as the number of unique words in the vocabulary increases, which is considered to be a limitation, and hence it is rarely used with deep learning. </p>
+
+
+            </article>
+
+            
+        </section>
+    </div>
+</body>
+</html>

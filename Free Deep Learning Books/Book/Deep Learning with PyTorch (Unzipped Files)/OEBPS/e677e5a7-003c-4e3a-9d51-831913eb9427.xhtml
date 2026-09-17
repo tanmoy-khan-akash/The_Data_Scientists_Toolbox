@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xmlns:m="http://www.w3.org/1998/Math/MathML" xmlns:pls="http://www.w3.org/2005/01/pronunciation-lexicon" xmlns:ssml="http://www.w3.org/2001/10/synthesis" xmlns:svg="http://www.w3.org/2000/svg">
+<head>
+  <meta charset="UTF-8" />
+  <title>Inception</title>
+  <link type="text/css" rel="stylesheet" media="all" href="style.css" />
+  <link type="text/css" rel="stylesheet" media="all" href="core.css" />
+</head>
+<body>
+  <div id="sbo-rt-content"><section>
+
+                            <header>
+                    <h1 class="header-title">Inception</h1>
+                </header>
+            
+            <article>
+                
+<p>In most of the deep learning algorithms we have seen for computer vision models, we either pick up a convolution layer with a filter size of 1 x 1, 3 x 3, 5 x 5, 7 x 7, or a map pooling layer. The Inception module combines convolutions of different filter sizes and concatenates all the outputs together. The following image makes the Inception model clearer:</p>
+<div class="CDPAlignCenter"><img height="287" width="590" class="alignnone size-full wp-image-405 image-border" src="images/f6b94415-ec97-49ff-8c59-775631d0ad41.png" /></div>
+<div class="mce-root CDPAlignCenter CDPAlign packt_figref">Image source: https://arxiv.org/pdf/1409.4842.pdf</div>
+<p>In this Inception block image, the convolution of different sizes is applied to the input, and the outputs of all these layers are concatenated. This is the simplest version of an Inception module. There is another variant of an Inception block where we pass the input through a 1 x 1 convolution before passing it through 3 x 3 and 5 x 5 convolutions. A 1 x 1 convolution is used for dimensionality reduction. It helps in solving computational bottlenecks. A 1 x 1 convolution looks at one value at a time and across the channels. For example, using a 10 x 1 x 1 filter on an input size of 100 x 64 x 64 would result in 10 x 64 x 64. The following figure shows the Inception block with dimensionality reductions:</p>
+<div class="CDPAlignCenter CDPAlign"><img height="334" width="641" class="alignnone size-full wp-image-406 image-border" src="images/3d91e925-80cd-4aa7-b94c-26083e8f2534.png" /></div>
+<div class="packt_figref CDPAlignCenter CDPAlign">Image source: https://arxiv.org/pdf/1409.4842.pdf</div>
+<p>Now, let's look at a PyTorch example of what the preceding Inception block would look like:</p>
+<pre>class BasicConv2d(nn.Module):<br/><br/>    def __init__(self, in_channels, out_channels, **kwargs):<br/>        super(BasicConv2d, self).__init__()<br/>        self.conv = nn.Conv2d(in_channels, out_channels, bias=False, **kwargs)<br/>        self.bn = nn.BatchNorm2d(out_channels)<br/><br/>    def forward(self, x):<br/>        x = self.conv(x)<br/>        x = self.bn(x)<br/>        return F.relu(x, inplace=True)<br/><br/><br/>class InceptionBasicBlock(nn.Module):<br/><br/>    def __init__(self, in_channels, pool_features):<br/>        super().__init__()<br/>        self.branch1x1 = BasicConv2d(in_channels, 64, kernel_size=1)<br/><br/>        self.branch5x5_1 = BasicConv2d(in_channels, 48, kernel_size=1)<br/>        self.branch5x5_2 = BasicConv2d(48, 64, kernel_size=5, padding=2)<br/><br/>        self.branch3x3dbl_1 = BasicConv2d(in_channels, 64, kernel_size=1)<br/>        self.branch3x3dbl_2 = BasicConv2d(64, 96, kernel_size=3, padding=1)<br/><br/>        self.branch_pool = BasicConv2d(in_channels, pool_features, kernel_size=1)<br/><br/>    def forward(self, x):<br/>        branch1x1 = self.branch1x1(x)<br/><br/>        branch5x5 = self.branch5x5_1(x)<br/>        branch5x5 = self.branch5x5_2(branch5x5)<br/><br/>        branch3x3dbl = self.branch3x3dbl_1(x)<br/>        branch3x3dbl = self.branch3x3dbl_2(branch3x3dbl)<br/><br/>        branch_pool = F.avg_pool2d(x, kernel_size=3, stride=1, padding=1)<br/>        branch_pool = self.branch_pool(branch_pool)<br/><br/>        outputs = [branch1x1, branch5x5, branch3x3dbl, branch_pool]<br/>        return torch.cat(outputs, 1)<br/><br/><br/></pre>
+<p>The preceding code contains two classes, <kbd>BasicConv2d</kbd> and <kbd>InceptionBasicBlock</kbd>. <kbd>BasicConv2d</kbd> acts like a custom layer which applies a two-dimensional convolution layer, batch normalization, and a ReLU layer to the input that is passed through. It is good practice to create a new layer when we have a repeating code structure, to make the code look elegant. </p>
+<p>The <kbd>InceptionBasicBlock</kbd> implements what we have in the second Inception figure. Let's go through each smaller snippet and try to understand how it is implemented:</p>
+<pre>branch1x1 = self.branch1x1(x)</pre>
+<p>The preceding code transforms the input by applying a 1 x 1 convolution block:</p>
+<pre>branch5x5 = self.branch5x5_1(x)<br/>branch5x5 = self.branch5x5_2(branch5x5)</pre>
+<p>In the preceding code, we transform the input by applying a 1 x 1 convolution block followed by a 5 x 5 convolution block:</p>
+<pre>branch3x3dbl = self.branch3x3dbl_1(x)<br/>branch3x3dbl = self.branch3x3dbl_2(branch3x3dbl)</pre>
+<p>In the preceding code, we transform the input by applying a 1 x 1 convolution block followed by a 3 x 3 convolution block:</p>
+<pre>branch_pool = F.avg_pool2d(x, kernel_size=3, stride=1, padding=1)<br/>branch_pool = self.branch_pool(branch_pool)</pre>
+<p>In the preceding code, we apply an average pool along with a 1 x 1 convolution block, and at the end, we concatenate all the results together. An Inception network would consist of several Inception blocks. The following image shows what an Inception architecture would look like:</p>
+<div class="CDPAlignCenter CDPAlign"><img height="465" width="1509" class="alignnone size-full wp-image-407 image-border" src="images/8dd6a8d2-c984-49d7-87d9-57cab172b60c.jpg" /></div>
+<div class="packt_figref CDPAlignCenter CDPAlign">Inception architecture</div>
+<p>The <kbd>torchvision</kbd> package has an Inception network which can be used in the same way we used the ResNet network. There were many improvements made to the initial Inception block, and the current implementation available from PyTorch is Inception v3. Let's look at how we can use the Inception v3 model from <kbd>torchvision</kbd> to calculate pre-computed features. We will not go through the data loading process as we will be using the same data loaders from the previous ResNet section. We will look at the following important topics:</p>
+<ul>
+<li>Creating an Inception model</li>
+<li>Extracting convolutional features using <kbd>register_forward_hook</kbd></li>
+<li>Creating a new dataset for the convoluted features</li>
+<li>Creating a fully connected model</li>
+<li>Training and validating the model</li>
+</ul>
+
+
+            </article>
+
+            
+        </section>
+    </div>
+</body>
+</html>

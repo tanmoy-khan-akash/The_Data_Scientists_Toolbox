@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xmlns:m="http://www.w3.org/1998/Math/MathML" xmlns:pls="http://www.w3.org/2005/01/pronunciation-lexicon" xmlns:ssml="http://www.w3.org/2001/10/synthesis" xmlns:svg="http://www.w3.org/2000/svg">
+<head>
+  <meta charset="UTF-8" />
+  <title>Training and validating the model</title>
+  <link type="text/css" rel="stylesheet" media="all" href="style.css" />
+  <link type="text/css" rel="stylesheet" media="all" href="core.css" />
+</head>
+<body>
+  <div id="sbo-rt-content"><section>
+
+                            <header>
+                    <h1 class="header-title">Training and validating the model</h1>
+                </header>
+            
+            <article>
+                
+<p>We need to make some minor changes to the <kbd>fit</kbd> method to accommodate the three input-values generated from the data loader. The following code implements the new <kbd>fit</kbd> function:</p>
+<pre>def fit(epoch,model,data_loader,phase='training',volatile=False):<br/>    if phase == 'training':<br/>        model.train()<br/>    if phase == 'validation':<br/>        model.eval()<br/>        volatile=True<br/>    running_loss = 0.0<br/>    running_correct = 0<br/>    for batch_idx , (data1,data2,data3,target) in enumerate(data_loader):<br/>        if is_cuda:<br/>            data1,data2,data3,target = data1.cuda(),data2.cuda(),data3.cuda(),target.cuda()<br/>        data1,data2,data3,target = Variable(data1,volatile),Variable(data2,volatile),Variable(data3,volatile),Variable(target)<br/>        if phase == 'training':<br/>            optimizer.zero_grad()<br/>        output = model(data1,data2,data3)<br/>        loss = F.cross_entropy(output,target)<br/>        <br/>        running_loss += F.cross_entropy(output,target,size_average=False).data[0]<br/>        preds = output.data.max(dim=1,keepdim=True)[1]<br/>        running_correct += preds.eq(target.data.view_as(preds)).cpu().sum()<br/>        if phase == 'training':<br/>            loss.backward()<br/>            optimizer.step()<br/>    <br/>    loss = running_loss/len(data_loader.dataset)<br/>    accuracy = 100. * running_correct/len(data_loader.dataset)<br/>    <br/>    print(f'{phase} loss is {loss:{5}.{2}} and {phase} accuracy is {running_correct}/{len(data_loader.dataset)}{accuracy:{10}.{4}}')<br/>    return loss,accuracy</pre>
+<p>As you can see from the previous code, most of it remains the same, except that the loader returns three inputs and one label. So, we make changes in the function, which is self-explanatory. </p>
+<p>The following code shows the training code:</p>
+<pre>train_losses , train_accuracy = [],[]<br/>val_losses , val_accuracy = [],[]<br/>for epoch in range(1,10):<br/>    epoch_loss, epoch_accuracy = fit(epoch,em,trn_feat_loader,phase='training')<br/>    val_epoch_loss , val_epoch_accuracy = fit(epoch,em,val_feat_loader,phase='validation')<br/>    train_losses.append(epoch_loss)<br/>    train_accuracy.append(epoch_accuracy)<br/>    val_losses.append(val_epoch_loss)<br/>    val_accuracy.append(val_epoch_accuracy)<br/>  </pre>
+<p>The result of the preceding code is as follows:</p>
+<pre>#Results <br/><br/>training loss is 7.2e+01 and training accuracy is 21359/23000 92.87<br/>validation loss is 6.5e+01 and validation accuracy is 1968/2000 98.4<br/>training loss is 9.4e+01 and training accuracy is 22539/23000 98.0<br/>validation loss is 1.1e+02 and validation accuracy is 1980/2000 99.0<br/>training loss is 1e+02 and training accuracy is 22714/23000 98.76<br/>validation loss is 1.4e+02 and validation accuracy is 1976/2000 98.8<br/>training loss is 7.3e+01 and training accuracy is 22825/23000 99.24<br/>validation loss is 1.6e+02 and validation accuracy is 1979/2000 98.95<br/>training loss is 7.2e+01 and training accuracy is 22845/23000 99.33<br/>validation loss is 2e+02 and validation accuracy is 1984/2000 99.2<br/>training loss is 1.1e+02 and training accuracy is 22862/23000 99.4<br/>validation loss is 4.1e+02 and validation accuracy is 1975/2000 98.75<br/>training loss is 1.3e+02 and training accuracy is 22851/23000 99.35<br/>validation loss is 4.2e+02 and validation accuracy is 1981/2000 99.05<br/>training loss is 2e+02 and training accuracy is 22845/23000 99.33<br/>validation loss is 6.1e+02 and validation accuracy is 1982/2000 99.1<br/>training loss is 1e+02 and training accuracy is 22917/23000 99.64<br/>validation loss is 5.3e+02 and validation accuracy is 1986/2000 99.3</pre>
+<p>The ensemble model achieves a 99.6% training accuracy and a validation accuracy of 99.3%. Though ensemble models are powerful, they are computationally expensive. They are good techniques to use when you are solving problems in competitions such as Kaggle. </p>
+
+
+            </article>
+
+            
+        </section>
+    </div>
+</body>
+</html>

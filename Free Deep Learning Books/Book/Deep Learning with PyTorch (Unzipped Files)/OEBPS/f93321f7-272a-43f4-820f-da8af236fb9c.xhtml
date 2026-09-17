@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xmlns:m="http://www.w3.org/1998/Math/MathML" xmlns:pls="http://www.w3.org/2005/01/pronunciation-lexicon" xmlns:ssml="http://www.w3.org/2001/10/synthesis" xmlns:svg="http://www.w3.org/2000/svg">
+<head>
+  <meta charset="UTF-8" />
+  <title>Downloading the embeddings</title>
+  <link type="text/css" rel="stylesheet" media="all" href="style.css" />
+  <link type="text/css" rel="stylesheet" media="all" href="core.css" />
+</head>
+<body>
+  <div id="sbo-rt-content"><section>
+
+                            <header>
+                    <h1 class="header-title">Downloading the embeddings</h1>
+                </header>
+            
+            <article>
+                
+<p>The <kbd>torchtext</kbd> library abstracts away a lot of complexity involved in downloading the embeddings and mapping them to the right word. Torchtext provides three classes, namely <kbd>GloVe</kbd>, <kbd>FastText</kbd>, <kbd>CharNGram</kbd>, in the <kbd>vocab</kbd> module, that ease the process of downloading embeddings, and mapping them to our vocabulary. Each of these classes provides different embeddings trained on different datasets and using different techniques. Let's look at some of the different embeddings provided:</p>
+<ul>
+<li><kbd>charngram.100d</kbd></li>
+<li><kbd><span>fasttext.en.300d</span></kbd></li>
+<li><kbd><span>fasttext.simple.300d</span></kbd></li>
+<li><kbd><span>glove.42B.300d</span></kbd></li>
+<li><kbd><span>glove.840B.300d</span></kbd></li>
+<li><kbd><span>glove.twitter.27B.25d</span></kbd></li>
+<li><kbd><span>glove.twitter.27B.50d</span></kbd></li>
+<li><kbd><span>glove.twitter.27B.100d</span></kbd></li>
+<li><kbd><span>glove.twitter.27B.200d</span></kbd></li>
+<li><kbd><kbd><span>glove.6B.50d</span></kbd></kbd></li>
+<li><kbd><span>glove.6B.100d</span></kbd></li>
+<li><kbd><span>glove.6B.200d</span></kbd></li>
+<li><kbd><span>glove.6B.300d</span></kbd></li>
+</ul>
+<p>The <kbd>build_vocab</kbd> method of the <kbd>Field</kbd> object takes in an argument for the embeddings. The following code explains how we download the embeddings:</p>
+<pre>from torchtext.vocab import GloVe<br/>TEXT.build_vocab(train, vectors=GloVe(name='6B', dim=300),max_size=10000,min_freq=10)<br/>LABEL.build_vocab(train,)</pre>
+<p>The value to the argument vector denotes what embedding class is to be used. The <kbd>name</kbd> and <kbd>dim</kbd> arguments determine on what embeddings can be used. We can easily access the embeddings from the <kbd>vocab</kbd> object. The following code demonstrates it, along with a view of how the results will look:</p>
+<pre>TEXT.vocab.vectors<br/><br/>#Output<br/>0.0000 0.0000 0.0000 ... 0.0000 0.0000 0.0000<br/> 0.0000 0.0000 0.0000 ... 0.0000 0.0000 0.0000<br/> 0.0466 0.2132 -0.0074 ... 0.0091 -0.2099 0.0539<br/>          ... ⋱ ... <br/> 0.0000 0.0000 0.0000 ... 0.0000 0.0000 0.0000<br/> 0.7724 -0.1800 0.2072 ... 0.6736 0.2263 -0.2919<br/> 0.0000 0.0000 0.0000 ... 0.0000 0.0000 0.0000<br/>[torch.FloatTensor of size 10002x300]</pre>
+<p>Now we have downloaded and mapped the embeddings to our vocabulary. Let's understand how we can use them with a PyTorch model.</p>
+
+
+            </article>
+
+            
+        </section>
+    </div>
+</body>
+</html>
