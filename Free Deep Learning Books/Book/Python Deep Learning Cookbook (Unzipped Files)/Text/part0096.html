@@ -1,0 +1,53 @@
+<?xml version='1.0' encoding='utf-8'?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+  <head>
+    <title>How to do it...</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <link href="../stylesheet.css" rel="stylesheet" type="text/css"/>
+<link href="../page_styles.css" rel="stylesheet" type="text/css"/>
+</head>
+  <body id="2RHM00-5e1e3ce63feb42db9ae6338e8302dfdb" class="calibre">
+        <section class="calibre1">
+
+                            <header class="calibre1">
+                    </header><h1 class="header-title" id="calibre_pb_0">How to do it...</h1>
+                
+            
+            <article class="calibre1">
+                
+<ol class="calibre17">
+<li value="1" class="calibre15">Let's start with importing the libraries as follows:</li>
+</ol>
+<pre class="calibre23">import numpy as np<br class="calibre24"/>import pandas as pd<br class="calibre24"/><br class="calibre24"/>from keras.preprocessing import sequence<br class="calibre24"/>from keras.models import Sequential<br class="calibre24"/>from keras.layers import Dense, Dropout, Activation<br class="calibre24"/>from keras.layers import Embedding<br class="calibre24"/>from keras.layers import GRU<br class="calibre24"/>from keras.callbacks import EarlyStopping<br class="calibre24"/><br class="calibre24"/>from keras.datasets import imdbimport numpy as np<br class="calibre24"/>import pandas as pd<br class="calibre24"/><br class="calibre24"/>from keras.preprocessing import sequence<br class="calibre24"/>from keras.models import Sequential<br class="calibre24"/>from keras.layers import Dense, Dropout, Activation<br class="calibre24"/>from keras.layers import Embedding<br class="calibre24"/>from keras.layers import GRU<br class="calibre24"/>from keras.callbacks import EarlyStopping<br class="calibre24"/><br class="calibre24"/>from keras.datasets import imdb</pre>
+<p class="calibre3"></p>
+<ol start="2" class="calibre17">
+<li value="2" class="calibre15">We will be using the IMDb dataset that classifies the sentiment of text; load the data with the following code:</li>
+</ol>
+<pre class="calibre23">n_words = 1000<br class="calibre24"/>(X_train, y_train), (X_test, y_test) = imdb.load_data(num_words=n_words)<br class="calibre24"/>print('Train seq: {}'.format(len(X_train)))<br class="calibre24"/>print('Test seq: {}'.format(len(X_train)))</pre>
+<ol start="3" class="calibre17">
+<li value="3" class="calibre15">By padding the sequences, we prepare our input for our network:</li>
+</ol>
+<pre class="calibre23"># Pad sequences with max_len<br class="calibre24"/>max_len = 200<br class="calibre24"/>X_train = sequence.pad_sequences(X_train, maxlen=max_len)<br class="calibre24"/>X_test = sequence.pad_sequences(X_test, maxlen=max_len)</pre>
+<ol start="4" class="calibre17">
+<li value="4" class="calibre15">We are now ready to define our network architecture:</li>
+</ol>
+<pre class="calibre23"># Define network architecture and compile<br class="calibre24"/>model = Sequential()<br class="calibre24"/>model.add(Embedding(n_words, 50, input_length=max_len))<br class="calibre24"/>model.add(Dropout(0.2))<span><br class="calibre24"/></span><span>model</span><span>.</span><span>add</span><span>(</span><span>GRU</span><span>(</span><span>100</span><span>,</span><span> </span><span>dropout</span><span>=</span><span>0.2</span><span>,</span><span> </span><span>recurrent_dropout</span><span>=</span><span>0.2</span><span>)</span><span>)</span><br class="calibre24"/>model.add(Dense(250, activation='relu'))<br class="calibre24"/>model.add(Dropout(0.2))<br class="calibre24"/>model.add(Dense(1, activation='sigmoid'))<br class="calibre24"/><br class="calibre24"/>model.compile(loss='binary_crossentropy',  <br class="calibre24"/>optimizer='adam', metrics=['accuracy'])<br class="calibre24"/>model.summary()</pre>
+<ol start="5" class="calibre17">
+<li value="5" class="calibre15">We use early stopping to prevent overfitting:</li>
+</ol>
+<pre class="calibre23">callbacks = [EarlyStopping(monitor='val_acc', <br class="calibre24"/>patience=3)]</pre>
+<ol start="6" class="calibre17">
+<li value="6" class="calibre15">Let's define the hyperparameters and start training our network:</li>
+</ol>
+<pre class="calibre23">batch_size = 512<br class="calibre24"/>n_epochs = 100<br class="calibre24"/><br class="calibre24"/>model.fit(X_train, y_train, batch_size=batch_size, <br class="calibre24"/>epochs=n_epochs, validation_split=0.2, callbacks=callbacks)</pre>
+<ol start="7" class="calibre17">
+<li value="7" class="calibre15">Finally, we can check the performance of our trained network on the test set:</li>
+</ol>
+<pre class="calibre23">print('\nAccuracy on test set: {}'.<br class="calibre24"/>format(model.evaluate(X_test, y_test)[1])<br class="calibre24"/><br class="calibre24"/># Accuracy on test set: 0.83004</pre>
+
+
+            </article>
+
+            
+        </section>
+    </body></html>

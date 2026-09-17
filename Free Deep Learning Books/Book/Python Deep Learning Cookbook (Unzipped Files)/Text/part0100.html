@@ -1,0 +1,69 @@
+<?xml version='1.0' encoding='utf-8'?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+  <head>
+    <title>How to do it...</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <link href="../stylesheet.css" rel="stylesheet" type="text/css"/>
+<link href="../page_styles.css" rel="stylesheet" type="text/css"/>
+</head>
+  <body id="2VBO80-5e1e3ce63feb42db9ae6338e8302dfdb" class="calibre">
+        <section class="calibre1">
+
+                            <header class="calibre1">
+                    </header><h1 class="header-title" id="calibre_pb_0">How to do it...</h1>
+                
+            
+            <article class="calibre1">
+                
+<ol class="calibre17">
+<li value="1" class="calibre15">Let's start with importing the libraries as follows:</li>
+</ol>
+<pre class="calibre23">import unidecode<br class="calibre24"/>import string<br class="calibre24"/>import random<br class="calibre24"/>import math<br class="calibre24"/><br class="calibre24"/>import torch<br class="calibre24"/>import torch.nn as nn<br class="calibre24"/>from torch.autograd import Variable</pre>
+<ol start="2" class="calibre17">
+<li value="2" class="calibre15">As input and output, we can use any character:</li>
+</ol>
+<pre class="calibre23">all_characters = string.printable<br class="calibre24"/>input_size = len(all_characters)<br class="calibre24"/>output_size = input_size<br class="calibre24"/>print(input_size)</pre>
+<ol start="3" class="calibre17">
+<li value="3" class="calibre15">We will be using a dataset with speeches from Obama:</li>
+</ol>
+<pre class="calibre23">filename = 'Data/obama.txt'<br class="calibre24"/>data = unidecode.unidecode(open(filename).read())<br class="calibre24"/>len_data = len(data)</pre>
+<ol start="4" class="calibre17">
+<li value="4" class="calibre15">We need to define the hyperparameters before moving on:</li>
+</ol>
+<pre class="calibre23">n_steps = 2000<br class="calibre24"/>batch_size = 512<br class="calibre24"/>hidden_size = 100<br class="calibre24"/>n_layers = 2<br class="calibre24"/>learning_rate = 0.01<br class="calibre24"/>len_text = 200<br class="calibre24"/>print_every = 50</pre>
+<ol start="5" class="calibre17">
+<li value="5" class="calibre15">Let's define a function that transforms characters to tensors:</li>
+</ol>
+<pre class="calibre23">def char_to_tensor(string):<br class="calibre24"/>    tensor = torch.zeros(len(string)).long()<br class="calibre24"/>    for c in range(len(string)):<br class="calibre24"/>        try:<br class="calibre24"/>            tensor[c] = all_characters.<br class="calibre24"/>            index(string[c])<br class="calibre24"/>        except:<br class="calibre24"/>            continue<br class="calibre24"/>    return tensor</pre>
+<ol start="6" class="calibre17">
+<li value="6" class="calibre15">Next, we define a batch generator:</li>
+</ol>
+<pre class="calibre23">def batch_gen(length_text, batch_size):<br class="calibre24"/>    X = torch.LongTensor(batch_size, length_text)<br class="calibre24"/>    y = torch.LongTensor(batch_size, length_text)<br class="calibre24"/>    for i in range(batch_size):<br class="calibre24"/>        start_index = random.randint<br class="calibre24"/>        (0, len_data - length_text)<br class="calibre24"/>        end_index = start_index + length_text + 1<br class="calibre24"/>        text = data[start_index:end_index]<br class="calibre24"/>        X[i] = char_to_tensor(text[:-1])<br class="calibre24"/>        y[i] = char_to_tensor(text[1:])<br class="calibre24"/>    X = Variable(X)<br class="calibre24"/>    y = Variable(y)<br class="calibre24"/>    X = X.cuda()<br class="calibre24"/>    y = y.cuda()<br class="calibre24"/>    return X, y</pre>
+<ol start="7" class="calibre17">
+<li value="7" class="calibre15">We are now ready to define our network architecture:</li>
+</ol>
+<pre class="calibre23">class create_model(nn.Module):<br class="calibre24"/>    def __init__(self, input_size, hidden_size, <br class="calibre24"/>    output_size, n_layers=1):<br class="calibre24"/>        super(create_model, self).__init__()<br class="calibre24"/>        self.input_size = input_size<br class="calibre24"/>        self.hidden_size = hidden_size<br class="calibre24"/>        self.output_size = output_size<br class="calibre24"/>        self.n_layers = n_layers<br class="calibre24"/><br class="calibre24"/>        self.encoder = nn.Embedding(input_size, hidden_size)<br class="calibre24"/>        self.rnn = nn.GRU(hidden_size, hidden_size, n_layers)<br class="calibre24"/>        self.decoder = nn.Linear(hidden_size, output_size)<br class="calibre24"/><br class="calibre24"/>    def forward(self, input, hidden):<br class="calibre24"/>        batch_size = input.size(0)<br class="calibre24"/>        encoded = self.encoder(input)<br class="calibre24"/>        output, hidden = self.rnn(encoded.view(1, <br class="calibre24"/>        batch_size, -1), hidden)<br class="calibre24"/>        output = self.decoder(output.view(batch_size, -1))<br class="calibre24"/>        return output, hidden<br class="calibre24"/><br class="calibre24"/>    def init_hidden(self, batch_size):<br class="calibre24"/>        return Variable(torch.zeros<br class="calibre24"/>       (self.n_layers, batch_size, self.hidden_size))</pre>
+<ol start="8" class="calibre17">
+<li value="8" class="calibre15">We continue by creating our model and defining the optimizer and loss function as follows:</li>
+</ol>
+<pre class="calibre23">decoder_model = create_model(<br class="calibre24"/>    input_size,<br class="calibre24"/>    hidden_size,<br class="calibre24"/>    output_size,<br class="calibre24"/>    n_layers=n_layers,<br class="calibre24"/>)<br class="calibre24"/><br class="calibre24"/>opt = torch.optim.Adam(decoder_model.parameters(), <br class="calibre24"/>lr=learning_rate)<br class="calibre24"/>loss = nn.CrossEntropyLoss()<br class="calibre24"/>decoder_model.cuda()</pre>
+<ol start="9" class="calibre17">
+<li value="9" class="calibre15">We also create a function that we can use to generate text during training:</li>
+</ol>
+<pre class="calibre23">def generate_text(decoder, start='The', predict_len=100):<br class="calibre24"/>    hidden = decoder.init_hidden(1).cuda()<br class="calibre24"/>    prime_input = Variable(char_to_tensor(start).unsqueeze(0)).cuda()<br class="calibre24"/>    predicted = start<br class="calibre24"/><br class="calibre24"/>    for p in range(len(start) - 1):<br class="calibre24"/>        _, hidden = decoder(prime_input[:, p], hidden)<br class="calibre24"/>        <br class="calibre24"/>    x = prime_input[:,-1]<br class="calibre24"/>    <br class="calibre24"/>    for p in range(predict_len):<br class="calibre24"/>        output, hidden = decoder(x, hidden)<br class="calibre24"/>        output_dist = output.data.view(-1).div(0.8).exp()<br class="calibre24"/>        # Add some randomness<br class="calibre24"/>        top_i = torch.multinomial(output_dist, 1)[0]<br class="calibre24"/>        predicted_char = all_characters[top_i]<br class="calibre24"/>        predicted += predicted_char<br class="calibre24"/>        x = Variable(char_to_tensor(predicted_char).<br class="calibre24"/>       unsqueeze(0)).cuda()<br class="calibre24"/>    return predicted</pre>
+<ol start="10" class="calibre17">
+<li value="10" class="calibre15">Finally, let's start training:</li>
+</ol>
+<pre class="calibre23">loss_avg = 0<br class="calibre24"/>for i in range(n_steps):<br class="calibre24"/>    X, y = batch_gen(len_text, batch_size)<br class="calibre24"/>    hidden = decoder_model.init_hidden(batch_size).cuda()<br class="calibre24"/>    decoder_model.zero_grad()<br class="calibre24"/>    loss_total = 0<br class="calibre24"/><br class="calibre24"/>    for c in range(len_text):<br class="calibre24"/>        output, hidden = decoder_model(X[:,c], hidden)<br class="calibre24"/>        loss_total += loss(output.view(batch_size, -1),<br class="calibre24"/>        y[:,c])<br class="calibre24"/><br class="calibre24"/>    loss_total.backward()<br class="calibre24"/>    opt.step()<br class="calibre24"/>    loss_value = loss_total.data[0] / len_text<br class="calibre24"/>    <br class="calibre24"/>    loss_avg += loss_value<br class="calibre24"/><br class="calibre24"/>    if i % print_every == 0:<br class="calibre24"/>        print('Epoch {}: loss {}'.format(i, loss_avg))<br class="calibre24"/>        print(generate_text(decoder_model, <br class="calibre24"/>       'The', 100), '\n')</pre>
+<p class="calibre3">In this chapter, we've introduced RNNs and some of the most popular techniques used in RNNs. We've also showed some applications of RNNs. In the following chapters, we will show you how to apply these networks to more advanced problems.</p>
+<p class="calibre3"></p>
+<p class="calibre3"></p>
+<p class="calibre3"></p>
+<p class="calibre3"></p>
+
+
+            </article>
+
+            
+        </section>
+    </body></html>

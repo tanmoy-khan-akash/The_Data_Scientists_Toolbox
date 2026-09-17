@@ -1,0 +1,207 @@
+<?xml version='1.0' encoding='utf-8'?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+  <head>
+    <title>How to do it...</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <link href="../stylesheet.css" rel="stylesheet" type="text/css"/>
+<link href="../page_styles.css" rel="stylesheet" type="text/css"/>
+</head>
+  <body id="3CN040-5e1e3ce63feb42db9ae6338e8302dfdb" class="calibre">
+        <section class="calibre1">
+
+                            <header class="calibre1">
+                    </header><h1 class="header-title" id="calibre_pb_0">How to do it...</h1>
+                
+            
+            <article class="calibre1">
+                
+<ol class="calibre17">
+<li value="1" class="calibre15">We start by importing the necessary libraries, as follows:</li>
+</ol>
+<pre class="calibre23">import<span> </span><span>matplotlib.pyplot</span><span> </span><span>as</span><span> </span><span>plt<br class="calibre24"/></span><span>import</span> <span>itertools</span>
+
+<span>import</span> <span>torch</span>
+<span>import</span> <span>torch.nn</span> <span>as</span> <span>nn</span>
+<span>import</span> <span>torch.nn.functional</span> <span>as</span> <span>F</span>
+<span>import</span> <span>torch.optim</span> <span>as</span> <span>optim</span>
+<span>from</span> <span>torch.autograd</span> <span>import</span> <span>Variable</span>
+<span>from</span> <span>torch.utils.data.dataset</span> <span>import</span> <span>Dataset</span>
+
+<span>import</span> <span>torchvision.datasets</span> <span>as</span> <span>dset</span>
+<span>import</span> <span>torchvision.transforms</span> <span>as</span> <span>transforms</span></pre>
+<ol start="2" class="calibre17">
+<li value="2" class="calibre15">We then define our <kbd class="calibre12">discriminator</kbd> network in a function:</li>
+</ol>
+<pre class="calibre23">class<span> </span><span>discriminator</span><span>(</span><span>nn</span><span>.</span><span>Module</span><span>):<br class="calibre24"/></span><span>    def</span> <span>__init__</span><span>(</span><span>self</span><span>):</span>
+        <span>super</span><span>(</span><span>discriminator</span><span>,</span> <span>self</span><span>)</span><span>.</span><span>__init__</span><span>()</span>
+        <span>self</span><span>.</span><span>conv1</span> <span>=</span> <span>nn</span><span>.</span><span>Conv2d</span><span>(</span><span>1</span><span>,</span> <span>d</span><span>,</span> <span>4</span><span>,</span> <span>2</span><span>,</span> <span>1</span><span>,</span> <span>bias</span><span>=</span><span>False</span><span>)</span>
+        <span>self</span><span>.</span><span>conv2</span> <span>=</span> <span>nn</span><span>.</span><span>Conv2d</span><span>(</span><span>d</span><span>,</span> <span>d</span><span>*</span><span>2</span><span>,</span> <span>4</span><span>,</span> <span>2</span><span>,</span> <span>1</span><span>,</span> <span>bias</span><span>=</span><span>False</span><span>)</span>
+        <span>self</span><span>.</span><span>conv2_bn</span> <span>=</span> <span>nn</span><span>.</span><span>BatchNorm2d</span><span>(</span><span>*</span><span>2</span><span>)</span>
+        <span>self</span><span>.</span><span>conv3</span> <span>=</span> <span>nn</span><span>.</span><span>Conv2d</span><span>(</span><span>d</span><span>*</span><span>2</span><span>,</span> <span>*</span><span>4</span><span>,</span> <span>4</span><span>,</span> <span>2</span><span>,</span> <span>1</span><span>,</span> <span>bias</span><span>=</span><span>False</span><span>)</span>
+        <span>self</span><span>.</span><span>conv3_bn</span> <span>=</span> <span>nn</span><span>.</span><span>BatchNorm2d</span><span>(</span><span>*</span><span>4</span><span>)</span>
+        <span>self</span><span>.</span><span>conv4</span> <span>=</span> <span>nn</span><span>.</span><span>Conv2d</span><span>(</span><span>d</span><span>*</span><span>4</span><span>,</span> <span>d</span><span>*</span><span>8</span><span>,</span> <span>4</span><span>,</span> <span>2</span><span>,</span> <span>1</span><span>,</span> <span>bias</span><span>=</span><span>False</span><span>)</span>
+        <span>self</span><span>.</span><span>conv4_bn</span> <span>=</span> <span>nn</span><span>.</span><span>BatchNorm2d</span><span>(</span><span>d</span><span>*</span><span>8</span><span>)</span>
+        <span>self</span><span>.</span><span>conv5</span> <span>=</span> <span>nn</span><span>.</span><span>Conv2d</span><span>(</span><span>d</span><span>*</span><span>8</span><span>,</span> <span>3</span><span>,</span> <span>4</span><span>,</span> <span>1</span><span>,</span> <span>0</span><span>,</span> <span>bias</span><span>=</span><span>False</span><span>)</span>
+
+    <span>def</span> <span>weight_init</span><span>(</span><span>self</span><span>,</span> <span>mean</span><span>,</span> <span>std</span><span>):</span>
+        <span>for</span> <span>m</span> <span>in</span> <span>self</span><span>.</span><span>_modules</span><span>:</span>
+            <span>normal_init</span><span>(</span><span>self</span><span>.</span><span>_modules</span><span>[</span><span>m</span><span>],</span> <span>mean</span><span>,</span> <span>std</span><span>)</span>
+
+    <span>def</span> <span>forward</span><span>(</span><span>self</span><span>,</span> <span>input</span><span>):</span>
+        <span>x</span> <span>=</span> <span>F</span><span>.</span><span>leaky_relu</span><span>(</span><span>self</span><span>.</span><span>conv1</span><span>(</span><span>input</span><span>),</span> <span>0.2</span><span>)</span>
+        <span>x</span> <span>=</span> <span>F</span><span>.</span><span>leaky_relu</span><span>(</span><span>self</span><span>.</span><span>conv2_bn</span><span>(</span><span>self</span><span>.</span><span>conv2</span><span>(</span><span>x</span><span>)),</span> <span>0.2</span><span>)</span>
+        <span>x</span> <span>=</span> <span>F</span><span>.</span><span>leaky_relu</span><span>(</span><span>self</span><span>.</span><span>conv3_bn</span><span>(</span><span>self</span><span>.</span><span>conv3</span><span>(</span><span>x</span><span>)),</span> <span>0.2</span><span>)</span>
+        <span>x</span> <span>=</span> <span>F</span><span>.</span><span>leaky_relu</span><span>(</span><span>self</span><span>.</span><span>conv4_bn</span><span>(</span><span>self</span><span>.</span><span>conv4</span><span>(</span><span>x</span><span>)),</span> <span>0.2</span><span>)</span>
+        <span>x</span> <span>=</span> <span>F</span><span>.</span><span>sigmoid</span><span>(</span><span>self</span><span>.</span><span>conv5</span><span>(</span><span>x</span><span>))</span>
+        <span>return</span> <span>x</span></pre>
+<ol start="3" class="calibre17">
+<li value="3" class="calibre15">In the preceding function, we've used the <kbd class="calibre12">normal_init</kbd> function, which we will be using in the <kbd class="calibre12">generator</kbd> as well. We define it as follows:</li>
+</ol>
+<pre class="calibre23">def<span> </span><span>normal_init</span><span>(</span><span>m</span><span>,</span><span> </span><span>mean</span><span>,</span><span> </span><span>std</span><span>):</span><span>
+    </span><span>if</span><span> </span><span>isinstance</span><span>(</span><span>m</span><span>,</span><span> </span><span>nn</span><span>.</span><span>ConvTranspose2d</span><span>)</span><span> </span><span>or</span><span> </span><span>isinstance</span><span>(</span><span>m</span><span>,</span><span> </span><span>nn</span><span>.</span><span>Conv2d</span><span>):</span><span>
+        </span><span>m</span><span>.</span><span>weight</span><span>.</span><span>data</span><span>.</span><span>normal_</span><span>(</span><span>mean</span><span>,</span><span> </span><span>std</span><span>)</span></pre>
+<ol start="4" class="calibre17">
+<li value="4" class="calibre15">Next, we define <kbd class="calibre12">generator</kbd>:</li>
+</ol>
+<pre class="calibre23">class<span> </span><span>generator</span><span>(</span><span>nn</span><span>.</span><span>Module</span><span>):</span><span>
+    </span><span>def</span><span> </span><span>__init__</span><span>(</span><span>self</span><span>):</span><span>
+        </span><span>super</span><span>(</span><span>generator</span><span>,</span><span> </span><span>self</span><span>)</span><span>.</span><span>__init__</span><span>()</span><span>
+        </span><span>self</span><span>.</span><span>deconv1</span><span> </span><span>=</span><span> </span><span>nn</span><span>.</span><span>ConvTranspose2d</span><span>(</span><span>100</span><span>,</span><span> </span><span>1024</span><span>,</span><span> </span><span>4</span><span>,</span><span> </span><span>1</span><span>,</span><span> </span><span>0</span><span>)<br class="calibre24"/></span><span>        self.deconv1_bn = nn.BatchNorm2d(1024)</span>
+        <span>self</span><span>.</span><span>deconv2</span> <span>=</span> <span>nn</span><span>.</span><span>ConvTranspose2d</span><span>(</span><span>1024</span><span>,</span> <span>512</span><span>,</span> <span>4</span><span>,</span> <span>2</span><span>,</span> <span>1</span><span>)</span>
+        <span>self</span><span>.</span><span>deconv2_bn</span> <span>=</span> <span>nn</span><span>.</span><span>BatchNorm2d</span><span>(</span><span>512</span><span>)</span>
+        <span>self</span><span>.</span><span>deconv3</span> <span>=</span> <span>nn</span><span>.</span><span>ConvTranspose2d</span><span>(</span><span>512</span><span>,</span> <span>256</span><span>,</span> <span>4</span><span>,</span> <span>2</span><span>,</span> <span>1</span><span>)</span>
+        <span>self</span><span>.</span><span>deconv3_bn</span> <span>=</span> <span>nn</span><span>.</span><span>BatchNorm2d</span><span>(</span><span>256</span><span>)</span>
+        <span>self</span><span>.</span><span>deconv4</span> <span>=</span> <span>nn</span><span>.</span><span>ConvTranspose2d</span><span>(</span><span>256</span><span>,</span> <span>128</span><span>,</span> <span>4</span><span>,</span> <span>2</span><span>,</span> <span>1</span><span>)</span>
+        <span>self</span><span>.</span><span>deconv4_bn</span> <span>=</span> <span>nn</span><span>.</span><span>BatchNorm2d</span><span>(</span><span>128</span><span>)</span>
+        <span>self</span><span>.</span><span>deconv5</span> <span>=</span> <span>nn</span><span>.</span><span>ConvTranspose2d</span><span>(</span><span>128</span><span>,</span> <span>1</span><span>,</span> <span>4</span><span>,</span> <span>2</span><span>,</span> <span>1</span><span>)</span>
+
+    <span>def</span> <span>weight_init</span><span>(</span><span>self</span><span>,</span> <span>mean</span><span>,</span> <span>std</span><span>):</span>
+        <span>for</span> <span>m</span> <span>in</span> <span>self</span><span>.</span><span>_modules</span><span>:</span>
+            <span>normal_init</span><span>(</span><span>self</span><span>.</span><span>_modules</span><span>[</span><span>m</span><span>],</span> <span>mean</span><span>,</span> <span>std</span><span>)</span>
+
+    <span>def</span> <span>forward</span><span>(</span><span>self</span><span>,</span> <span>input</span><span>):</span>
+        <span>x</span> <span>=</span> <span>F</span><span>.</span><span>relu</span><span>(</span><span>self</span><span>.</span><span>deconv1_bn</span><span>(</span><span>self</span><span>.</span><span>deconv1</span><span>(</span><span>input</span><span>)))</span>
+        <span>x</span> <span>=</span> <span>F</span><span>.</span><span>relu</span><span>(</span><span>self</span><span>.</span><span>deconv2_bn</span><span>(</span><span>self</span><span>.</span><span>deconv2</span><span>(</span><span>x</span><span>)))</span>
+        <span>x</span> <span>=</span> <span>F</span><span>.</span><span>relu</span><span>(</span><span>self</span><span>.</span><span>deconv3_bn</span><span>(</span><span>self</span><span>.</span><span>deconv3</span><span>(</span><span>x</span><span>)))</span>
+        <span>x</span> <span>=</span> <span>F</span><span>.</span><span>relu</span><span>(</span><span>self</span><span>.</span><span>deconv4_bn</span><span>(</span><span>self</span><span>.</span><span>deconv4</span><span>(</span><span>x</span><span>)))</span>
+        <span>x</span> <span>=</span> <span>F</span><span>.</span><span>tanh</span><span>(</span><span>self</span><span>.</span><span>deconv5</span><span>(</span><span>x</span><span>))</span>
+        <span>return</span> <span>x</span></pre>
+<ol start="5" class="calibre17">
+<li value="5" class="calibre15">To plot multiple random outputs during training, we create a function to plot the generated images:</li>
+</ol>
+<pre class="calibre23">def<span> </span><span>plot_output</span><span>(</span><span>epoch</span><span>):</span><span>
+    </span><span>z_</span><span> </span><span>=</span><span> </span><span>torch</span><span>.</span><span>randn</span><span>((</span><span>5</span><span>*</span><span>5</span><span>,</span><span> </span><span>100</span><span>))</span><span>.</span><span>view</span><span>(</span><span>-</span><span>1</span><span>,</span><span> </span><span>100</span><span>,</span><span> </span><span>1</span><span>,</span><span> </span><span>1</span><span>)</span><span>
+    </span><span>z_</span><span> </span><span>=</span><span> </span><span>Variable</span><span>(</span><span>z_</span><span>.</span><span>cuda</span><span>(),</span><span> </span><span>volatile</span><span>=</span><span>True</span><span>)</span><span>
+
+    </span><span>G</span><span>.</span><span>eval</span><span>()</span><span>
+    </span><span>test_images</span><span> </span><span>=</span><span> </span><span>G</span><span>(</span><span>z_</span><span>)</span><span>
+    </span><span>G</span><span>.</span><span>train</span><span>()</span><span>
+
+    </span><span>size_figure_grid</span><span> </span><span>=</span><span> </span><span>5</span><span>
+    </span><span>fig</span><span>,</span><span> </span><span>ax</span><span> </span><span>=</span><span> </span><span>plt</span><span>.</span><span>subplots</span><span>(</span><span>size_figure_grid</span><span>,</span><span> </span><span>size_figure_grid</span><span>,</span><span> </span><span>figsize</span><span>=</span><span>(</span><span>5</span><span>,</span><span> </span><span>5</span><span>))</span><span>
+    </span><span>for</span><span> </span><span>i</span><span>,</span><span> </span><span>j</span><span> </span><span>in</span><span> </span><span>itertools</span><span>.</span><span>product</span><span>(</span><span>range</span><span>(</span><span>size_figure_grid</span><span>),</span><span> </span><span>range</span><span>(</span><span>size_figure_grid</span><span>)):</span><span>
+        </span><span>ax</span><span>[</span><span>i</span><span>,</span><span> </span><span>j</span><span>]</span><span>.</span><span>get_xaxis</span><span>()</span><span>.</span><span>set_visible</span><span>(</span><span>False</span><span>)</span><span>
+        </span><span>ax</span><span>[</span><span>i</span><span>,</span><span> </span><span>j</span><span>]</span><span>.</span><span>get_yaxis</span><span>()</span><span>.</span><span>set_visible</span><span>(</span><span>False</span><span>)</span></pre>
+<ol start="6" class="calibre17">
+<li value="6" class="calibre15">In the following step, we will set the hyperparameters used during training. The hyperparameters have a big effect on the results of our GANs. The <kbd class="calibre12">generator</kbd> and <kbd class="calibre12">discriminator</kbd> shouldn't overpower each other. Batch size is an important hyperparameter for GANs. A general rule in deep learning is that a bigger batch size is better (up to a certain point). However, for GANs, a smaller batch size can also work better sometimes.</li>
+</ol>
+<pre class="calibre23">n_epochs<span> </span><span>=</span><span> </span><span>24<br class="calibre24"/></span><span>batch_size</span> <span>=</span> <span>32</span>
+<span>learning_rate</span> <span>=</span> <span>0.0002</span></pre>
+<ol start="7" class="calibre17">
+<li value="7" class="calibre15">For our model, we will use the Fashion-MNIST dataset and load it with the following code:</li>
+</ol>
+<pre class="calibre23">transform<span> </span><span>=</span><span> </span><span>transforms</span><span>.</span><span>Compose</span><span>([</span><span>transforms</span><span>.</span><span>Scale</span><span>(</span><span>64</span><span>),</span><span>
+                                </span><span>transforms</span><span>.</span><span>ToTensor</span><span>(),</span><span>
+                                </span><span>transforms</span><span>.</span><span>Normalize</span><span>((</span><span>0.5</span><span>,),</span><span> </span><span>(</span><span>0.5</span><span>,))])</span><span>
+
+</span><span>train_dataset</span><span> </span><span>=</span><span> </span><span>fashion_mnist</span><span>(</span><span>root</span><span>=</span><span>'./data'</span><span>,</span><span> 
+                            </span><span>train</span><span>=</span><span>True</span><span>,</span><span> 
+                            </span><span>transform</span><span>=</span><span>transform</span><span>,</span><span>
+                            </span><span>download</span><span>=</span><span>True</span><span>
+                           </span><span>)</span><span>
+
+</span><span>train_loader</span><span> </span><span>=</span><span> </span><span>torch</span><span>.</span><span>utils</span><span>.</span><span>data</span><span>.</span><span>DataLoader</span><span>(</span><span>dataset</span><span>=</span><span>train_dataset</span><span>,</span><span> 
+                                           </span><span>batch_size</span><span>=</span><span>batch_size</span><span>,</span><span>            
+                                           </span><span>shuffle</span><span>=</span><span>True</span><span>)</span></pre>
+<ol start="8" class="calibre17">
+<li value="8" class="calibre15">Let's create both networks by calling the defined functions, followed by initializing the weights:</li>
+</ol>
+<pre class="calibre23">G<span> </span><span>=</span><span> </span><span>generator</span><span>(</span><span>128</span><span>)</span><span>
+</span><span>D</span><span> </span><span>=</span><span> </span><span>discriminator</span><span>(</span><span>128</span><span>)<br class="calibre24"/></span><span>G</span><span>.</span><span>weight_init</span><span>(</span><span>mean</span><span>=</span><span>0.0</span><span>,</span> <span>std</span><span>=</span><span>0.02</span><span>)</span>
+<span>D</span><span>.</span><span>weight_init</span><span>(</span><span>mean</span><span>=</span><span>0.0</span><span>,</span> <span>std</span><span>=</span><span>0.02</span><span>)</span></pre>
+<ol start="9" class="calibre17">
+<li value="9" class="calibre15">Next, we need to make sure we use <kbd class="calibre12">cuda</kbd>:</li>
+</ol>
+<pre class="calibre23">G<span>.</span><span>cuda</span><span>()</span><span>
+</span><span>D</span><span>.</span><span>cuda</span><span>()</span></pre>
+<ol start="10" class="calibre17">
+<li value="10" class="calibre15">For GANs, we can use the <strong class="calibre5">Binary Cross Entropy</strong> (<strong class="calibre5">BCE</strong>) loss:</li>
+</ol>
+<pre class="calibre23">BCE_loss<span> </span><span>=</span><span> </span><span>nn</span><span>.</span><span>BCELoss</span><span>()</span></pre>
+<ol start="11" class="calibre17">
+<li value="11" class="calibre15">For both networks, we need to set the optimizers with the following settings:</li>
+</ol>
+<pre class="calibre23">beta_1<span> </span><span>=</span><span> </span><span>0.5</span><span>
+</span><span>beta_2</span><span> </span><span>=</span><span> </span><span>0.999</span><span>
+</span><span>G_optimizer</span><span> </span><span>=</span><span> </span><span>optim</span><span>.</span><span>Adam</span><span>(</span><span>G</span><span>.</span><span>parameters</span><span>(),</span><span> </span><span>lr</span><span>=</span><span>learning_rate</span><span>,</span><span> </span><span>betas</span><span>=</span><span>(</span><span>beta_1</span><span>,</span><span> </span><span>beta_2</span><span>))</span><span>
+</span><span>D_optimizer</span><span> </span><span>=</span><span> </span><span>optim</span><span>.</span><span>Adam</span><span>(</span><span>D</span><span>.</span><span>parameters</span><span>(),</span><span> </span><span>lr</span><span>=</span><span>learning_rate</span><span>/</span><span>2</span><span>,</span><span> </span><span>betas</span><span>=</span><span>(</span><span>beta_1</span><span>,</span><span> </span><span>beta_2</span><span>))</span></pre>
+<ol start="12" class="calibre17">
+<li value="12" class="calibre15">Now we can start training our networks with the following code block:</li>
+</ol>
+<pre class="calibre23">for<span> </span><span>epoch</span><span> </span><span>in</span><span> </span><span>range</span><span>(</span><span>n_epochs</span><span>):</span><span>
+    </span><span>D_losses</span><span> </span><span>=</span><span> </span><span>[]</span><span>
+    </span><span>G_losses</span><span> </span><span>=</span><span> </span><span>[]</span><span>
+    </span><span>for</span><span> </span><span>x_</span><span>,</span><span> </span><span>_</span><span> </span><span>in</span><span> </span><span>train_loader</span><span>:</span><span>
+        </span><span>D</span><span>.</span><span>zero_grad</span><span>()</span><span>
+
+        </span><span>mini_batch</span><span> </span><span>=</span><span> </span><span>x_</span><span>.</span><span>size</span><span>()[</span><span>0</span><span>]</span><span>
+
+        </span><span>y_real_</span><span> </span><span>=</span><span> </span><span>torch</span><span>.</span><span>ones</span><span>(</span><span>mini_batch</span><span>)</span><span>
+        </span><span>y_fake_</span><span> </span><span>=</span><span> </span><span>torch</span><span>.</span><span>zeros</span><span>(</span><span>mini_batch</span><span>)</span><span>
+
+        </span><span>x_</span><span> </span><span>=</span><span> </span><span>Variable</span><span>(</span><span>x_</span><span>.</span><span>cuda</span><span>())</span><span>
+        </span><span>y_real_</span><span> </span><span>=</span><span> </span><span>Variable</span><span>(</span><span>y_real_</span><span>.</span><span>cuda</span><span>())</span><span>
+        </span><span>y_fake_</span><span> </span><span>=</span><span> </span><span>Variable</span><span>(</span><span>y_fake_</span><span>.</span><span>cuda</span><span>())</span><span>
+                
+        </span><span>D_result</span><span> </span><span>=</span><span> </span><span>D</span><span>(</span><span>x_</span><span>)</span><span>.</span><span>squeeze</span><span>()</span><span>
+        </span><span>D_real_loss</span><span> </span><span>=</span><span> </span><span>BCE_loss</span><span>(</span><span>D_result</span><span>,</span><span> </span><span>y_real_</span><span>)</span><span>
+
+        </span><span>z_</span><span> </span><span>=</span><span> </span><span>torch</span><span>.</span><span>randn</span><span>((</span><span>mini_batch</span><span>,</span><span> </span><span>100</span><span>))</span><span>.</span><span>view</span><span>(</span><span>-</span><span>1</span><span>,</span><span> </span><span>100</span><span>,</span><span> </span><span>1</span><span>,</span><span> </span><span>1</span><span>)</span><span>
+        </span><span>z_</span><span> </span><span>=</span><span> </span><span>Variable</span><span>(</span><span>z_</span><span>.</span><span>cuda</span><span>())</span><span>
+        </span><span>G_result</span><span> </span><span>=</span><span> </span><span>G</span><span>(</span><span>z_</span><span>)</span><span>
+
+        </span><span>D_result</span><span> </span><span>=</span><span> </span><span>D</span><span>(</span><span>G_result</span><span>)</span><span>.</span><span>squeeze</span><span>()</span><span>
+        </span><span>D_fake_loss</span><span> </span><span>=</span><span> </span><span>BCE_loss</span><span>(</span><span>D_result</span><span>,</span><span> </span><span>y_fake_</span><span>)</span><span>
+        </span><span>D_fake_score</span><span> </span><span>=</span><span> </span><span>D_result</span><span>.</span><span>data</span><span>.</span><span>mean</span><span>()</span><span>
+        </span><span>D_train_loss</span><span> </span><span>=</span><span> </span><span>D_real_loss</span><span> </span><span>+</span><span> </span><span>D_fake_loss</span><span>
+
+        </span><span>D_train_loss</span><span>.</span><span>backward</span><span>()</span><span>
+        </span><span>D_optimizer</span><span>.</span><span>step</span><span>()</span><span>     
+        </span><span>D_losses</span><span>.</span><span>append</span><span>(</span><span>D_train_loss</span><span>.</span><span>data</span><span>[</span><span>0</span><span>])</span><span> 
+        </span><span>G</span><span>.</span><span>zero_grad</span><span>()</span><span>
+
+        </span><span>z_</span><span> </span><span>=</span><span> </span><span>torch</span><span>.</span><span>randn</span><span>((</span><span>mini_batch</span><span>,</span><span> </span><span>100</span><span>))</span><span>.</span><span>view</span><span>(</span><span>-</span><span>1</span><span>,</span><span> </span><span>100</span><span>,</span><span> </span><span>1</span><span>,</span><span> </span><span>1</span><span>)</span><span>
+        </span><span>z_</span><span> </span><span>=</span><span> </span><span>Variable</span><span>(</span><span>z_</span><span>.</span><span>cuda</span><span>())</span><span>
+
+        </span><span>G_result</span><span> </span><span>=</span><span> </span><span>G</span><span>(</span><span>z_</span><span>)</span><span>
+        </span><span>D_result</span><span> </span><span>=</span><span> </span><span>D</span><span>(</span><span>G_result</span><span>)</span><span>.</span><span>squeeze</span><span>()</span><span>
+        </span><span>G_train_loss</span><span> </span><span>=</span><span> </span><span>BCE_loss</span><span>(</span><span>D_result</span><span>,</span><span> </span><span>y_real_</span><span>)</span><span>
+        </span><span>G_train_loss</span><span>.</span><span>backward</span><span>()</span><span>
+        </span><span>G_optimizer</span><span>.</span><span>step</span><span>()</span><span>
+</span><span>        </span><span>G_losses</span><span>.</span><span>append</span><span>(</span><span>G_train_loss</span><span>.</span><span>data</span><span>[</span><span>0</span><span>])</span><span>
+
+    </span><span>print</span><span>(</span><span>'Epoch </span><span>%d</span><span> - loss_d: </span><span>%.3f</span><span>, loss_g: </span><span>%.3f</span><span>'</span><span> </span><span>%</span><span> </span><span>((</span><span>epoch</span><span> </span><span>+</span><span> </span><span>1</span><span>),</span><span> </span><span>torch</span><span>.</span><span>mean</span><span>(</span><span>torch</span><span>.</span><span>FloatTensor</span><span>(</span><span>D_losses</span><span>)),</span><span>
+                                                              </span><span>torch</span><span>.</span><span>mean</span><span>(</span><span>torch</span><span>.</span><span>FloatTensor</span><span>(</span><span>G_losses</span><span>))))</span><span>
+    
+    </span><span># Plot example output</span><span>
+    </span><span>plot_output</span><span>(</span><span>epoch</span><span>)<br class="calibre24"/></span></pre>
+<p class="calibre3">In the following figure, we can see the output after running our networks for 24 epochs:</p>
+<div class="cdpaligncenter"><img src="../images/00051.jpeg" class="calibre50"/></div>
+<div class="cdpaligncenter3">Figure 6.2: Examples of generated images after 24 epochs</div>
+
+
+            </article>
+
+            
+        </section>
+    </body></html>

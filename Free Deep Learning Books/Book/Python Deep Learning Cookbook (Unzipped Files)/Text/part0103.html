@@ -1,0 +1,26 @@
+<?xml version='1.0' encoding='utf-8'?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+  <head>
+    <title>Implementing policy gradients</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <link href="../stylesheet.css" rel="stylesheet" type="text/css"/>
+<link href="../page_styles.css" rel="stylesheet" type="text/css"/>
+</head>
+  <body id="3279U0-5e1e3ce63feb42db9ae6338e8302dfdb" class="calibre">
+        <section class="calibre1">
+
+                            <header class="calibre1">
+                    </header><h1 class="header-title" id="calibre_pb_0">Implementing policy gradients</h1>
+                
+            
+            <article class="calibre1">
+                
+<p class="calibre3">In reinforcement learning, we cannot backpropagate the error in our network directly, because we don't have a truth set for each step. We only receive feedback now and then. This is why we need the <strong class="calibre5">policy gradient</strong> to propagate the rewards back to the network. The rules to determine the best action are called <strong class="calibre5">policies</strong>. The network for learning these policies is called <strong class="calibre5">policy network</strong>. This can be any type of network, for example, a simple, two-layer FNN or a CNN. The more complex the environment, the more you will benefit from a complex network. When using a policy gradient, we draw an action of the output distribution of our policy network. Because the reward is not always directly available, we treat the action as correct. Later we use the <strong class="calibre5">discounted reward</strong> as a scalar and backpropagate this to the network weights.</p>
+<p class="calibre3">In the following recipe, we will teach an agent to play <em class="calibre22">Pong</em> from OpenAI by implementing a policy gradient in TensorFlow. <em class="calibre22">Pong</em> is a great game to start with, because it is simple (two actions, <em class="calibre22">up</em> or <em class="calibre22">down</em>, if we exclude <em class="calibre22">do nothing</em>), is easy to visualize, and has a straightforward reward (+1 if the agent wins the game and -1 if the agent loses the game). In this version of <em class="calibre22">Pong</em>, we play until one of the two players wins 21 games (this is called an <strong class="calibre5">episode</strong>). We want our agent to win a game of <em class="calibre22">Pong</em> with the highest score possible: 21 - 0.</p>
+
+
+            </article>
+
+            
+        </section>
+    </body></html>

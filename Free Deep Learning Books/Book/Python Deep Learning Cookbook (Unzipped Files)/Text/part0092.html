@@ -1,0 +1,55 @@
+<?xml version='1.0' encoding='utf-8'?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+  <head>
+    <title>How to do it...</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <link href="../stylesheet.css" rel="stylesheet" type="text/css"/>
+<link href="../page_styles.css" rel="stylesheet" type="text/css"/>
+</head>
+  <body id="2NNJO0-5e1e3ce63feb42db9ae6338e8302dfdb" class="calibre">
+        <section class="calibre1">
+
+                            <header class="calibre1">
+                    </header><h1 class="header-title" id="calibre_pb_0">How to do it...</h1>
+                
+            
+            <article class="calibre1">
+                
+<ol class="calibre17">
+<li value="1" class="calibre15">In this basic example, we will implement our simple RNN with NumPy:</li>
+</ol>
+<pre class="calibre23">import numpy as np</pre>
+<ol start="2" class="calibre17">
+<li value="2" class="calibre15">Let's start with creating the dummy dataset that we will be using:</li>
+</ol>
+<pre class="calibre23">X = []<br class="calibre24"/>X.append([1,0,0,0])<br class="calibre24"/>X.append([0,1,0,0])<br class="calibre24"/>X.append([0,0,1,0])<br class="calibre24"/>X.append([0,0,0,1])<br class="calibre24"/>X.append([0,0,0,1])<br class="calibre24"/>X.append([1,0,0,0])<br class="calibre24"/>X.append([0,1,0,0])<br class="calibre24"/>X.append([0,0,1,0])<br class="calibre24"/>X.append([0,0,0,1])<br class="calibre24"/><br class="calibre24"/>y = [0.20, 0.30, 0.40, 0.50, 0.05, 0.10, 0.20,<br class="calibre24"/>0.30, 0.40]</pre>
+<ol start="3" class="calibre17">
+<li value="3" class="calibre15">For this regression problem, we will be using a sigmoid activation function:</li>
+</ol>
+<pre class="calibre23">def sigmoid(x):<br class="calibre24"/>    return 1 / (1 + np.exp(-x))<br class="calibre24"/><br class="calibre24"/>def sigmoid_der(x):<br class="calibre24"/>    return 1.0 - x**2</pre>
+<ol start="4" class="calibre17">
+<li value="4" class="calibre15">Next, we initialize the layers and weights:</li>
+</ol>
+<pre class="calibre23">layers = []<br class="calibre24"/># 4 input variables, 16 hidden units and 1 output variable<br class="calibre24"/>n_units = (4, 16, 1)<br class="calibre24"/>n_layers = len(n_units)<br class="calibre24"/><br class="calibre24"/>layers.append(np.ones(n_units[0]+1+n_units[1]))<br class="calibre24"/>for i in range(1, n_layers):<br class="calibre24"/>    layers.append(np.ones(n_units[i]))<br class="calibre24"/><br class="calibre24"/>weights = []<br class="calibre24"/>for i in range(n_layers-1):<br class="calibre24"/>    weights.append(np.zeros((layers[i].size, <br class="calibre24"/>    layers[i+1].size)))<br class="calibre24"/><br class="calibre24"/>weights_delta = [0,]*len(weights)</pre>
+<ol start="5" class="calibre17">
+<li value="5" class="calibre15">We are now ready to define the function for the forward pass:</li>
+</ol>
+<pre class="calibre23">def forwards(data):<br class="calibre24"/>    layers[0][:n_units[0]] = data<br class="calibre24"/>    layers[0][n_units[0]:-1] = layers[1]<br class="calibre24"/><br class="calibre24"/>    # Propagate the data forwards<br class="calibre24"/>    for i in range(1, n_layers):<br class="calibre24"/>        layers[i][...] = sigmoid(np.dot(layers[i-1], <br class="calibre24"/>        weights[i-1]))<br class="calibre24"/><br class="calibre24"/>    return layers[-1]</pre>
+<ol start="6" class="calibre17">
+<li value="6" class="calibre15">In the backwards pass, we will determine the errors and update the weights:</li>
+</ol>
+<pre class="calibre23">def backwards(target, learning_rate=0.1, momentum=0.1):<br class="calibre24"/>    deltas = []<br class="calibre24"/>    error = target - layers[-1]<br class="calibre24"/>    delta = error * sigmoid_der(layers[-1])<br class="calibre24"/>    deltas.append(delta)<br class="calibre24"/><br class="calibre24"/>    # Determine error in hidden layers<br class="calibre24"/>    for i in range(n_layers-2, 0, -1):<br class="calibre24"/>        delta = np.dot(deltas[0], weights[i].T) * sigmoid_der(layers[i])<br class="calibre24"/>        deltas.insert(0, delta)<br class="calibre24"/><br class="calibre24"/>    # Update weights<br class="calibre24"/>    for i in range(len(weights)):<br class="calibre24"/>        layer = np.atleast_2d(layers[i])<br class="calibre24"/>        delta = np.atleast_2d(deltas[i])<br class="calibre24"/>        weights_delta_temp = np.dot(layer.T, delta)<br class="calibre24"/>        weights[i] += learning_rate*weights_delta_temp + <br class="calibre24"/>        momentum*weights_delta[i]<br class="calibre24"/>        weights_delta[i] = weights_delta_temp<br class="calibre24"/><br class="calibre24"/>    return (error**2).sum()</pre>
+<ol start="7" class="calibre17">
+<li value="7" class="calibre15">We are now ready to train our simple RNN:</li>
+</ol>
+<pre class="calibre23">n_epochs = 10000<br class="calibre24"/>for i in range(n_epochs):<br class="calibre24"/>    loss = 0<br class="calibre24"/>    for j in range(len(X)):<br class="calibre24"/>        forwards(X[j])<br class="calibre24"/>        backwards(y[j])<br class="calibre24"/>        loss += (y[j]-forwards(X[j]))**2<br class="calibre24"/>    if i%1000 == 0: print('epoch {} - loss: <br class="calibre24"/>    {:04.4f}'.format(i, loss[0]))</pre>
+<p class="calibre27">8. Finally, let's inspect our results:</p>
+<pre class="calibre49">for i in range(len(X)):<br class="calibre24"/>    pred = forwards(X[i])<br class="calibre24"/>    loss = (y[i]-pred)**2<br class="calibre24"/>    print('X: {}; y: {:04.2f}; pred: <br class="calibre24"/>    {:04.2f}'.format(X[i], y[i], pred[0]))</pre>
+<p class="calibre3">The goal of this recipe is to get you familiar with RNNs and the internal structure. In our example, we've shown that the predicted value is not only dependent on the current input data, but also on previous value in a sequence. </p>
+
+
+            </article>
+
+            
+        </section>
+    </body></html>

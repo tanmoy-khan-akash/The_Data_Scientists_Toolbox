@@ -1,0 +1,89 @@
+<?xml version='1.0' encoding='utf-8'?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+  <head>
+    <title>How to do it...</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <link href="../stylesheet.css" rel="stylesheet" type="text/css"/>
+<link href="../page_styles.css" rel="stylesheet" type="text/css"/>
+</head>
+  <body id="344B20-5e1e3ce63feb42db9ae6338e8302dfdb" class="calibre">
+        <section class="calibre1">
+
+                            <header class="calibre1">
+                    </header><h1 class="header-title" id="calibre_pb_0">How to do it...</h1>
+                
+            
+            <article class="calibre1">
+                
+<ol class="calibre17">
+<li value="1" class="calibre15">First, we import the necessary libraries, as follows:</li>
+</ol>
+<pre class="calibre23">import numpy as np<br class="calibre24"/>import gym<br class="calibre24"/>import tensorflow as tf<br class="calibre24"/>import matplotlib.pyplot as plt</pre>
+<ol start="2" class="calibre17">
+<li value="2" class="calibre15">Let's set up the Pong environment and plot a frame:</li>
+</ol>
+<div class="cdpaligncenter"><img src="../images/00042.jpeg" class="calibre72"/></div>
+<div class="mce-root1">Figures 5.1: Frame of the Pong game by OpenAI</div>
+<pre class="calibre23">env = gym.make("Pong-v0") # environment info<br class="calibre24"/>observation = env.reset()<br class="calibre24"/><br class="calibre24"/>for i in range(22):<br class="calibre24"/>    # The ball is released after 20 frames<br class="calibre24"/>    if i &gt; 20:<br class="calibre24"/>        plt.imshow(observation)<br class="calibre24"/>        plt.show()<br class="calibre24"/>    <br class="calibre24"/>    # Get the next observation<br class="calibre24"/>    observation, _, _, _ = env.step(1)</pre>
+<ol start="3" class="calibre17">
+<li value="3" class="calibre15">Before we implement the algorithm, we need a function that preprocesses the input data:</li>
+</ol>
+<pre class="calibre23">def preprocess_frame(frame):<br class="calibre24"/>    # remove top part of frame and some background<br class="calibre24"/>    frame = frame[35:195, 10:150]<br class="calibre24"/>    <br class="calibre24"/>    # grayscale frame and downsize by factor 2<br class="calibre24"/>    frame = frame[::2, ::2, 0]<br class="calibre24"/>    <br class="calibre24"/>    # set background to 0<br class="calibre24"/>    frame[frame == 144] = 0<br class="calibre24"/>    frame[frame == 109] = 0<br class="calibre24"/>    <br class="calibre24"/>    # set ball and paddles to 1<br class="calibre24"/>    frame[frame != 0] = 1<br class="calibre24"/>    return frame.astype(np.float).ravel()</pre>
+<ol start="4" class="calibre17">
+<li value="4" class="calibre15">Let's see what the preprocessed data looks like:</li>
+</ol>
+<p class="cdpaligncenter1"><img src="../images/00043.jpeg" class="calibre73"/></p>
+<div class="mce-root1">Figure 5.2: Preprocessed frame of Pong (reshaped to 2D)</div>
+<pre class="calibre23">obs_preprocessed = preprocess_frame(observation).<br class="calibre24"/>reshape(80, 70)<br class="calibre24"/>plt.imshow(obs_preprocessed, cmap='gray')<br class="calibre24"/>plt.show()</pre>
+<ol start="5" class="calibre17">
+<li value="5" class="calibre15">To extract temporal information from the game, we use the difference between two successive frames:</li>
+</ol>
+<p class="cdpaligncenter1"><img src="../images/00044.jpeg" class="calibre74"/></p>
+<div class="mce-root1"><span>Figure 5.3: Difference between two successive frames of Pong (reshaped to 2D)</span></div>
+<pre class="calibre23">observation_next, _, _, _ = env.step(1)<br class="calibre24"/>diff = preprocess_frame(observation_next) - preprocess_frame(observation)<br class="calibre24"/>plt.imshow(diff.reshape(80, 70), cmap='gray')<br class="calibre24"/>plt.show()</pre>
+<ol start="6" class="calibre17">
+<li value="6" class="calibre15">Now we can start implementing our three-layer model. Let's start by defining the weights:</li>
+</ol>
+<pre class="calibre23">input_dim = 80*70<br class="calibre24"/>hidden_L1 = 400<br class="calibre24"/>hidden_L2 = 200<br class="calibre24"/>actions = [1, 2, 3]<br class="calibre24"/>n_actions = len(actions)<br class="calibre24"/>model = {}<br class="calibre24"/>with tf.variable_scope('L1',reuse=False):<br class="calibre24"/>    init_W1 = tf.truncated_normal_initializer<br class="calibre24"/>    (mean=0, stddev=1./np.sqrt(input_dim), <br class="calibre24"/>    dtype=tf.float32)<br class="calibre24"/>    model['W1'] = tf.get_variable("W1", <br class="calibre24"/>   [input_dim, hidden_L1], initializer=init_W1)<br class="calibre24"/><br class="calibre24"/>with tf.variable_scope('L2',reuse=False):<br class="calibre24"/>    init_W2 = tf.truncated_normal_initializer<br class="calibre24"/>    (mean=0, stddev=1./np.sqrt(hidden_L1), <br class="calibre24"/>    dtype=tf.float32)<br class="calibre24"/>    model['W2'] = tf.get_variable("W2", <br class="calibre24"/>   [hidden_L1, n_actions], initializer=init_W2)</pre>
+<ol start="7" class="calibre17">
+<li value="7" class="calibre15">Next, we define the functions for our policies:</li>
+</ol>
+<pre class="calibre23">def policy_forward(x):<br class="calibre24"/>    x = tf.matmul(x, model['W1'])<br class="calibre24"/>    x = tf.nn.relu(x)<br class="calibre24"/>    x = tf.matmul(x, model['W2'])<br class="calibre24"/>    p = tf.nn.softmax(x)<br class="calibre24"/>    return p</pre>
+<ol start="8" class="calibre17">
+<li value="8" class="calibre15">For our algorithm, we need to define a function for the discounted reward:</li>
+</ol>
+<pre class="calibre23">def discounted_rewards(reward, gamma):<br class="calibre24"/>    discounted_function = lambda a, v: <br class="calibre24"/>    a*gamma + v;<br class="calibre24"/>    reward_reverse = tf.scan(discounted_function, <br class="calibre24"/>    tf.reverse(reward, [True, False]))<br class="calibre24"/>    discounted_reward = tf.reverse(reward_reverse, <br class="calibre24"/>    [True, False])<br class="calibre24"/>    return discounted_reward</pre>
+<ol start="9" class="calibre17">
+<li value="9" class="calibre15">Before proceeding, we need to define the hyperparamters:</li>
+</ol>
+<pre class="calibre23">learning_rate = 0.001<br class="calibre24"/>gamma = 0.99<br class="calibre24"/>batch_size = 10</pre>
+<ol start="10" class="calibre17">
+<li value="10" class="calibre15">We have to set our backwards update separately by defining placeholders:</li>
+</ol>
+<pre class="calibre23"># TensorFlow placeholders<br class="calibre24"/>episode_x = tf.placeholder(dtype=tf.float32, <br class="calibre24"/>shape=[None, input_dim])<br class="calibre24"/>episode_y = tf.placeholder(dtype=tf.float32, <br class="calibre24"/>shape=[None, n_actions])<br class="calibre24"/>episode_reward = tf.placeholder(dtype=tf.float32, <br class="calibre24"/>shape=[None, 1])<br class="calibre24"/><br class="calibre24"/>episode_discounted_reward = discounted_rewards<br class="calibre24"/>(episode_reward, gamma)<br class="calibre24"/>episode_mean, episode_variance= tf.nn.moments(episode_discounted_reward, <br class="calibre24"/>[0], shift=None)<br class="calibre24"/><br class="calibre24"/># Normalize discounted reward<br class="calibre24"/>episode_discounted_reward -= episode_mean<br class="calibre24"/>episode_discounted_reward /= <br class="calibre24"/>tf.sqrt(episode_variance + 1e-6)<br class="calibre24"/><br class="calibre24"/># Optimizer settings<br class="calibre24"/>tf_aprob = policy_forward(episode_x)<br class="calibre24"/>loss = tf.nn.l2_loss(episode_y - tf_aprob)<br class="calibre24"/>optimizer = tf.train.AdamOptimizer(learning_rate)<br class="calibre24"/>gradients = optimizer.compute_gradients(loss, var_list=tf.trainable_variables(), grad_loss=episode_discounted_reward)<br class="calibre24"/>train_op = optimizer.apply_gradients(gradients)<br class="calibre24"/><br class="calibre24"/># Initialize graph<br class="calibre24"/>sess = tf.InteractiveSession()<br class="calibre24"/>tf.global_variables_initializer().run()<br class="calibre24"/><br class="calibre24"/># Settings to save the trained model<br class="calibre24"/>saver = tf.train.Saver(tf.global_variables())<br class="calibre24"/>save_path = 'checkpoints/pong_rl.ckpt'</pre>
+<ol start="11" class="calibre17">
+<li value="11" class="calibre15">Now, we can initialize the values and run our algorithm:</li>
+</ol>
+<pre class="calibre23">obs_prev = None<br class="calibre24"/>xs, ys, rs, = [], [], []<br class="calibre24"/>reward_sum = 0<br class="calibre24"/>episode_number = 0<br class="calibre24"/>reward_window = None<br class="calibre24"/>reward_best = -22<br class="calibre24"/>history = []<br class="calibre24"/><br class="calibre24"/>observation = env.reset()<br class="calibre24"/>while True:<br class="calibre24"/># if True: env.render() <br class="calibre24"/># uncomment if you want to see the agent <br class="calibre24"/>#play while training<br class="calibre24"/><br class="calibre24"/>    # Preprocess the observation, <br class="calibre24"/>    #set input to network to be difference image<br class="calibre24"/>    obs_cur = preprocess_frame(observation)<br class="calibre24"/>    obs_diff = obs_cur - obs_prev if obs_prev <br class="calibre24"/>    is not None else np.zeros(input_dim)<br class="calibre24"/>    obs_prev = obs_cur<br class="calibre24"/><br class="calibre24"/>    # Sample an action (policy)<br class="calibre24"/>    feed = {episode_x: np.reshape(obs_diff, (1,-1))}<br class="calibre24"/>    aprob = sess.run(tf_aprob, feed) ; aprob = aprob[0,:]<br class="calibre24"/>    action = np.random.choice(n_actions, p=aprob)<br class="calibre24"/>    label = np.zeros_like(aprob) ; label[action] = 1<br class="calibre24"/><br class="calibre24"/>    # Return action to environment and extract<br class="calibre24"/>    # next observation, reward, and status<br class="calibre24"/>    observation, reward, done, info = <br class="calibre24"/>    env.step(action+1)<br class="calibre24"/>    reward_sum += reward<br class="calibre24"/>    <br class="calibre24"/>    # record game history<br class="calibre24"/>    xs.append(obs_diff) ; ys.append(label) ; <br class="calibre24"/>    rs.append(reward)<br class="calibre24"/><br class="calibre24"/>    if done:<br class="calibre24"/>        history.append(reward_sum)<br class="calibre24"/>        reward_window = -21 if reward_window is <br class="calibre24"/>        None else np.mean(history[-100:])<br class="calibre24"/>        <br class="calibre24"/>        # Update the weights with the stored values<br class="calibre24"/>        # (update policies)<br class="calibre24"/>        feed = {episode_x: np.vstack(xs), episode_y:<br class="calibre24"/>        np.vstack(ys), episode_reward: np.vstack(rs), }<br class="calibre24"/>        _ = sess.run(train_op, feed)<br class="calibre24"/>        <br class="calibre24"/>        print('episode {:2d}: reward: {:2.0f}'.<br class="calibre24"/>        format(episode_number, reward_sum))<br class="calibre24"/>        <br class="calibre24"/>        xs, ys, rs = [], [], []<br class="calibre24"/>        episode_number += 1<br class="calibre24"/>        observation = env.reset()<br class="calibre24"/>        reward_sum = 0<br class="calibre24"/>        <br class="calibre24"/>        # Save best model after every 10 episodes<br class="calibre24"/>        if (episode_number % 10 == 0) &amp; (reward_window &gt;<br class="calibre24"/>        reward_best):<br class="calibre24"/>            saver.save(sess, save_path, <br class="calibre24"/>            global_step=episode_number)<br class="calibre24"/>            reward_best = reward_window<br class="calibre24"/>            print("Save best model {:2d}: <br class="calibre24"/>            {:2.5f} (reward window)"<br class="calibre24"/>            .format(episode_number, reward_window))</pre>
+<ol start="12" class="calibre17">
+<li value="12" class="calibre15">When our algorithm reaches about 2500 episodes, we can stop training and plot the results:</li>
+</ol>
+<div class="mce-root1"><img src="../images/00045.jpeg" class="calibre62"/></div>
+<div class="mce-root1"><br class="calibre24"/>
+Figure 5.4<span>: The scores against the number of trained episodes</span></div>
+<pre class="calibre23">plt.plot(history)<br class="calibre24"/>plt.show()</pre>
+<ol start="13" class="calibre17">
+<li value="13" class="calibre15">Finally, we want to see how our final model performs in OpenAI's Gym:</li>
+</ol>
+<div class="cdpaligncenter"><img src="../images/00046.jpeg" class="calibre75"/></div>
+<div class="mce-root1">Figure 5.5: Our trained policy gradient agent in action</div>
+<pre class="calibre23">observation = env.reset()<br class="calibre24"/>while True:<br class="calibre24"/>    if True: env.render()<br class="calibre24"/><br class="calibre24"/>    # Preprocess the observation, <br class="calibre24"/>    #set input to network to be difference image<br class="calibre24"/>    obs_cur = preprocess_frame(observation)<br class="calibre24"/>    obs_diff = obs_cur - obs_prev if <br class="calibre24"/>    obs_prev is not None else np.zeros(input_dim)<br class="calibre24"/>    obs_prev = obs_cur<br class="calibre24"/><br class="calibre24"/>    # Sample an action (policy)<br class="calibre24"/>    feed = {tf_x: np.reshape(obs_diff, (1,-1))}<br class="calibre24"/>    aprob = sess.run(tf_aprob, feed) ; aprob = aprob[0,:]<br class="calibre24"/>    action = np.random.choice(n_actions, p=aprob)<br class="calibre24"/>    label = np.zeros_like(aprob) ; label[action] = 1<br class="calibre24"/><br class="calibre24"/>    # Return action to environment and extract <br class="calibre24"/>    #next observation, reward, and status<br class="calibre24"/>    observation, reward, done, info = env.step(action+1)<br class="calibre24"/>    <br class="calibre24"/>    if done: observation = env.reset()</pre>
+<p class="calibre3">As we can see, it takes quite a few training episodes before our implementation is able to win the episode more steadily. If you want to see how the agent performs while training, you can uncomment the first line of code within the <kbd class="calibre12">while</kbd> loop. This will render each observation while training.</p>
+<p class="calibre3">One of the options to improve the preceding setup is to adjust the network architecture and fine-tune the hyperparameters. A more complex network architecture could help, but it will also increase the training time. Policy gradients are the most popular method for RL these days, because they are end-to-end and have shown better results when tuned correctly.</p>
+
+
+            </article>
+
+            
+        </section>
+    </body></html>

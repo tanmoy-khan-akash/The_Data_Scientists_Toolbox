@@ -1,0 +1,54 @@
+<?xml version='1.0' encoding='utf-8'?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+  <head>
+    <title>How to do it...</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <link href="../stylesheet.css" rel="stylesheet" type="text/css"/>
+<link href="../page_styles.css" rel="stylesheet" type="text/css"/>
+</head>
+  <body id="3APV00-5e1e3ce63feb42db9ae6338e8302dfdb" class="calibre">
+        <section class="calibre1">
+
+                            <header class="calibre1">
+                    </header><h1 class="header-title" id="calibre_pb_0">How to do it...</h1>
+                
+            
+            <article class="calibre1">
+                
+<ol class="calibre17">
+<li value="1" class="calibre15">We start by importing the necessary libraries, as follows:</li>
+</ol>
+<pre class="calibre23">import numpy as np<br class="calibre24"/>from keras.models import Sequential, Model<br class="calibre24"/>from keras.layers import Input, Dense, Activation, Flatten, Reshape<br class="calibre24"/>from keras.layers import Conv2D, Conv2DTranspose, UpSampling2D<br class="calibre24"/>from keras.layers import LeakyReLU, Dropout<br class="calibre24"/>from keras.layers import BatchNormalization<br class="calibre24"/>from keras.optimizers import Adam<br class="calibre24"/>from keras import initializers<br class="calibre24"/><br class="calibre24"/><br class="calibre24"/>from keras.datasets import mnist<br class="calibre24"/><br class="calibre24"/>import matplotlib.pyplot as plt</pre>
+<ol start="2" class="calibre17">
+<li value="2" class="calibre15">By using Keras, we can easily import both datasets with the following lines of code:</li>
+</ol>
+<pre class="calibre23">(X_train, y_train), (X_test, y_test) = mnist.load_data()<br class="calibre24"/><br class="calibre24"/>img_rows, img_cols = X_train.shape[1:]<br class="calibre24"/><br class="calibre24"/>X_train = X_train.reshape(-1, img_rows*img_cols, 1).astype(np.float32)/255.</pre>
+<ol start="3" class="calibre17">
+<li value="3" class="calibre15">For our GAN, we need to define three network architectures. Let's start with  <kbd class="calibre12">discriminator_model</kbd>:</li>
+</ol>
+<pre class="calibre23"> def discriminator_model(dropout=0.5):<br class="calibre24"/>    model = Sequential()<br class="calibre24"/>    model.add(Dense(1024, input_dim=784, kernel_initializer=initializers.RandomNormal(stddev=0.02)))<br class="calibre24"/>    model.add(LeakyReLU(0.2))<br class="calibre24"/>    model.add(Dropout(dropout))<br class="calibre24"/>    model.add(Dense(512))<br class="calibre24"/>    model.add(LeakyReLU(0.2))<br class="calibre24"/>    model.add(Dropout(dropout))<br class="calibre24"/>    model.add(Dense(256))<br class="calibre24"/>    model.add(LeakyReLU(0.2))<br class="calibre24"/>    model.add(Dropout(dropout))<br class="calibre24"/>    model.add(Dense(1, activation='sigmoid'))<br class="calibre24"/>    model.compile(loss='binary_crossentropy', optimizer=adam)<br class="calibre24"/>    return model</pre>
+<ol start="4" class="calibre17">
+<li value="4" class="calibre15">Next, we define <kbd class="calibre12">generator_model</kbd>:</li>
+</ol>
+<pre class="calibre23">def generator_model():<br class="calibre24"/>    model = Sequential()<br class="calibre24"/>    model.add(Dense(256, input_dim=100, kernel_initializer=initializers.RandomNormal(stddev=0.02)))<br class="calibre24"/>    model.add(LeakyReLU(0.2))<br class="calibre24"/>    model.add(Dense(512))<br class="calibre24"/>    model.add(LeakyReLU(0.2))<br class="calibre24"/>    model.add(Dense(1024))<br class="calibre24"/>    model.add(LeakyReLU(0.2))<br class="calibre24"/>    model.add(Dense(784, activation='tanh'))<br class="calibre24"/>    model.compile(loss='binary_crossentropy', optimizer=adam)<br class="calibre24"/>    return model</pre>
+<ol start="5" class="calibre17">
+<li value="5" class="calibre15">Finally, we can create our networks and the combined network:</li>
+</ol>
+<pre class="calibre23">discriminator = discriminator_model()<br class="calibre24"/>generator = generator_model()<br class="calibre24"/>discriminator.trainable = False<br class="calibre24"/>gan_input = Input(shape=(100,))<br class="calibre24"/>x = generator(gan_input)<br class="calibre24"/>gan_output = discriminator(x)<br class="calibre24"/>gan = Model(inputs=gan_input, outputs=gan_output)<br class="calibre24"/>gan.compile(loss='binary_crossentropy', optimizer='adam')</pre>
+<ol start="6" class="calibre17">
+<li value="6" class="calibre15">Before we train our GAN, we need to define a function to plot the generated images:</li>
+</ol>
+<pre class="calibre23">def plot_images(samples=16, step=0):<br class="calibre24"/>    images = generator.predict(noise)<br class="calibre24"/>    plt.figure(figsize=(5,5))<br class="calibre24"/>    for i in range(samples):<br class="calibre24"/>        plt.subplot(4, 4, i+1)<br class="calibre24"/>        image = images[i, :,]<br class="calibre24"/>        image = np.reshape(image, [img_rows, img_cols])<br class="calibre24"/>        plt.imshow(image, cmap='gray')<br class="calibre24"/>        plt.axis('off')<br class="calibre24"/>    plt.show()</pre>
+<ol start="7" class="calibre17">
+<li value="7" class="calibre15">We can now start training our GAN. While training our model, we will output the results:</li>
+</ol>
+<pre class="calibre23">batch_size = 32<br class="calibre24"/>n_steps = 100000<br class="calibre24"/>plot_every = 1000<br class="calibre24"/><br class="calibre24"/>noise_input = np.random.uniform(-1.0, 1.0, size=[16, 100])<br class="calibre24"/>for step in range(n_steps):<br class="calibre24"/>    <br class="calibre24"/>    noise = np.random.normal(0, 1, size=[batch_size, 100])<br class="calibre24"/>    batch = X_train[np.random.randint(0, X_train.shape[0], <br class="calibre24"/>    size=batch_size)].reshape(batch_size, 784)<br class="calibre24"/><br class="calibre24"/>    gen_output = generator.predict(noise)<br class="calibre24"/>    X = np.concatenate([batch, gen_output])<br class="calibre24"/><br class="calibre24"/>    y_D = np.zeros(2*batch_size)<br class="calibre24"/>    y_D[:batch_size] = 0.9<br class="calibre24"/><br class="calibre24"/>    discriminator.trainable = True<br class="calibre24"/>    loss_D = discriminator.train_on_batch(X, y_D)<br class="calibre24"/><br class="calibre24"/>    noise = np.random.normal(0, 1, size=[batch_size, 100])<br class="calibre24"/>    y_G = np.ones(batch_size)<br class="calibre24"/>    discriminator.trainable = False<br class="calibre24"/>    loss_G = gan.train_on_batch(noise, y_G)<br class="calibre24"/>    <br class="calibre24"/>    if step % plot_every == 0:<br class="calibre24"/>        plot_images(samples=noise_input.shape[0], step=(step+1))</pre>
+<div class="cdpaligncenter"><img src="../images/00050.jpeg" class="calibre77"/></div>
+<div class="mce-root1">Figure 6.1: Examples of generated images after 100,000 steps</div>
+
+
+            </article>
+
+            
+        </section>
+    </body></html>
