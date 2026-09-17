@@ -1,0 +1,1681 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html><html xmlns:epub="http://www.idpf.org/2007/ops" xmlns="http://www.w3.org/1999/xhtml"><head><title>Introduction to TensorFlow Primitives</title><link rel="stylesheet" type="text/css" href="epub.css"/></head><body data-type="book"><section data-type="chapter" epub:type="chapter" data-pdf-bookmark="Chapter 2. Introduction to TensorFlow Primitives"><div class="chapter" id="intro_to_tensorflow_prims">
+<h1><span class="label">Chapter 2. </span>Introduction to TensorFlow Primitives</h1>
+
+
+<p>This<a data-type="indexterm" data-primary="primitives" data-secondary="TensorFlow" id="Ptens02"/> chapter will introduce you to fundamental aspects of TensorFlow. In particular, you will learn how to perform basic computation using TensorFlow. A large part of this chapter will be spent introducing the concept of tensors, and discussing how tensors are represented and manipulated within TensorFlow. This discussion will necessitate a brief overview of some of the mathematical concepts that underlie tensorial mathematics. In particular, we’ll briefly review basic linear algebra and demonstrate how to perform basic linear algebraic operations with TensorFlow.</p>
+
+<p>We’ll follow this discussion of basic mathematics with a discussion of the differences between declarative and imperative programming styles. Unlike many programming languages, TensorFlow is largely declarative. Calling a TensorFlow operation adds a description of a computation to TensorFlow’s “computation graph.” In particular, TensorFlow code “describes” computations and doesn’t actually perform them. In order to run TensorFlow code, users need to create <code>tf.Session</code> objects. We introduce the concept of sessions and describe how users perform computations with them in TensorFlow.</p>
+
+<p>We end the chapter by discussing the notion of variables. Variables in TensorFlow hold tensors and allow for stateful computation that modifies variables to occur. We demonstrate how to create variables and update their values via TensorFlow.</p>
+
+
+
+
+
+
+<section data-type="sect1" data-pdf-bookmark="Introducing Tensors"><div class="sect1" id="idm139806619148720">
+<h1>Introducing Tensors</h1>
+
+<p>Tensors are fundamental mathematical constructs in fields such as physics and engineering. Historically, however, tensors have made fewer inroads in computer science, which has traditionally been more associated with discrete mathematics and logic. This state of affairs has started to change significantly with the advent of machine learning and its foundation on continuous, vectorial mathematics. Modern machine learning is founded upon the manipulation and calculus of tensors.</p>
+
+
+
+
+
+
+
+
+<section data-type="sect2" data-pdf-bookmark="Scalars, Vectors, and Matrices"><div class="sect2" id="idm139806619146528">
+<h2>Scalars, Vectors, and Matrices</h2>
+
+<p>To<a data-type="indexterm" data-primary="tensors" data-secondary="scalars, vectors, and matrices" id="Tscal02"/><a data-type="indexterm" data-primary="scalars" id="idm139806619649280"/> start, we will give some simple examples of tensors that you might be familiar with. The simplest example of a tensor is a scalar, a single constant value drawn from the real numbers (recall that the real numbers are decimal numbers of arbitrary precision, with both positive and negative numbers permitted). Mathematically, we denote the real numbers by <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>ℝ</mi>
+</math>. More formally, we call a scalar a rank-0 tensor.</p>
+<div data-type="note" epub:type="note"><h1>Aside on Fields</h1>
+<p>Mathematically sophisticated readers will protest that it’s entirely meaningful to define tensors based on the complex numbers, or with binary numbers. More generally, it’s sufficient that the numbers come from a <em>field</em>: a mathematical collection of numbers where 0, 1, addition, multiplication, subtraction, and division are defined. Common fields include the real numbers <math xmlns="http://www.w3.org/1998/Math/MathML" alttext="double-struck upper R">
+  <mi>ℝ</mi>
+</math>, the rational numbers <math xmlns="http://www.w3.org/1998/Math/MathML" alttext="double-struck upper Q">
+  <mi>ℚ</mi>
+</math>, the complex numbers <math xmlns="http://www.w3.org/1998/Math/MathML" alttext="double-struck upper C">
+  <mi>ℂ</mi>
+</math>, and finite fields such as <math xmlns="http://www.w3.org/1998/Math/MathML" alttext="double-struck upper Z 2">
+  <msub><mi>ℤ</mi> <mn>2</mn> </msub>
+</math>. For simplicity, in much of the discussion, we will assume real valued tensors, but substituting in values from other fields is entirely reasonable.</p>
+</div>
+
+<p>If<a data-type="indexterm" data-primary="vectors" id="idm139806619638624"/> scalars are rank-0 tensors, what constitutes a rank-1 tensor? Formally, speaking, a rank-1 tensor is a vector; a list of real numbers. Traditionally, vectors are written as either column vectors</p>
+<div data-type="equation">
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
+  <mfenced open="(" close=")">
+    <mtable>
+      <mtr>
+        <mtd>
+          <mi>a</mi>
+        </mtd>
+      </mtr>
+      <mtr>
+        <mtd>
+          <mi>b</mi>
+        </mtd>
+      </mtr>
+    </mtable>
+  </mfenced>
+</math>
+</div>
+
+<p>or as row vectors</p>
+<div data-type="equation">
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
+  <mfenced open="(" close=")">
+    <mtable>
+      <mtr>
+        <mtd>
+          <mi>a</mi>
+        </mtd>
+        <mtd>
+          <mi>b</mi>
+        </mtd>
+      </mtr>
+    </mtable>
+  </mfenced>
+</math>
+</div>
+
+<p>Notationally, the collection of all column vectors of length 2 is denoted <math xmlns="http://www.w3.org/1998/Math/MathML" alttext="double-struck upper R Superscript 2 times 1">
+  <msup><mi>ℝ</mi> <mrow><mn>2</mn><mo>×</mo><mn>1</mn></mrow> </msup>
+</math> while the set of all row vectors of length 2 is <math xmlns="http://www.w3.org/1998/Math/MathML" alttext="double-struck upper R Superscript 1 times 2">
+  <msup><mi>ℝ</mi> <mrow><mn>1</mn><mo>×</mo><mn>2</mn></mrow> </msup>
+</math>. More computationally, we might say that the shape of a column vector is (2, 1), while the shape of a row vector is (1, 2). If we don’t wish to specify whether a vector is a row vector or column vector, we can say it comes from the set <math xmlns="http://www.w3.org/1998/Math/MathML" alttext="double-struck upper R squared">
+  <msup><mi>ℝ</mi> <mn>2</mn> </msup>
+</math> and has shape (2). This notion of tensor shape is quite important for understanding TensorFlow computations, and we will return to it later on in this chapter.</p>
+
+<p>One of the simplest uses of vectors is to represent coordinates in the real world. Suppose that we decide on an origin point (say the position where you’re currently standing). Then any position in the world can be represented by three displacement values from your current position (left-right displacement, front-back displacement, up-down displacement). Thus, the set of vectors (vector space) <math xmlns="http://www.w3.org/1998/Math/MathML" alttext="double-struck upper R cubed">
+  <msup><mi>ℝ</mi> <mn>3</mn> </msup>
+</math> can represent any position in the world.</p>
+
+<p>For a different example, let’s suppose that a cat is described by its height, weight, and color. Then a video game cat can be represented as a vector</p>
+<div data-type="equation">
+
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
+  <mfenced open="(" close=")">
+    <mtable>
+      <mtr>
+        <mtd>
+          <mi> height </mi>
+        </mtd>
+      </mtr>
+      <mtr>
+        <mtd>
+          <mi> weight </mi>
+        </mtd>
+      </mtr>
+      <mtr>
+        <mtd>
+          <mi> color </mi>
+        </mtd>
+      </mtr>
+    </mtable>
+  </mfenced>
+</math>
+</div>
+
+<p>in the space <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <msup><mi>ℝ</mi> <mn>3</mn> </msup>
+</math>. This<a data-type="indexterm" data-primary="featurization" id="idm139806619842384"/> type of representation is often called a <em>featurization</em>. That is, a featurization is a representation of a real-world entity as a vector (or more generally as a tensor). Nearly all machine learning algorithms operate on vectors or tensors. Thus the process of featurization is a critical part of any machine learning pipeline. Often, the featurization system can be the most sophisticated part of a machine learning system. Suppose we have a benzene molecule as illustrated in <a data-type="xref" href="#ch2-benzene">Figure 2-1</a>.</p>
+
+<figure><div id="ch2-benzene" class="figure">
+<img src="assets/tfdl_0201.png" alt="images/Benzene-2D-flat.png"/>
+<h6><span class="label">Figure 2-1. </span>A representation of a benzene molecule.</h6>
+</div></figure>
+
+<p>How can we transform this molecule into a vector suitable for a query to a machine learning system? There are a number of potential solutions to this problem, most of which exploit the idea of marking the presence of subfragments of the molecule. The presence or absence of specific subfragments is marked by setting indices in a binary vector (in <math xmlns="http://www.w3.org/1998/Math/MathML" alttext="StartSet 0 comma 1 EndSet Superscript n">
+  <msup><mrow><mo>{</mo><mn>0</mn><mo>,</mo><mn>1</mn><mo>}</mo></mrow> <mi>n</mi> </msup>
+</math>) to 1/0, respectively. This process is illustrated in <a data-type="xref" href="#ch2-circfing">Figure 2-2</a>.</p>
+
+<figure><div id="ch2-circfing" class="figure">
+<img src="assets/tfdl_0202.png" alt="images/molecular_fingerprint.jpg"/>
+<h6><span class="label">Figure 2-2. </span>Subfragments of the molecule to be featurized are selected (those containing OH). These fragments are hashed into indices in a fixed-length vector. These positions are set to 1 and all other positions are set to 0.</h6>
+</div></figure>
+
+<p>Note that this process sounds (and is) fairly complex. In fact, one of the most challenging aspects of building a machine learning system is deciding how to transform the data in question into a tensorial format. For some types of data, this transformation is obvious. For others (such as molecules), the transformation required can be quite subtle. For the practitioner of machine learning, it isn’t usually necessary to invent a new featurization method since the scholarly literature is extensive, but it will often be necessary to read research papers to understand best practices for transforming a new data stream.</p>
+
+<p>Now that we have established that rank-0 tensors are scalars (<math xmlns="http://www.w3.org/1998/Math/MathML" alttext="double-struck upper R">
+  <mi>ℝ</mi>
+</math>) and that rank-1 tensors are vectors (<math xmlns="http://www.w3.org/1998/Math/MathML" alttext="double-struck upper R Superscript n">
+  <msup><mi>ℝ</mi> <mi>n</mi> </msup>
+</math>), what is a rank-2 tensor? Traditionally, a rank-2 tensor is referred to as a matrix:</p>
+<div data-type="equation">
+
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
+  <mfenced open="(" close=")">
+    <mtable>
+      <mtr>
+        <mtd>
+          <mi>a</mi>
+        </mtd>
+        <mtd>
+          <mi>b</mi>
+        </mtd>
+      </mtr>
+      <mtr>
+        <mtd>
+          <mi>c</mi>
+        </mtd>
+        <mtd>
+          <mi>d</mi>
+        </mtd>
+      </mtr>
+    </mtable>
+  </mfenced>
+</math>
+</div>
+
+<p>This matrix has two rows and two columns. The set of all such matrices is referred to as <math xmlns="http://www.w3.org/1998/Math/MathML" alttext="double-struck upper R Superscript 2 times 2">
+  <msup><mi>ℝ</mi> <mrow><mn>2</mn><mo>×</mo><mn>2</mn></mrow> </msup>
+</math>. Returning to our notion of tensor shape earlier, the shape of this matrix is (2, 2). Matrices are traditionally used to represent transformations of vectors. For example, the action of rotating a vector in the plane by angle α can be performed by the matrix</p>
+<div data-type="equation">
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
+  <mrow>
+    <msub><mi>R</mi> <mi>α</mi> </msub>
+    <mo>=</mo>
+    <mfenced open="(" close=")">
+      <mtable>
+        <mtr>
+          <mtd>
+            <mrow>
+              <mo form="prefix">cos</mo>
+              <mo>(</mo>
+              <mi>α</mi>
+              <mo>)</mo>
+            </mrow>
+          </mtd>
+          <mtd>
+            <mrow>
+              <mo form="prefix">–sin</mo>
+              <mo>(</mo>
+              <mi>α</mi>
+              <mo>)</mo>
+            </mrow>
+          </mtd>
+        </mtr>
+        <mtr>
+          <mtd>
+            <mrow>
+              <mo form="prefix">sin</mo>
+              <mo>(</mo>
+              <mi>α</mi>
+              <mo>)</mo>
+            </mrow>
+          </mtd>
+          <mtd>
+            <mrow>
+              <mo form="prefix">cos</mo>
+              <mo>(</mo>
+              <mi>α</mi>
+              <mo>)</mo>
+            </mrow>
+          </mtd>
+        </mtr>
+      </mtable>
+    </mfenced>
+  </mrow>
+</math>
+</div>
+
+<p>To see this, note that the <em>x</em> unit vector (1, 0) is transformed by matrix multiplication into the vector (cos (α), sin (α)). (We will cover the detailed definition of matrix multiplication later in the chapter, but will simply display the result for the moment).</p>
+<div data-type="equation">
+
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
+  <mrow>
+    <mfenced open="(" close=")">
+      <mtable>
+        <mtr>
+          <mtd>
+            <mrow>
+              <mo form="prefix">cos</mo>
+              <mo>(</mo>
+              <mi>α</mi>
+              <mo>)</mo>
+            </mrow>
+          </mtd>
+          <mtd>
+            <mrow>
+              <mo form="prefix">–sin</mo>
+              <mo>(</mo>
+              <mi>α</mi>
+              <mo>)</mo>
+            </mrow>
+          </mtd>
+        </mtr>
+        <mtr>
+          <mtd>
+            <mrow>
+              <mo form="prefix">sin</mo>
+              <mo>(</mo>
+              <mi>α</mi>
+              <mo>)</mo>
+            </mrow>
+          </mtd>
+          <mtd>
+            <mrow>
+              <mo form="prefix">cos</mo>
+              <mo>(</mo>
+              <mi>α</mi>
+              <mo>)</mo>
+            </mrow>
+          </mtd>
+        </mtr>
+      </mtable>
+    </mfenced>
+    <mo>·</mo>
+    <mfenced open="(" close=")">
+      <mtable>
+        <mtr>
+          <mtd>
+            <mn>1</mn>
+          </mtd>
+        </mtr>
+        <mtr>
+          <mtd>
+            <mn>0</mn>
+          </mtd>
+        </mtr>
+      </mtable>
+    </mfenced>
+    <mo>=</mo>
+    <mfenced open="(" close=")">
+      <mtable>
+        <mtr>
+          <mtd>
+            <mrow>
+              <mo form="prefix">cos</mo>
+              <mo>(</mo>
+              <mi>α</mi>
+              <mo>)</mo>
+            </mrow>
+          </mtd>
+        </mtr>
+        <mtr>
+          <mtd>
+            <mrow>
+              <mo form="prefix">sin</mo>
+              <mo>(</mo>
+              <mi>α</mi>
+              <mo>)</mo>
+            </mrow>
+          </mtd>
+        </mtr>
+      </mtable>
+    </mfenced>
+  </mrow>
+</math>
+</div>
+
+<p>This transformation can be visualized graphically as well. <a data-type="xref" href="#ch2-circparam">Figure 2-3</a> demonstrates how the final vector corresponds to a rotation of the original unit vector.<a data-type="indexterm" data-primary="" data-startref="Tscal02" id="idm139806619671712"/></p>
+
+<figure><div id="ch2-circparam" class="figure">
+<img src="assets/tfdl_0203.png" alt="unit_circle.png"/>
+<h6><span class="label">Figure 2-3. </span>Positions on the unit circle are parameterized by cosine and sine.</h6>
+</div></figure>
+</div></section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<section data-type="sect2" data-pdf-bookmark="Matrix Mathematics"><div class="sect2" id="idm139806619145584">
+<h2>Matrix Mathematics</h2>
+
+<p>There<a data-type="indexterm" data-primary="tensors" data-secondary="matrix mathematics" id="idm139806619667072"/><a data-type="indexterm" data-primary="matrix mathematics" id="idm139806619666064"/> are a number of standard mathematical operations on matrices that machine learning programs use repeatedly. We will briefly review some of the most fundamental of these operations.</p>
+
+<p>The matrix transpose is a convenient operation that flips a matrix around its diagonal. Mathematically, suppose <em>A</em> is a matrix; then the transpose matrix <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <msup><mi>A</mi> <mi>T</mi> </msup>
+</math> is defined by equation <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mrow>
+    <msubsup><mi>A</mi> <mrow><mi>i</mi><mi>j</mi></mrow> <mi>T</mi> </msubsup>
+    <mo>=</mo>
+    <msub><mi>A</mi> <mrow><mi>j</mi><mi>i</mi></mrow> </msub>
+  </mrow>
+</math>. For example, the transpose of the rotation matrix <math xmlns="http://www.w3.org/1998/Math/MathML" alttext="upper R Subscript alpha">
+  <msub><mi>R</mi> <mi>α</mi> </msub>
+</math> is</p>
+<div data-type="equation">
+
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
+  <mrow>
+    <msubsup><mi>R</mi> <mrow><mi>α</mi></mrow> <mi>T</mi> </msubsup>
+    <mo>=</mo>
+    <mfenced open="(" close=")">
+      <mtable>
+        <mtr>
+          <mtd>
+            <mrow>
+              <mo form="prefix">cos</mo>
+              <mo>(</mo>
+              <mi>α</mi>
+              <mo>)</mo>
+            </mrow>
+          </mtd>
+          <mtd>
+            <mrow>
+              <mo form="prefix">sin</mo>
+              <mo>(</mo>
+              <mi>α</mi>
+              <mo>)</mo>
+            </mrow>
+          </mtd>
+        </mtr>
+        <mtr>
+          <mtd>
+            <mrow>
+              <mo form="prefix">–sin</mo>
+              <mo>(</mo>
+              <mi>α</mi>
+              <mo>)</mo>
+            </mrow>
+          </mtd>
+          <mtd>
+            <mrow>
+              <mo form="prefix">cos</mo>
+              <mo>(</mo>
+              <mi>α</mi>
+              <mo>)</mo>
+            </mrow>
+          </mtd>
+        </mtr>
+      </mtable>
+    </mfenced>
+  </mrow>
+</math>
+</div>
+
+<p>Addition of matrices is only defined for matrices of the same shape and is simply performed elementwise. For example:</p>
+<div data-type="equation">
+
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
+  <mrow>
+    <mfenced open="(" close=")">
+      <mtable>
+        <mtr>
+          <mtd>
+            <mn>1</mn>
+          </mtd>
+          <mtd>
+            <mn>2</mn>
+          </mtd>
+        </mtr>
+        <mtr>
+          <mtd>
+            <mn>3</mn>
+          </mtd>
+          <mtd>
+            <mn>4</mn>
+          </mtd>
+        </mtr>
+      </mtable>
+    </mfenced>
+    <mo>+</mo>
+    <mfenced open="(" close=")">
+      <mtable>
+        <mtr>
+          <mtd>
+            <mn>1</mn>
+          </mtd>
+          <mtd>
+            <mn>1</mn>
+          </mtd>
+        </mtr>
+        <mtr>
+          <mtd>
+            <mn>1</mn>
+          </mtd>
+          <mtd>
+            <mn>1</mn>
+          </mtd>
+        </mtr>
+      </mtable>
+    </mfenced>
+    <mo>=</mo>
+    <mfenced open="(" close=")">
+      <mtable>
+        <mtr>
+          <mtd>
+            <mn>2</mn>
+          </mtd>
+          <mtd>
+            <mn>3</mn>
+          </mtd>
+        </mtr>
+        <mtr>
+          <mtd>
+            <mn>4</mn>
+          </mtd>
+          <mtd>
+            <mn>5</mn>
+          </mtd>
+        </mtr>
+      </mtable>
+    </mfenced>
+  </mrow>
+</math>
+</div>
+
+<p>Similarly, matrices can be multiplied by scalars. In this case, each element of the matrix is simply multiplied elementwise by the scalar in question:</p>
+<div data-type="equation">
+
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
+  <mrow>
+    <mn>2</mn>
+    <mo>·</mo>
+    <mfenced open="(" close=")">
+      <mtable>
+        <mtr>
+          <mtd>
+            <mn>1</mn>
+          </mtd>
+          <mtd>
+            <mn>2</mn>
+          </mtd>
+        </mtr>
+        <mtr>
+          <mtd>
+            <mn>3</mn>
+          </mtd>
+          <mtd>
+            <mn>4</mn>
+          </mtd>
+        </mtr>
+      </mtable>
+    </mfenced>
+    <mo>=</mo>
+    <mfenced open="(" close=")">
+      <mtable>
+        <mtr>
+          <mtd>
+            <mn>2</mn>
+          </mtd>
+          <mtd>
+            <mn>4</mn>
+          </mtd>
+        </mtr>
+        <mtr>
+          <mtd>
+            <mn>6</mn>
+          </mtd>
+          <mtd>
+            <mn>8</mn>
+          </mtd>
+        </mtr>
+      </mtable>
+    </mfenced>
+  </mrow>
+</math>
+</div>
+
+<p>Furthermore, it is sometimes possible to multiply two matrices directly.
+This notion of matrix multiplication is probably the most important mathematical concept associated with matrices. Note specifically that matrix multiplication is not the same notion as elementwise multiplication of matrices! Rather, suppose we have a matrix <em>A</em> of shape (<em>m</em>, <em>n</em>) with <em>m</em> rows and <em>n</em> columns. Then, <em>A</em> can be multiplied on the right by any matrix <em>B</em> of shape (<em>n</em>, <em>k</em>) (where <em>k</em> is any positive integer) to form matrix <em>AB</em> of shape (<em>m</em>, <em>k</em>). For the actual mathematical description, suppose <em>A</em> is a matrix of shape (<em>m</em>, <em>n</em>) and <em>B</em> is a matrix of shape (<em>n</em>, <em>k</em>). Then <em>AB</em> is defined by</p>
+<div data-type="equation">
+
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
+  <mrow>
+    <msub><mrow><mo>(</mo><mi>A</mi><mi>B</mi><mo>)</mo></mrow> <mrow><mi>i</mi><mi>j</mi></mrow> </msub>
+    <mo>=</mo>
+    <munder><mo>∑</mo> <mi>k</mi> </munder>
+    <msub><mi>A</mi> <mrow><mi>i</mi><mi>k</mi></mrow> </msub>
+    <msub><mi>B</mi> <mrow><mi>k</mi><mi>j</mi></mrow> </msub>
+  </mrow>
+</math>
+</div>
+
+<p>We displayed a matrix multiplication equation earlier in brief. Let’s expand that example now that we have the formal definition:</p>
+<div data-type="equation">
+
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
+  <mrow>
+    <mfenced open="(" close=")">
+      <mtable>
+        <mtr>
+          <mtd>
+            <mrow>
+              <mo form="prefix">cos</mo>
+              <mo>(</mo>
+              <mi>α</mi>
+              <mo>)</mo>
+            </mrow>
+          </mtd>
+          <mtd>
+            <mrow>
+              <mo form="prefix">–sin</mo>
+              <mo>(</mo>
+              <mi>α</mi>
+              <mo>)</mo>
+            </mrow>
+          </mtd>
+        </mtr>
+        <mtr>
+          <mtd>
+            <mrow>
+              <mo form="prefix">sin</mo>
+              <mo>(</mo>
+              <mi>α</mi>
+              <mo>)</mo>
+            </mrow>
+          </mtd>
+          <mtd>
+            <mrow>
+              <mo form="prefix">cos</mo>
+              <mo>(</mo>
+              <mi>α</mi>
+              <mo>)</mo>
+            </mrow>
+          </mtd>
+        </mtr>
+      </mtable>
+    </mfenced>
+    <mo>·</mo>
+    <mfenced open="(" close=")">
+      <mtable>
+        <mtr>
+          <mtd>
+            <mn>1</mn>
+          </mtd>
+        </mtr>
+        <mtr>
+          <mtd>
+            <mn>0</mn>
+          </mtd>
+        </mtr>
+      </mtable>
+    </mfenced>
+    <mo>=</mo>
+    <mfenced open="(" close=")">
+      <mtable>
+        <mtr>
+          <mtd>
+            <mrow>
+              <mo form="prefix">cos</mo>
+              <mo>(</mo>
+              <mi>α</mi>
+              <mo>)</mo>
+              <mo>·</mo>
+              <mn>1</mn>
+              <mo>–</mo>
+              <mo form="prefix">sin</mo>
+              <mo>(</mo>
+              <mi>α</mi>
+              <mo>)</mo>
+              <mo>·</mo>
+              <mn>0</mn>
+            </mrow>
+          </mtd>
+        </mtr>
+        <mtr>
+          <mtd>
+            <mrow>
+              <mo form="prefix">sin</mo>
+              <mo>(</mo>
+              <mi>α</mi>
+              <mo>)</mo>
+              <mo>·</mo>
+              <mn>1</mn>
+              <mo>–</mo>
+              <mo form="prefix">cos</mo>
+              <mo>(</mo>
+              <mi>α</mi>
+              <mo>)</mo>
+              <mo>·</mo>
+              <mn>0</mn>
+            </mrow>
+          </mtd>
+        </mtr>
+      </mtable>
+    </mfenced>
+    <mo>=</mo>
+    <mfenced open="(" close=")">
+      <mtable>
+        <mtr>
+          <mtd>
+            <mrow>
+              <mo form="prefix">cos</mo>
+              <mo>(</mo>
+              <mi>α</mi>
+              <mo>)</mo>
+            </mrow>
+          </mtd>
+        </mtr>
+        <mtr>
+          <mtd>
+            <mrow>
+              <mo form="prefix">sin</mo>
+              <mo>(</mo>
+              <mi>α</mi>
+              <mo>)</mo>
+            </mrow>
+          </mtd>
+        </mtr>
+      </mtable>
+    </mfenced>
+  </mrow>
+</math>
+</div>
+
+<p>The fundamental takeaway is that rows of one matrix are multiplied against columns of the other matrix.</p>
+
+<p>This definition hides a number of subtleties. Note first that matrix multiplication is not commutative. That is, <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mrow>
+    <mi>A</mi>
+    <mi>B</mi>
+    <mo>≠</mo>
+    <mi>B</mi>
+    <mi>A</mi>
+  </mrow>
+</math> in general. In fact, <em>AB</em> can exist when <em>BA</em> is not meaningful. Suppose, for example, <em>A</em> is a matrix of shape (2, 3) and <em>B</em> is a matrix of shape (3, 4). Then <em>AB</em> is a matrix of shape (2, 4). However, <em>BA</em> is not defined since the respective dimensions (4 and 2) don’t match. As another subtlety, note that, as in the rotation example, a matrix of shape (<em>m</em>, <em>n</em>) can be multiplied on the right by a matrix of shape (<em>n</em>, 1). However, a matrix of shape (<em>n</em>, 1) is simply a column vector. So, it is meaningful to multiply matrices by vectors. Matrix-vector multiplication is one of the fundamental building blocks of common machine learning systems.</p>
+
+<p>One of the nicest properties of standard multiplication is that it is a linear operation. More precisely, a function <em>f</em> is called linear if <math xmlns="http://www.w3.org/1998/Math/MathML" alttext="f left-parenthesis x plus y right-parenthesis equals f left-parenthesis x right-parenthesis plus f left-parenthesis y right-parenthesis">
+  <mrow>
+    <mi>f</mi>
+    <mo>(</mo>
+    <mi>x</mi>
+    <mo>+</mo>
+    <mi>y</mi>
+    <mo>)</mo>
+    <mo>=</mo>
+    <mi>f</mi>
+    <mo>(</mo>
+    <mi>x</mi>
+    <mo>)</mo>
+    <mo>+</mo>
+    <mi>f</mi>
+    <mo>(</mo>
+    <mi>y</mi>
+    <mo>)</mo>
+  </mrow>
+</math> and <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mrow>
+    <mi>f</mi>
+    <mo>(</mo>
+    <mi>c</mi>
+    <mi>x</mi>
+    <mo>)</mo>
+    <mo>=</mo>
+    <mi>c</mi>
+    <mi>f</mi>
+    <mo>(</mo>
+    <mi>x</mi>
+    <mo>)</mo>
+  </mrow>
+</math> where <em>c</em> is a scalar. To demonstrate that scalar multiplication is linear, suppose that <em>a</em>, <em>b</em>, <em>c</em>, <em>d</em> are all real numbers. Then we have</p>
+<div data-type="equation">
+
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
+  <mrow>
+    <mi>a</mi>
+    <mo>·</mo>
+    <mo>(</mo>
+    <mi>b</mi>
+    <mo>·</mo>
+    <mi>c</mi>
+    <mo>)</mo>
+    <mo>=</mo>
+    <mi>b</mi>
+    <mo>·</mo>
+    <mo>(</mo>
+    <mi>a</mi>
+    <mi>c</mi>
+    <mo>)</mo>
+  </mrow>
+</math>
+</div>
+<div data-type="equation">
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
+  <mrow>
+    <mi>a</mi>
+    <mo>·</mo>
+    <mo>(</mo>
+    <mi>c</mi>
+    <mo>+</mo>
+    <mi>d</mi>
+    <mo>)</mo>
+    <mo>=</mo>
+    <mi>a</mi>
+    <mi>c</mi>
+    <mo>+</mo>
+    <mi>a</mi>
+    <mi>d</mi>
+  </mrow>
+</math>
+</div>
+
+<p>We make use of the commutative and distributive properties of scalar multiplication here. Now suppose that instead, <em>A</em>, <em>C</em>, <em>D</em> are now matrices where <em>C</em>, <em>D</em> are of the same size and it is meaningful to multiply <em>A</em> on the right with either <em>C</em> or <em>D</em> (<em>b</em> remains a real number). Then matrix multiplication is a linear operator:</p>
+<div data-type="equation">
+
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
+  <mrow>
+    <mi>A</mi>
+    <mo>(</mo>
+    <mi>b</mi>
+    <mo>·</mo>
+    <mi>C</mi>
+    <mo>)</mo>
+    <mo>=</mo>
+    <mi>b</mi>
+    <mo>·</mo>
+    <mo>(</mo>
+    <mi>A</mi>
+    <mi>C</mi>
+    <mo>)</mo>
+  </mrow>
+</math>
+</div>
+<div data-type="equation">
+
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
+  <mrow>
+    <mi>A</mi>
+    <mo>(</mo>
+    <mi>C</mi>
+    <mo>+</mo>
+    <mi>D</mi>
+    <mo>)</mo>
+    <mo>=</mo>
+    <mi>A</mi>
+    <mi>C</mi>
+    <mo>+</mo>
+    <mi>A</mi>
+    <mi>D</mi>
+  </mrow>
+</math>
+</div>
+
+<p>Put another way, matrix multiplication is distributive and commutes with scalar multiplication. In fact, it can be shown that any linear transformation on vectors corresponds to a matrix multiplication. For a computer science analogy, think of linearity as a property demanded by an abstract method in a superclass. Then standard multiplication and matrix multiplication are concrete implementations of that abstract method for different subclasses (respectively real numbers and matrices).</p>
+</div></section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<section data-type="sect2" data-pdf-bookmark="Tensors"><div class="sect2" id="idm139806619667920">
+<h2>Tensors</h2>
+
+<p>In<a data-type="indexterm" data-primary="tensors" data-secondary="rank-3 tensors" id="idm139806623012176"/><a data-type="indexterm" data-primary="rank-3 tensors" id="idm139806623011168"/> the previous sections, we introduced the notion of scalars as rank-0 tensors, vectors as rank-1 tensors, and matrices as rank-2 tensors. What then is a rank-3 tensor? Before passing to a general definition, it can help to think about the commonalities between scalars, vectors, and matrices. Scalars are single numbers. Vectors are lists of numbers. To pick out any particular element of a vector requires knowing its index. Hence, we need one index element into the vector (thus a rank-1 tensor). Matrices are tables of numbers. To pick out any particular element of a matrix requires knowing its row and column. Hence, we need two index elements (thus a rank-2 tensor). It follows naturally that a rank-3 tensor is a set of numbers where there are three required indices. It can help to think of a rank-3 tensor as a rectangular prism of numbers, as illustrated in <a data-type="xref" href="#ch2-rank3">Figure 2-4</a>.</p>
+
+<figure><div id="ch2-rank3" class="figure">
+<img src="assets/tfdl_0204.png" alt="images/3tensor.gif"/>
+<h6><span class="label">Figure 2-4. </span>A rank-3 tensor can be visualized as a rectangular prism of numbers.</h6>
+</div></figure>
+
+<p>The rank-3 tensor <em>T</em> displayed in the figure is of shape (<em>N</em>, <em>N</em>, <em>N</em>). An arbitrary element of the tensor would then be selected by specifying (<em>i</em>, <em>j</em>, <em>k</em>) as indices.</p>
+
+<p>There is a linkage between tensors and shapes. A rank-1 tensor has a shape of dimension 1, a rank-2 tensor a shape of dimension 2, and a rank-3 tensor of dimension 3. You might protest that this contradicts our earlier discussion of row and column vectors. By our definition, a column vector has shape (<em>n</em>, 1). Wouldn’t that make a column vector a rank-2 tensor (or a matrix)? This is exactly what has happened. Recall that a vector which is not specified to be a row vector or column vector has shape (<em>n</em>). When we specify that a vector is a row vector or a column vector, we in fact specify a method of transforming the underlying vector into a matrix. This type of dimension expansion is a common trick in tensor manipulation.</p>
+
+<p>Note that another way of thinking about a rank-3 tensor is as a list of matrices all with the same shape. Suppose that <em>W</em> is a matrix with shape (<em>n</em>, <em>n</em>). Then the tensor <math xmlns="http://www.w3.org/1998/Math/MathML" alttext="upper T Subscript i j k Baseline equals left-parenthesis upper W 1 comma ellipsis comma upper W Subscript n Baseline right-parenthesis">
+  <mrow>
+    <msub><mi>T</mi> <mrow><mi>i</mi><mi>j</mi><mi>k</mi></mrow> </msub>
+    <mo>=</mo>
+    <mrow>
+      <mo>(</mo>
+      <msub><mi>W</mi> <mn>1</mn> </msub>
+      <mo>,</mo>
+      <mo>⋯</mo>
+      <mo>,</mo>
+      <msub><mi>W</mi> <mi>n</mi> </msub>
+      <mo>)</mo>
+    </mrow>
+  </mrow>
+</math> consists of <em>n</em> copies of the matrix <em>W</em>.</p>
+
+<p>Note that a black-and-white image can be represented as a rank-2 tensor. Suppose we have a 224 × 224-pixel black and white image. Then, pixel (<em>i</em>, <em>j</em>) is 1/0 to encode a black/white pixel, respectively. It follows that a black and white image can be represented as a matrix of shape (224, 224). Now, consider a
+ 224 × 224 color image. The color at a particular pixel is typically represented by three separate RGB channels. That is, pixel (<em>i</em>, <em>j</em>) is represented as a tuple of numbers (<em>r</em>, <em>g</em>, <em>b</em>) that encode the amount of red, green, and blue at the pixel, respectively. <em>r</em>, <em>g</em>, <em>b</em> are typically integers from 0 to 255. It follows now that the color image can be encoded as a rank-3 tensor of shape (224, 224, 3). Continuing the analogy, consider a color video. Suppose that each frame of the video is a 224 × 224 color image. Then a minute of video (at 60 fps) would be a rank-4 tensor of shape (224, 224, 3, 3600). Continuing even further, a collection of 10 such videos would then form a rank-5 tensor of shape (10, 224, 224, 3, 3600). In general, tensors provide for a convenient representation of numeric data. In practice, it’s not common to see tensors of higher order than rank-5 tensors, but it’s smart to design any tensor software to allow for arbitrary tensors since intelligent users will always come up with use cases designers don’t consider.</p>
+</div></section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<section data-type="sect2" data-pdf-bookmark="Tensors in Physics"><div class="sect2" id="idm139806622988688">
+<h2>Tensors in Physics</h2>
+
+<p>Tensors<a data-type="indexterm" data-primary="tensors" data-secondary="in physics" data-secondary-sortas="physics" id="idm139806622981504"/><a data-type="indexterm" data-primary="physics, tensors in" id="idm139806622980224"/> are used widely in physics to encode fundamental physical quantities. For example, the stress tensor is commonly used in material science to define the stress at a point within a material. Mathematically, the stress tensor is a rank-2 tensor of shape (3, 3):</p>
+<div data-type="equation">
+
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
+  <mrow>
+    <mi>σ</mi>
+    <mo>=</mo>
+    <mfenced open="(" close=")">
+      <mtable>
+        <mtr>
+          <mtd>
+            <msub><mi>σ</mi> <mn>11</mn> </msub>
+          </mtd>
+          <mtd>
+            <msub><mi>τ</mi> <mn>12</mn> </msub>
+          </mtd>
+          <mtd>
+            <msub><mi>τ</mi> <mn>13</mn> </msub>
+          </mtd>
+        </mtr>
+        <mtr>
+          <mtd>
+            <msub><mi>τ</mi> <mn>21</mn> </msub>
+          </mtd>
+          <mtd>
+            <msub><mi>σ</mi> <mn>22</mn> </msub>
+          </mtd>
+          <mtd>
+            <msub><mi>τ</mi> <mn>23</mn> </msub>
+          </mtd>
+        </mtr>
+        <mtr>
+          <mtd>
+            <msub><mi>τ</mi> <mn>31</mn> </msub>
+          </mtd>
+          <mtd>
+            <msub><mi>τ</mi> <mn>32</mn> </msub>
+          </mtd>
+          <mtd>
+            <msub><mi>σ</mi> <mn>33</mn> </msub>
+          </mtd>
+        </mtr>
+      </mtable>
+    </mfenced>
+  </mrow>
+</math>
+</div>
+
+<p>Then, suppose that <em>n</em> is a vector of shape (3) that encodes a direction. The stress <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <msup><mi>T</mi> <mi>n</mi> </msup>
+</math> in direction <em>n</em> is specified by the vector <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mrow>
+    <msup><mi>T</mi> <mi>n</mi> </msup>
+    <mo>=</mo>
+    <mi>T</mi>
+    <mo>·</mo>
+    <mi>n</mi>
+  </mrow>
+</math> (note the matrix-vector multiplication). This relationship is depicted pictorially in <a data-type="xref" href="#ch2-stress">Figure 2-5</a>.</p>
+
+<figure><div id="ch2-stress" class="figure">
+<img src="assets/tfdl_0205.png" alt="images/stress_energy_small.png"/>
+<h6><span class="label">Figure 2-5. </span>A 3D pictorial depiction of the components of stress.</h6>
+</div></figure>
+
+<p>As another physical example, Einstein’s field equations of general relativity are commonly expressed in tensorial format:</p>
+<div data-type="equation">
+
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
+  <mrow>
+    <msub><mi>R</mi> <mrow><mi>μ</mi><mi>ν</mi></mrow> </msub>
+    <mo>-</mo>
+    <mfrac><mn>1</mn> <mn>2</mn></mfrac>
+    <mi>R</mi>
+    <msub><mi>g</mi> <mrow><mi>μ</mi><mi>ν</mi></mrow> </msub>
+    <mo>+</mo>
+    <mi>Λ</mi>
+    <msub><mi>g</mi> <mrow><mi>μ</mi><mi>ν</mi></mrow> </msub>
+    <mo>=</mo>
+    <mfrac><mrow><mn>8</mn><mi>π</mi><mi>G</mi></mrow> <msup><mi>c</mi> <mn>4</mn> </msup></mfrac>
+    <msub><mi>T</mi> <mrow><mi>μ</mi><mi>ν</mi></mrow> </msub>
+  </mrow>
+</math>
+</div>
+
+<p>Here <math xmlns="http://www.w3.org/1998/Math/MathML" alttext="upper R Subscript mu nu">
+  <msub><mi>R</mi> <mrow><mi>μ</mi><mi>ν</mi></mrow> </msub>
+</math> is the Ricci curvature tensor, <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <msub><mi>g</mi> <mrow><mi>μ</mi><mi>ν</mi></mrow> </msub>
+</math> is the metric tensor, <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <msub><mi>T</mi> <mrow><mi>μ</mi><mi>ν</mi></mrow> </msub>
+</math> is the stress-energy tensor, and the remaining quantities are scalars. Note, however, that there’s an important subtlety distinguishing these tensors and the other tensors we’ve discussed previously. Quantities like the metric tensor provide a separate tensor (in the sense of an array of numbers) for each point in space-time (mathematically, the metric tensor is a tensor field). The same holds for the stress tensor previously discussed, and for the other tensors in these equations. At a given point in space-time, each of these quantities becomes a symmetric rank-2 tensor of shape (4, 4) using our notation.</p>
+
+<p>Part of the power of modern tensor calculus systems such as TensorFlow is that some of the mathematical machinery long used for classical physics can now be adapted to solve applied problems in image processing and language understanding. At the same time, today’s tensor calculus systems are still limited compared with the mathematical machinery of physicists. For example, there’s no simple way to talk about a quantity such as the metric tensor using TensorFlow yet. We hope that as tensor calculus becomes more fundamental to computer science, the situation will change and that systems like TensorFlow will serve as a bridge between the physical world and the computational world.</p>
+</div></section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<section data-type="sect2" data-pdf-bookmark="Mathematical Asides"><div class="sect2" id="idm139806622925152">
+<h2>Mathematical Asides</h2>
+
+<p>The<a data-type="indexterm" data-primary="tensors" data-secondary="as multilinear functions" data-secondary-sortas="multilinear functions" id="idm139806622923584"/><a data-type="indexterm" data-primary="multilinear functions" id="idm139806622922288"/> discussion so far in this chapter has introduced tensors informally via example and illustration. In our definition, a tensor is simply an array of numbers. It’s often convenient to view a tensor as a function instead. The most common definition introduces a tensor as a multilinear function from a product of vector spaces to the real numbers:</p>
+<div data-type="equation">
+
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
+  <mrow>
+    <mi>T</mi>
+    <mo>:</mo>
+    <msub><mi>V</mi> <mn>1</mn> </msub>
+    <mo>×</mo>
+    <msub><mi>V</mi> <mn>2</mn> </msub>
+    <mo>×</mo>
+    <mo>⋯</mo>
+    <msub><mi>V</mi> <mi>n</mi> </msub>
+    <mo>→</mo>
+    <mi>ℝ</mi>
+  </mrow>
+</math>
+</div>
+
+<p>This definition uses a number of terms you haven’t seen. A<a data-type="indexterm" data-primary="vector spaces" id="idm139806622911808"/> vector space is simply a collection of vectors. You’ve seen a few examples of vector spaces such as <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <msup><mi>ℝ</mi> <mn>3</mn> </msup>
+</math> or generally <math xmlns="http://www.w3.org/1998/Math/MathML" alttext="double-struck upper R Superscript n">
+  <msup><mi>ℝ</mi> <mi>n</mi> </msup>
+</math>. We won’t lose any generality by holding that <math xmlns="http://www.w3.org/1998/Math/MathML" alttext="upper V Subscript i Baseline equals double-struck upper R Superscript d Super Subscript i">
+  <mrow>
+    <msub><mi>V</mi> <mi>i</mi> </msub>
+    <mo>=</mo>
+    <msup><mi>ℝ</mi> <msub><mi>d</mi> <mi>i</mi> </msub> </msup>
+  </mrow>
+</math>. As we defined previously, a function <em>f</em> is linear if <math xmlns="http://www.w3.org/1998/Math/MathML" alttext="f left-parenthesis x plus y right-parenthesis equals f left-parenthesis x right-parenthesis plus f left-parenthesis y right-parenthesis">
+  <mrow>
+    <mi>f</mi>
+    <mo>(</mo>
+    <mi>x</mi>
+    <mo>+</mo>
+    <mi>y</mi>
+    <mo>)</mo>
+    <mo>=</mo>
+    <mi>f</mi>
+    <mo>(</mo>
+    <mi>x</mi>
+    <mo>)</mo>
+    <mo>+</mo>
+    <mi>f</mi>
+    <mo>(</mo>
+    <mi>y</mi>
+    <mo>)</mo>
+  </mrow>
+</math> and <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mrow>
+    <mi>f</mi>
+    <mo>(</mo>
+    <mi>c</mi>
+    <mi>x</mi>
+    <mo>)</mo>
+    <mo>=</mo>
+    <mi>c</mi>
+    <mi>f</mi>
+    <mo>(</mo>
+    <mi>x</mi>
+    <mo>)</mo>
+  </mrow>
+</math>. A multilinear function is simply a function that is linear in each argument. This function can be viewed as assigning individual entries of a multidimensional array, when provided indices into the array as arguments.</p>
+
+<p>We won’t use this more mathematical definition much in this book, but it serves as a useful bridge to connect the deep learning concepts you will learn about with the centuries of mathematical research that have been undertaken on tensors by the physics and mathematics communities.</p>
+<div data-type="warning" epub:type="warning"><h1>Covariance and Contravariance</h1>
+<p>Our<a data-type="indexterm" data-primary="covariant indices" id="idm139806622884800"/><a data-type="indexterm" data-primary="contravariant indices" id="idm139806622884064"/> definition here has swept many details under the rug that would
+need to be carefully attended to for a formal treatment. For example, we
+don’t touch upon the notion of covariant and contravariant indices here.
+What we call a rank-<em>n</em> tensor is better described as a (<em>p</em>, <em>q</em>)-tensor where <em>n</em> = <em>p</em> + <em>q</em> and
+<em>p</em> is the number of contravariant indices, and <em>q</em>
+the number of covariant indices. Matrices are (1,1)-tensors, for example.
+As a subtlety, there are rank-2 tensors that are not matrices! We won’t dig into
+these topics carefully here since they don’t crop up much in machine learning,
+but we encourage you to understand how covariance and contravariance
+affect the machine learning systems you construct.</p>
+</div>
+</div></section>
+
+
+
+
+
+</div></section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<section data-type="sect1" data-pdf-bookmark="Basic Computations in TensorFlow"><div class="sect1" id="idm139806622878992">
+<h1>Basic Computations in TensorFlow</h1>
+
+<p>We’ve<a data-type="indexterm" data-primary="TensorFlow" data-secondary="basic computations in" id="TFcomp02"/><a data-type="indexterm" data-primary="tensors" data-secondary="creating and manipulating" id="Tcreat02"/><a data-type="indexterm" data-primary="computations in TensorFlow" id="Ctensor02"/> spent the last sections covering the mathematical definitions of various tensors. It’s now time to cover how to create and manipulate tensors using TensorFlow. For this section, we recommend you follow along using an interactive Python session (with IPython). Many of the basic TensorFlow concepts are easiest to understand after experimenting with them directly.</p>
+
+
+
+
+
+
+
+
+<section data-type="sect2" data-pdf-bookmark="Installing TensorFlow and Getting Started"><div class="sect2" id="idm139806620098192">
+<h2>Installing TensorFlow and Getting Started</h2>
+
+<p>Before<a data-type="indexterm" data-primary="TensorFlow" data-secondary="installing and getting started" id="idm139806620096688"/> continuing this section, you will need to install TensorFlow on your machine. The details of installation will vary depending on your particular hardware, so we refer you to <a href="https://www.tensorflow.org/api_docs/">the official TensorFlow documentation</a> for<a data-type="indexterm" data-primary="TensorFlow" data-secondary="documentation" id="idm139806620094672"/> more details.</p>
+
+<p>Although there are frontends to TensorFlow in multiple programming languages, we will exclusively use the TensorFlow Python API<a data-type="indexterm" data-primary="Python API" id="idm139806620093008"/> in the remainder of this book. We<a data-type="indexterm" data-primary="Anaconda Python" id="idm139806620092128"/> recommend that you install <a href="https://anaconda.org/anaconda/python">Anaconda Python</a>, which packages many useful numerical libraries along with the base Python executable.</p>
+
+<p>Once you’ve installed TensorFlow, we recommend that you invoke it interactively while you’re learning the basic API (see <a data-type="xref" href="#ch2-interactive-session">Example 2-1</a>). When<a data-type="indexterm" data-primary="tf.InteractiveSession()" id="idm139806620089152"/> experimenting with TensorFlow interactively, it’s convenient to use <code>tf.InteractiveSession()</code>. Invoking this statement within IPython (an interactive Python shell) will make TensorFlow behave almost imperatively, allowing beginners to play with tensors much more easily. You will learn about imperative versus declarative style in greater depth later in this chapter.</p>
+<div id="ch2-interactive-session" data-type="example">
+<h5><span class="label">Example 2-1. </span>Initialize an interactive TensorFlow session</h5>
+
+<pre data-type="programlisting" data-code-language="python"><code class="o">&gt;&gt;&gt;</code> <code class="kn">import</code> <code class="nn">tensorflow</code> <code class="kn">as</code> <code class="nn">tf</code>
+<code class="o">&gt;&gt;&gt;</code> <code class="n">tf</code><code class="o">.</code><code class="n">InteractiveSession</code><code class="p">()</code>
+<code class="o">&lt;</code><code class="n">tensorflow</code><code class="o">.</code><code class="n">python</code><code class="o">.</code><code class="n">client</code><code class="o">.</code><code class="n">session</code><code class="o">.</code><code class="n">InteractiveSession</code><code class="o">&gt;</code></pre></div>
+
+<p>The rest of the code in this section will assume that an interactive session has been loaded.</p>
+</div></section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<section data-type="sect2" data-pdf-bookmark="Initializing Constant Tensors"><div class="sect2" id="idm139806629668960">
+<h2>Initializing Constant Tensors</h2>
+
+<p>Until<a data-type="indexterm" data-primary="tensors" data-secondary="initializing constant tensors" id="idm139806622162736"/><a data-type="indexterm" data-primary="tf.zeros()" id="idm139806621093392"/><a data-type="indexterm" data-primary="tf.ones()" id="idm139806619025840"/> now, we’ve discussed tensors as abstract mathematical entities. However, a system like TensorFlow must run on a real computer, so any tensors must live on computer memory in order to be useful to computer programmers. TensorFlow provides a number of functions that instantiate basic tensors in memory. The simplest of these are <code>tf.zeros()</code> and <code>tf.ones()</code>. <code>tf.zeros()</code> takes a tensor shape (represented as a Python tuple) and returns a tensor of that shape filled with zeros. Let’s try invoking this command in the shell (<a data-type="xref" href="#ch2-zeros">Example 2-2</a>).</p>
+<div id="ch2-zeros" data-type="example">
+<h5><span class="label">Example 2-2. </span>Create a zeros tensor</h5>
+
+<pre data-type="programlisting" data-code-language="python"><code class="o">&gt;&gt;&gt;</code> <code class="n">tf</code><code class="o">.</code><code class="n">zeros</code><code class="p">(</code><code class="mi">2</code><code class="p">)</code>
+<code class="o">&lt;</code><code class="n">tf</code><code class="o">.</code><code class="n">Tensor</code> <code class="s1">'zeros:0'</code> <code class="n">shape</code><code class="o">=</code><code class="p">(</code><code class="mi">2</code><code class="p">,)</code> <code class="n">dtype</code><code class="o">=</code><code class="n">float32</code><code class="o">&gt;</code></pre></div>
+
+<p>TensorFlow<a data-type="indexterm" data-primary="tf.Tensor.eval()" id="idm139806620083168"/><a data-type="indexterm" data-primary="tf.InteractiveSession()" id="idm139806620082560"/><a data-type="indexterm" data-primary="tensors" data-secondary="evaluating value of tensors" id="idm139806620081920"/> returns a reference to the desired tensor rather than the value of the tensor itself. To force the value of the tensor to be returned, we will use the method <code>tf.Tensor.eval()</code> of tensor objects (<a data-type="xref" href="#ch2-evaluate">Example 2-3</a>). Since we have initialized <code>tf.InteractiveSession()</code>, this method will return the value of the zeros tensor to us.</p>
+<div id="ch2-evaluate" data-type="example">
+<h5><span class="label">Example 2-3. </span>Evaluate the value of a tensor</h5>
+
+<pre data-type="programlisting" data-code-language="python"><code class="o">&gt;&gt;&gt;</code> <code class="n">a</code> <code class="o">=</code> <code class="n">tf</code><code class="o">.</code><code class="n">zeros</code><code class="p">(</code><code class="mi">2</code><code class="p">)</code>
+<code class="o">&gt;&gt;&gt;</code> <code class="n">a</code><code class="o">.</code><code class="n">eval</code><code class="p">()</code>
+<code class="n">array</code><code class="p">([</code> <code class="mf">0.</code><code class="p">,</code>  <code class="mf">0.</code><code class="p">],</code> <code class="n">dtype</code><code class="o">=</code><code class="n">float32</code><code class="p">)</code></pre></div>
+
+<p>Note<a data-type="indexterm" data-primary="a.eval()" id="idm139806618962528"/><a data-type="indexterm" data-primary="NumPy" id="idm139806618961920"/> that the evaluated value of the TensorFlow tensor is itself a Python object. In particular, <code>a.eval()</code> is a <code>numpy.ndarray</code> object. NumPy is a sophisticated numerical system for Python. We won’t attempt an in-depth discussion of NumPy here beyond noting that TensorFlow is designed to be compatible with NumPy conventions to a large degree.</p>
+
+<p>We can call <code>tf.zeros()</code> and <code>tf.ones()</code> to create and display tensors of various sizes (<a data-type="xref" href="#ch2-display">Example 2-4</a>).</p>
+<div id="ch2-display" data-type="example">
+<h5><span class="label">Example 2-4. </span>Evaluate and display tensors</h5>
+
+<pre data-type="programlisting" data-code-language="python"><code class="o">&gt;&gt;&gt;</code> <code class="n">a</code> <code class="o">=</code> <code class="n">tf</code><code class="o">.</code><code class="n">zeros</code><code class="p">((</code><code class="mi">2</code><code class="p">,</code> <code class="mi">3</code><code class="p">))</code>
+<code class="o">&gt;&gt;&gt;</code> <code class="n">a</code><code class="o">.</code><code class="n">eval</code><code class="p">()</code>
+<code class="n">array</code><code class="p">([[</code> <code class="mf">0.</code><code class="p">,</code>  <code class="mf">0.</code><code class="p">,</code>  <code class="mf">0.</code><code class="p">],</code>
+       <code class="p">[</code> <code class="mf">0.</code><code class="p">,</code>  <code class="mf">0.</code><code class="p">,</code>  <code class="mf">0.</code><code class="p">]],</code> <code class="n">dtype</code><code class="o">=</code><code class="n">float32</code><code class="p">)</code>
+<code class="o">&gt;&gt;&gt;</code> <code class="n">b</code> <code class="o">=</code> <code class="n">tf</code><code class="o">.</code><code class="n">ones</code><code class="p">((</code><code class="mi">2</code><code class="p">,</code><code class="mi">2</code><code class="p">,</code><code class="mi">2</code><code class="p">))</code>
+<code class="o">&gt;&gt;&gt;</code> <code class="n">b</code><code class="o">.</code><code class="n">eval</code><code class="p">()</code>
+<code class="n">array</code><code class="p">([[[</code> <code class="mf">1.</code><code class="p">,</code>  <code class="mf">1.</code><code class="p">],</code>
+        <code class="p">[</code> <code class="mf">1.</code><code class="p">,</code>  <code class="mf">1.</code><code class="p">]],</code>
+
+       <code class="p">[[</code> <code class="mf">1.</code><code class="p">,</code>  <code class="mf">1.</code><code class="p">],</code>
+        <code class="p">[</code> <code class="mf">1.</code><code class="p">,</code>  <code class="mf">1.</code><code class="p">]]],</code> <code class="n">dtype</code><code class="o">=</code><code class="n">float32</code><code class="p">)</code></pre></div>
+
+<p>What<a data-type="indexterm" data-primary="tf.fill()" id="idm139806618842864"/> if we’d like a tensor filled with some quantity besides 0/1? The <code>tf.fill()</code> method provides a nice shortcut for doing so (<a data-type="xref" href="#ch2-fill">Example 2-5</a>).</p>
+<div id="ch2-fill" data-type="example">
+<h5><span class="label">Example 2-5. </span>Filling tensors with arbitrary values</h5>
+
+<pre data-type="programlisting" data-code-language="python"><code class="o">&gt;&gt;&gt;</code> <code class="n">b</code> <code class="o">=</code> <code class="n">tf</code><code class="o">.</code><code class="n">fill</code><code class="p">((</code><code class="mi">2</code><code class="p">,</code> <code class="mi">2</code><code class="p">),</code> <code class="n">value</code><code class="o">=</code><code class="mf">5.</code><code class="p">)</code>
+<code class="o">&gt;&gt;&gt;</code> <code class="n">b</code><code class="o">.</code><code class="n">eval</code><code class="p">()</code>
+<code class="n">array</code><code class="p">([[</code> <code class="mf">5.</code><code class="p">,</code>  <code class="mf">5.</code><code class="p">],</code>
+       <code class="p">[</code> <code class="mf">5.</code><code class="p">,</code>  <code class="mf">5.</code><code class="p">]],</code> <code class="n">dtype</code><code class="o">=</code><code class="n">float32</code><code class="p">)</code></pre></div>
+
+<p><code>tf.constant</code> is<a data-type="indexterm" data-primary="tf.constant()" id="idm139806618783552"/> another function, similar to <code>tf.fill</code>, which allows for construction of tensors that shouldn’t change during the program execution (<a data-type="xref" href="#ch2-constant">Example 2-6</a>).</p>
+<div id="ch2-constant" data-type="example">
+<h5><span class="label">Example 2-6. </span>Creating constant tensors</h5>
+
+<pre data-type="programlisting" data-code-language="python"><code class="o">&gt;&gt;&gt;</code> <code class="n">a</code> <code class="o">=</code> <code class="n">tf</code><code class="o">.</code><code class="n">constant</code><code class="p">(</code><code class="mi">3</code><code class="p">)</code>
+<code class="o">&gt;&gt;&gt;</code> <code class="n">a</code><code class="o">.</code><code class="n">eval</code><code class="p">()</code>
+<code class="mi">3</code></pre></div>
+</div></section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<section data-type="sect2" data-pdf-bookmark="Sampling Random Tensors"><div class="sect2" id="idm139806618759088">
+<h2>Sampling Random Tensors</h2>
+
+<p>Although<a data-type="indexterm" data-primary="tensors" data-secondary="sampling random" id="idm139806618603168"/><a data-type="indexterm" data-primary="random values" id="idm139806618602304"/><a data-type="indexterm" data-primary="tf.random_normal()" id="idm139806618601632"/> working with constant tensors is convenient for testing ideas, it’s much more common to initialize tensors with random values. The most common way to do this is to sample each entry in the tensor from a random distribution. <code>tf.random_normal</code> allows for each entry in a tensor of specified shape to be sampled from a Normal distribution of specified mean and standard deviation (<a data-type="xref" href="#ch2-randnormal">Example 2-7</a>).</p>
+<div data-type="note" epub:type="note"><h1>Symmetry Breaking</h1>
+<p>Many<a data-type="indexterm" data-primary="symmetry breaking" id="idm139806618597920"/> machine learning algorithms learn by performing updates to a set
+of tensors that hold weights. These update equations usually satisfy the
+property that weights initialized at the same value will continue to evolve
+together. Thus, if the initial set of tensors is initialized to a constant
+value, the model won’t be capable of learning much. Fixing this situation requires
+<em>symmetry breaking</em>. The easiest way of breaking symmetry is to sample each
+entry in a tensor <span class="keep-together">randomly</span>.</p>
+</div>
+<div id="ch2-randnormal" data-type="example">
+<h5><span class="label">Example 2-7. </span>Sampling a tensor with random Normal entries</h5>
+
+<pre data-type="programlisting" data-code-language="python"><code class="o">&gt;&gt;&gt;</code> <code class="n">a</code> <code class="o">=</code> <code class="n">tf</code><code class="o">.</code><code class="n">random_normal</code><code class="p">((</code><code class="mi">2</code><code class="p">,</code> <code class="mi">2</code><code class="p">),</code> <code class="n">mean</code><code class="o">=</code><code class="mi">0</code><code class="p">,</code> <code class="n">stddev</code><code class="o">=</code><code class="mi">1</code><code class="p">)</code>
+<code class="o">&gt;&gt;&gt;</code> <code class="n">a</code><code class="o">.</code><code class="n">eval</code><code class="p">()</code>
+<code class="n">array</code><code class="p">([[</code><code class="o">-</code><code class="mf">0.73437649</code><code class="p">,</code> <code class="o">-</code><code class="mf">0.77678096</code><code class="p">],</code>
+       <code class="p">[</code> <code class="mf">0.51697761</code><code class="p">,</code>  <code class="mf">1.15063596</code><code class="p">]],</code> <code class="n">dtype</code><code class="o">=</code><code class="n">float32</code><code class="p">)</code></pre></div>
+
+<p>One<a data-type="indexterm" data-primary="tf.truncated_normal()" id="idm139806618714640"/> thing to note is that machine learning systems often make use of very large tensors that often have tens of millions of parameters. When we sample tens of millions of random values from the Normal distribution, it becomes almost certain that some sampled values will be far from the mean. Such large samples can lead to numerical instability, so it’s common to sample using <code>tf.truncated_normal()</code> instead of <code>tf.random_normal()</code>. This function behaves the same as <code>tf.random_normal()</code> in terms of API, but drops and resamples all values more than two standard deviations from the mean.</p>
+
+<p><code>tf.random_uniform()</code> behaves<a data-type="indexterm" data-primary="tf.random_uniform()" id="idm139806618696880"/> like <code>tf.random_normal()</code> except for the fact that random values are sampled from the Uniform distribution over a specified range (<a data-type="xref" href="#ch2-randuniform">Example 2-8</a>).</p>
+<div id="ch2-randuniform" data-type="example">
+<h5><span class="label">Example 2-8. </span>Sampling a tensor with uniformly random entries</h5>
+
+<pre data-type="programlisting" data-code-language="python"><code class="o">&gt;&gt;&gt;</code> <code class="n">a</code> <code class="o">=</code> <code class="n">tf</code><code class="o">.</code><code class="n">random_uniform</code><code class="p">((</code><code class="mi">2</code><code class="p">,</code> <code class="mi">2</code><code class="p">),</code> <code class="n">minval</code><code class="o">=-</code><code class="mi">2</code><code class="p">,</code> <code class="n">maxval</code><code class="o">=</code><code class="mi">2</code><code class="p">)</code>
+<code class="o">&gt;&gt;&gt;</code> <code class="n">a</code><code class="o">.</code><code class="n">eval</code><code class="p">()</code>
+<code class="n">array</code><code class="p">([[</code><code class="o">-</code><code class="mf">1.90391684</code><code class="p">,</code>  <code class="mf">1.4179163</code> <code class="p">],</code>
+       <code class="p">[</code> <code class="mf">0.67762709</code><code class="p">,</code>  <code class="mf">1.07282352</code><code class="p">]],</code> <code class="n">dtype</code><code class="o">=</code><code class="n">float32</code><code class="p">)</code></pre></div>
+</div></section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<section data-type="sect2" data-pdf-bookmark="Tensor Addition and Scaling"><div class="sect2" id="idm139806618691968">
+<h2>Tensor Addition and Scaling</h2>
+
+<p>TensorFlow<a data-type="indexterm" data-primary="operator overloading" id="idm139806618462016"/><a data-type="indexterm" data-primary="tensors" data-secondary="adding and scaling" id="idm139806618461344"/><a data-type="indexterm" data-primary="scaling" id="idm139806618460400"/><a data-type="indexterm" data-primary="adding tensors" id="idm139806618459728"/> makes use of Python’s operator overloading to make basic tensor arithmetic straightforward with standard Python operators (<a data-type="xref" href="#ch2-tensoradd">Example 2-9</a>).</p>
+<div id="ch2-tensoradd" data-type="example" class="pagebreak-before">
+<h5><span class="label">Example 2-9. </span>Adding tensors together</h5>
+
+<pre data-type="programlisting" data-code-language="python"><code class="o">&gt;&gt;&gt;</code> <code class="n">c</code> <code class="o">=</code> <code class="n">tf</code><code class="o">.</code><code class="n">ones</code><code class="p">((</code><code class="mi">2</code><code class="p">,</code> <code class="mi">2</code><code class="p">))</code>
+<code class="o">&gt;&gt;&gt;</code> <code class="n">d</code> <code class="o">=</code> <code class="n">tf</code><code class="o">.</code><code class="n">ones</code><code class="p">((</code><code class="mi">2</code><code class="p">,</code> <code class="mi">2</code><code class="p">))</code>
+<code class="o">&gt;&gt;&gt;</code> <code class="n">e</code> <code class="o">=</code> <code class="n">c</code> <code class="o">+</code> <code class="n">d</code>
+<code class="o">&gt;&gt;&gt;</code> <code class="n">e</code><code class="o">.</code><code class="n">eval</code><code class="p">()</code>
+<code class="n">array</code><code class="p">([[</code> <code class="mf">2.</code><code class="p">,</code>  <code class="mf">2.</code><code class="p">],</code>
+       <code class="p">[</code> <code class="mf">2.</code><code class="p">,</code>  <code class="mf">2.</code><code class="p">]],</code> <code class="n">dtype</code><code class="o">=</code><code class="n">float32</code><code class="p">)</code>
+<code class="o">&gt;&gt;&gt;</code> <code class="n">f</code> <code class="o">=</code> <code class="mi">2</code> <code class="o">*</code> <code class="n">e</code>
+<code class="o">&gt;&gt;&gt;</code> <code class="n">f</code><code class="o">.</code><code class="n">eval</code><code class="p">()</code>
+<code class="n">array</code><code class="p">([[</code> <code class="mf">4.</code><code class="p">,</code>  <code class="mf">4.</code><code class="p">],</code>
+       <code class="p">[</code> <code class="mf">4.</code><code class="p">,</code>  <code class="mf">4.</code><code class="p">]],</code> <code class="n">dtype</code><code class="o">=</code><code class="n">float32</code><code class="p">)</code></pre></div>
+
+<p>Tensors<a data-type="indexterm" data-primary="elementwise multiplication" id="idm139806618454704"/><a data-type="indexterm" data-primary="matrix multiplication" id="ix_multiply"/><a data-type="indexterm" data-primary="multiplying tensors" id="idm139806618400336"/> can also be multiplied this way. Note, however, when multiplying two tensors we get elementwise multiplication and not matrix multiplication, which can be seen in <a data-type="xref" href="#ch2-tensormul">Example 2-10</a>.</p>
+<div id="ch2-tensormul" data-type="example">
+<h5><span class="label">Example 2-10. </span>Elementwise tensor multiplication</h5>
+
+<pre data-type="programlisting" data-code-language="python"><code class="o">&gt;&gt;&gt;</code> <code class="n">c</code> <code class="o">=</code> <code class="n">tf</code><code class="o">.</code><code class="n">fill</code><code class="p">((</code><code class="mi">2</code><code class="p">,</code><code class="mi">2</code><code class="p">),</code> <code class="mf">2.</code><code class="p">)</code>
+<code class="o">&gt;&gt;&gt;</code> <code class="n">d</code> <code class="o">=</code> <code class="n">tf</code><code class="o">.</code><code class="n">fill</code><code class="p">((</code><code class="mi">2</code><code class="p">,</code><code class="mi">2</code><code class="p">),</code> <code class="mf">7.</code><code class="p">)</code>
+<code class="o">&gt;&gt;&gt;</code> <code class="n">e</code> <code class="o">=</code> <code class="n">c</code> <code class="o">*</code> <code class="n">d</code>
+<code class="o">&gt;&gt;&gt;</code> <code class="n">e</code><code class="o">.</code><code class="n">eval</code><code class="p">()</code>
+<code class="n">array</code><code class="p">([[</code> <code class="mf">14.</code><code class="p">,</code>  <code class="mf">14.</code><code class="p">],</code>
+       <code class="p">[</code> <code class="mf">14.</code><code class="p">,</code>  <code class="mf">14.</code><code class="p">]],</code> <code class="n">dtype</code><code class="o">=</code><code class="n">float32</code><code class="p">)</code></pre></div>
+</div></section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<section data-type="sect2" data-pdf-bookmark="Matrix Operations"><div class="sect2" id="idm139806618395936">
+<h2>Matrix Operations</h2>
+
+<p>TensorFlow<a data-type="indexterm" data-primary="TensorFlow" data-secondary="matrix operations" id="idm139806618238944"/><a data-type="indexterm" data-primary="matrix operations" id="idm139806618238000"/><a data-type="indexterm" data-primary="tensors" data-secondary="matrix operations" id="idm139806618237328"/><a data-type="indexterm" data-primary="identity matrices" id="idm139806618236384"/> provides a variety of amenities for working with matrices. (Matrices by far are the most common type of tensor used in practice.) In particular, TensorFlow provides shortcuts to make certain types of commonly used matrices. The most widely used of these is likely the identity matrix. Identity matrices are square matrices that are 0 everywhere except on the diagonal, where they are 1. <code>tf.eye()</code> allows<a data-type="indexterm" data-primary="tf.eye()" id="idm139806618234800"/> for fast construction of identity matrices of desired size (<a data-type="xref" href="#ch2-tensorid">Example 2-11</a>).</p>
+<div id="ch2-tensorid" data-type="example">
+<h5><span class="label">Example 2-11. </span>Creating an identity matrix</h5>
+
+<pre data-type="programlisting" data-code-language="python"><code class="o">&gt;&gt;&gt;</code> <code class="n">a</code> <code class="o">=</code> <code class="n">tf</code><code class="o">.</code><code class="n">eye</code><code class="p">(</code><code class="mi">4</code><code class="p">)</code>
+<code class="o">&gt;&gt;&gt;</code> <code class="n">a</code><code class="o">.</code><code class="n">eval</code><code class="p">()</code>
+<code class="n">array</code><code class="p">([[</code> <code class="mf">1.</code><code class="p">,</code>  <code class="mf">0.</code><code class="p">,</code>  <code class="mf">0.</code><code class="p">,</code>  <code class="mf">0.</code><code class="p">],</code>
+       <code class="p">[</code> <code class="mf">0.</code><code class="p">,</code>  <code class="mf">1.</code><code class="p">,</code>  <code class="mf">0.</code><code class="p">,</code>  <code class="mf">0.</code><code class="p">],</code>
+       <code class="p">[</code> <code class="mf">0.</code><code class="p">,</code>  <code class="mf">0.</code><code class="p">,</code>  <code class="mf">1.</code><code class="p">,</code>  <code class="mf">0.</code><code class="p">],</code>
+       <code class="p">[</code> <code class="mf">0.</code><code class="p">,</code>  <code class="mf">0.</code><code class="p">,</code>  <code class="mf">0.</code><code class="p">,</code>  <code class="mf">1.</code><code class="p">]],</code> <code class="n">dtype</code><code class="o">=</code><code class="n">float32</code><code class="p">)</code></pre></div>
+
+<p>Diagonal matrices<a data-type="indexterm" data-primary="diagonal matrices" id="idm139806618210912"/> are another common type of matrix. Like identity matrices, diagonal matrices are only nonzero along the diagonal. Unlike identity matrices, they may take arbitrary values along the diagonal. Let’s construct a diagonal matrix with ascending values along the diagonal (<a data-type="xref" href="#ch2-tensordiag">Example 2-12</a>). To start, we’ll need a method to construct a vector of ascending values in TensorFlow. The<a data-type="indexterm" data-primary="tf.range(start, limit, delta)" id="idm139806618172816"/> easiest way for doing this is invoking <code>tf.range(start, limit, delta)</code>. Note that <code>limit</code> is excluded from the range and <code>delta</code> is the step size for the traversal. The<a data-type="indexterm" data-primary="tf.diag(diagonal)" id="idm139806618170832"/> resulting vector can then be fed to <code>tf.diag(diagonal)</code>, which will construct a matrix with the specified diagonal.</p>
+<div id="ch2-tensordiag" data-type="example">
+<h5><span class="label">Example 2-12. </span>Creating diagonal matrices</h5>
+
+<pre data-type="programlisting" data-code-language="python"><code class="o">&gt;&gt;&gt;</code> <code class="n">r</code> <code class="o">=</code> <code class="n">tf</code><code class="o">.</code><code class="n">range</code><code class="p">(</code><code class="mi">1</code><code class="p">,</code> <code class="mi">5</code><code class="p">,</code> <code class="mi">1</code><code class="p">)</code>
+<code class="o">&gt;&gt;&gt;</code> <code class="n">r</code><code class="o">.</code><code class="n">eval</code><code class="p">()</code>
+<code class="n">array</code><code class="p">([</code><code class="mi">1</code><code class="p">,</code> <code class="mi">2</code><code class="p">,</code> <code class="mi">3</code><code class="p">,</code> <code class="mi">4</code><code class="p">],</code> <code class="n">dtype</code><code class="o">=</code><code class="n">int32</code><code class="p">)</code>
+<code class="o">&gt;&gt;&gt;</code> <code class="n">d</code> <code class="o">=</code> <code class="n">tf</code><code class="o">.</code><code class="n">diag</code><code class="p">(</code><code class="n">r</code><code class="p">)</code>
+<code class="o">&gt;&gt;&gt;</code> <code class="n">d</code><code class="o">.</code><code class="n">eval</code><code class="p">()</code>
+<code class="n">array</code><code class="p">([[</code><code class="mi">1</code><code class="p">,</code> <code class="mi">0</code><code class="p">,</code> <code class="mi">0</code><code class="p">,</code> <code class="mi">0</code><code class="p">],</code>
+       <code class="p">[</code><code class="mi">0</code><code class="p">,</code> <code class="mi">2</code><code class="p">,</code> <code class="mi">0</code><code class="p">,</code> <code class="mi">0</code><code class="p">],</code>
+       <code class="p">[</code><code class="mi">0</code><code class="p">,</code> <code class="mi">0</code><code class="p">,</code> <code class="mi">3</code><code class="p">,</code> <code class="mi">0</code><code class="p">],</code>
+       <code class="p">[</code><code class="mi">0</code><code class="p">,</code> <code class="mi">0</code><code class="p">,</code> <code class="mi">0</code><code class="p">,</code> <code class="mi">4</code><code class="p">]],</code> <code class="n">dtype</code><code class="o">=</code><code class="n">int32</code><code class="p">)</code></pre></div>
+
+<p>Now<a data-type="indexterm" data-primary="tf.matrix_transpose()" id="idm139806618166672"/> suppose that we have a specified matrix in TensorFlow. How do we compute the matrix transpose? <code>tf.matrix_transpose()</code> will do the trick nicely (<a data-type="xref" href="#ch2-tensortrans">Example 2-13</a>).</p>
+<div id="ch2-tensortrans" data-type="example">
+<h5><span class="label">Example 2-13. </span>Taking a matrix transpose</h5>
+
+<pre data-type="programlisting" data-code-language="python"><code class="o">&gt;&gt;&gt;</code> <code class="n">a</code> <code class="o">=</code> <code class="n">tf</code><code class="o">.</code><code class="n">ones</code><code class="p">((</code><code class="mi">2</code><code class="p">,</code> <code class="mi">3</code><code class="p">))</code>
+<code class="o">&gt;&gt;&gt;</code> <code class="n">a</code><code class="o">.</code><code class="n">eval</code><code class="p">()</code>
+<code class="n">array</code><code class="p">([[</code> <code class="mf">1.</code><code class="p">,</code>  <code class="mf">1.</code><code class="p">,</code>  <code class="mf">1.</code><code class="p">],</code>
+       <code class="p">[</code> <code class="mf">1.</code><code class="p">,</code>  <code class="mf">1.</code><code class="p">,</code>  <code class="mf">1.</code><code class="p">]],</code> <code class="n">dtype</code><code class="o">=</code><code class="n">float32</code><code class="p">)</code>
+<code class="o">&gt;&gt;&gt;</code> <code class="n">at</code> <code class="o">=</code> <code class="n">tf</code><code class="o">.</code><code class="n">matrix_transpose</code><code class="p">(</code><code class="n">a</code><code class="p">)</code>
+<code class="o">&gt;&gt;&gt;</code> <code class="n">at</code><code class="o">.</code><code class="n">eval</code><code class="p">()</code>
+<code class="n">array</code><code class="p">([[</code> <code class="mf">1.</code><code class="p">,</code>  <code class="mf">1.</code><code class="p">],</code>
+       <code class="p">[</code> <code class="mf">1.</code><code class="p">,</code>  <code class="mf">1.</code><code class="p">],</code>
+       <code class="p">[</code> <code class="mf">1.</code><code class="p">,</code>  <code class="mf">1.</code><code class="p">]],</code> <code class="n">dtype</code><code class="o">=</code><code class="n">float32</code><code class="p">)</code></pre></div>
+
+<p>Now,<a data-type="indexterm" data-startref="ix_multiply" id="idm139806618059536"/> let’s suppose we have a pair of matrices we’d like to multiply using matrix multiplication. The<a data-type="indexterm" data-primary="tf.matmul()" id="idm139806618058800"/> easiest way to do so is by invoking <code>tf.matmul()</code> (<a data-type="xref" href="#ch2-tensormatmul">Example 2-14</a>).</p>
+<div id="ch2-tensormatmul" data-type="example">
+<h5><span class="label">Example 2-14. </span>Performing matrix multiplication</h5>
+
+<pre data-type="programlisting" data-code-language="python"><code class="o">&gt;&gt;&gt;</code> <code class="n">a</code> <code class="o">=</code> <code class="n">tf</code><code class="o">.</code><code class="n">ones</code><code class="p">((</code><code class="mi">2</code><code class="p">,</code> <code class="mi">3</code><code class="p">))</code>
+<code class="o">&gt;&gt;&gt;</code> <code class="n">a</code><code class="o">.</code><code class="n">eval</code><code class="p">()</code>
+<code class="n">array</code><code class="p">([[</code> <code class="mf">1.</code><code class="p">,</code>  <code class="mf">1.</code><code class="p">,</code>  <code class="mf">1.</code><code class="p">],</code>
+       <code class="p">[</code> <code class="mf">1.</code><code class="p">,</code>  <code class="mf">1.</code><code class="p">,</code>  <code class="mf">1.</code><code class="p">]],</code> <code class="n">dtype</code><code class="o">=</code><code class="n">float32</code><code class="p">)</code>
+<code class="o">&gt;&gt;&gt;</code> <code class="n">b</code> <code class="o">=</code> <code class="n">tf</code><code class="o">.</code><code class="n">ones</code><code class="p">((</code><code class="mi">3</code><code class="p">,</code> <code class="mi">4</code><code class="p">))</code>
+<code class="o">&gt;&gt;&gt;</code> <code class="n">b</code><code class="o">.</code><code class="n">eval</code><code class="p">()</code>
+<code class="n">array</code><code class="p">([[</code> <code class="mf">1.</code><code class="p">,</code>  <code class="mf">1.</code><code class="p">,</code>  <code class="mf">1.</code><code class="p">,</code>  <code class="mf">1.</code><code class="p">],</code>
+       <code class="p">[</code> <code class="mf">1.</code><code class="p">,</code>  <code class="mf">1.</code><code class="p">,</code>  <code class="mf">1.</code><code class="p">,</code>  <code class="mf">1.</code><code class="p">],</code>
+       <code class="p">[</code> <code class="mf">1.</code><code class="p">,</code>  <code class="mf">1.</code><code class="p">,</code>  <code class="mf">1.</code><code class="p">,</code>  <code class="mf">1.</code><code class="p">]],</code> <code class="n">dtype</code><code class="o">=</code><code class="n">float32</code><code class="p">)</code>
+<code class="o">&gt;&gt;&gt;</code> <code class="n">c</code> <code class="o">=</code> <code class="n">tf</code><code class="o">.</code><code class="n">matmul</code><code class="p">(</code><code class="n">a</code><code class="p">,</code> <code class="n">b</code><code class="p">)</code>
+<code class="o">&gt;&gt;&gt;</code> <code class="n">c</code><code class="o">.</code><code class="n">eval</code><code class="p">()</code>
+<code class="n">array</code><code class="p">([[</code> <code class="mf">3.</code><code class="p">,</code>  <code class="mf">3.</code><code class="p">,</code>  <code class="mf">3.</code><code class="p">,</code>  <code class="mf">3.</code><code class="p">],</code>
+       <code class="p">[</code> <code class="mf">3.</code><code class="p">,</code>  <code class="mf">3.</code><code class="p">,</code>  <code class="mf">3.</code><code class="p">,</code>  <code class="mf">3.</code><code class="p">]],</code> <code class="n">dtype</code><code class="o">=</code><code class="n">float32</code><code class="p">)</code></pre></div>
+
+<p>You can check that this answer matches the mathematical definition of matrix multiplication we provided earlier.</p>
+</div></section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<section data-type="sect2" data-pdf-bookmark="Tensor Types"><div class="sect2" id="idm139806618239888">
+<h2>Tensor Types</h2>
+
+<p>You<a data-type="indexterm" data-primary="tensors" data-secondary="types of" id="idm139806618014992"/><a data-type="indexterm" data-primary="dtype notation" id="idm139806617806256"/><a data-type="indexterm" data-primary="tf.float32" id="idm139806617805584"/><a data-type="indexterm" data-primary="tf.float64" id="idm139806617804912"/> may have noticed the <code>dtype</code> notation in the preceding examples. Tensors in TensorFlow come in a variety of types such as <code>tf.float32</code>, <code>tf.float64</code>, <code>tf.int32</code>, <code>tf.int64</code>. It’s possible to to create tensors of specified types by setting <code>dtype</code> in tensor construction functions. Furthermore,<a data-type="indexterm" data-primary="casting functions" id="idm139806617801344"/><a data-type="indexterm" data-primary="tf.to_double()" id="idm139806617800640"/><a data-type="indexterm" data-primary="tf.to_float()" id="idm139806617799968"/><a data-type="indexterm" data-primary="tf.to_int32()" id="idm139806617799296"/><a data-type="indexterm" data-primary="tf.to_int64()" id="idm139806617798624"/> given a tensor, it’s possible to change its type using casting functions such as <code>tf.to_double()</code>, <code>tf.to_float()</code>, <code>tf.to_int32()</code>, <code>tf.to_int64()</code>, and others (<a data-type="xref" href="#ch2-tensortype">Example 2-15</a>).</p>
+<div id="ch2-tensortype" data-type="example">
+<h5><span class="label">Example 2-15. </span>Creating tensors of different types</h5>
+
+<pre data-type="programlisting" data-code-language="python"><code class="o">&gt;&gt;&gt;</code> <code class="n">a</code> <code class="o">=</code> <code class="n">tf</code><code class="o">.</code><code class="n">ones</code><code class="p">((</code><code class="mi">2</code><code class="p">,</code><code class="mi">2</code><code class="p">),</code> <code class="n">dtype</code><code class="o">=</code><code class="n">tf</code><code class="o">.</code><code class="n">int32</code><code class="p">)</code>
+<code class="o">&gt;&gt;&gt;</code> <code class="n">a</code><code class="o">.</code><code class="n">eval</code><code class="p">()</code>
+<code class="n">array</code><code class="p">([[</code><code class="mi">0</code><code class="p">,</code> <code class="mi">0</code><code class="p">],</code>
+       <code class="p">[</code><code class="mi">0</code><code class="p">,</code> <code class="mi">0</code><code class="p">]],</code> <code class="n">dtype</code><code class="o">=</code><code class="n">int32</code><code class="p">)</code>
+<code class="o">&gt;&gt;&gt;</code> <code class="n">b</code> <code class="o">=</code> <code class="n">tf</code><code class="o">.</code><code class="n">to_float</code><code class="p">(</code><code class="n">a</code><code class="p">)</code>
+<code class="o">&gt;&gt;&gt;</code> <code class="n">b</code><code class="o">.</code><code class="n">eval</code><code class="p">()</code>
+<code class="n">array</code><code class="p">([[</code> <code class="mf">0.</code><code class="p">,</code>  <code class="mf">0.</code><code class="p">],</code>
+       <code class="p">[</code> <code class="mf">0.</code><code class="p">,</code>  <code class="mf">0.</code><code class="p">]],</code> <code class="n">dtype</code><code class="o">=</code><code class="n">float32</code><code class="p">)</code></pre></div>
+</div></section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<section data-type="sect2" data-pdf-bookmark="Tensor Shape Manipulations"><div class="sect2" id="idm139806617792640">
+<h2>Tensor Shape Manipulations</h2>
+
+<p>Within<a data-type="indexterm" data-primary="tensors" data-secondary="shape manipulations" id="idm139806617578864"/><a data-type="indexterm" data-primary="shapes, manipulating" id="idm139806617577920"/> TensorFlow, tensors are just collections of numbers written in memory. The different shapes are views into the underlying set of numbers that provide different ways of interacting with the set of numbers. At different times, it can be useful to view the same set of numbers as forming tensors with different shapes. <code>tf.reshape()</code> allows<a data-type="indexterm" data-primary="tf.reshape()" id="idm139806617576400"/> tensors to be converted into tensors with different shapes (<a data-type="xref" href="#ch2-tensorshapes">Example 2-16</a>).</p>
+<div id="ch2-tensorshapes" data-type="example">
+<h5><span class="label">Example 2-16. </span>Manipulating tensor shapes</h5>
+
+<pre data-type="programlisting" data-code-language="python"><code class="o">&gt;&gt;&gt;</code> <code class="n">a</code> <code class="o">=</code> <code class="n">tf</code><code class="o">.</code><code class="n">ones</code><code class="p">(</code><code class="mi">8</code><code class="p">)</code>
+<code class="o">&gt;&gt;&gt;</code> <code class="n">a</code><code class="o">.</code><code class="n">eval</code><code class="p">()</code>
+<code class="n">array</code><code class="p">([</code> <code class="mf">1.</code><code class="p">,</code>  <code class="mf">1.</code><code class="p">,</code>  <code class="mf">1.</code><code class="p">,</code>  <code class="mf">1.</code><code class="p">,</code>  <code class="mf">1.</code><code class="p">,</code>  <code class="mf">1.</code><code class="p">,</code>  <code class="mf">1.</code><code class="p">,</code>  <code class="mf">1.</code><code class="p">],</code> <code class="n">dtype</code><code class="o">=</code><code class="n">float32</code><code class="p">)</code>
+<code class="o">&gt;&gt;&gt;</code> <code class="n">b</code> <code class="o">=</code> <code class="n">tf</code><code class="o">.</code><code class="n">reshape</code><code class="p">(</code><code class="n">a</code><code class="p">,</code> <code class="p">(</code><code class="mi">4</code><code class="p">,</code> <code class="mi">2</code><code class="p">))</code>
+<code class="o">&gt;&gt;&gt;</code> <code class="n">b</code><code class="o">.</code><code class="n">eval</code><code class="p">()</code>
+<code class="n">array</code><code class="p">([[</code> <code class="mf">1.</code><code class="p">,</code>  <code class="mf">1.</code><code class="p">],</code>
+       <code class="p">[</code> <code class="mf">1.</code><code class="p">,</code>  <code class="mf">1.</code><code class="p">],</code>
+       <code class="p">[</code> <code class="mf">1.</code><code class="p">,</code>  <code class="mf">1.</code><code class="p">],</code>
+       <code class="p">[</code> <code class="mf">1.</code><code class="p">,</code>  <code class="mf">1.</code><code class="p">]],</code> <code class="n">dtype</code><code class="o">=</code><code class="n">float32</code><code class="p">)</code>
+<code class="o">&gt;&gt;&gt;</code> <code class="n">c</code> <code class="o">=</code> <code class="n">tf</code><code class="o">.</code><code class="n">reshape</code><code class="p">(</code><code class="n">a</code><code class="p">,</code> <code class="p">(</code><code class="mi">2</code><code class="p">,</code> <code class="mi">2</code><code class="p">,</code> <code class="mi">2</code><code class="p">))</code>
+<code class="o">&gt;&gt;&gt;</code> <code class="n">c</code><code class="o">.</code><code class="n">eval</code><code class="p">()</code>
+<code class="n">array</code><code class="p">([[[</code> <code class="mf">1.</code><code class="p">,</code>  <code class="mf">1.</code><code class="p">],</code>
+        <code class="p">[</code> <code class="mf">1.</code><code class="p">,</code>  <code class="mf">1.</code><code class="p">]],</code>
+
+       <code class="p">[[</code> <code class="mf">1.</code><code class="p">,</code>  <code class="mf">1.</code><code class="p">],</code>
+        <code class="p">[</code> <code class="mf">1.</code><code class="p">,</code>  <code class="mf">1.</code><code class="p">]]],</code> <code class="n">dtype</code><code class="o">=</code><code class="n">float32</code><code class="p">)</code></pre></div>
+
+<p>Notice<a data-type="indexterm" data-primary="rank-3 tensors" id="idm139806617571696"/> how we can turn the original rank-1 tensor into a rank-2 tensor and then into a rank-3 tensor with <code>tf.reshape</code>. While all necessary shape manipulations can be performed with <code>tf.reshape()</code>, sometimes it can be convenient to perform simpler shape manipulations using functions such<a data-type="indexterm" data-primary="tf.expand_dims" id="idm139806617569968"/><a data-type="indexterm" data-primary="tf.squeeze" id="idm139806617506368"/> as <code>tf.expand_dims</code> or <code>tf.squeeze</code>. <code>tf.expand_dims</code> adds an extra dimension to a tensor of size 1. It’s useful for increasing the rank of a tensor by one (for example, when converting a rank-1 vector into a rank-2 row vector or column vector). <code>tf.squeeze</code>, on the other hand, removes all dimensions of size 1 from a tensor. It’s a useful way to convert a row or column vector into a flat vector.</p>
+
+<p>This<a data-type="indexterm" data-primary="tf.Tensor.get_shape()" id="idm139806617503184"/> is also a convenient opportunity to introduce the <code>tf.Tensor.get_shape()</code> method (<a data-type="xref" href="#ch2-tensorgetshape">Example 2-17</a>). This method lets users query the shape of a tensor.</p>
+<div id="ch2-tensorgetshape" data-type="example">
+<h5><span class="label">Example 2-17. </span>Getting the shape of a tensor</h5>
+
+<pre data-type="programlisting" data-code-language="python"><code class="o">&gt;&gt;&gt;</code> <code class="n">a</code> <code class="o">=</code> <code class="n">tf</code><code class="o">.</code><code class="n">ones</code><code class="p">(</code><code class="mi">2</code><code class="p">)</code>
+<code class="o">&gt;&gt;&gt;</code> <code class="n">a</code><code class="o">.</code><code class="n">get_shape</code><code class="p">()</code>
+<code class="n">TensorShape</code><code class="p">([</code><code class="n">Dimension</code><code class="p">(</code><code class="mi">2</code><code class="p">)])</code>
+<code class="o">&gt;&gt;&gt;</code> <code class="n">a</code><code class="o">.</code><code class="n">eval</code><code class="p">()</code>
+<code class="n">array</code><code class="p">([</code> <code class="mf">1.</code><code class="p">,</code>  <code class="mf">1.</code><code class="p">],</code> <code class="n">dtype</code><code class="o">=</code><code class="n">float32</code><code class="p">)</code>
+<code class="o">&gt;&gt;&gt;</code> <code class="n">b</code> <code class="o">=</code> <code class="n">tf</code><code class="o">.</code><code class="n">expand_dims</code><code class="p">(</code><code class="n">a</code><code class="p">,</code> <code class="mi">0</code><code class="p">)</code>
+<code class="o">&gt;&gt;&gt;</code> <code class="n">b</code><code class="o">.</code><code class="n">get_shape</code><code class="p">()</code>
+<code class="n">TensorShape</code><code class="p">([</code><code class="n">Dimension</code><code class="p">(</code><code class="mi">1</code><code class="p">),</code> <code class="n">Dimension</code><code class="p">(</code><code class="mi">2</code><code class="p">)])</code>
+<code class="o">&gt;&gt;&gt;</code> <code class="n">b</code><code class="o">.</code><code class="n">eval</code><code class="p">()</code>
+<code class="n">array</code><code class="p">([[</code> <code class="mf">1.</code><code class="p">,</code>  <code class="mf">1.</code><code class="p">]],</code> <code class="n">dtype</code><code class="o">=</code><code class="n">float32</code><code class="p">)</code>
+<code class="o">&gt;&gt;&gt;</code> <code class="n">c</code> <code class="o">=</code> <code class="n">tf</code><code class="o">.</code><code class="n">expand_dims</code><code class="p">(</code><code class="n">a</code><code class="p">,</code> <code class="mi">1</code><code class="p">)</code>
+<code class="o">&gt;&gt;&gt;</code> <code class="n">c</code><code class="o">.</code><code class="n">get_shape</code><code class="p">()</code>
+<code class="n">TensorShape</code><code class="p">([</code><code class="n">Dimension</code><code class="p">(</code><code class="mi">2</code><code class="p">),</code> <code class="n">Dimension</code><code class="p">(</code><code class="mi">1</code><code class="p">)])</code>
+<code class="o">&gt;&gt;&gt;</code> <code class="n">c</code><code class="o">.</code><code class="n">eval</code><code class="p">()</code>
+<code class="n">array</code><code class="p">([[</code> <code class="mf">1.</code><code class="p">],</code>
+       <code class="p">[</code> <code class="mf">1.</code><code class="p">]],</code> <code class="n">dtype</code><code class="o">=</code><code class="n">float32</code><code class="p">)</code>
+<code class="o">&gt;&gt;&gt;</code> <code class="n">d</code> <code class="o">=</code> <code class="n">tf</code><code class="o">.</code><code class="n">squeeze</code><code class="p">(</code><code class="n">b</code><code class="p">)</code>
+<code class="o">&gt;&gt;&gt;</code> <code class="n">d</code><code class="o">.</code><code class="n">get_shape</code><code class="p">()</code>
+<code class="n">TensorShape</code><code class="p">([</code><code class="n">Dimension</code><code class="p">(</code><code class="mi">2</code><code class="p">)])</code>
+<code class="o">&gt;&gt;&gt;</code> <code class="n">d</code><code class="o">.</code><code class="n">eval</code><code class="p">()</code>
+<code class="n">array</code><code class="p">([</code> <code class="mf">1.</code><code class="p">,</code>  <code class="mf">1.</code><code class="p">],</code> <code class="n">dtype</code><code class="o">=</code><code class="n">float32</code><code class="p">)</code></pre></div>
+</div></section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<section data-type="sect2" data-pdf-bookmark="Introduction to Broadcasting"><div class="sect2" id="idm139806617498384">
+<h2>Introduction to Broadcasting</h2>
+
+<p>Broadcasting<a data-type="indexterm" data-primary="tensors" data-secondary="broadcasting" id="idm139806617497008"/><a data-type="indexterm" data-primary="broadcasting" id="idm139806617496064"/> is a term (introduced by NumPy) for when a tensor system’s matrices and vectors of different sizes can be added together. These rules allow for conveniences like adding a vector to every row of a matrix. Broadcasting rules can be quite complex, so we will not dive into a formal discussion of the rules. It’s often easier to experiment and see how the broadcasting works (<a data-type="xref" href="#ch2-tensorbroadcast">Example 2-18</a>).</p>
+<div id="ch2-tensorbroadcast" data-type="example">
+<h5><span class="label">Example 2-18. </span>Examples of broadcasting</h5>
+
+<pre data-type="programlisting" data-code-language="python"><code class="o">&gt;&gt;&gt;</code> <code class="n">a</code> <code class="o">=</code> <code class="n">tf</code><code class="o">.</code><code class="n">ones</code><code class="p">((</code><code class="mi">2</code><code class="p">,</code> <code class="mi">2</code><code class="p">))</code>
+<code class="o">&gt;&gt;&gt;</code> <code class="n">a</code><code class="o">.</code><code class="n">eval</code><code class="p">()</code>
+<code class="n">array</code><code class="p">([[</code> <code class="mf">1.</code><code class="p">,</code>  <code class="mf">1.</code><code class="p">],</code>
+       <code class="p">[</code> <code class="mf">1.</code><code class="p">,</code>  <code class="mf">1.</code><code class="p">]],</code> <code class="n">dtype</code><code class="o">=</code><code class="n">float32</code><code class="p">)</code>
+<code class="o">&gt;&gt;&gt;</code> <code class="n">b</code> <code class="o">=</code> <code class="n">tf</code><code class="o">.</code><code class="n">range</code><code class="p">(</code><code class="mi">0</code><code class="p">,</code> <code class="mi">2</code><code class="p">,</code> <code class="mi">1</code><code class="p">,</code> <code class="n">dtype</code><code class="o">=</code><code class="n">tf</code><code class="o">.</code><code class="n">float32</code><code class="p">)</code>
+<code class="o">&gt;&gt;&gt;</code> <code class="n">b</code><code class="o">.</code><code class="n">eval</code><code class="p">()</code>
+<code class="n">array</code><code class="p">([</code> <code class="mf">0.</code><code class="p">,</code>  <code class="mf">1.</code><code class="p">],</code> <code class="n">dtype</code><code class="o">=</code><code class="n">float32</code><code class="p">)</code>
+<code class="o">&gt;&gt;&gt;</code> <code class="n">c</code> <code class="o">=</code> <code class="n">a</code> <code class="o">+</code> <code class="n">b</code>
+<code class="o">&gt;&gt;&gt;</code> <code class="n">c</code><code class="o">.</code><code class="n">eval</code><code class="p">()</code>
+<code class="n">array</code><code class="p">([[</code> <code class="mf">1.</code><code class="p">,</code>  <code class="mf">2.</code><code class="p">],</code>
+       <code class="p">[</code> <code class="mf">1.</code><code class="p">,</code>  <code class="mf">2.</code><code class="p">]],</code> <code class="n">dtype</code><code class="o">=</code><code class="n">float32</code><code class="p">)</code></pre></div>
+
+<p>Notice<a data-type="indexterm" data-primary="dtype notation" id="idm139806617377328"/> that the vector <code>b</code> is added to every row of matrix <code>a</code>. Notice another subtlety; we explicitly set the <code>dtype</code> for <code>b</code>. If the <code>dtype</code> isn’t set, TensorFlow will report a type error. Let’s see what would have happened if we hadn’t set the <code>dtype</code> (<a data-type="xref" href="#ch2-tensornocast">Example 2-19</a>).<a data-type="indexterm" data-primary="type casting" id="idm139806617266128"/><a data-type="indexterm" data-primary="implicit type casting" id="idm139806617265424"/></p>
+<div id="ch2-tensornocast" data-type="example">
+<h5><span class="label">Example 2-19. </span>TensorFlow doesn’t perform implicit type casting</h5>
+
+<pre data-type="programlisting" data-code-language="python"><code class="o">&gt;&gt;&gt;</code> <code class="n">b</code> <code class="o">=</code> <code class="n">tf</code><code class="o">.</code><code class="n">range</code><code class="p">(</code><code class="mi">0</code><code class="p">,</code> <code class="mi">2</code><code class="p">,</code> <code class="mi">1</code><code class="p">)</code>
+<code class="o">&gt;&gt;&gt;</code> <code class="n">b</code><code class="o">.</code><code class="n">eval</code><code class="p">()</code>
+<code class="n">array</code><code class="p">([</code><code class="mi">0</code><code class="p">,</code> <code class="mi">1</code><code class="p">],</code> <code class="n">dtype</code><code class="o">=</code><code class="n">int32</code><code class="p">)</code>
+<code class="o">&gt;&gt;&gt;</code> <code class="n">c</code> <code class="o">=</code> <code class="n">a</code> <code class="o">+</code> <code class="n">b</code>
+<code class="ne">ValueError</code><code class="p">:</code> <code class="n">Tensor</code> <code class="n">conversion</code> <code class="n">requested</code> <code class="n">dtype</code> <code class="n">float32</code> <code class="k">for</code> <code class="n">Tensor</code> <code class="k">with</code> <code class="n">dtype</code> <code class="n">int32</code><code class="p">:</code>
+<code class="s1">'Tensor("range_2:0", shape=(2,), dtype=int32)</code></pre></div>
+
+<p>Unlike languages like C, TensorFlow doesn’t perform implicit type casting under the hood. It’s often necessary to perform explicit type casts when doing arithmetic operations.<a data-type="indexterm" data-primary="" data-startref="TFcomp02" id="idm139806617261744"/><a data-type="indexterm" data-primary="" data-startref="Tcreat02" id="idm139806616936800"/><a data-type="indexterm" data-primary="" data-startref="Ctensor02" id="idm139806616935920"/></p>
+</div></section>
+
+
+
+
+
+</div></section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<section data-type="sect1" data-pdf-bookmark="Imperative and Declarative Programming"><div class="sect1" id="idm139806622878368">
+<h1>Imperative and Declarative Programming</h1>
+
+<p>Most<a data-type="indexterm" data-primary="imperative programming" id="idm139806616933312"/> situations in computer science involve imperative programming. Consider a simple Python program (<a data-type="xref" href="#ch2-pyadd">Example 2-20</a>).</p>
+<div id="ch2-pyadd" data-type="example">
+<h5><span class="label">Example 2-20. </span>Python program imperatively performing an addition</h5>
+
+<pre data-type="programlisting" data-code-language="python"><code class="o">&gt;&gt;&gt;</code> <code class="n">a</code> <code class="o">=</code> <code class="mi">3</code>
+<code class="o">&gt;&gt;&gt;</code> <code class="n">b</code> <code class="o">=</code> <code class="mi">4</code>
+<code class="o">&gt;&gt;&gt;</code> <code class="n">c</code> <code class="o">=</code> <code class="n">a</code> <code class="o">+</code> <code class="n">b</code>
+<code class="o">&gt;&gt;&gt;</code> <code class="n">c</code>
+<code class="mi">7</code></pre></div>
+
+<p>This program, when translated into machine code, instructs the machine to perform a primitive addition operation on two registers, one containing 3, and the other containing 4. The result is then 7. This style of programming is called <em>imperative</em> since the program tells the computer explicitly which actions to perform.</p>
+
+<p>An<a data-type="indexterm" data-primary="declarative programming" id="idm139806617228192"/> alternative style of programming is <em>declarative</em>. In a declarative system, a computer program is a high-level description of the computation that is to be performed. It does not instruct the computer exactly how to perform the computation. <a data-type="xref" href="#ch2-tensorpyadd">Example 2-21</a> is the TensorFlow equivalent of <a data-type="xref" href="#ch2-pyadd">Example 2-20</a>.</p>
+<div id="ch2-tensorpyadd" data-type="example">
+<h5><span class="label">Example 2-21. </span>TensorFlow program declaratively performing an addition</h5>
+
+<pre data-type="programlisting" data-code-language="python"><code class="o">&gt;&gt;&gt;</code> <code class="n">a</code> <code class="o">=</code> <code class="n">tf</code><code class="o">.</code><code class="n">constant</code><code class="p">(</code><code class="mi">3</code><code class="p">)</code>
+<code class="o">&gt;&gt;&gt;</code> <code class="n">b</code> <code class="o">=</code> <code class="n">tf</code><code class="o">.</code><code class="n">constant</code><code class="p">(</code><code class="mi">4</code><code class="p">)</code>
+<code class="o">&gt;&gt;&gt;</code> <code class="n">c</code> <code class="o">=</code> <code class="n">a</code> <code class="o">+</code> <code class="n">b</code>
+<code class="o">&gt;&gt;&gt;</code> <code class="n">c</code>
+<code class="o">&lt;</code><code class="n">tf</code><code class="o">.</code><code class="n">Tensor</code> <code class="s1">'add_1:0'</code> <code class="n">shape</code><code class="o">=</code><code class="p">()</code> <code class="n">dtype</code><code class="o">=</code><code class="n">int32</code><code class="o">&gt;</code>
+<code class="o">&gt;&gt;&gt;</code> <code class="n">c</code><code class="o">.</code><code class="n">eval</code><code class="p">()</code>
+<code class="mi">7</code></pre></div>
+
+<p>Note that the value of <code>c</code> isn’t <code>7</code>! Rather, it’s a symbolic tensor. This code specifies the computation of adding two values together to create a new tensor. The<a data-type="indexterm" data-primary="c.eval()" id="idm139806617174704"/><a data-type="indexterm" data-primary="eval()" id="idm139806617174176"/> actual computation isn’t executed until we call <code>c.eval()</code>. In the sections before, we have been using the <code>eval()</code> method to simulate imperative style in TensorFlow since it can be challenging to understand declarative programming at first.</p>
+
+<p>However, declarative programming is by no means an unknown concept to software engineering. Relational databases and SQL provide an example of a widely used declarative programming system. Commands<a data-type="indexterm" data-primary="SELECT command" id="idm139806617171808"/><a data-type="indexterm" data-primary="JOIN command" id="idm139806617171104"/> like SELECT and JOIN may be implemented in an arbitrary fashion under the hood so long as their basic semantics are preserved. TensorFlow code is best thought of as analogous to a SQL program; the TensorFlow code specifies a computation to be performed, with details left up to TensorFlow. The TensorFlow developers exploit this lack of detail under the hood to tailor the execution style to the underlying hardware, be it CPU, GPU, or mobile device.</p>
+
+<p>It’s important to note that the grand weakness of declarative programming is that the abstraction is quite leaky. For example, without detailed understanding of the underlying implementation of the relational database, long SQL programs can become unbearably inefficient. Similarly, large TensorFlow programs implemented without understanding of the underlying learning algorithms are unlikely to work well. In the rest of this section, we will start paring back the abstraction, a process we will continue throughout the rest of the book.</p>
+<div data-type="note" epub:type="note"><h1>TensorFlow Eager</h1>
+<p>The<a data-type="indexterm" data-primary="TensorFlow Eager" id="idm139806617167600"/> TensorFlow team recently added a new experimental module, TensorFlow Eager, that enables users to run TensorFlow calculations imperatively. In time, this module will likely become the preferred entry mode for new programmers learning TensorFlow. However, at the timing of writing, this module is still very new with many rough edges. As a result, we won’t teach you about Eager mode, but encourage you to check it out for yourself.</p>
+
+<p>It’s important to emphasize that much of TensorFlow will remain declarative even after Eager matures, so it’s worth learning declarative TensorFlow regardless.</p>
+</div>
+
+
+
+
+
+
+
+
+<section data-type="sect2" data-pdf-bookmark="TensorFlow Graphs"><div class="sect2" id="idm139806617165472">
+<h2>TensorFlow Graphs</h2>
+
+<p>Any<a data-type="indexterm" data-primary="TensorFlow" data-secondary="graphs" id="idm139806617163904"/><a data-type="indexterm" data-primary="graphs" id="idm139806617162512"/><a data-type="indexterm" data-primary="tf.Graph" id="idm139806617161840"/><a data-type="indexterm" data-primary="tf.Tensor" id="idm139806617161168"/><a data-type="indexterm" data-primary="tf.Operation" id="idm139806617160496"/><a data-type="indexterm" data-primary="tf.matmul()" id="idm139806617159824"/> computation in TensorFlow is represented as an instance of a <code>tf.Graph</code> object. Such a graph consists of a set of instances of <code>tf.Tensor</code> objects and <code>tf.Operation</code> objects. We have covered <code>tf.Tensor</code> in some detail, but what are <code>tf.Operation</code> objects? You have already seen them over the course of this chapter. A call to an operation like <code>tf.matmul</code> creates a <code>tf.Operation</code> instance to mark the need to perform the matrix multiplication operation.</p>
+
+<p>When<a data-type="indexterm" data-primary="tf.get_default_graph()" id="idm139806617155616"/> a <code>tf.Graph</code> is not explicitly specified, TensorFlow adds tensors and operations to a hidden global <code>tf.Graph</code> instance. This instance can be fetched by <code>tf.get_default_graph()</code> (<a data-type="xref" href="#ch2-defgraph">Example 2-22</a>).</p>
+<div id="ch2-defgraph" data-type="example">
+<h5><span class="label">Example 2-22. </span>Getting the default TensorFlow graph</h5>
+
+<pre data-type="programlisting" data-code-language="python"><code class="o">&gt;&gt;&gt;</code> <code class="n">tf</code><code class="o">.</code><code class="n">get_default_graph</code><code class="p">()</code>
+<code class="o">&lt;</code><code class="n">tensorflow</code><code class="o">.</code><code class="n">python</code><code class="o">.</code><code class="n">framework</code><code class="o">.</code><code class="n">ops</code><code class="o">.</code><code class="n">Graph</code><code class="o">&gt;</code></pre></div>
+
+<p>It is possible to specify that TensorFlow operations should be performed in graphs other than the default. We will demonstrate examples of this in future chapters.</p>
+</div></section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<section data-type="sect2" data-pdf-bookmark="TensorFlow Sessions"><div class="sect2" id="idm139806616759952">
+<h2>TensorFlow Sessions</h2>
+
+<p>In<a data-type="indexterm" data-primary="tf.Session()" id="idm139806616758480"/><a data-type="indexterm" data-primary="sessions" id="idm139806616757744"/><a data-type="indexterm" data-primary="TensorFlow" data-secondary="sessions" id="idm139806616757072"/> TensorFlow, a <code>tf.Session()</code> object stores the context under which a computation is performed. At<a data-type="indexterm" data-primary="tf.InteractiveSession()" id="idm139806616755584"/> the beginning of this chapter, we used <code>tf.InteractiveSession()</code> to set up an environment for all TensorFlow computations. This call created a hidden global context for all computations performed. We<a data-type="indexterm" data-primary="tf.Tensor.eval()" id="idm139806616754224"/> then used <code>tf.Tensor.eval()</code> to execute our declaratively specified computations. Underneath the hood, this call is evaluated in context of this hidden global <code>tf.Session</code>. It can be convenient (and often necessary) to use an explicit context for a computation instead of a hidden context (<a data-type="xref" href="#ch2-sessions">Example 2-23</a>).</p>
+<div id="ch2-sessions" data-type="example">
+<h5><span class="label">Example 2-23. </span>Explicitly manipulating TensorFlow sessions</h5>
+
+<pre data-type="programlisting" data-code-language="python"><code class="o">&gt;&gt;&gt;</code> <code class="n">sess</code> <code class="o">=</code> <code class="n">tf</code><code class="o">.</code><code class="n">Session</code><code class="p">()</code>
+<code class="o">&gt;&gt;&gt;</code> <code class="n">a</code> <code class="o">=</code> <code class="n">tf</code><code class="o">.</code><code class="n">ones</code><code class="p">((</code><code class="mi">2</code><code class="p">,</code> <code class="mi">2</code><code class="p">))</code>
+<code class="o">&gt;&gt;&gt;</code> <code class="n">b</code> <code class="o">=</code> <code class="n">tf</code><code class="o">.</code><code class="n">matmul</code><code class="p">(</code><code class="n">a</code><code class="p">,</code> <code class="n">a</code><code class="p">)</code>
+<code class="o">&gt;&gt;&gt;</code> <code class="n">b</code><code class="o">.</code><code class="n">eval</code><code class="p">(</code><code class="n">session</code><code class="o">=</code><code class="n">sess</code><code class="p">)</code>
+<code class="n">array</code><code class="p">([[</code> <code class="mf">2.</code><code class="p">,</code>  <code class="mf">2.</code><code class="p">],</code>
+       <code class="p">[</code> <code class="mf">2.</code><code class="p">,</code>  <code class="mf">2.</code><code class="p">]],</code> <code class="n">dtype</code><code class="o">=</code><code class="n">float32</code><code class="p">)</code></pre></div>
+
+<p>This code evaluates <code>b</code> in the context of <code>sess</code> instead of the hidden global session. In fact, we can make this more explicit with an alternate notation (<a data-type="xref" href="#ch2-runsessions">Example 2-24</a>).</p>
+<div id="ch2-runsessions" data-type="example">
+<h5><span class="label">Example 2-24. </span>Running a computation within a session</h5>
+
+<pre data-type="programlisting" data-code-language="python"><code class="o">&gt;&gt;&gt;</code> <code class="n">sess</code><code class="o">.</code><code class="n">run</code><code class="p">(</code><code class="n">b</code><code class="p">)</code>
+<code class="n">array</code><code class="p">([[</code> <code class="mf">2.</code><code class="p">,</code>  <code class="mf">2.</code><code class="p">],</code>
+       <code class="p">[</code> <code class="mf">2.</code><code class="p">,</code>  <code class="mf">2.</code><code class="p">]],</code> <code class="n">dtype</code><code class="o">=</code><code class="n">float32</code><code class="p">)</code></pre></div>
+
+<p>In fact, calling <code>b.eval(session=sess)</code> is just syntactic sugar for calling <code>sess.run(b)</code>.</p>
+
+<p>This entire discussion may smack a bit of sophistry. What does it matter which session is in play given that all the different methods seem to return the same answer? Explicit sessions don’t really show their value until you start to perform computations that have state, a topic you will learn about in the following section.</p>
+</div></section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<section data-type="sect2" data-pdf-bookmark="TensorFlow Variables"><div class="sect2" id="idm139806616596048">
+<h2>TensorFlow Variables</h2>
+
+<p>All<a data-type="indexterm" data-primary="TensorFlow" data-secondary="variables" id="idm139806616594128"/><a data-type="indexterm" data-primary="variables" id="idm139806616593120"/> the example code in this section has used constant tensors. While we could combine and recombine these tensors in any way we chose, we could never change the value of tensors themselves (only create new tensors with new values). The<a data-type="indexterm" data-primary="functional programming" id="idm139806616592064"/><a data-type="indexterm" data-primary="stateful programming" id="idm139806616591392"/> style of programming so far has been <em>functional</em> and not <em>stateful</em>. While functional computations are very useful, machine learning often depends heavily on stateful computations. Learning algorithms are essentially rules for updating stored tensors to explain provided data. If it’s not possible to update these stored tensors, it would be hard to learn.</p>
+
+<p>The<a data-type="indexterm" data-primary="tf.Variable()" id="idm139806616589168"/> <code>tf.Variable()</code> class provides a wrapper around tensors that allows for stateful computations. The variable objects serve as holders for tensors. Creating a variable is easy enough (<a data-type="xref" href="#ch2-createvar">Example 2-25</a>).</p>
+<div id="ch2-createvar" data-type="example">
+<h5><span class="label">Example 2-25. </span>Creating a TensorFlow variable</h5>
+
+<pre data-type="programlisting" data-code-language="python"><code class="o">&gt;&gt;&gt;</code> <code class="n">a</code> <code class="o">=</code> <code class="n">tf</code><code class="o">.</code><code class="n">Variable</code><code class="p">(</code><code class="n">tf</code><code class="o">.</code><code class="n">ones</code><code class="p">((</code><code class="mi">2</code><code class="p">,</code> <code class="mi">2</code><code class="p">)))</code>
+<code class="o">&gt;&gt;&gt;</code> <code class="n">a</code>
+<code class="o">&lt;</code><code class="n">tf</code><code class="o">.</code><code class="n">Variable</code> <code class="s1">'Variable:0'</code> <code class="n">shape</code><code class="o">=</code><code class="p">(</code><code class="mi">2</code><code class="p">,</code> <code class="mi">2</code><code class="p">)</code> <code class="n">dtype</code><code class="o">=</code><code class="n">float32_ref</code><code class="o">&gt;</code></pre></div>
+
+<p>What happens when we try to evaluate the variable <code>a</code> as though it were a tensor, as in <a data-type="xref" href="#ch2-vareval">Example 2-26</a>?</p>
+<div id="ch2-vareval" data-type="example">
+<h5><span class="label">Example 2-26. </span>Evaluating an uninitialized variable fails</h5>
+
+<pre data-type="programlisting" data-code-language="python"><code class="o">&gt;&gt;&gt;</code> <code class="n">a</code><code class="o">.</code><code class="n">eval</code><code class="p">()</code>
+<code class="n">FailedPreconditionError</code><code class="p">:</code> <code class="n">Attempting</code> <code class="n">to</code> <code class="n">use</code> <code class="n">uninitialized</code> <code class="n">value</code> <code class="n">Variable</code></pre></div>
+
+<p>The<a data-type="indexterm" data-primary="tf.global_variables_initializer" id="idm139806616656912"/> evaluation fails since variables have to be explicitly initialized. The easiest way to initialize all variables is to invoke <code>tf.global_variables_initializer</code>. Running this operation within a session will initialize all variables in the program (<a data-type="xref" href="#ch2-sessioninit">Example 2-27</a>).</p>
+<div id="ch2-sessioninit" data-type="example">
+<h5><span class="label">Example 2-27. </span>Evaluating initialized variables</h5>
+
+<pre data-type="programlisting" data-code-language="python"><code class="o">&gt;&gt;&gt;</code> <code class="n">sess</code> <code class="o">=</code> <code class="n">tf</code><code class="o">.</code><code class="n">Session</code><code class="p">()</code>
+<code class="o">&gt;&gt;&gt;</code> <code class="n">sess</code><code class="o">.</code><code class="n">run</code><code class="p">(</code><code class="n">tf</code><code class="o">.</code><code class="n">global_variables_initializer</code><code class="p">())</code>
+<code class="o">&gt;&gt;&gt;</code> <code class="n">a</code><code class="o">.</code><code class="n">eval</code><code class="p">(</code><code class="n">session</code><code class="o">=</code><code class="n">sess</code><code class="p">)</code>
+<code class="n">array</code><code class="p">([[</code> <code class="mf">1.</code><code class="p">,</code>  <code class="mf">1.</code><code class="p">],</code>
+       <code class="p">[</code> <code class="mf">1.</code><code class="p">,</code>  <code class="mf">1.</code><code class="p">]],</code> <code class="n">dtype</code><code class="o">=</code><code class="n">float32</code><code class="p">)</code></pre></div>
+
+<p>After initialization, we are able to fetch the value stored within the variable as though it were a plain tensor. So far, there’s not much more to variables than plain tensors. Variables<a data-type="indexterm" data-primary="tf.assign()" id="idm139806616547536"/> only become interesting once we can assign to them. <code>tf.assign()</code> lets us do this. Using <code>tf.assign()</code> we can update the value of an existing variable (<a data-type="xref" href="#ch2-varassign">Example 2-28</a>).</p>
+<div id="ch2-varassign" data-type="example">
+<h5><span class="label">Example 2-28. </span>Assigning values to variables</h5>
+
+<pre data-type="programlisting" data-code-language="python"><code class="o">&gt;&gt;&gt;</code> <code class="n">sess</code><code class="o">.</code><code class="n">run</code><code class="p">(</code><code class="n">a</code><code class="o">.</code><code class="n">assign</code><code class="p">(</code><code class="n">tf</code><code class="o">.</code><code class="n">zeros</code><code class="p">((</code><code class="mi">2</code><code class="p">,</code><code class="mi">2</code><code class="p">))))</code>
+<code class="n">array</code><code class="p">([[</code> <code class="mf">0.</code><code class="p">,</code>  <code class="mf">0.</code><code class="p">],</code>
+       <code class="p">[</code> <code class="mf">0.</code><code class="p">,</code>  <code class="mf">0.</code><code class="p">]],</code> <code class="n">dtype</code><code class="o">=</code><code class="n">float32</code><code class="p">)</code>
+<code class="o">&gt;&gt;&gt;</code> <code class="n">sess</code><code class="o">.</code><code class="n">run</code><code class="p">(</code><code class="n">a</code><code class="p">)</code>
+<code class="n">array</code><code class="p">([[</code> <code class="mf">0.</code><code class="p">,</code>  <code class="mf">0.</code><code class="p">],</code>
+       <code class="p">[</code> <code class="mf">0.</code><code class="p">,</code>  <code class="mf">0.</code><code class="p">]],</code> <code class="n">dtype</code><code class="o">=</code><code class="n">float32</code><code class="p">)</code></pre></div>
+
+<p>What would happen if we tried to assign a value to variable <code>a</code> not of shape <code>(2,2)</code>? Let’s find out in <a data-type="xref" href="#ch2-badshapeassing">Example 2-29</a>.</p>
+<div id="ch2-badshapeassing" data-type="example">
+<h5><span class="label">Example 2-29. </span>Assignment fails when shapes aren’t equal</h5>
+
+<pre data-type="programlisting" data-code-language="python"><code class="o">&gt;&gt;&gt;</code> <code class="n">sess</code><code class="o">.</code><code class="n">run</code><code class="p">(</code><code class="n">a</code><code class="o">.</code><code class="n">assign</code><code class="p">(</code><code class="n">tf</code><code class="o">.</code><code class="n">zeros</code><code class="p">((</code><code class="mi">3</code><code class="p">,</code><code class="mi">3</code><code class="p">))))</code>
+<code class="ne">ValueError</code><code class="p">:</code> <code class="n">Dimension</code> <code class="mi">0</code> <code class="ow">in</code> <code class="n">both</code> <code class="n">shapes</code> <code class="n">must</code> <code class="n">be</code> <code class="n">equal</code><code class="p">,</code> <code class="n">but</code> <code class="n">are</code> <code class="mi">2</code> <code class="ow">and</code> <code class="mi">3</code> <code class="k">for</code> <code class="s1">'Assign_3'</code>
+<code class="p">(</code><code class="n">op</code><code class="p">:</code> <code class="s1">'Assign'</code><code class="p">)</code> <code class="k">with</code> <code class="nb">input</code> <code class="n">shapes</code><code class="p">:</code> <code class="p">[</code><code class="mi">2</code><code class="p">,</code><code class="mi">2</code><code class="p">],</code> <code class="p">[</code><code class="mi">3</code><code class="p">,</code><code class="mi">3</code><code class="p">]</code><code class="o">.</code></pre></div>
+
+<p>You can see that TensorFlow complains. The shape of the variable is fixed upon initialization and must be preserved with updates. As<a data-type="indexterm" data-primary="tf.Graph" id="idm139806616358832"/> another interesting note, <code>tf.assign</code> is itself a part of the underlying global <code>tf.Graph</code> instance. This allows TensorFlow programs to update their internal state every time they are run. We will make heavy use of this feature in the chapters to come.</p>
+</div></section>
+
+
+
+
+
+</div></section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<section data-type="sect1" data-pdf-bookmark="Review"><div class="sect1" id="idm139806616934512">
+<h1>Review</h1>
+
+<p>In this chapter, we’ve introduced the mathematical concept of tensors, and briefly reviewed a number of mathematical concepts associated with tensors. We then demonstrated how to create tensors in TensorFlow and perform these same mathematical operations within TensorFlow. We also briefly introduced some underlying TensorFlow structures like the computational graph, sessions, and variables. If you haven’t completely grasped the concepts discussed in this chapter, don’t worry much about it. We will repeatedly use these same concepts over the remainder of the book, so there will be plenty of chances to let the ideas sink in.</p>
+
+<p>In the next chapter, we will teach you how to build simple learning models for linear and logistic regression using TensorFlow. Subsequent chapters will build on these foundations to teach you how to train more sophisticated models.<a data-type="indexterm" data-primary="" data-startref="Ptens02" id="idm139806616327456"/></p>
+</div></section>
+
+
+
+
+
+
+
+</div></section></body></html>

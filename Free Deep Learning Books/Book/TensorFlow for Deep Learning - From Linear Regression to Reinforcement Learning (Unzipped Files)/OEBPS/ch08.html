@@ -1,0 +1,1284 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html><html xmlns:epub="http://www.idpf.org/2007/ops" xmlns="http://www.w3.org/1999/xhtml"><head><title>Reinforcement Learning</title><link rel="stylesheet" type="text/css" href="epub.css"/></head><body data-type="book"><section data-type="chapter" epub:type="chapter" data-pdf-bookmark="Chapter 8. Reinforcement Learning"><div class="chapter" id="reinforcement_learning">
+<h1><span class="label">Chapter 8. </span>Reinforcement Learning</h1>
+
+
+<p>The learning techniques we’ve covered so far in this book fall into the categories of supervised or unsupervised learning. In both cases, solving a given problem requires a data scientist to design a deep architecture that handles and processes input data and to connect the output of the architecture to a loss function suitable for the problem at hand. This framework is widely applicable, but not all applications fall neatly into this style of thinking. Let’s consider the challenge of training a machine learning model to win a game of chess. It seems reasonable to process the board as spatial input using a convolutional network, but what would the loss entail? None of our standard loss functions such as cross-entropy or <em>L</em><sup>2</sup> loss quite seem to apply.</p>
+
+<p>Reinforcement learning<a data-type="indexterm" data-primary="reinforcement learning (RL)" data-secondary="history of" id="idm139806607764096"/><a data-type="indexterm" data-primary="Markov decision processes" id="idm139806607763120"/><a data-type="indexterm" data-primary="environments" id="idm139806607762480"/><a data-type="indexterm" data-primary="rewards" id="idm139806607761808"/><a data-type="indexterm" data-primary="actions" id="idm139806607761136"/> provides a mathematical framework well suited to solving games. The central mathematical concept is that of the <em>Markov decision process</em>, a tool for modeling AI agents that interact with <em>environments</em> that offer <em>rewards</em> upon completion of certain <em>actions</em>. This framework proves to be flexible and general, and has found a number of applications in recent years. It’s worth noting that reinforcement learning as a field is quite mature and has existed in recognizable form since the 1970s. However, until recently, most reinforcement learning systems were only capable of solving toy problems. Recent work has revealed that these limitations were likely due to the lack of sophisticated data intake mechanisms; hand-engineered features for many games or robotic environments often did not suffice. Deep representation extractions trained end-to-end on modern hardware seem to break through the barriers of earlier reinforcement learning systems and have achieved notable results in recent years.</p>
+
+<p>Arguably,<a data-type="indexterm" data-primary="ATARI arcade games" id="idm139806607757504"/><a data-type="indexterm" data-primary="Breakout arcade game" id="idm139806607756768"/> the first breakthrough in deep reinforcement learning was on ATARI arcade games. ATARI arcade games were traditionally played in video game arcades and offered users simple games that don’t typically require sophisticated strategizing but might require good reflexes. <a data-type="xref" href="#ch8-breakout">Figure 8-1</a> shows a screenshot from the popular ATARI game Breakout. In recent years, due to the development of good ATARI emulation software, ATARI games have become a testbed for gameplay algorithms. At first, reinforcement learning algorithms applied to ATARI didn’t achieve superb results; the requirement that the algorithm understand a visual game state frustrated most attempts. However, as convolutional networks matured, researchers at DeepMind realized that convolutional networks could be combined with existing reinforcement learning techniques and trained end-to-end.</p>
+
+<figure><div id="ch8-breakout" class="figure">
+<img src="assets/tfdl_0801.png" alt="breakout.jpg"/>
+<h6><span class="label">Figure 8-1. </span>A screenshot of the ATARI arcade game Breakout. Players have to use the paddle at the bottom of the screen to bounce a ball that breaks the tiles at the top of the screen.</h6>
+</div></figure>
+
+<p>The resulting system achieved superb results, and learned to play many ATARI games (especially those dependent on quick reflexes) at superhuman standards. <a data-type="xref" href="#ch8-breakoutresults">Figure 8-2</a> lists ATARI scores achieved by DeepMind’s DQN algorithm. This breakthrough result spurred tremendous growth in the field of deep reinforcement learning and inspired legions of researchers to explore the potential of deep reinforcement learning techniques. At the same time, DeepMind’s ATARI results showed reinforcement learning techniques were capable of solving systems dependent on short-term movements. These results didn’t demonstrate that deep reinforcement learning systems were capable of solving games that required greater strategic planning.</p>
+
+<figure><div id="ch8-breakoutresults" class="figure">
+<img src="assets/tfdl_0802.png" alt="atari_scores.jpg"/>
+<h6><span class="label">Figure 8-2. </span>Results of DeepMind’s DQN reinforcement learning algorithm on various ATARI games. 100% is the score of a strong human player. Note that DQN achieves superhuman performance on many games, but is quite weak on others.</h6>
+</div></figure>
+<div data-type="note" epub:type="note"><h1>Computer Go</h1>
+<p>In 1994, IBM<a data-type="indexterm" data-primary="DeepBlue system" id="idm139806607746688"/><a data-type="indexterm" data-primary="Kasparov, Gary" id="idm139806607745952"/><a data-type="indexterm" data-primary="computer vs. human chess match" id="idm139806607745280"/><a data-type="indexterm" data-primary="chess match" id="idm139806607744592"/><a data-type="indexterm" data-primary="master-level chess" id="idm139806607743920"/> revealed the system Deep Blue, which later succeeded in defeating Garry Kasparov in a highly publicized chess match. This system relied on brute force computation to expand the tree of possible chess moves (with some help from handcrafted chess heuristics) to play master-level chess.</p>
+
+<p>Computer scientists attempted to apply similar techniques to other games such as Go. Unfortunately for early experimenters, Go’s 19 × 19 game board is significantly larger than chess’s 8 × 8 board. As a result, trees of possible moves explode much more quickly than for chess, and simple back-of-the-envelope calculations indicated that Moore’s law would take a very long time to enable brute force solution of Go in the style of Deep Blue. Complicating matters, there existed no simple heuristic for evaluating who’s winning in a half-played Go game (determining whether black or white is ahead is a notoriously noisy art for the best human analysts). As a result, until very recently, many prominent computer scientists believed that strong computer Go play was a decade away at the least.</p>
+</div>
+
+<p>To<a data-type="indexterm" data-primary="DeepMind" id="idm139806607741072"/><a data-type="indexterm" data-primary="AlphaGo" id="idm139806607740336"/> demonstrate the prowess of its reinforcement learning algorithms, DeepMind took on the challenge of learning to play Go, a game that requires complex strategic planning. In a tour-de-force paper, DeepMind revealed its deep reinforcement learning engine, AlphaGo, which combined convolutional networks with tree-based search to defeat the human Go master Lee Sedol (<a data-type="xref" href="#ch8-leesedol">Figure 8-3</a>).</p>
+
+<figure><div id="ch8-leesedol" class="figure">
+<img src="assets/tfdl_0803.png" alt="lee_sedol.jpg"/>
+<h6><span class="label">Figure 8-3. </span>Human Go champion Lee Sedol battles AlphaGo. Lee Sedol eventually lost the match 1–4, but succeeded in winning one game. It’s unlikely that this victory can be replicated against the vastly improved successors of AlphaGo such as AlphaZero.</h6>
+</div></figure>
+
+<p>AlphaGo convincingly demonstrated that deep reinforcement learning techniques were capable of learning to solve complex strategic games. The heart of the breakthrough was the realization that convolutional networks could learn to estimate whether black or white was ahead in a half-played game, which enabled game trees to be truncated at reasonable depths. (AlphaGo also estimates which moves are most fruitful, enabling a second pruning of the game tree space.) AlphaGo’s victory really launched deep reinforcement learning into prominence, and a host of researchers are working to transform AlphaGo-style systems into practical use.</p>
+
+<p>In this chapter, we discuss reinforcement learning algorithms and specifically deep reinforcement learning architectures. We then show readers how to successfully apply reinforcement learning to the game of tic-tac-toe. Despite the simplicity of the game, training a successful reinforcement learner for tic-tac-toe requires significant sophistication, as you will soon see.</p>
+
+<p>The<a data-type="indexterm" data-primary="DeepChem" data-secondary="reinforcement learning" id="idm139806607881904"/><a data-type="indexterm" data-primary="Eastman, Peter" id="idm139806607881008"/><a data-type="indexterm" data-primary="Leswing, Karl" id="idm139806607880336"/> code for this chapter was adapted from the DeepChem reinforcement learning library, and in particular from example code created by Peter Eastman and Karl Leswing. Thanks to Peter for debugging and tuning help on this chapter’s example code.</p>
+
+
+
+
+
+
+<section data-type="sect1" data-pdf-bookmark="Markov Decision Processes"><div class="sect1" id="idm139806607879152">
+<h1>Markov Decision Processes</h1>
+
+<p>Before<a data-type="indexterm" data-primary="Markov decision processes" id="idm139806607877648"/><a data-type="indexterm" data-primary="reinforcement learning (RL)" data-secondary="Markov decision processes and" id="idm139806607876848"/> launching into a discussion of reinforcement learning algorithms, it will be useful to pin down the family of problems that reinforcement learning methods seek to solve. The mathematical framework of Markov decision processes (MDPs) is very useful for formulating reinforcement learning methods. Traditionally, MDPs are introduced with a battery of Greek symbols, but we will instead try to proceed by providing some basic intuition.</p>
+
+<p>The<a data-type="indexterm" data-primary="environments" id="idm139806607874912"/><a data-type="indexterm" data-primary="agents" id="idm139806607874176"/> heart of MDPs is the pair of an <em>environment</em> and an <em>agent</em>. An environment encodes a “world” in which the agent seeks to act. Example environments could include game worlds. For example, a Go board with master Lee Sedol sitting opposite is a valid environment. Another potential environment could be the environment surrounding a small robot helicopter. In a prominent early reinforcement learning success, a team at Stanford led by Andrew Ng trained a helicopter to fly upside down using reinforcement learning as shown in <a data-type="xref" href="#ch8-upside">Figure 8-4</a>.</p>
+
+<figure><div id="ch8-upside" class="figure">
+<img src="assets/tfdl_0804.png" alt="upside_down_helicopter.jpg"/>
+<h6><span class="label">Figure 8-4. </span>Andrew Ng’s team at Stanford, from 2004 to 2010, trained a helicopter to learn to fly upside down using reinforcement learning. This work required the construction of a sophisticated physically accurate simulator.</h6>
+</div></figure>
+
+<p>The<a data-type="indexterm" data-primary="AlphaGo" id="idm139806607868560"/> agent is the learning entity that acts within the environment. In our first example, AlphaGo itself is the agent. In the second, the robot helicopter (or more accurately, the control algorithm in the robot helicopter) is the agent. Each agent has a set of actions that it can take within the environment. For AlphaGo, these constitute valid Go moves. For the robot helicopter, these include control of the main and secondary rotors.</p>
+
+<p>Actions the agent takes are presumed to have an effect on the environment. In the case of AlphaGo, this effect is deterministic (AlphaGo deciding to place a Go stone results in the stone being placed). In the case of the helicopter, the effect is likely probabilistic (changes in helicopter position may depend on wind conditions, which can’t be modeled effectively).</p>
+
+<p>The<a data-type="indexterm" data-primary="rewards" id="idm139806607866064"/> final piece of the model is the notion of reward. Unlike supervised learning where explicit labels are present to learn from, or unsupervised learning where the challenge is to learn the underlying structure of the data, reinforcement learning operates in a setting of partial, sparse rewards. In Go, rewards are achieved at the end of the game upon victory or defeat, while in helicopter flight, rewards might be presented for successful flights or completion of trick moves.</p>
+<div data-type="warning" epub:type="warning"><h1>Reward Function Engineering Is Hard</h1>
+<p>One of the largest challenges in reinforcement learning is designing rewards that induce agents to learn desired behaviors. For even simple win/loss games such as Go or tic-tac-toe, this can be surprisingly difficult. How much should a loss be punished and how much should a win be rewarded? There don’t yet exist good answers.</p>
+
+<p>For more complex behaviors, this can be extremely challenging. A number of studies have demonstrated that simple rewards can result in agents learning unexpected and even potentially damaging behaviors. These systems spur fears of future agents with greater autonomy wreaking havoc when unleashed in the real world after having been trained to optimize bad reward functions.</p>
+
+<p>In general, reinforcement learning is less mature than supervised learning techniques, and we caution that decisions to deploy reinforcement learning in production systems should be taken very carefully. Given uncertainty over learned behavior, make sure to thoroughly test any deployed reinforcement learned system.</p>
+</div>
+</div></section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<section data-type="sect1" data-pdf-bookmark="Reinforcement Learning Algorithms"><div class="sect1" id="idm139806607861312">
+<h1>Reinforcement Learning Algorithms</h1>
+
+<p>Now<a data-type="indexterm" data-primary="reinforcement learning (RL)" data-secondary="algorithms for" id="RLalg08"/><a data-type="indexterm" data-primary="algorithms" data-secondary="for reinforcement learning" id="Areinf08"/> that we’ve introduced you to the core mathematical structures underlying reinforcement learning, let’s consider how to design algorithms that learn intelligent behaviors for reinforcement learning agents. At<a data-type="indexterm" data-primary="model-based algorithms" id="idm139806607856784"/><a data-type="indexterm" data-primary="model-free algorithms" id="idm139806607856112"/> a high level, reinforcement learning algorithms can be separated into the buckets of <em>model-based</em> and <em>model-free</em> algorithms. The central difference is whether the algorithm seeks to learn an internal model of how its environment acts. For simpler environments, such as tic-tac-toe, the model dynamics are trivial. For more complex environments, such as helicopter flight or even ATARI games, the underlying environment is likely extraordinarily complex. Avoiding the construction of an explicit model of the environment in favor of an implicit model that advises the agent on how to act may well be more pragmatic.</p>
+<div data-type="note" epub:type="note"><h1>Simulations and Reinforcement Learning</h1>
+<p>Any<a data-type="indexterm" data-primary="reinforcement learning (RL)" data-secondary="simulations and" id="idm139806607852832"/><a data-type="indexterm" data-primary="simulations" id="idm139806607851808"/> reinforcement learning algorithm requires iteratively improving the performance of the current agent by evaluating the agent’s current behavior and changing it to improve received rewards. These updates to the agent structure often include some gradient descent update, as we will see in the following sections. However, as you know intimately from previous chapters, gradient descent is a slow training algorithm! Millions or even billions of gradient descent steps may be required to learn an effective model.</p>
+
+<p>This poses a problem if the learning environment is in the real world; how can an agent interact millions of times with the real world? In most cases it can’t. As a result, most sophisticated reinforcement learning systems depend critically on simulators that allow interaction with a simulation computational version of the environment. For the helicopter flight environment, one of the hardest challenges researchers faced was building an accurate helicopter physics simulator that allowed learning of effective flight policies computationally.</p>
+</div>
+
+
+
+
+
+
+
+
+<section data-type="sect2" data-pdf-bookmark="Q-Learning"><div class="sect2" id="idm139806607849280">
+<h2>Q-Learning</h2>
+
+<p>In<a data-type="indexterm" data-primary="algorithms" data-secondary="Q-learning" id="idm139806607847712"/><a data-type="indexterm" data-primary="Q-learning" id="idm139806607846704"/> the framework of Markov decision processes, agents take actions in an environment and obtain rewards that are (presumably) tied to agent actions. The <em>Q</em> function predicts the expected reward for taking a given action in a particular environment state. This concept seems very straightforward, but the trickiness arises when this expected reward includes discounted rewards from future actions.</p>
+<div data-type="note" epub:type="note"><h1>Discounting Rewards</h1>
+<p>The<a data-type="indexterm" data-primary="discounted rewards" id="idm139806607843808"/><a data-type="indexterm" data-primary="rewards" id="idm139806607843072"/> notion of a discounted reward is widespread, and is often introduced in the context of finances. Suppose a friend says he’ll pay you $10 next week. That future 10 dollars is worth less to you than 10 dollars in your hand right now (what if the payment never happens, for one?). So mathematically, it’s common practice to introduce a discounting factor γ (typically between 0 and 1) that lowers the “present-value” of future payments. For example, say your friend is somewhat untrustworthy. You might decide to set γ = 0.5 and value your friend’s promise as worth 10γ = 5 dollars today to account for uncertainty in rewards.</p>
+</div>
+
+<p>However,<a data-type="indexterm" data-primary="future rewards" id="idm139806607840880"/> these future rewards depend on actions taken by the agent in the future. As a result, the <em>Q</em> function must be formulated recursively in terms of itself, since expected rewards for one state depend on those for another state. This recursive definition makes learning the <em>Q</em> function tricky. This recursive relationship can be <span class="keep-together">formulated</span> explicitly for simple environments with discrete state spaces and solved with dynamic programming methods. For more general environments, <em>Q</em>-learning methods were not very useful until recently.</p>
+
+<p>Recently, Deep <em>Q</em>-networks (DQN) were introduced by DeepMind and used to solve ATARI games as mentioned earlier. The key insight underlying DQN is once again the universal approximation theorem; since <em>Q</em> may be arbitrarily complex, we should model it with a universal approximator such as a deep network. While using neural networks to model <em>Q</em> had been done before, DeepMind also introduced the notion of experience replay for these networks, which let them train DQN models effectively at scale. Experience replay stores observed game outcomes and transitions from past games, and resamples them while training (in addition to training on new games) to ensure that lessons from the past are not forgotten by the network.</p>
+<div data-type="warning" epub:type="warning"><h1>Catastrophic Forgetting</h1>
+<p>Neural<a data-type="indexterm" data-primary="catastrophic forgetting" id="idm139806607833952"/><a data-type="indexterm" data-primary="algorithms" data-secondary="catastrophic forgetting and" id="idm139806607833216"/> networks quickly forget the past. In fact, this phenomenon, termed <em>catastrophic forgetting</em>, can occur very rapidly; a few minibatch updates can be sufficient for the network to forget a complex behavior it previously knew. As a result, without techniques like experience replay that ensure the network always trains on episodes from past matches, it wouldn’t be possible to learn complex behaviors.</p>
+
+<p>Designing a training algorithm for deep networks that doesn’t suffer from catastrophic forgetting is still a major open problem today. Humans notably don’t suffer from catastrophic forgetting; even if you haven’t ridden a bike in years, it’s likely you still remember how to do so. Creating a neural network that has similar resilience might involve the addition of long-term external memory, along the lines of the Neural Turing machine. Unfortunately, none of the attempts thus far at designing resilient architectures has really worked well.</p>
+</div>
+</div></section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<section data-type="sect2" data-pdf-bookmark="Policy Learning"><div class="sect2" id="idm139806607830176">
+<h2>Policy Learning</h2>
+
+<p>In<a data-type="indexterm" data-primary="algorithms" data-secondary="policy learning" id="idm139806607828608"/><a data-type="indexterm" data-primary="policy learning" id="idm139806607827600"/> the previous section, you learned about <em>Q</em>-learning, which seeks to understand the expected rewards for taking given actions in given environment states. Policy learning is an alternative mathematical framework for learning agent behavior. It introduces the policy function π that assigns a probability to each action that an agent can take in a given state.</p>
+
+<p>Note that a policy is sufficient for defining agent behavior entirely. Given a policy, an agent can act just by sampling a suitable action for the current environment state. Policy learning is convenient, since policies can be learned directly through an algorithm called policy gradient. This algorithm uses a couple mathematical tricks to enable policy gradients to be computed directly via backpropagation for deep networks. The<a data-type="indexterm" data-primary="rollout concept" id="idm139806607825216"/> key concept is the <em>rollout</em>. Let an agent act in an environment according to its current policy and observe all rewards that come in. Then backpropagate to increase the likelihood of those actions that led to more fruitful rewards. This description is accurate at a high level, but we will see more implementation details later in the chapter.</p>
+
+<p>A<a data-type="indexterm" data-primary="value functions" id="idm139806607822992"/> policy is often associated with a <em>value function</em> <em>V</em>. This function returns the expected discounted reward for following policy π starting from the current state of the environment. <em>V</em> and <em>Q</em> are closely related functions since both provide estimates of future rewards starting from present state, but <em>V</em> does not specify an action to be taken and assumes rather that actions are sampled from π.</p>
+
+<p>Another<a data-type="indexterm" data-primary="advantage functions" id="idm139806607819120"/> commonly defined function is the <em>advantage</em> <em>A</em>. This function defines the difference in expected reward due to taking a particular action <em>a</em> in a given environment state <em>s</em>, as opposed to following the base policy π. Mathematically, <em>A</em> is defined in terms of <em>Q</em> and <em>V</em>:</p>
+<div data-type="equation">
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
+  <mrow>
+    <mi>A</mi>
+    <mo>(</mo>
+    <mi>s</mi>
+    <mo>,</mo>
+    <mi>a</mi>
+    <mo>)</mo>
+    <mo>=</mo>
+    <mi>Q</mi>
+    <mo>(</mo>
+    <mi>s</mi>
+    <mo>,</mo>
+    <mi>a</mi>
+    <mo>)</mo>
+    <mo>-</mo>
+    <mi>V</mi>
+    <mo>(</mo>
+    <mi>s</mi>
+    <mo>)</mo>
+  </mrow>
+</math>
+</div>
+
+<p>The advantage is useful in policy-learning algorithms, since it lets an algorithm quantify how a particular action may have been better suited than the present recommendation of the policy.</p>
+<div data-type="note" epub:type="note"><h1>Policy Gradient Outside Reinforcement Learning</h1>
+<p>Although we have introduced policy gradient as a reinforcement learning algorithm, it can equally be viewed as a tool for learning deep networks with nondifferentiable submodules. What does this mean when we unpack the mathematical jargon?</p>
+
+<p>Let’s suppose we have a deep network that calls an external program within the network itself. This external program is a black box; it could be a network call or an invocation of a 1970s COBOL routine. How can we learn the rest of the deep network when this module has no gradient?</p>
+
+<p>It turns out that policy gradient can be repurposed to estimate an “effective” gradient for the system. The simple intuition is that multiple “rollouts” can be run, which are used to estimate gradients. Expect to see research over the next few years extending this idea to create large networks with nondifferential modules.</p>
+</div>
+</div></section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<section data-type="sect2" data-pdf-bookmark="Asynchronous Training"><div class="sect2" id="idm139806607702176">
+<h2>Asynchronous Training</h2>
+
+<p>A<a data-type="indexterm" data-primary="algorithms" data-secondary="asynchronous training" id="idm139806607700848"/><a data-type="indexterm" data-primary="asynchronous training" id="idm139806607699840"/> disadvantage of the policy gradient methods presented in the previous section is that performing the rollout operations requires evaluating agent behavior in some (likely simulated) environment. Most simulators are complicated pieces of software that can’t be run on the GPU. As a result, taking a single learning step will require running long CPU-bound calculations. This can lead to unreasonably slow training.</p>
+
+<p>Asynchronous reinforcement learning methods seek to speed up this process by using multiple asynchronous CPU threads to perform rollouts independently. These worker threads will perform rollouts, estimate gradient updates to the policy locally, and then periodically synchronize with the global set of parameters. Empirically, asynchronous training appears to significantly speed up reinforcement learning and allows for fairly sophisticated policies to be learned on laptops. (Without GPUs! The majority of computational power is used on rollouts, so gradient update steps are often not the rate limiting aspect of reinforcement learning training.) The most popular algorithm for asynchronous reinforcement learning currently is the asynchronous actor advantage critic (A3C) algorithm.<a data-type="indexterm" data-primary="" data-startref="RLalg08" id="idm139806607697424"/><a data-type="indexterm" data-primary="" data-startref="Areinf08" id="idm139806607696448"/></p>
+<div data-type="note" epub:type="note"><h1>CPU or GPU?</h1>
+<p>GPUs<a data-type="indexterm" data-primary="CPU-based simulations" id="idm139806607694240"/><a data-type="indexterm" data-primary="reinforcement learning (RL)" data-secondary="simulations and" id="idm139806607693504"/><a data-type="indexterm" data-primary="simulations" id="idm139806607692592"/> are necessary for most large deep learning applications, but reinforcement learning currently appears to be an exception to this general rule. The reliance of reinforcement learning algorithms to perform many rollouts seems to currently bias reinforcement learning implementations toward multicore CPU systems. It’s likely that in specific applications, individual simulators can be ported to work more quickly on GPUs, but CPU-based simulations will likely continue to dominate for the near future.</p>
+</div>
+</div></section>
+
+
+
+
+
+</div></section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<section data-type="sect1" data-pdf-bookmark="Limits of Reinforcement Learning"><div class="sect1" id="idm139806607690896">
+<h1>Limits of Reinforcement Learning</h1>
+
+<p>The <a data-type="indexterm" data-primary="reinforcement learning (RL)" data-secondary="limitations of" id="idm139806607689488"/><a data-type="indexterm" data-primary="artificial general intelligences (AGIs)" id="idm139806607688512"/>framework of Markov decision processes is immensely general. For example, behavioral scientists routinely use Markov decision processes to understand and model human decision making. The mathematical generality of this framework has spurred scientists to posit that solving reinforcement learning might spur the creation of artificial general intelligences (AGIs). The<a data-type="indexterm" data-primary="AlphaGo" id="idm139806607687360"/> stunning success of AlphaGo against Lee Sedol amplified this belief, and indeed research groups such as OpenAI and DeepMind aiming to build AGIs focus much of their efforts on developing new reinforcement learning techniques.</p>
+
+<p>Nonetheless, there are major weaknesses to reinforcement learning as it currently exists. Careful benchmarking work has shown that reinforcement learning techniques are very susceptible to choice of hyperparameters (even by the standards of deep learning, which is already much finickier than other techniques like random forests). As we have mentioned, reward function engineering is very immature. Humans are capable of internally designing their own reward functions or effectively learning to copy reward functions from observation. Although “inverse reinforcement learning” algorithms that learn reward functions directly have been proposed, these algorithms have many limitations in practice.</p>
+
+<p>In addition to these fundamental limitations, there are still many practical scaling issues. Humans are capable of playing games that combine high-level strategizing with thousands of “micro” moves. For<a data-type="indexterm" data-primary="StarCraft" id="idm139806607684576"/> example, master-level play of the strategy game StarCraft (see <a data-type="xref" href="#ch8-starcraft">Figure 8-5</a>) requires sophisticated strategic ploys combined with careful control of hundreds of units. Games can require thousands of local moves to be played to completion. In addition, unlike Go or chess, StarCraft has a “fog of war” where players cannot see the entire game state. This combination of large game state and uncertainty has foiled reinforcement learning attempts on StarCraft. As a result, teams of AI researchers at DeepMind and other groups are focusing serious effort on solving StarCraft with deep reinforcement learning methods. Despite some serious effort, though, the best StarCraft bots remain at amateur level.</p>
+
+<figure><div id="ch8-starcraft" class="figure">
+<img src="assets/tfdl_0805.png" alt="deep_starcraft.png"/>
+<h6><span class="label">Figure 8-5. </span>A collection of subtasks required for playing the real-time strategy game StarCraft. In this game, players must build an army that they can use to defeat the opposing force. Successful StarCraft play requires mastery of resource planning, exploration, and complex strategy. The best computer StarCraft agents remain at amateur level.</h6>
+</div></figure>
+
+<p>In general, there’s wide consensus that reinforcement learning is a useful technique that’s likely to be deeply influential over the next few decades, but it’s also clear that the many practical limitations of reinforcement learning methods will mean that most work will continue to be done in research labs for the near future.</p>
+</div></section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<section data-type="sect1" data-pdf-bookmark="Playing Tic-Tac-Toe"><div class="sect1" id="idm139806607679120">
+<h1>Playing Tic-Tac-Toe</h1>
+
+<p>Tic-tac-toe<a data-type="indexterm" data-primary="tic-tac-toe agent" data-secondary="overview" id="idm139806607677616"/><a data-type="indexterm" data-primary="reinforcement learning (RL)" data-secondary="tic-tac-toe agent" id="RLtic08"/> is a simple two-player game. Players place Xs and Os on a 3 × 3 game board until one player succeeds in placing three of her pieces in a row. The first player to do so wins. If neither player succeeds in obtaining three in a row before the board is filled up, the game ends in a draw. <a data-type="xref" href="#ch8-tictactoe">Figure 8-6</a> illustrates a tic-tac-toe game board.</p>
+
+<figure><div id="ch8-tictactoe" class="figure">
+<img src="assets/tfdl_0806.png" alt="Tic_tac_toe.png"/>
+<h6><span class="label">Figure 8-6. </span>A tic-tac-toe game board.</h6>
+</div></figure>
+
+<p>Tic-tac-toe is a nice testbed for reinforcement learning techniques. The game is simple enough that exorbitant amounts of computational power aren’t required to train effective agents. At the same time, despite tic-tac-toe’s simplicity, learning an effective agent requires considerable sophistication. The TensorFlow code for this section is arguably the most sophisticated example found in this book. We will walk you through the design of a TensorFlow tic-tac-toe asynchronous reinforcement learning agent in the remainder of this section.</p>
+
+
+
+
+
+
+
+
+<section data-type="sect2" data-pdf-bookmark="Object Orientation"><div class="sect2" id="idm139806607671104">
+<h2>Object Orientation</h2>
+
+<p>The<a data-type="indexterm" data-primary="tic-tac-toe agent" data-secondary="object orientation" id="idm139806607669552"/><a data-type="indexterm" data-primary="object orientation" id="idm139806607668576"/> code we’ve introduced thus far in this book has primarily consisted of scripts augmented by smaller helper functions. In this chapter, however, we will swap to an object-oriented programming style. This style of programming might be new to you, especially if you hail from the scientific world rather than from the tech world. Briefly, an object-oriented program defines <em>objects</em> that model aspects of the world. For example, you might want to define <code>Environment</code> or <code>Agent</code> or <code>Reward</code> objects that directly correspond to these mathematical concepts. A <em>class</em> is a template for objects that can be used to <em>instantiate</em> (or create) many new objects. For example, you will shortly see an <code>Environment</code> class definition we will use to define many particular <code>Environment</code> objects.</p>
+
+<p>Object orientation is particularly powerful for building complex systems, so we will use it to simplify the design of our reinforcement learning system. In practice, your real-world deep learning (or reinforcement learning) systems will likely need to be object oriented as well, so we encourage taking some time to master object-oriented design. There are many superb books that cover the fundamentals of object-oriented design, and we recommend that you check them out as necessary.</p>
+</div></section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<section data-type="sect2" data-pdf-bookmark="Abstract Environment"><div class="sect2" id="idm139806607662816">
+<h2>Abstract Environment</h2>
+
+<p>Let’s<a data-type="indexterm" data-primary="tic-tac-toe agent" data-secondary="abstract environment" id="idm139806607661456"/> start by defining an abstract <code>Environment</code> object that encodes the state of a system in a list of NumPy objects (<a data-type="xref" href="#ch8-envclass">Example 8-1</a>). This <code>Environment</code> object is quite general (adapted from DeepChem’s reinforcement learning engine) so it can easily serve as a template for other reinforcement learning projects you might seek to implement.</p>
+<div id="ch8-envclass" data-type="example">
+<h5><span class="label">Example 8-1. </span>This class defines a template for constructing new environments</h5>
+
+<pre data-type="programlisting" data-code-language="python"><code class="k">class</code> <code class="nc">Environment</code><code class="p">(</code><code class="nb">object</code><code class="p">):</code>
+  <code class="sd">"""An environment in which an actor performs actions to accomplish a task.</code>
+
+<code class="sd">  An environment has a current state, which is represented as either a single NumPy</code>
+<code class="sd">  array, or optionally a list of NumPy arrays.  When an action is taken, that causes</code>
+<code class="sd">  the state to be updated.  Exactly what is meant by an "action" is defined by each</code>
+<code class="sd">  subclass.  As far as this interface is concerned, it is simply an arbitrary object.</code>
+<code class="sd">  The environment also computes a reward for each action, and reports when the task</code>
+<code class="sd">  has been terminated (meaning that no more actions may be taken).</code>
+<code class="sd">  """</code>
+
+  <code class="k">def</code> <code class="nf-Magic">__init__</code><code class="p">(</code><code class="bp">self</code><code class="p">,</code> <code class="n">state_shape</code><code class="p">,</code> <code class="n">n_actions</code><code class="p">,</code> <code class="n">state_dtype</code><code class="o">=</code><code class="bp">None</code><code class="p">):</code>
+    <code class="sd">"""Subclasses should call the superclass constructor in addition to doing their</code>
+<code class="sd">       own initialization."""</code>
+    <code class="bp">self</code><code class="o">.</code><code class="n">state_shape</code> <code class="o">=</code> <code class="n">state_shape</code>
+    <code class="bp">self</code><code class="o">.</code><code class="n">n_actions</code> <code class="o">=</code> <code class="n">n_actions</code>
+    <code class="k">if</code> <code class="n">state_dtype</code> <code class="ow">is</code> <code class="bp">None</code><code class="p">:</code>
+      <code class="c1"># Assume all arrays are float32.</code>
+      <code class="k">if</code> <code class="nb">isinstance</code><code class="p">(</code><code class="n">state_shape</code><code class="p">[</code><code class="mi">0</code><code class="p">],</code> <code class="n">collections</code><code class="o">.</code><code class="n">Sequence</code><code class="p">):</code>
+        <code class="bp">self</code><code class="o">.</code><code class="n">state_dtype</code> <code class="o">=</code> <code class="p">[</code><code class="n">np</code><code class="o">.</code><code class="n">float32</code><code class="p">]</code> <code class="o">*</code> <code class="nb">len</code><code class="p">(</code><code class="n">state_shape</code><code class="p">)</code>
+      <code class="k">else</code><code class="p">:</code>
+        <code class="bp">self</code><code class="o">.</code><code class="n">state_dtype</code> <code class="o">=</code> <code class="n">np</code><code class="o">.</code><code class="n">float32</code>
+    <code class="k">else</code><code class="p">:</code>
+      <code class="bp">self</code><code class="o">.</code><code class="n">state_dtype</code> <code class="o">=</code> <code class="n">state_dtype</code></pre></div>
+</div></section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<section data-type="sect2" data-pdf-bookmark="Tic-Tac-Toe Environment"><div class="sect2" id="idm139806607654864">
+<h2>Tic-Tac-Toe Environment</h2>
+
+<p>We<a data-type="indexterm" data-primary="tic-tac-toe agent" data-secondary="tic-tac-toe environment" id="idm139806607564672"/> need to specialize the <code>Environment</code> class to create a <code>TicTacToeEnvironment</code> suitable for our needs. To do this, we construct a <em>subclass</em> of <code>Environment</code> that adds on more features, while retaining the core functionality of the original <em>superclass</em>. In <a data-type="xref" href="#ch8-tictacenvclass">Example 8-2</a>, we define <code>TicTacToeEnvironment</code> as a subclass of <code>Environment</code> that adds details specific to tic-tac-toe.</p>
+<div id="ch8-tictacenvclass" data-type="example">
+<h5><span class="label">Example 8-2. </span>The TicTacToeEnvironment class defines a template for constructing new tic-tac-toe environments</h5>
+
+<pre data-type="programlisting" data-code-language="python"><code class="k">class</code> <code class="nc">TicTacToeEnvironment</code><code class="p">(</code><code class="n">dc</code><code class="o">.</code><code class="n">rl</code><code class="o">.</code><code class="n">Environment</code><code class="p">):</code>
+  <code class="sd">"""</code>
+<code class="sd">  Play tictactoe against a randomly acting opponent</code>
+<code class="sd">  """</code>
+  <code class="n">X</code> <code class="o">=</code> <code class="n">np</code><code class="o">.</code><code class="n">array</code><code class="p">([</code><code class="mf">1.0</code><code class="p">,</code> <code class="mf">0.0</code><code class="p">])</code>
+  <code class="n">O</code> <code class="o">=</code> <code class="n">np</code><code class="o">.</code><code class="n">array</code><code class="p">([</code><code class="mf">0.0</code><code class="p">,</code> <code class="mf">1.0</code><code class="p">])</code>
+  <code class="n">EMPTY</code> <code class="o">=</code> <code class="n">np</code><code class="o">.</code><code class="n">array</code><code class="p">([</code><code class="mf">0.0</code><code class="p">,</code> <code class="mf">0.0</code><code class="p">])</code>
+
+  <code class="n">ILLEGAL_MOVE_PENALTY</code> <code class="o">=</code> <code class="o">-</code><code class="mf">3.0</code>
+  <code class="n">LOSS_PENALTY</code> <code class="o">=</code> <code class="o">-</code><code class="mf">3.0</code>
+  <code class="n">NOT_LOSS</code> <code class="o">=</code> <code class="mf">0.1</code>
+  <code class="n">DRAW_REWARD</code> <code class="o">=</code> <code class="mf">5.0</code>
+  <code class="n">WIN_REWARD</code> <code class="o">=</code> <code class="mf">10.0</code>
+
+  <code class="k">def</code> <code class="nf-Magic">__init__</code><code class="p">(</code><code class="bp">self</code><code class="p">):</code>
+    <code class="nb">super</code><code class="p">(</code><code class="n">TicTacToeEnvironment</code><code class="p">,</code> <code class="bp">self</code><code class="p">)</code><code class="o">.</code><code class="nf-Magic">__init__</code><code class="p">([(</code><code class="mi">3</code><code class="p">,</code> <code class="mi">3</code><code class="p">,</code> <code class="mi">2</code><code class="p">)],</code> <code class="mi">9</code><code class="p">)</code>
+    <code class="bp">self</code><code class="o">.</code><code class="n">terminated</code> <code class="o">=</code> <code class="bp">None</code>
+    <code class="bp">self</code><code class="o">.</code><code class="n">reset</code><code class="p">()</code></pre></div>
+
+<p>The first interesting tidbit to note here is that we define the board state as a NumPy array of shape <code>(3, 3, 2)</code>. We use a one-hot encoding of <code>X</code> and <code>O</code> (one-hot encodings aren’t only useful for natural language processing!).</p>
+
+<p>The second important thing to note is that the environment explicitly defines the reward function by setting penalties for illegal moves and losses, and rewards for draws and wins. This snippet powerfully illustrates the arbitrary nature of reward function engineering. Why these particular numbers?</p>
+
+<p>Empirically, these choices appear to result in stable behavior, but we encourage you to experiment with alternate reward settings to observe results. In this implementation, we specify that the agent always plays <code>X</code>, but randomize whether <code>X</code> or <code>O</code> goes first. The function <code>get_O_move()</code> simply places an <code>O</code> on a random open tile on the game board. <code>TicTacToeEnvironment</code> encodes an opponent that plays <code>O</code> while always selecting a random move. The <code>reset()</code> function simply clears the board, and places an <code>O</code> tile randomly if <code>O</code> is going first during this game. See <a data-type="xref" href="#ch8-tictacenvclass2">Example 8-3</a>.</p>
+<div id="ch8-tictacenvclass2" data-type="example">
+<h5><span class="label">Example 8-3. </span>More methods from the TicTacToeEnvironment class</h5>
+
+<pre data-type="programlisting" data-code-language="python"><code class="k">def</code> <code class="nf">reset</code><code class="p">(</code><code class="bp">self</code><code class="p">):</code>
+  <code class="bp">self</code><code class="o">.</code><code class="n">terminated</code> <code class="o">=</code> <code class="bp">False</code>
+  <code class="bp">self</code><code class="o">.</code><code class="n">state</code> <code class="o">=</code> <code class="p">[</code><code class="n">np</code><code class="o">.</code><code class="n">zeros</code><code class="p">(</code><code class="n">shape</code><code class="o">=</code><code class="p">(</code><code class="mi">3</code><code class="p">,</code> <code class="mi">3</code><code class="p">,</code> <code class="mi">2</code><code class="p">),</code> <code class="n">dtype</code><code class="o">=</code><code class="n">np</code><code class="o">.</code><code class="n">float32</code><code class="p">)]</code>
+
+  <code class="c1"># Randomize who goes first</code>
+  <code class="k">if</code> <code class="n">random</code><code class="o">.</code><code class="n">randint</code><code class="p">(</code><code class="mi">0</code><code class="p">,</code> <code class="mi">1</code><code class="p">)</code> <code class="o">==</code> <code class="mi">1</code><code class="p">:</code>
+    <code class="n">move</code> <code class="o">=</code> <code class="bp">self</code><code class="o">.</code><code class="n">get_O_move</code><code class="p">()</code>
+    <code class="bp">self</code><code class="o">.</code><code class="n">state</code><code class="p">[</code><code class="mi">0</code><code class="p">][</code><code class="n">move</code><code class="p">[</code><code class="mi">0</code><code class="p">]][</code><code class="n">move</code><code class="p">[</code><code class="mi">1</code><code class="p">]]</code> <code class="o">=</code> <code class="n">TicTacToeEnvironment</code><code class="o">.</code><code class="n">O</code>
+
+<code class="k">def</code> <code class="nf">get_O_move</code><code class="p">(</code><code class="bp">self</code><code class="p">):</code>
+  <code class="n">empty_squares</code> <code class="o">=</code> <code class="p">[]</code>
+  <code class="k">for</code> <code class="n">row</code> <code class="ow">in</code> <code class="nb">range</code><code class="p">(</code><code class="mi">3</code><code class="p">):</code>
+    <code class="k">for</code> <code class="n">col</code> <code class="ow">in</code> <code class="nb">range</code><code class="p">(</code><code class="mi">3</code><code class="p">):</code>
+      <code class="k">if</code> <code class="n">np</code><code class="o">.</code><code class="n">all</code><code class="p">(</code><code class="bp">self</code><code class="o">.</code><code class="n">state</code><code class="p">[</code><code class="mi">0</code><code class="p">][</code><code class="n">row</code><code class="p">][</code><code class="n">col</code><code class="p">]</code> <code class="o">==</code> <code class="n">TicTacToeEnvironment</code><code class="o">.</code><code class="n">EMPTY</code><code class="p">):</code>
+        <code class="n">empty_squares</code><code class="o">.</code><code class="n">append</code><code class="p">((</code><code class="n">row</code><code class="p">,</code> <code class="n">col</code><code class="p">))</code>
+  <code class="k">return</code> <code class="n">random</code><code class="o">.</code><code class="n">choice</code><code class="p">(</code><code class="n">empty_squares</code><code class="p">)</code></pre></div>
+
+<p>The utility function <code>game_over()</code> reports that the game has ended if all tiles are filled. <code>check_winner()</code> checks whether the specified player has achieved three in a row and won the game (<a data-type="xref" href="#ch8-tictacenvclass3">Example 8-4</a>).</p>
+<div id="ch8-tictacenvclass3" data-type="example">
+<h5><span class="label">Example 8-4. </span>Utility methods from the TicTacToeEnvironment class for detecting when the game has ended and who won</h5>
+
+<pre data-type="programlisting" data-code-language="python"><code class="k">def</code> <code class="nf">check_winner</code><code class="p">(</code><code class="bp">self</code><code class="p">,</code> <code class="n">player</code><code class="p">):</code>
+  <code class="k">for</code> <code class="n">i</code> <code class="ow">in</code> <code class="nb">range</code><code class="p">(</code><code class="mi">3</code><code class="p">):</code>
+    <code class="n">row</code> <code class="o">=</code> <code class="n">np</code><code class="o">.</code><code class="n">sum</code><code class="p">(</code><code class="bp">self</code><code class="o">.</code><code class="n">state</code><code class="p">[</code><code class="mi">0</code><code class="p">][</code><code class="n">i</code><code class="p">][:],</code> <code class="n">axis</code><code class="o">=</code><code class="mi">0</code><code class="p">)</code>
+    <code class="k">if</code> <code class="n">np</code><code class="o">.</code><code class="n">all</code><code class="p">(</code><code class="n">row</code> <code class="o">==</code> <code class="n">player</code> <code class="o">*</code> <code class="mi">3</code><code class="p">):</code>
+      <code class="k">return</code> <code class="bp">True</code>
+    <code class="n">col</code> <code class="o">=</code> <code class="n">np</code><code class="o">.</code><code class="n">sum</code><code class="p">(</code><code class="bp">self</code><code class="o">.</code><code class="n">state</code><code class="p">[</code><code class="mi">0</code><code class="p">][:][</code><code class="n">i</code><code class="p">],</code> <code class="n">axis</code><code class="o">=</code><code class="mi">0</code><code class="p">)</code>
+    <code class="k">if</code> <code class="n">np</code><code class="o">.</code><code class="n">all</code><code class="p">(</code><code class="n">col</code> <code class="o">==</code> <code class="n">player</code> <code class="o">*</code> <code class="mi">3</code><code class="p">):</code>
+      <code class="k">return</code> <code class="bp">True</code>
+
+  <code class="n">diag1</code> <code class="o">=</code> <code class="bp">self</code><code class="o">.</code><code class="n">state</code><code class="p">[</code><code class="mi">0</code><code class="p">][</code><code class="mi">0</code><code class="p">][</code><code class="mi">0</code><code class="p">]</code> <code class="o">+</code> <code class="bp">self</code><code class="o">.</code><code class="n">state</code><code class="p">[</code><code class="mi">0</code><code class="p">][</code><code class="mi">1</code><code class="p">][</code><code class="mi">1</code><code class="p">]</code> <code class="o">+</code> <code class="bp">self</code><code class="o">.</code><code class="n">state</code><code class="p">[</code><code class="mi">0</code><code class="p">][</code><code class="mi">2</code><code class="p">][</code><code class="mi">2</code><code class="p">]</code>
+  <code class="k">if</code> <code class="n">np</code><code class="o">.</code><code class="n">all</code><code class="p">(</code><code class="n">diag1</code> <code class="o">==</code> <code class="n">player</code> <code class="o">*</code> <code class="mi">3</code><code class="p">):</code>
+    <code class="k">return</code> <code class="bp">True</code>
+  <code class="n">diag2</code> <code class="o">=</code> <code class="bp">self</code><code class="o">.</code><code class="n">state</code><code class="p">[</code><code class="mi">0</code><code class="p">][</code><code class="mi">0</code><code class="p">][</code><code class="mi">2</code><code class="p">]</code> <code class="o">+</code> <code class="bp">self</code><code class="o">.</code><code class="n">state</code><code class="p">[</code><code class="mi">0</code><code class="p">][</code><code class="mi">1</code><code class="p">][</code><code class="mi">1</code><code class="p">]</code> <code class="o">+</code> <code class="bp">self</code><code class="o">.</code><code class="n">state</code><code class="p">[</code><code class="mi">0</code><code class="p">][</code><code class="mi">2</code><code class="p">][</code><code class="mi">0</code><code class="p">]</code>
+  <code class="k">if</code> <code class="n">np</code><code class="o">.</code><code class="n">all</code><code class="p">(</code><code class="n">diag2</code> <code class="o">==</code> <code class="n">player</code> <code class="o">*</code> <code class="mi">3</code><code class="p">):</code>
+    <code class="k">return</code> <code class="bp">True</code>
+  <code class="k">return</code> <code class="bp">False</code>
+
+<code class="k">def</code> <code class="nf">game_over</code><code class="p">(</code><code class="bp">self</code><code class="p">):</code>
+  <code class="k">for</code> <code class="n">i</code> <code class="ow">in</code> <code class="nb">range</code><code class="p">(</code><code class="mi">3</code><code class="p">):</code>
+    <code class="k">for</code> <code class="n">j</code> <code class="ow">in</code> <code class="nb">range</code><code class="p">(</code><code class="mi">3</code><code class="p">):</code>
+      <code class="k">if</code> <code class="n">np</code><code class="o">.</code><code class="n">all</code><code class="p">(</code><code class="bp">self</code><code class="o">.</code><code class="n">state</code><code class="p">[</code><code class="mi">0</code><code class="p">][</code><code class="n">i</code><code class="p">][</code><code class="n">j</code><code class="p">]</code> <code class="o">==</code> <code class="n">TicTacToeEnvironment</code><code class="o">.</code><code class="n">EMPTY</code><code class="p">):</code>
+        <code class="k">return</code> <code class="bp">False</code>
+  <code class="k">return</code> <code class="bp">True</code></pre></div>
+
+<p>In our implementation, an action is simply a number between 0 and 8 specifying the tile on which the <code>X</code> tile is placed. The <code>step()</code> method checks whether this tile is occupied (returning a penalty if so), then places the tile. If <code>X</code> has won, a reward is returned. Else, the random <code>O</code> opponent is allowed to make a move. If <code>O</code> won, then a penalty is returned. If the game has ended as a draw, then a penalty is returned. Else, the game continues with a <code>NOT_LOSS</code> reward. See <a data-type="xref" href="#ch8-tictacenvclass4">Example 8-5</a>.</p>
+<div id="ch8-tictacenvclass4" data-type="example">
+<h5><span class="label">Example 8-5. </span>This method performs a step of the simulation</h5>
+
+<pre data-type="programlisting" data-code-language="python"><code class="k">def</code> <code class="nf">step</code><code class="p">(</code><code class="bp">self</code><code class="p">,</code> <code class="n">action</code><code class="p">):</code>
+  <code class="bp">self</code><code class="o">.</code><code class="n">state</code> <code class="o">=</code> <code class="n">copy</code><code class="o">.</code><code class="n">deepcopy</code><code class="p">(</code><code class="bp">self</code><code class="o">.</code><code class="n">state</code><code class="p">)</code>
+  <code class="n">row</code> <code class="o">=</code> <code class="n">action</code> <code class="o">//</code> <code class="mi">3</code>
+  <code class="n">col</code> <code class="o">=</code> <code class="n">action</code> <code class="o">%</code> <code class="mi">3</code>
+
+  <code class="c1"># Illegal move -- the square is not empty</code>
+  <code class="k">if</code> <code class="ow">not</code> <code class="n">np</code><code class="o">.</code><code class="n">all</code><code class="p">(</code><code class="bp">self</code><code class="o">.</code><code class="n">state</code><code class="p">[</code><code class="mi">0</code><code class="p">][</code><code class="n">row</code><code class="p">][</code><code class="n">col</code><code class="p">]</code> <code class="o">==</code> <code class="n">TicTacToeEnvironment</code><code class="o">.</code><code class="n">EMPTY</code><code class="p">):</code>
+    <code class="bp">self</code><code class="o">.</code><code class="n">terminated</code> <code class="o">=</code> <code class="bp">True</code>
+    <code class="k">return</code> <code class="n">TicTacToeEnvironment</code><code class="o">.</code><code class="n">ILLEGAL_MOVE_PENALTY</code>
+
+  <code class="c1"># Move X</code>
+  <code class="bp">self</code><code class="o">.</code><code class="n">state</code><code class="p">[</code><code class="mi">0</code><code class="p">][</code><code class="n">row</code><code class="p">][</code><code class="n">col</code><code class="p">]</code> <code class="o">=</code> <code class="n">TicTacToeEnvironment</code><code class="o">.</code><code class="n">X</code>
+
+  <code class="c1"># Did X Win</code>
+  <code class="k">if</code> <code class="bp">self</code><code class="o">.</code><code class="n">check_winner</code><code class="p">(</code><code class="n">TicTacToeEnvironment</code><code class="o">.</code><code class="n">X</code><code class="p">):</code>
+    <code class="bp">self</code><code class="o">.</code><code class="n">terminated</code> <code class="o">=</code> <code class="bp">True</code>
+    <code class="k">return</code> <code class="n">TicTacToeEnvironment</code><code class="o">.</code><code class="n">WIN_REWARD</code>
+
+  <code class="k">if</code> <code class="bp">self</code><code class="o">.</code><code class="n">game_over</code><code class="p">():</code>
+    <code class="bp">self</code><code class="o">.</code><code class="n">terminated</code> <code class="o">=</code> <code class="bp">True</code>
+    <code class="k">return</code> <code class="n">TicTacToeEnvironment</code><code class="o">.</code><code class="n">DRAW_REWARD</code>
+
+  <code class="n">move</code> <code class="o">=</code> <code class="bp">self</code><code class="o">.</code><code class="n">get_O_move</code><code class="p">()</code>
+  <code class="bp">self</code><code class="o">.</code><code class="n">state</code><code class="p">[</code><code class="mi">0</code><code class="p">][</code><code class="n">move</code><code class="p">[</code><code class="mi">0</code><code class="p">]][</code><code class="n">move</code><code class="p">[</code><code class="mi">1</code><code class="p">]]</code> <code class="o">=</code> <code class="n">TicTacToeEnvironment</code><code class="o">.</code><code class="n">O</code>
+
+  <code class="c1"># Did O Win</code>
+  <code class="k">if</code> <code class="bp">self</code><code class="o">.</code><code class="n">check_winner</code><code class="p">(</code><code class="n">TicTacToeEnvironment</code><code class="o">.</code><code class="n">O</code><code class="p">):</code>
+    <code class="bp">self</code><code class="o">.</code><code class="n">terminated</code> <code class="o">=</code> <code class="bp">True</code>
+    <code class="k">return</code> <code class="n">TicTacToeEnvironment</code><code class="o">.</code><code class="n">LOSS_PENALTY</code>
+
+  <code class="k">if</code> <code class="bp">self</code><code class="o">.</code><code class="n">game_over</code><code class="p">():</code>
+    <code class="bp">self</code><code class="o">.</code><code class="n">terminated</code> <code class="o">=</code> <code class="bp">True</code>
+    <code class="k">return</code> <code class="n">TicTacToeEnvironment</code><code class="o">.</code><code class="n">DRAW_REWARD</code>
+
+  <code class="k">return</code> <code class="n">TicTacToeEnvironment</code><code class="o">.</code><code class="n">NOT_LOSS</code></pre></div>
+</div></section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<section data-type="sect2" data-pdf-bookmark="The Layer Abstraction"><div class="sect2" id="idm139806607654272">
+<h2>The Layer Abstraction</h2>
+
+<p>Running<a data-type="indexterm" data-primary="tic-tac-toe agent" data-secondary="layer abstraction" id="idm139806606983872"/> an asynchronous reinforcement learning algorithm such as A3C requires that each thread have access to a separate copy of the policy model. These copies of the model have to be periodically re-synced with one another for training to proceed. What is the easiest way we can construct multiple copies of the TensorFlow graph that we can distribute to each thread?</p>
+
+<p>One simple possibility is to create a function that creates a copy of the model in a separate TensorFlow graph. This approach works well, but gets to be a little messy, especially for sophisticated networks. Using a little bit of object orientation can significantly simplify this process. Since our reinforcement learning code is adapted from the DeepChem library, we use a simplified version of the TensorGraph framework from DeepChem (see <a href="https://deepchem.io"><em class="hyperlink">https://deepchem.io</em></a> for information and docs). This framework is similar to other high-level TensorFlow frameworks such as Keras. The core abstraction in all such models is the introduction of a <code>Layer</code> object that encapsulates a portion of a deep network.</p>
+
+<p>A <code>Layer</code> is a portion<a data-type="indexterm" data-primary="directed graphs" id="idm139806606592016"/><a data-type="indexterm" data-primary="Layer object" id="idm139806606591280"/> of a TensorFlow graph that accepts a list <code>in_layers</code> of input layers. In this abstraction, a deep architecture consists of a <em>directed graph</em> of layers. Directed graphs are similar to the undirected graphs you saw in <a data-type="xref" href="ch06.html#convolutional_neural_networks">Chapter 6</a>, but have directions on their edges. In this case, the <code>in_layers</code> have edges to the new <code>Layer</code>, with the direction pointing toward the new layer. You will learn more about this concept in the next section.</p>
+
+<p>We<a data-type="indexterm" data-primary="tf.register_tensor_conversion_function" id="idm139806606587632"/><a data-type="indexterm" data-primary="tf.convert_to_tensor" id="idm139806606586576"/><a data-type="indexterm" data-primary="get_input_tensors()" id="idm139806606585904"/> use <code>tf.register_tensor_conversion_function</code>, a utility that allows arbitrary classes to register themselves as tensor convertible. This registration will mean that a <code>Layer</code> can be converted into a TensorFlow tensor via a call to <code>tf.convert_to_tensor</code>.  The <code>_get_input_tensors()</code> private method is a utility that uses <code>tf.convert_to_tensor</code> to transform input layers into input tensors. Each <code>Layer</code> is responsible for implementing a <code>create_tensor()</code> method that specifies the operations to add to the TensorFlow computational graph. See <a data-type="xref" href="#ch8-layer">Example 8-6</a>.</p>
+<div id="ch8-layer" data-type="example">
+<h5><span class="label">Example 8-6. </span>The Layer object is the fundamental abstraction in object-oriented deep architectures. It encapsulates a part of the netwok such as a fully connected layer or a convolutional layer. This example defines a generic superclass for all such layers.</h5>
+
+<pre data-type="programlisting" data-code-language="python"><code class="k">class</code> <code class="nc">Layer</code><code class="p">(</code><code class="nb">object</code><code class="p">):</code>
+
+  <code class="k">def</code> <code class="nf-Magic">__init__</code><code class="p">(</code><code class="bp">self</code><code class="p">,</code> <code class="n">in_layers</code><code class="o">=</code><code class="bp">None</code><code class="p">,</code> <code class="o">**</code><code class="n">kwargs</code><code class="p">):</code>
+    <code class="k">if</code> <code class="s2">"name"</code> <code class="ow">in</code> <code class="n">kwargs</code><code class="p">:</code>
+      <code class="bp">self</code><code class="o">.</code><code class="n">name</code> <code class="o">=</code> <code class="n">kwargs</code><code class="p">[</code><code class="s2">"name"</code><code class="p">]</code>
+    <code class="k">else</code><code class="p">:</code>
+      <code class="bp">self</code><code class="o">.</code><code class="n">name</code> <code class="o">=</code> <code class="bp">None</code>
+    <code class="k">if</code> <code class="n">in_layers</code> <code class="ow">is</code> <code class="bp">None</code><code class="p">:</code>
+      <code class="n">in_layers</code> <code class="o">=</code> <code class="nb">list</code><code class="p">()</code>
+    <code class="k">if</code> <code class="ow">not</code> <code class="nb">isinstance</code><code class="p">(</code><code class="n">in_layers</code><code class="p">,</code> <code class="n">Sequence</code><code class="p">):</code>
+      <code class="n">in_layers</code> <code class="o">=</code> <code class="p">[</code><code class="n">in_layers</code><code class="p">]</code>
+    <code class="bp">self</code><code class="o">.</code><code class="n">in_layers</code> <code class="o">=</code> <code class="n">in_layers</code>
+    <code class="bp">self</code><code class="o">.</code><code class="n">variable_scope</code> <code class="o">=</code> <code class="s2">""</code>
+    <code class="bp">self</code><code class="o">.</code><code class="n">tb_input</code> <code class="o">=</code> <code class="bp">None</code>
+
+  <code class="k">def</code> <code class="nf">create_tensor</code><code class="p">(</code><code class="bp">self</code><code class="p">,</code> <code class="n">in_layers</code><code class="o">=</code><code class="bp">None</code><code class="p">,</code> <code class="o">**</code><code class="n">kwargs</code><code class="p">):</code>
+    <code class="k">raise</code> <code class="ne">NotImplementedError</code><code class="p">(</code><code class="s2">"Subclasses must implement for themselves"</code><code class="p">)</code>
+
+  <code class="k">def</code> <code class="nf">_get_input_tensors</code><code class="p">(</code><code class="bp">self</code><code class="p">,</code> <code class="n">in_layers</code><code class="p">):</code>
+    <code class="sd">"""Get the input tensors to his layer.</code>
+
+<code class="sd">    Parameters</code>
+<code class="sd">    ----------</code>
+<code class="sd">    in_layers: list of Layers or tensors</code>
+<code class="sd">      the inputs passed to create_tensor().  If None, this layer's inputs will</code>
+<code class="sd">      be used instead.</code>
+<code class="sd">    """</code>
+    <code class="k">if</code> <code class="n">in_layers</code> <code class="ow">is</code> <code class="bp">None</code><code class="p">:</code>
+      <code class="n">in_layers</code> <code class="o">=</code> <code class="bp">self</code><code class="o">.</code><code class="n">in_layers</code>
+    <code class="k">if</code> <code class="ow">not</code> <code class="nb">isinstance</code><code class="p">(</code><code class="n">in_layers</code><code class="p">,</code> <code class="n">Sequence</code><code class="p">):</code>
+      <code class="n">in_layers</code> <code class="o">=</code> <code class="p">[</code><code class="n">in_layers</code><code class="p">]</code>
+    <code class="n">tensors</code> <code class="o">=</code> <code class="p">[]</code>
+    <code class="k">for</code> <code class="nb">input</code> <code class="ow">in</code> <code class="n">in_layers</code><code class="p">:</code>
+      <code class="n">tensors</code><code class="o">.</code><code class="n">append</code><code class="p">(</code><code class="n">tf</code><code class="o">.</code><code class="n">convert_to_tensor</code><code class="p">(</code><code class="nb">input</code><code class="p">))</code>
+    <code class="k">return</code> <code class="n">tensors</code>
+
+<code class="k">def</code> <code class="nf">_convert_layer_to_tensor</code><code class="p">(</code><code class="n">value</code><code class="p">,</code> <code class="n">dtype</code><code class="o">=</code><code class="bp">None</code><code class="p">,</code> <code class="n">name</code><code class="o">=</code><code class="bp">None</code><code class="p">,</code> <code class="n">as_ref</code><code class="o">=</code><code class="bp">False</code><code class="p">):</code>
+  <code class="k">return</code> <code class="n">tf</code><code class="o">.</code><code class="n">convert_to_tensor</code><code class="p">(</code><code class="n">value</code><code class="o">.</code><code class="n">out_tensor</code><code class="p">,</code> <code class="n">dtype</code><code class="o">=</code><code class="n">dtype</code><code class="p">,</code> <code class="n">name</code><code class="o">=</code><code class="n">name</code><code class="p">)</code>
+
+<code class="n">tf</code><code class="o">.</code><code class="n">register_tensor_conversion_function</code><code class="p">(</code><code class="n">Layer</code><code class="p">,</code> <code class="n">_convert_layer_to_tensor</code><code class="p">)</code></pre></div>
+
+<p>The preceding description is abstract, but in practice easy to use. <a data-type="xref" href="#ch8-squeeze">Example 8-7</a> shows a <code>Squeeze</code> layer that wraps <code>tf.squeeze</code> with a <code>Layer</code> (you will find this class convenient later). Note that <code>Squeeze</code> is a subclass of <code>Layer</code>.</p>
+<div id="ch8-squeeze" data-type="example">
+<h5><span class="label">Example 8-7. </span>The Squeeze layer squeezes its input</h5>
+
+<pre data-type="programlisting" data-code-language="python"><code class="k">class</code> <code class="nc">Squeeze</code><code class="p">(</code><code class="n">Layer</code><code class="p">):</code>
+
+  <code class="k">def</code> <code class="nf-Magic">__init__</code><code class="p">(</code><code class="bp">self</code><code class="p">,</code> <code class="n">in_layers</code><code class="o">=</code><code class="bp">None</code><code class="p">,</code> <code class="n">squeeze_dims</code><code class="o">=</code><code class="bp">None</code><code class="p">,</code> <code class="o">**</code><code class="n">kwargs</code><code class="p">):</code>
+    <code class="bp">self</code><code class="o">.</code><code class="n">squeeze_dims</code> <code class="o">=</code> <code class="n">squeeze_dims</code>
+    <code class="nb">super</code><code class="p">(</code><code class="n">Squeeze</code><code class="p">,</code> <code class="bp">self</code><code class="p">)</code><code class="o">.</code><code class="nf-Magic">__init__</code><code class="p">(</code><code class="n">in_layers</code><code class="p">,</code> <code class="o">**</code><code class="n">kwargs</code><code class="p">)</code>
+
+  <code class="k">def</code> <code class="nf">create_tensor</code><code class="p">(</code><code class="bp">self</code><code class="p">,</code> <code class="n">in_layers</code><code class="o">=</code><code class="bp">None</code><code class="p">,</code> <code class="o">**</code><code class="n">kwargs</code><code class="p">):</code>
+    <code class="n">inputs</code> <code class="o">=</code> <code class="bp">self</code><code class="o">.</code><code class="n">_get_input_tensors</code><code class="p">(</code><code class="n">in_layers</code><code class="p">)</code>
+    <code class="n">parent_tensor</code> <code class="o">=</code> <code class="n">inputs</code><code class="p">[</code><code class="mi">0</code><code class="p">]</code>
+    <code class="n">out_tensor</code> <code class="o">=</code> <code class="n">tf</code><code class="o">.</code><code class="n">squeeze</code><code class="p">(</code><code class="n">parent_tensor</code><code class="p">,</code> <code class="n">squeeze_dims</code><code class="o">=</code><code class="bp">self</code><code class="o">.</code><code class="n">squeeze_dims</code><code class="p">)</code>
+    <code class="bp">self</code><code class="o">.</code><code class="n">out_tensor</code> <code class="o">=</code> <code class="n">out_tensor</code>
+    <code class="k">return</code> <code class="n">out_tensor</code></pre></div>
+
+<p>The <code>Input</code> layer wraps placeholders for convenience (<a data-type="xref" href="#ch8-input">Example 8-8</a>). Note that the <code>Layer.create_tensor</code> method must be invoked for each layer we use in order to construct a TensorFlow computational graph.</p>
+<div id="ch8-input" data-type="example">
+<h5><span class="label">Example 8-8. </span>The Input layer adds placeholders to the computation graph</h5>
+
+<pre data-type="programlisting" data-code-language="python"><code class="k">class</code> <code class="nc">Input</code><code class="p">(</code><code class="n">Layer</code><code class="p">):</code>
+
+  <code class="k">def</code> <code class="nf-Magic">__init__</code><code class="p">(</code><code class="bp">self</code><code class="p">,</code> <code class="n">shape</code><code class="p">,</code> <code class="n">dtype</code><code class="o">=</code><code class="n">tf</code><code class="o">.</code><code class="n">float32</code><code class="p">,</code> <code class="o">**</code><code class="n">kwargs</code><code class="p">):</code>
+    <code class="bp">self</code><code class="o">.</code><code class="n">_shape</code> <code class="o">=</code> <code class="nb">tuple</code><code class="p">(</code><code class="n">shape</code><code class="p">)</code>
+    <code class="bp">self</code><code class="o">.</code><code class="n">dtype</code> <code class="o">=</code> <code class="n">dtype</code>
+    <code class="nb">super</code><code class="p">(</code><code class="n">Input</code><code class="p">,</code> <code class="bp">self</code><code class="p">)</code><code class="o">.</code><code class="nf-Magic">__init__</code><code class="p">(</code><code class="o">**</code><code class="n">kwargs</code><code class="p">)</code>
+
+  <code class="k">def</code> <code class="nf">create_tensor</code><code class="p">(</code><code class="bp">self</code><code class="p">,</code> <code class="n">in_layers</code><code class="o">=</code><code class="bp">None</code><code class="p">,</code> <code class="o">**</code><code class="n">kwargs</code><code class="p">):</code>
+    <code class="k">if</code> <code class="n">in_layers</code> <code class="ow">is</code> <code class="bp">None</code><code class="p">:</code>
+      <code class="n">in_layers</code> <code class="o">=</code> <code class="bp">self</code><code class="o">.</code><code class="n">in_layers</code>
+    <code class="n">out_tensor</code> <code class="o">=</code> <code class="n">tf</code><code class="o">.</code><code class="n">placeholder</code><code class="p">(</code><code class="n">dtype</code><code class="o">=</code><code class="bp">self</code><code class="o">.</code><code class="n">dtype</code><code class="p">,</code> <code class="n">shape</code><code class="o">=</code><code class="bp">self</code><code class="o">.</code><code class="n">_shape</code><code class="p">)</code>
+    <code class="bp">self</code><code class="o">.</code><code class="n">out_tensor</code> <code class="o">=</code> <code class="n">out_tensor</code>
+    <code class="k">return</code> <code class="n">out_tensor</code></pre></div>
+<div data-type="note" epub:type="note"><h1>tf.keras and tf.estimator</h1>
+<p>TensorFlow<a data-type="indexterm" data-primary="tf.keras" id="idm139806606107776"/><a data-type="indexterm" data-primary="tf.estimator" id="idm139806606305888"/> has now integrated the popular Keras object-oriented frontend into the core TensorFlow library. Keras includes a <code>Layer</code> class definition that closely matches the <code>Layer</code> objects you’ve just learned about in this section. In fact, the <code>Layer</code> objects here were adapted from the DeepChem library, which in turn adapted them from an earlier version of Keras.</p>
+
+<p>It’s worth noting, though, that <code>tf.keras</code> has not yet become the standard higher-level interface to TensorFlow. The <code>tf.estimator</code> module provides an alternative (albeit less rich) high-level interface to raw TensorFlow.</p>
+
+<p>Regardless of which frontend eventually becomes standard, we think that understanding the fundamental design principles for building your own frontend is instructive and worthwhile. You might need to build a new system for your organization that requires an alternative design, so a solid grasp of design principles will serve you well.</p>
+</div>
+</div></section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<section data-type="sect2" data-pdf-bookmark="Defining a Graph of Layers"><div class="sect2" id="idm139806606984848">
+<h2>Defining a Graph of Layers</h2>
+
+<p>We<a data-type="indexterm" data-primary="tic-tac-toe agent" data-secondary="defining a graph of layers" id="idm139806606299696"/><a data-type="indexterm" data-primary="TensorGraph objects" id="idm139806606298720"/><a data-type="indexterm" data-primary="directed graphs" id="idm139806606298048"/> mentioned briefly in the previous section that a deep architecture could be visualized as a directed graph of <code>Layer</code> objects. In this section, we transform this intuition into the <code>TensorGraph</code> object. These objects are responsible for constructing the underlying TensorFlow computation graph.</p>
+
+<p>A <code>TensorGraph</code> object<a data-type="indexterm" data-primary="tf.Graph" id="idm139806606294960"/><a data-type="indexterm" data-primary="tf.Session()" id="idm139806606294224"/> is responsible for maintaining a <code>tf.Graph</code>, a <code>tf.Session</code>, and a list of layers (<code>self.layers</code>) internally (<a data-type="xref" href="#ch8-tensorgraph">Example 8-9</a>). The directed graph is represented implicitly, by the <code>in_layers</code> belonging to each <code>Layer</code> object. <code>TensorGraph</code> also contains utilities for saving this <code>tf.Graph</code> instance to disk and consequently assigns itself a directory (using <code>tempfile.mkdtemp()</code> if none is specified) to store checkpoints of the weights associated with its underlying TensorFlow graph.</p>
+<div id="ch8-tensorgraph" data-type="example">
+<h5><span class="label">Example 8-9. </span>The TensorGraph contains a graph of layers; TensorGraph objects can be thought of as the “model” object holding the deep architecture you want to train</h5>
+
+<pre data-type="programlisting" data-code-language="python"><code class="k">class</code> <code class="nc">TensorGraph</code><code class="p">(</code><code class="nb">object</code><code class="p">):</code>
+
+  <code class="k">def</code> <code class="nf-Magic">__init__</code><code class="p">(</code><code class="bp">self</code><code class="p">,</code>
+               <code class="n">batch_size</code><code class="o">=</code><code class="mi">100</code><code class="p">,</code>
+               <code class="n">random_seed</code><code class="o">=</code><code class="bp">None</code><code class="p">,</code>
+               <code class="n">graph</code><code class="o">=</code><code class="bp">None</code><code class="p">,</code>
+               <code class="n">learning_rate</code><code class="o">=</code><code class="mf">0.001</code><code class="p">,</code>
+               <code class="n">model_dir</code><code class="o">=</code><code class="bp">None</code><code class="p">,</code>
+               <code class="o">**</code><code class="n">kwargs</code><code class="p">):</code>
+    <code class="sd">"""</code>
+<code class="sd">    Parameters</code>
+<code class="sd">    ----------</code>
+<code class="sd">    batch_size: int</code>
+<code class="sd">      default batch size for training and evaluating</code>
+<code class="sd">    graph: tensorflow.Graph</code>
+<code class="sd">      the Graph in which to create Tensorflow objects.  If None, a new Graph</code>
+<code class="sd">      is created.</code>
+<code class="sd">    learning_rate: float or LearningRateSchedule</code>
+<code class="sd">      the learning rate to use for optimization</code>
+<code class="sd">    kwargs</code>
+<code class="sd">    """</code>
+
+    <code class="c1"># Layer Management</code>
+    <code class="bp">self</code><code class="o">.</code><code class="n">layers</code> <code class="o">=</code> <code class="nb">dict</code><code class="p">()</code>
+    <code class="bp">self</code><code class="o">.</code><code class="n">features</code> <code class="o">=</code> <code class="nb">list</code><code class="p">()</code>
+    <code class="bp">self</code><code class="o">.</code><code class="n">labels</code> <code class="o">=</code> <code class="nb">list</code><code class="p">()</code>
+    <code class="bp">self</code><code class="o">.</code><code class="n">outputs</code> <code class="o">=</code> <code class="nb">list</code><code class="p">()</code>
+    <code class="bp">self</code><code class="o">.</code><code class="n">task_weights</code> <code class="o">=</code> <code class="nb">list</code><code class="p">()</code>
+    <code class="bp">self</code><code class="o">.</code><code class="n">loss</code> <code class="o">=</code> <code class="bp">None</code>
+    <code class="bp">self</code><code class="o">.</code><code class="n">built</code> <code class="o">=</code> <code class="bp">False</code>
+    <code class="bp">self</code><code class="o">.</code><code class="n">optimizer</code> <code class="o">=</code> <code class="bp">None</code>
+    <code class="bp">self</code><code class="o">.</code><code class="n">learning_rate</code> <code class="o">=</code> <code class="n">learning_rate</code>
+
+    <code class="c1"># Singular place to hold Tensor objects which don't serialize</code>
+    <code class="c1"># See TensorGraph._get_tf() for more details on lazy construction</code>
+    <code class="bp">self</code><code class="o">.</code><code class="n">tensor_objects</code> <code class="o">=</code> <code class="p">{</code>
+        <code class="s2">"Graph"</code><code class="p">:</code> <code class="n">graph</code><code class="p">,</code>
+        <code class="c1">#"train_op": None,</code>
+    <code class="p">}</code>
+    <code class="bp">self</code><code class="o">.</code><code class="n">global_step</code> <code class="o">=</code> <code class="mi">0</code>
+    <code class="bp">self</code><code class="o">.</code><code class="n">batch_size</code> <code class="o">=</code> <code class="n">batch_size</code>
+    <code class="bp">self</code><code class="o">.</code><code class="n">random_seed</code> <code class="o">=</code> <code class="n">random_seed</code>
+    <code class="k">if</code> <code class="n">model_dir</code> <code class="ow">is</code> <code class="ow">not</code> <code class="bp">None</code><code class="p">:</code>
+      <code class="k">if</code> <code class="ow">not</code> <code class="n">os</code><code class="o">.</code><code class="n">path</code><code class="o">.</code><code class="n">exists</code><code class="p">(</code><code class="n">model_dir</code><code class="p">):</code>
+        <code class="n">os</code><code class="o">.</code><code class="n">makedirs</code><code class="p">(</code><code class="n">model_dir</code><code class="p">)</code>
+    <code class="k">else</code><code class="p">:</code>
+      <code class="n">model_dir</code> <code class="o">=</code> <code class="n">tempfile</code><code class="o">.</code><code class="n">mkdtemp</code><code class="p">()</code>
+      <code class="bp">self</code><code class="o">.</code><code class="n">model_dir_is_temp</code> <code class="o">=</code> <code class="bp">True</code>
+    <code class="bp">self</code><code class="o">.</code><code class="n">model_dir</code> <code class="o">=</code> <code class="n">model_dir</code>
+    <code class="bp">self</code><code class="o">.</code><code class="n">save_file</code> <code class="o">=</code> <code class="s2">"</code><code class="si">%s</code><code class="s2">/</code><code class="si">%s</code><code class="s2">"</code> <code class="o">%</code> <code class="p">(</code><code class="bp">self</code><code class="o">.</code><code class="n">model_dir</code><code class="p">,</code> <code class="s2">"model"</code><code class="p">)</code>
+    <code class="bp">self</code><code class="o">.</code><code class="n">model_class</code> <code class="o">=</code> <code class="bp">None</code></pre></div>
+
+<p>The private method <code>_add_layer</code> does bookkeeping work to add a new <code>Layer</code> obect to the <code>TensorGraph</code> (<a data-type="xref" href="#ch8-add-layer">Example 8-10</a>).</p>
+<div id="ch8-add-layer" data-type="example">
+<h5><span class="label">Example 8-10. </span>The _add_layer method adds a new Layer object</h5>
+
+<pre data-type="programlisting" data-code-language="python"><code class="k">def</code> <code class="nf">_add_layer</code><code class="p">(</code><code class="bp">self</code><code class="p">,</code> <code class="n">layer</code><code class="p">):</code>
+  <code class="k">if</code> <code class="n">layer</code><code class="o">.</code><code class="n">name</code> <code class="ow">is</code> <code class="bp">None</code><code class="p">:</code>
+    <code class="n">layer</code><code class="o">.</code><code class="n">name</code> <code class="o">=</code> <code class="s2">"</code><code class="si">%s</code><code class="s2">_</code><code class="si">%s</code><code class="s2">"</code> <code class="o">%</code> <code class="p">(</code><code class="n">layer</code><code class="o">.</code><code class="nv-Magic">__class__</code><code class="o">.</code><code class="nv-Magic">__name__</code><code class="p">,</code> <code class="nb">len</code><code class="p">(</code><code class="bp">self</code><code class="o">.</code><code class="n">layers</code><code class="p">)</code> <code class="o">+</code> <code class="mi">1</code><code class="p">)</code>
+  <code class="k">if</code> <code class="n">layer</code><code class="o">.</code><code class="n">name</code> <code class="ow">in</code> <code class="bp">self</code><code class="o">.</code><code class="n">layers</code><code class="p">:</code>
+    <code class="k">return</code>
+  <code class="k">if</code> <code class="nb">isinstance</code><code class="p">(</code><code class="n">layer</code><code class="p">,</code> <code class="n">Input</code><code class="p">):</code>
+    <code class="bp">self</code><code class="o">.</code><code class="n">features</code><code class="o">.</code><code class="n">append</code><code class="p">(</code><code class="n">layer</code><code class="p">)</code>
+  <code class="bp">self</code><code class="o">.</code><code class="n">layers</code><code class="p">[</code><code class="n">layer</code><code class="o">.</code><code class="n">name</code><code class="p">]</code> <code class="o">=</code> <code class="n">layer</code>
+  <code class="k">for</code> <code class="n">in_layer</code> <code class="ow">in</code> <code class="n">layer</code><code class="o">.</code><code class="n">in_layers</code><code class="p">:</code>
+    <code class="bp">self</code><code class="o">.</code><code class="n">_add_layer</code><code class="p">(</code><code class="n">in_layer</code><code class="p">)</code></pre></div>
+
+<p>The layers in a <code>TensorGraph</code> must form a directed acyclic graph (there can be no loops in the graph). As a result, we can topologically sort these layers. Intuitively, a topological sort “orders” the layers in the graph so that each <code>Layer</code> object’s <code>in_layers</code> precede it in the ordered list. This topological sort is necessary to make sure all input layers to a given layer are added to the graph before the layer itself (<a data-type="xref" href="#ch8-topsort">Example 8-11</a>).</p>
+<div id="ch8-topsort" data-type="example">
+<h5><span class="label">Example 8-11. </span>The topsort method orders the layers in the TensorGraph</h5>
+
+<pre data-type="programlisting" data-code-language="python"><code class="k">def</code> <code class="nf">topsort</code><code class="p">(</code><code class="bp">self</code><code class="p">):</code>
+
+  <code class="k">def</code> <code class="nf">add_layers_to_list</code><code class="p">(</code><code class="n">layer</code><code class="p">,</code> <code class="n">sorted_layers</code><code class="p">):</code>
+    <code class="k">if</code> <code class="n">layer</code> <code class="ow">in</code> <code class="n">sorted_layers</code><code class="p">:</code>
+      <code class="k">return</code>
+    <code class="k">for</code> <code class="n">in_layer</code> <code class="ow">in</code> <code class="n">layer</code><code class="o">.</code><code class="n">in_layers</code><code class="p">:</code>
+      <code class="n">add_layers_to_list</code><code class="p">(</code><code class="n">in_layer</code><code class="p">,</code> <code class="n">sorted_layers</code><code class="p">)</code>
+    <code class="n">sorted_layers</code><code class="o">.</code><code class="n">append</code><code class="p">(</code><code class="n">layer</code><code class="p">)</code>
+
+  <code class="n">sorted_layers</code> <code class="o">=</code> <code class="p">[]</code>
+  <code class="k">for</code> <code class="n">l</code> <code class="ow">in</code> <code class="bp">self</code><code class="o">.</code><code class="n">features</code> <code class="o">+</code> <code class="bp">self</code><code class="o">.</code><code class="n">labels</code> <code class="o">+</code> <code class="bp">self</code><code class="o">.</code><code class="n">task_weights</code> <code class="o">+</code> <code class="bp">self</code><code class="o">.</code><code class="n">outputs</code><code class="p">:</code>
+    <code class="n">add_layers_to_list</code><code class="p">(</code><code class="n">l</code><code class="p">,</code> <code class="n">sorted_layers</code><code class="p">)</code>
+  <code class="n">add_layers_to_list</code><code class="p">(</code><code class="bp">self</code><code class="o">.</code><code class="n">loss</code><code class="p">,</code> <code class="n">sorted_layers</code><code class="p">)</code>
+  <code class="k">return</code> <code class="n">sorted_layers</code></pre></div>
+
+<p>The <code>build()</code> method<a data-type="indexterm" data-primary="build() method" id="idm139806605876704"/> takes the responsibility of populating the <code>tf.Graph</code> instance by calling <code>layer.create_tensor</code> for each layer in topological order (<a data-type="xref" href="#ch8-build">Example 8-12</a>).</p>
+<div id="ch8-build" data-type="example">
+<h5><span class="label">Example 8-12. </span>The build method populates the underlying TensorFlow graph</h5>
+
+<pre data-type="programlisting" data-code-language="python"><code class="k">def</code> <code class="nf">build</code><code class="p">(</code><code class="bp">self</code><code class="p">):</code>
+  <code class="k">if</code> <code class="bp">self</code><code class="o">.</code><code class="n">built</code><code class="p">:</code>
+    <code class="k">return</code>
+  <code class="k">with</code> <code class="bp">self</code><code class="o">.</code><code class="n">_get_tf</code><code class="p">(</code><code class="s2">"Graph"</code><code class="p">)</code><code class="o">.</code><code class="n">as_default</code><code class="p">():</code>
+    <code class="bp">self</code><code class="o">.</code><code class="n">_training_placeholder</code> <code class="o">=</code> <code class="n">tf</code><code class="o">.</code><code class="n">placeholder</code><code class="p">(</code><code class="n">dtype</code><code class="o">=</code><code class="n">tf</code><code class="o">.</code><code class="n">float32</code><code class="p">,</code> <code class="n">shape</code><code class="o">=</code><code class="p">())</code>
+    <code class="k">if</code> <code class="bp">self</code><code class="o">.</code><code class="n">random_seed</code> <code class="ow">is</code> <code class="ow">not</code> <code class="bp">None</code><code class="p">:</code>
+      <code class="n">tf</code><code class="o">.</code><code class="n">set_random_seed</code><code class="p">(</code><code class="bp">self</code><code class="o">.</code><code class="n">random_seed</code><code class="p">)</code>
+    <code class="k">for</code> <code class="n">layer</code> <code class="ow">in</code> <code class="bp">self</code><code class="o">.</code><code class="n">topsort</code><code class="p">():</code>
+      <code class="k">with</code> <code class="n">tf</code><code class="o">.</code><code class="n">name_scope</code><code class="p">(</code><code class="n">layer</code><code class="o">.</code><code class="n">name</code><code class="p">):</code>
+        <code class="n">layer</code><code class="o">.</code><code class="n">create_tensor</code><code class="p">(</code><code class="n">training</code><code class="o">=</code><code class="bp">self</code><code class="o">.</code><code class="n">_training_placeholder</code><code class="p">)</code>
+    <code class="bp">self</code><code class="o">.</code><code class="n">session</code> <code class="o">=</code> <code class="n">tf</code><code class="o">.</code><code class="n">Session</code><code class="p">()</code>
+
+    <code class="bp">self</code><code class="o">.</code><code class="n">built</code> <code class="o">=</code> <code class="bp">True</code></pre></div>
+
+<p>The<a data-type="indexterm" data-primary="set_loss() method" id="idm139806605488992"/> method <code>set_loss()</code> adds a loss for training to the graph. <code>add_output()</code> specifies<a data-type="indexterm" data-primary="add_output() method" id="idm139806605407168"/><a data-type="indexterm" data-primary="set_optimizer() method" id="idm139806605406432"/> that the layer in question might be fetched from the graph. <code>set_optimizer()</code> specifies the optimizer used for training (<a data-type="xref" href="#ch8-utilities">Example 8-13</a>).</p>
+<div id="ch8-utilities" data-type="example">
+<h5><span class="label">Example 8-13. </span>These methods add necessary losses, outputs, and optimizers to the computation graph</h5>
+
+<pre data-type="programlisting" data-code-language="python"><code class="k">def</code> <code class="nf">set_loss</code><code class="p">(</code><code class="bp">self</code><code class="p">,</code> <code class="n">layer</code><code class="p">):</code>
+  <code class="bp">self</code><code class="o">.</code><code class="n">_add_layer</code><code class="p">(</code><code class="n">layer</code><code class="p">)</code>
+  <code class="bp">self</code><code class="o">.</code><code class="n">loss</code> <code class="o">=</code> <code class="n">layer</code>
+
+<code class="k">def</code> <code class="nf">add_output</code><code class="p">(</code><code class="bp">self</code><code class="p">,</code> <code class="n">layer</code><code class="p">):</code>
+  <code class="bp">self</code><code class="o">.</code><code class="n">_add_layer</code><code class="p">(</code><code class="n">layer</code><code class="p">)</code>
+  <code class="bp">self</code><code class="o">.</code><code class="n">outputs</code><code class="o">.</code><code class="n">append</code><code class="p">(</code><code class="n">layer</code><code class="p">)</code>
+
+<code class="k">def</code> <code class="nf">set_optimizer</code><code class="p">(</code><code class="bp">self</code><code class="p">,</code> <code class="n">optimizer</code><code class="p">):</code>
+  <code class="sd">"""Set the optimizer to use for fitting."""</code>
+  <code class="bp">self</code><code class="o">.</code><code class="n">optimizer</code> <code class="o">=</code> <code class="n">optimizer</code></pre></div>
+
+<p>The<a data-type="indexterm" data-primary="get_layer_variables() method" id="idm139806605233632"/><a data-type="indexterm" data-primary="tf.Variable()" id="idm139806605238096"/><a data-type="indexterm" data-primary="learnable variables" id="idm139806605237488"/> method <code>get_layer_variables()</code> is used to fetch the learnable <code>tf.Variable</code> objects created by a layer. The private method <code>_get_tf</code> is used to fetch the <code>tf.Graph</code> and optimizer instances underpinning the <code>TensorGraph</code>. <code>get_global_step</code> is a convenience method for fetching the current step in the training process (starting from 0 at construction). See <a data-type="xref" href="#ch8-get-vars">Example 8-14</a>.</p>
+<div id="ch8-get-vars" data-type="example">
+<h5><span class="label">Example 8-14. </span>Fetch the learnable variables associated with each layer</h5>
+
+<pre data-type="programlisting" data-code-language="python"><code class="k">def</code> <code class="nf">get_layer_variables</code><code class="p">(</code><code class="bp">self</code><code class="p">,</code> <code class="n">layer</code><code class="p">):</code>
+  <code class="sd">"""Get the list of trainable variables in a layer of the graph."""</code>
+  <code class="k">if</code> <code class="ow">not</code> <code class="bp">self</code><code class="o">.</code><code class="n">built</code><code class="p">:</code>
+    <code class="bp">self</code><code class="o">.</code><code class="n">build</code><code class="p">()</code>
+  <code class="k">with</code> <code class="bp">self</code><code class="o">.</code><code class="n">_get_tf</code><code class="p">(</code><code class="s2">"Graph"</code><code class="p">)</code><code class="o">.</code><code class="n">as_default</code><code class="p">():</code>
+    <code class="k">if</code> <code class="n">layer</code><code class="o">.</code><code class="n">variable_scope</code> <code class="o">==</code> <code class="s2">""</code><code class="p">:</code>
+      <code class="k">return</code> <code class="p">[]</code>
+    <code class="k">return</code> <code class="n">tf</code><code class="o">.</code><code class="n">get_collection</code><code class="p">(</code>
+        <code class="n">tf</code><code class="o">.</code><code class="n">GraphKeys</code><code class="o">.</code><code class="n">TRAINABLE_VARIABLES</code><code class="p">,</code> <code class="n">scope</code><code class="o">=</code><code class="n">layer</code><code class="o">.</code><code class="n">variable_scope</code><code class="p">)</code>
+
+<code class="k">def</code> <code class="nf">get_global_step</code><code class="p">(</code><code class="bp">self</code><code class="p">):</code>
+  <code class="k">return</code> <code class="bp">self</code><code class="o">.</code><code class="n">_get_tf</code><code class="p">(</code><code class="s2">"GlobalStep"</code><code class="p">)</code>
+
+<code class="k">def</code> <code class="nf">_get_tf</code><code class="p">(</code><code class="bp">self</code><code class="p">,</code> <code class="n">obj</code><code class="p">):</code>
+  <code class="sd">"""Fetches underlying TensorFlow primitives.</code>
+
+<code class="sd">  Parameters</code>
+<code class="sd">  ----------</code>
+<code class="sd">  obj: str</code>
+<code class="sd">    If "Graph", returns tf.Graph instance. If "Optimizer", returns the</code>
+<code class="sd">    optimizer. If "train_op", returns the train operation. If "GlobalStep" returns</code>
+<code class="sd">    the global step.</code>
+<code class="sd">  Returns</code>
+<code class="sd">  -------</code>
+<code class="sd">  TensorFlow Object</code>
+<code class="sd">  """</code>
+
+  <code class="k">if</code> <code class="n">obj</code> <code class="ow">in</code> <code class="bp">self</code><code class="o">.</code><code class="n">tensor_objects</code> <code class="ow">and</code> <code class="bp">self</code><code class="o">.</code><code class="n">tensor_objects</code><code class="p">[</code><code class="n">obj</code><code class="p">]</code> <code class="ow">is</code> <code class="ow">not</code> <code class="bp">None</code><code class="p">:</code>
+    <code class="k">return</code> <code class="bp">self</code><code class="o">.</code><code class="n">tensor_objects</code><code class="p">[</code><code class="n">obj</code><code class="p">]</code>
+  <code class="k">if</code> <code class="n">obj</code> <code class="o">==</code> <code class="s2">"Graph"</code><code class="p">:</code>
+    <code class="bp">self</code><code class="o">.</code><code class="n">tensor_objects</code><code class="p">[</code><code class="s2">"Graph"</code><code class="p">]</code> <code class="o">=</code> <code class="n">tf</code><code class="o">.</code><code class="n">Graph</code><code class="p">()</code>
+  <code class="k">elif</code> <code class="n">obj</code> <code class="o">==</code> <code class="s2">"Optimizer"</code><code class="p">:</code>
+    <code class="bp">self</code><code class="o">.</code><code class="n">tensor_objects</code><code class="p">[</code><code class="s2">"Optimizer"</code><code class="p">]</code> <code class="o">=</code> <code class="n">tf</code><code class="o">.</code><code class="n">train</code><code class="o">.</code><code class="n">AdamOptimizer</code><code class="p">(</code>
+        <code class="n">learning_rate</code><code class="o">=</code><code class="bp">self</code><code class="o">.</code><code class="n">learning_rate</code><code class="p">,</code>
+        <code class="n">beta1</code><code class="o">=</code><code class="mf">0.9</code><code class="p">,</code>
+        <code class="n">beta2</code><code class="o">=</code><code class="mf">0.999</code><code class="p">,</code>
+        <code class="n">epsilon</code><code class="o">=</code><code class="mf">1e-7</code><code class="p">)</code>
+  <code class="k">elif</code> <code class="n">obj</code> <code class="o">==</code> <code class="s2">"GlobalStep"</code><code class="p">:</code>
+    <code class="k">with</code> <code class="bp">self</code><code class="o">.</code><code class="n">_get_tf</code><code class="p">(</code><code class="s2">"Graph"</code><code class="p">)</code><code class="o">.</code><code class="n">as_default</code><code class="p">():</code>
+      <code class="bp">self</code><code class="o">.</code><code class="n">tensor_objects</code><code class="p">[</code><code class="s2">"GlobalStep"</code><code class="p">]</code> <code class="o">=</code> <code class="n">tf</code><code class="o">.</code><code class="n">Variable</code><code class="p">(</code><code class="mi">0</code><code class="p">,</code> <code class="n">trainable</code><code class="o">=</code><code class="bp">False</code><code class="p">)</code>
+  <code class="k">return</code> <code class="bp">self</code><code class="o">.</code><code class="n">_get_tf</code><code class="p">(</code><code class="n">obj</code><code class="p">)</code></pre></div>
+
+<p>Finally,<a data-type="indexterm" data-primary="restore() method" id="idm139806605371152"/> the <code>restore()</code> method restores a saved <code>TensorGraph</code> from disk (<a data-type="xref" href="#ch8-restore">Example 8-15</a>). (As you will see later, the <code>TensorGraph</code> is saved automatically during training.)<a data-type="indexterm" data-primary="" data-startref="RLtic08" id="idm139806605151088"/></p>
+<div id="ch8-restore" data-type="example">
+<h5><span class="label">Example 8-15. </span>Restore a trained model from disk</h5>
+
+<pre data-type="programlisting" data-code-language="python"><code class="k">def</code> <code class="nf">restore</code><code class="p">(</code><code class="bp">self</code><code class="p">):</code>
+  <code class="sd">"""Reload the values of all variables from the most recent checkpoint file."""</code>
+  <code class="k">if</code> <code class="ow">not</code> <code class="bp">self</code><code class="o">.</code><code class="n">built</code><code class="p">:</code>
+    <code class="bp">self</code><code class="o">.</code><code class="n">build</code><code class="p">()</code>
+  <code class="n">last_checkpoint</code> <code class="o">=</code> <code class="n">tf</code><code class="o">.</code><code class="n">train</code><code class="o">.</code><code class="n">latest_checkpoint</code><code class="p">(</code><code class="bp">self</code><code class="o">.</code><code class="n">model_dir</code><code class="p">)</code>
+  <code class="k">if</code> <code class="n">last_checkpoint</code> <code class="ow">is</code> <code class="bp">None</code><code class="p">:</code>
+    <code class="k">raise</code> <code class="ne">ValueError</code><code class="p">(</code><code class="s2">"No checkpoint found"</code><code class="p">)</code>
+  <code class="k">with</code> <code class="bp">self</code><code class="o">.</code><code class="n">_get_tf</code><code class="p">(</code><code class="s2">"Graph"</code><code class="p">)</code><code class="o">.</code><code class="n">as_default</code><code class="p">():</code>
+    <code class="n">saver</code> <code class="o">=</code> <code class="n">tf</code><code class="o">.</code><code class="n">train</code><code class="o">.</code><code class="n">Saver</code><code class="p">()</code>
+    <code class="n">saver</code><code class="o">.</code><code class="n">restore</code><code class="p">(</code><code class="bp">self</code><code class="o">.</code><code class="n">session</code><code class="p">,</code> <code class="n">last_checkpoint</code><code class="p">)</code></pre></div>
+</div></section>
+
+
+
+
+
+</div></section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<section data-type="sect1" data-pdf-bookmark="The A3C Algorithm"><div class="sect1" id="idm139806606300768">
+<h1>The A3C Algorithm</h1>
+
+<p>In<a data-type="indexterm" data-primary="reinforcement learning (RL)" data-secondary="A3C algorithm" id="RLa3c08"/><a data-type="indexterm" data-primary="algorithms" data-secondary="A3C algorithm" id="Aa3c08"/><a data-type="indexterm" data-primary="asynchronous reinforcement" id="idm139806605078384"/><a data-type="indexterm" data-primary="A3C algorithm" data-secondary="overview of" id="idm139806605077744"/><a data-type="indexterm" data-primary="Asynchronous Advantage Actor-Critic" data-see="A3C algorithm" id="idm139806605076800"/> this section you will learn how to implement A3C, the asynchronous reinforcement learning algorithm you saw earlier in the chapter. A3C is a significantly more complex training algorithm than those you have seen previously. The algorithm requires running gradient descent in multiple threads, interspersed with game rollout code, and updating learned weights asynchronously. As a result of this extra complexity, we will define the A3C algorithm in an object-oriented fashion. Let’s start by defining an <code>A3C</code> object.</p>
+
+<p>The <code>A3C</code> class implements the A3C algorithm (<a data-type="xref" href="#ch8-a3c">Example 8-16</a>). A few extra bells and whistles are added onto the basic algorithm to encourage learning, notably an entropy term and support for generalized advantage estimation. We won’t cover all of these details, but encourage you to follow references into the research literature (listed in the documentation) to understand more.</p>
+<div id="ch8-a3c" data-type="example">
+<h5><span class="label">Example 8-16. </span>Define the A3C class encapsulating the asynchronous A3C training algorithm</h5>
+
+<pre data-type="programlisting" data-code-language="python"><code class="k">class</code> <code class="nc">A3C</code><code class="p">(</code><code class="nb">object</code><code class="p">):</code>
+  <code class="sd">"""</code>
+<code class="sd">  Implements the Asynchronous Advantage Actor-Critic (A3C) algorithm.</code>
+
+<code class="sd">  The algorithm is described in Mnih et al, "Asynchronous Methods for Deep</code>
+<code class="sd">  Reinforcement Learning" (https://arxiv.org/abs/1602.01783).  This class</code>
+<code class="sd">  requires the policy to output two quantities: a vector giving the probability</code>
+<code class="sd">  of taking each action, and an estimate of the value function for the current</code>
+<code class="sd">  state.  It optimizes both outputs at once using a loss that is the sum of three</code>
+<code class="sd">  terms:</code>
+
+<code class="sd">  1. The policy loss, which seeks to maximize the discounted reward for each action.</code>
+<code class="sd">  2. The value loss, which tries to make the value estimate match the actual</code>
+<code class="sd">     discounted reward that was attained at each step.</code>
+<code class="sd">  3. An entropy term to encourage exploration.</code>
+
+<code class="sd">  This class only supports environments with discrete action spaces, not</code>
+<code class="sd">  continuous ones.  The "action" argument passed to the environment is an</code>
+<code class="sd">  integer, giving the index of the action to perform.</code>
+
+<code class="sd">  This class supports Generalized Advantage Estimation as described in Schulman</code>
+<code class="sd">  et al., "High-Dimensional Continuous Control Using Generalized Advantage</code>
+<code class="sd">  Estimation" (https://arxiv.org/abs/1506.02438).  This is a method of trading</code>
+<code class="sd">  off bias and variance in the advantage estimate, which can sometimes improve</code>
+<code class="sd">  the rate of convergence.  Use the advantage_lambda parameter to adjust the</code>
+<code class="sd">  tradeoff.</code>
+<code class="sd">  """</code>
+  <code class="bp">self</code><code class="o">.</code><code class="n">_env</code> <code class="o">=</code> <code class="n">env</code>
+  <code class="bp">self</code><code class="o">.</code><code class="n">max_rollout_length</code> <code class="o">=</code> <code class="n">max_rollout_length</code>
+  <code class="bp">self</code><code class="o">.</code><code class="n">discount_factor</code> <code class="o">=</code> <code class="n">discount_factor</code>
+  <code class="bp">self</code><code class="o">.</code><code class="n">advantage_lambda</code> <code class="o">=</code> <code class="n">advantage_lambda</code>
+  <code class="bp">self</code><code class="o">.</code><code class="n">value_weight</code> <code class="o">=</code> <code class="n">value_weight</code>
+  <code class="bp">self</code><code class="o">.</code><code class="n">entropy_weight</code> <code class="o">=</code> <code class="n">entropy_weight</code>
+  <code class="bp">self</code><code class="o">.</code><code class="n">_optimizer</code> <code class="o">=</code> <code class="bp">None</code>
+  <code class="p">(</code><code class="bp">self</code><code class="o">.</code><code class="n">_graph</code><code class="p">,</code> <code class="bp">self</code><code class="o">.</code><code class="n">_features</code><code class="p">,</code> <code class="bp">self</code><code class="o">.</code><code class="n">_rewards</code><code class="p">,</code> <code class="bp">self</code><code class="o">.</code><code class="n">_actions</code><code class="p">,</code>
+   <code class="bp">self</code><code class="o">.</code><code class="n">_action_prob</code><code class="p">,</code> <code class="bp">self</code><code class="o">.</code><code class="n">_value</code><code class="p">,</code> <code class="bp">self</code><code class="o">.</code><code class="n">_advantages</code><code class="p">)</code> <code class="o">=</code> <code class="bp">self</code><code class="o">.</code><code class="n">build_graph</code><code class="p">(</code>
+       <code class="bp">None</code><code class="p">,</code> <code class="s2">"global"</code><code class="p">,</code> <code class="n">model_dir</code><code class="p">)</code>
+  <code class="k">with</code> <code class="bp">self</code><code class="o">.</code><code class="n">_graph</code><code class="o">.</code><code class="n">_get_tf</code><code class="p">(</code><code class="s2">"Graph"</code><code class="p">)</code><code class="o">.</code><code class="n">as_default</code><code class="p">():</code>
+    <code class="bp">self</code><code class="o">.</code><code class="n">_session</code> <code class="o">=</code> <code class="n">tf</code><code class="o">.</code><code class="n">Session</code><code class="p">()</code></pre></div>
+
+<p>The<a data-type="indexterm" data-primary="build_graph() method" id="idm139806605068576"/> heart of the A3C class lies in the <code>build_graph()</code> method (<a data-type="xref" href="#ch8-builda3c">Example 8-17</a>), which constructs a <code>TensorGraph</code> instance (underneath which lies a TensorFlow computation graph) encoding the policy learned by the model. Notice how succinct this definition is compared with others you have seen previously! There are many advantages to using object orientation.</p>
+<div id="ch8-builda3c" data-type="example">
+<h5><span class="label">Example 8-17. </span>This method builds the computation graph for the A3C algorithm. Note that the policy network is defined here using the Layer abstractions you saw previously.</h5>
+
+<pre data-type="programlisting" data-code-language="python"><code class="k">def</code> <code class="nf">build_graph</code><code class="p">(</code><code class="bp">self</code><code class="p">,</code> <code class="n">tf_graph</code><code class="p">,</code> <code class="n">scope</code><code class="p">,</code> <code class="n">model_dir</code><code class="p">):</code>
+  <code class="sd">"""Construct a TensorGraph containing the policy and loss calculations."""</code>
+  <code class="n">state_shape</code> <code class="o">=</code> <code class="bp">self</code><code class="o">.</code><code class="n">_env</code><code class="o">.</code><code class="n">state_shape</code>
+  <code class="n">features</code> <code class="o">=</code> <code class="p">[]</code>
+  <code class="k">for</code> <code class="n">s</code> <code class="ow">in</code> <code class="n">state_shape</code><code class="p">:</code>
+    <code class="n">features</code><code class="o">.</code><code class="n">append</code><code class="p">(</code><code class="n">Input</code><code class="p">(</code><code class="n">shape</code><code class="o">=</code><code class="p">[</code><code class="bp">None</code><code class="p">]</code> <code class="o">+</code> <code class="nb">list</code><code class="p">(</code><code class="n">s</code><code class="p">),</code> <code class="n">dtype</code><code class="o">=</code><code class="n">tf</code><code class="o">.</code><code class="n">float32</code><code class="p">))</code>
+  <code class="n">d1</code> <code class="o">=</code> <code class="n">Flatten</code><code class="p">(</code><code class="n">in_layers</code><code class="o">=</code><code class="n">features</code><code class="p">)</code>
+  <code class="n">d2</code> <code class="o">=</code> <code class="n">Dense</code><code class="p">(</code>
+      <code class="n">in_layers</code><code class="o">=</code><code class="p">[</code><code class="n">d1</code><code class="p">],</code>
+      <code class="n">activation_fn</code><code class="o">=</code><code class="n">tf</code><code class="o">.</code><code class="n">nn</code><code class="o">.</code><code class="n">relu</code><code class="p">,</code>
+      <code class="n">normalizer_fn</code><code class="o">=</code><code class="n">tf</code><code class="o">.</code><code class="n">nn</code><code class="o">.</code><code class="n">l2_normalize</code><code class="p">,</code>
+      <code class="n">normalizer_params</code><code class="o">=</code><code class="p">{</code><code class="s2">"dim"</code><code class="p">:</code> <code class="mi">1</code><code class="p">},</code>
+      <code class="n">out_channels</code><code class="o">=</code><code class="mi">64</code><code class="p">)</code>
+  <code class="n">d3</code> <code class="o">=</code> <code class="n">Dense</code><code class="p">(</code>
+      <code class="n">in_layers</code><code class="o">=</code><code class="p">[</code><code class="n">d2</code><code class="p">],</code>
+      <code class="n">activation_fn</code><code class="o">=</code><code class="n">tf</code><code class="o">.</code><code class="n">nn</code><code class="o">.</code><code class="n">relu</code><code class="p">,</code>
+      <code class="n">normalizer_fn</code><code class="o">=</code><code class="n">tf</code><code class="o">.</code><code class="n">nn</code><code class="o">.</code><code class="n">l2_normalize</code><code class="p">,</code>
+      <code class="n">normalizer_params</code><code class="o">=</code><code class="p">{</code><code class="s2">"dim"</code><code class="p">:</code> <code class="mi">1</code><code class="p">},</code>
+      <code class="n">out_channels</code><code class="o">=</code><code class="mi">32</code><code class="p">)</code>
+  <code class="n">d4</code> <code class="o">=</code> <code class="n">Dense</code><code class="p">(</code>
+      <code class="n">in_layers</code><code class="o">=</code><code class="p">[</code><code class="n">d3</code><code class="p">],</code>
+      <code class="n">activation_fn</code><code class="o">=</code><code class="n">tf</code><code class="o">.</code><code class="n">nn</code><code class="o">.</code><code class="n">relu</code><code class="p">,</code>
+      <code class="n">normalizer_fn</code><code class="o">=</code><code class="n">tf</code><code class="o">.</code><code class="n">nn</code><code class="o">.</code><code class="n">l2_normalize</code><code class="p">,</code>
+      <code class="n">normalizer_params</code><code class="o">=</code><code class="p">{</code><code class="s2">"dim"</code><code class="p">:</code> <code class="mi">1</code><code class="p">},</code>
+      <code class="n">out_channels</code><code class="o">=</code><code class="mi">16</code><code class="p">)</code>
+  <code class="n">d4</code> <code class="o">=</code> <code class="n">BatchNorm</code><code class="p">(</code><code class="n">in_layers</code><code class="o">=</code><code class="p">[</code><code class="n">d4</code><code class="p">])</code>
+  <code class="n">d5</code> <code class="o">=</code> <code class="n">Dense</code><code class="p">(</code><code class="n">in_layers</code><code class="o">=</code><code class="p">[</code><code class="n">d4</code><code class="p">],</code> <code class="n">activation_fn</code><code class="o">=</code><code class="bp">None</code><code class="p">,</code> <code class="n">out_channels</code><code class="o">=</code><code class="mi">9</code><code class="p">)</code>
+  <code class="n">value</code> <code class="o">=</code> <code class="n">Dense</code><code class="p">(</code><code class="n">in_layers</code><code class="o">=</code><code class="p">[</code><code class="n">d4</code><code class="p">],</code> <code class="n">activation_fn</code><code class="o">=</code><code class="bp">None</code><code class="p">,</code> <code class="n">out_channels</code><code class="o">=</code><code class="mi">1</code><code class="p">)</code>
+  <code class="n">value</code> <code class="o">=</code> <code class="n">Squeeze</code><code class="p">(</code><code class="n">squeeze_dims</code><code class="o">=</code><code class="mi">1</code><code class="p">,</code> <code class="n">in_layers</code><code class="o">=</code><code class="p">[</code><code class="n">value</code><code class="p">])</code>
+  <code class="n">action_prob</code> <code class="o">=</code> <code class="n">SoftMax</code><code class="p">(</code><code class="n">in_layers</code><code class="o">=</code><code class="p">[</code><code class="n">d5</code><code class="p">])</code>
+
+  <code class="n">rewards</code> <code class="o">=</code> <code class="n">Input</code><code class="p">(</code><code class="n">shape</code><code class="o">=</code><code class="p">(</code><code class="bp">None</code><code class="p">,))</code>
+  <code class="n">advantages</code> <code class="o">=</code> <code class="n">Input</code><code class="p">(</code><code class="n">shape</code><code class="o">=</code><code class="p">(</code><code class="bp">None</code><code class="p">,))</code>
+  <code class="n">actions</code> <code class="o">=</code> <code class="n">Input</code><code class="p">(</code><code class="n">shape</code><code class="o">=</code><code class="p">(</code><code class="bp">None</code><code class="p">,</code> <code class="bp">self</code><code class="o">.</code><code class="n">_env</code><code class="o">.</code><code class="n">n_actions</code><code class="p">))</code>
+  <code class="n">loss</code> <code class="o">=</code> <code class="n">A3CLoss</code><code class="p">(</code>
+      <code class="bp">self</code><code class="o">.</code><code class="n">value_weight</code><code class="p">,</code>
+      <code class="bp">self</code><code class="o">.</code><code class="n">entropy_weight</code><code class="p">,</code>
+      <code class="n">in_layers</code><code class="o">=</code><code class="p">[</code><code class="n">rewards</code><code class="p">,</code> <code class="n">actions</code><code class="p">,</code> <code class="n">action_prob</code><code class="p">,</code> <code class="n">value</code><code class="p">,</code> <code class="n">advantages</code><code class="p">])</code>
+  <code class="n">graph</code> <code class="o">=</code> <code class="n">TensorGraph</code><code class="p">(</code>
+      <code class="n">batch_size</code><code class="o">=</code><code class="bp">self</code><code class="o">.</code><code class="n">max_rollout_length</code><code class="p">,</code>
+      <code class="n">graph</code><code class="o">=</code><code class="n">tf_graph</code><code class="p">,</code>
+      <code class="n">model_dir</code><code class="o">=</code><code class="n">model_dir</code><code class="p">)</code>
+  <code class="k">for</code> <code class="n">f</code> <code class="ow">in</code> <code class="n">features</code><code class="p">:</code>
+    <code class="n">graph</code><code class="o">.</code><code class="n">_add_layer</code><code class="p">(</code><code class="n">f</code><code class="p">)</code>
+  <code class="n">graph</code><code class="o">.</code><code class="n">add_output</code><code class="p">(</code><code class="n">action_prob</code><code class="p">)</code>
+  <code class="n">graph</code><code class="o">.</code><code class="n">add_output</code><code class="p">(</code><code class="n">value</code><code class="p">)</code>
+  <code class="n">graph</code><code class="o">.</code><code class="n">set_loss</code><code class="p">(</code><code class="n">loss</code><code class="p">)</code>
+  <code class="n">graph</code><code class="o">.</code><code class="n">set_optimizer</code><code class="p">(</code><code class="bp">self</code><code class="o">.</code><code class="n">_optimizer</code><code class="p">)</code>
+  <code class="k">with</code> <code class="n">graph</code><code class="o">.</code><code class="n">_get_tf</code><code class="p">(</code><code class="s2">"Graph"</code><code class="p">)</code><code class="o">.</code><code class="n">as_default</code><code class="p">():</code>
+    <code class="k">with</code> <code class="n">tf</code><code class="o">.</code><code class="n">variable_scope</code><code class="p">(</code><code class="n">scope</code><code class="p">):</code>
+      <code class="n">graph</code><code class="o">.</code><code class="n">build</code><code class="p">()</code>
+  <code class="k">return</code> <code class="n">graph</code><code class="p">,</code> <code class="n">features</code><code class="p">,</code> <code class="n">rewards</code><code class="p">,</code> <code class="n">actions</code><code class="p">,</code> <code class="n">action_prob</code><code class="p">,</code> <code class="n">value</code><code class="p">,</code> <code class="n">advantages</code></pre></div>
+
+<p>There’s a lot of code in this example. Let’s break it down into multiple examples and discuss more carefully. <a data-type="xref" href="#ch8-inputa3c">Example 8-18</a> takes the array encoding of the <code>TicTacToeEnvironment</code> and feeds it into the <code>Input</code> instances for the graph directly.</p>
+<div id="ch8-inputa3c" data-type="example">
+<h5><span class="label">Example 8-18. </span>This snippet from the build_graph() method feeds in the array encoding of TicTacToeEnvironment</h5>
+
+<pre data-type="programlisting" data-code-language="python"><code class="n">state_shape</code> <code class="o">=</code> <code class="bp">self</code><code class="o">.</code><code class="n">_env</code><code class="o">.</code><code class="n">state_shape</code>
+<code class="n">features</code> <code class="o">=</code> <code class="p">[]</code>
+<code class="k">for</code> <code class="n">s</code> <code class="ow">in</code> <code class="n">state_shape</code><code class="p">:</code>
+  <code class="n">features</code><code class="o">.</code><code class="n">append</code><code class="p">(</code><code class="n">Input</code><code class="p">(</code><code class="n">shape</code><code class="o">=</code><code class="p">[</code><code class="bp">None</code><code class="p">]</code> <code class="o">+</code> <code class="nb">list</code><code class="p">(</code><code class="n">s</code><code class="p">),</code> <code class="n">dtype</code><code class="o">=</code><code class="n">tf</code><code class="o">.</code><code class="n">float32</code><code class="p">))</code></pre></div>
+
+<p><a data-type="xref" href="#ch8-inputrewarda3c">Example 8-19</a> shows the code used to construct inputs for rewards from the environment, advantages observed, and actions taken.</p>
+<div id="ch8-inputrewarda3c" data-type="example">
+<h5><span class="label">Example 8-19. </span>This snippet from the build_graph() method defines Input objects for rewards, advantages, and actions</h5>
+
+<pre data-type="programlisting" data-code-language="python"><code class="n">rewards</code> <code class="o">=</code> <code class="n">Input</code><code class="p">(</code><code class="n">shape</code><code class="o">=</code><code class="p">(</code><code class="bp">None</code><code class="p">,))</code>
+<code class="n">advantages</code> <code class="o">=</code> <code class="n">Input</code><code class="p">(</code><code class="n">shape</code><code class="o">=</code><code class="p">(</code><code class="bp">None</code><code class="p">,))</code>
+<code class="n">actions</code> <code class="o">=</code> <code class="n">Input</code><code class="p">(</code><code class="n">shape</code><code class="o">=</code><code class="p">(</code><code class="bp">None</code><code class="p">,</code> <code class="bp">self</code><code class="o">.</code><code class="n">_env</code><code class="o">.</code><code class="n">n_actions</code><code class="p">))</code></pre></div>
+
+<p>The<a data-type="indexterm" data-primary="policy learning" id="idm139806604399728"/> policy network is responsible for learning the policy. In <a data-type="xref" href="#ch8-policya3c">Example 8-20</a>, the input board state is first flattened into an input feature vector. A series of fully connected (or <code>Dense</code>) transformations are applied to the flattened board. At the very end, a <code>Softmax</code> layer is used to predict action probabilities from <code>d5</code> (note that <code>out_channels</code> is set to 9, one for each possible move on the tic-tac-toe board).</p>
+<div id="ch8-policya3c" data-type="example">
+<h5><span class="label">Example 8-20. </span>This snippet from the build_graph() method defines the policy network</h5>
+
+<pre data-type="programlisting" data-code-language="python"><code class="n">d1</code> <code class="o">=</code> <code class="n">Flatten</code><code class="p">(</code><code class="n">in_layers</code><code class="o">=</code><code class="n">features</code><code class="p">)</code>
+<code class="n">d2</code> <code class="o">=</code> <code class="n">Dense</code><code class="p">(</code>
+    <code class="n">in_layers</code><code class="o">=</code><code class="p">[</code><code class="n">d1</code><code class="p">],</code>
+    <code class="n">activation_fn</code><code class="o">=</code><code class="n">tf</code><code class="o">.</code><code class="n">nn</code><code class="o">.</code><code class="n">relu</code><code class="p">,</code>
+    <code class="n">normalizer_fn</code><code class="o">=</code><code class="n">tf</code><code class="o">.</code><code class="n">nn</code><code class="o">.</code><code class="n">l2_normalize</code><code class="p">,</code>
+    <code class="n">normalizer_params</code><code class="o">=</code><code class="p">{</code><code class="s2">"dim"</code><code class="p">:</code> <code class="mi">1</code><code class="p">},</code>
+    <code class="n">out_channels</code><code class="o">=</code><code class="mi">64</code><code class="p">)</code>
+<code class="n">d3</code> <code class="o">=</code> <code class="n">Dense</code><code class="p">(</code>
+    <code class="n">in_layers</code><code class="o">=</code><code class="p">[</code><code class="n">d2</code><code class="p">],</code>
+    <code class="n">activation_fn</code><code class="o">=</code><code class="n">tf</code><code class="o">.</code><code class="n">nn</code><code class="o">.</code><code class="n">relu</code><code class="p">,</code>
+    <code class="n">normalizer_fn</code><code class="o">=</code><code class="n">tf</code><code class="o">.</code><code class="n">nn</code><code class="o">.</code><code class="n">l2_normalize</code><code class="p">,</code>
+    <code class="n">normalizer_params</code><code class="o">=</code><code class="p">{</code><code class="s2">"dim"</code><code class="p">:</code> <code class="mi">1</code><code class="p">},</code>
+    <code class="n">out_channels</code><code class="o">=</code><code class="mi">32</code><code class="p">)</code>
+<code class="n">d4</code> <code class="o">=</code> <code class="n">Dense</code><code class="p">(</code>
+    <code class="n">in_layers</code><code class="o">=</code><code class="p">[</code><code class="n">d3</code><code class="p">],</code>
+    <code class="n">activation_fn</code><code class="o">=</code><code class="n">tf</code><code class="o">.</code><code class="n">nn</code><code class="o">.</code><code class="n">relu</code><code class="p">,</code>
+    <code class="n">normalizer_fn</code><code class="o">=</code><code class="n">tf</code><code class="o">.</code><code class="n">nn</code><code class="o">.</code><code class="n">l2_normalize</code><code class="p">,</code>
+    <code class="n">normalizer_params</code><code class="o">=</code><code class="p">{</code><code class="s2">"dim"</code><code class="p">:</code> <code class="mi">1</code><code class="p">},</code>
+    <code class="n">out_channels</code><code class="o">=</code><code class="mi">16</code><code class="p">)</code>
+<code class="n">d4</code> <code class="o">=</code> <code class="n">BatchNorm</code><code class="p">(</code><code class="n">in_layers</code><code class="o">=</code><code class="p">[</code><code class="n">d4</code><code class="p">])</code>
+<code class="n">d5</code> <code class="o">=</code> <code class="n">Dense</code><code class="p">(</code><code class="n">in_layers</code><code class="o">=</code><code class="p">[</code><code class="n">d4</code><code class="p">],</code> <code class="n">activation_fn</code><code class="o">=</code><code class="bp">None</code><code class="p">,</code> <code class="n">out_channels</code><code class="o">=</code><code class="mi">9</code><code class="p">)</code>
+<code class="n">value</code> <code class="o">=</code> <code class="n">Dense</code><code class="p">(</code><code class="n">in_layers</code><code class="o">=</code><code class="p">[</code><code class="n">d4</code><code class="p">],</code> <code class="n">activation_fn</code><code class="o">=</code><code class="bp">None</code><code class="p">,</code> <code class="n">out_channels</code><code class="o">=</code><code class="mi">1</code><code class="p">)</code>
+<code class="n">value</code> <code class="o">=</code> <code class="n">Squeeze</code><code class="p">(</code><code class="n">squeeze_dims</code><code class="o">=</code><code class="mi">1</code><code class="p">,</code> <code class="n">in_layers</code><code class="o">=</code><code class="p">[</code><code class="n">value</code><code class="p">])</code>
+<code class="n">action_prob</code> <code class="o">=</code> <code class="n">SoftMax</code><code class="p">(</code><code class="n">in_layers</code><code class="o">=</code><code class="p">[</code><code class="n">d5</code><code class="p">])</code></pre></div>
+<div data-type="note" epub:type="note"><h1>Is Feature Engineering Dead?</h1>
+<p>In<a data-type="indexterm" data-primary="feature engineering" id="idm139806604274576"/><a data-type="indexterm" data-primary="AlphaGo" id="idm139806604273872"/><a data-type="indexterm" data-primary="DeepMind" id="idm139806604273200"/> this section, we feed the raw tic-tac-toe game board into TensorFlow for training the policy. However, it’s important to note that for more complex games than tic-tac-toe, this may not yield satisfactory results. One of the lesser known facts about AlphaGo is that DeepMind performs sophisticated feature engineering to extract “interesting” patterns of Go pieces upon the board to make AlphaGo’s learning easier. (This fact is tucked away into the supplemental information of DeepMind’s paper.)</p>
+
+<p>The fact remains that reinforcement learning (and deep learning methods broadly) often still need human-guided feature engineering to extract meaningful information before learning algorithms can learn effective policies and models. It’s likely that as more computational power becomes available through hardware advances, this need for feature engineering will be reduced, but for the near term, plan on manually extracting information about your systems as needed for performance.<a data-type="indexterm" data-primary="" data-startref="Aa3c08" id="idm139806604159024"/></p>
+</div>
+
+
+
+
+
+
+
+
+<section data-type="sect2" data-pdf-bookmark="The A3C Loss Function"><div class="sect2" id="idm139806604157792">
+<h2>The A3C Loss Function</h2>
+
+<p>We<a data-type="indexterm" data-primary="A3C algorithm" data-secondary="A3C loss function" id="idm139806604155872"/><a data-type="indexterm" data-primary="loss functions" id="idm139806604154864"/> now have the object-oriented machinery set in place to define a loss for the A3C policy network. This loss function will itself be implemented as a <code>Layer</code> object (it’s a convenient abstraction that all parts of the deep architecture are simply layers). The <code>A3CLoss</code> object implements a mathematical loss consisting of the sum of three terms: a <code>policy_loss</code>, a <code>value_loss</code>, and an <code>entropy</code> term for exploration. See <a data-type="xref" href="#ch8-a3closs">Example 8-21</a>.</p>
+<div id="ch8-a3closs" data-type="example">
+<h5><span class="label">Example 8-21. </span>This Layer implements the loss function for A3C</h5>
+
+<pre data-type="programlisting" data-code-language="python"><code class="k">class</code> <code class="nc">A3CLoss</code><code class="p">(</code><code class="n">Layer</code><code class="p">):</code>
+  <code class="sd">"""This layer computes the loss function for A3C."""</code>
+
+  <code class="k">def</code> <code class="nf-Magic">__init__</code><code class="p">(</code><code class="bp">self</code><code class="p">,</code> <code class="n">value_weight</code><code class="p">,</code> <code class="n">entropy_weight</code><code class="p">,</code> <code class="o">**</code><code class="n">kwargs</code><code class="p">):</code>
+    <code class="nb">super</code><code class="p">(</code><code class="n">A3CLoss</code><code class="p">,</code> <code class="bp">self</code><code class="p">)</code><code class="o">.</code><code class="nf-Magic">__init__</code><code class="p">(</code><code class="o">**</code><code class="n">kwargs</code><code class="p">)</code>
+    <code class="bp">self</code><code class="o">.</code><code class="n">value_weight</code> <code class="o">=</code> <code class="n">value_weight</code>
+    <code class="bp">self</code><code class="o">.</code><code class="n">entropy_weight</code> <code class="o">=</code> <code class="n">entropy_weight</code>
+
+  <code class="k">def</code> <code class="nf">create_tensor</code><code class="p">(</code><code class="bp">self</code><code class="p">,</code> <code class="o">**</code><code class="n">kwargs</code><code class="p">):</code>
+    <code class="n">reward</code><code class="p">,</code> <code class="n">action</code><code class="p">,</code> <code class="n">prob</code><code class="p">,</code> <code class="n">value</code><code class="p">,</code> <code class="n">advantage</code> <code class="o">=</code> <code class="p">[</code>
+        <code class="n">layer</code><code class="o">.</code><code class="n">out_tensor</code> <code class="k">for</code> <code class="n">layer</code> <code class="ow">in</code> <code class="bp">self</code><code class="o">.</code><code class="n">in_layers</code>
+    <code class="p">]</code>
+    <code class="n">prob</code> <code class="o">=</code> <code class="n">prob</code> <code class="o">+</code> <code class="n">np</code><code class="o">.</code><code class="n">finfo</code><code class="p">(</code><code class="n">np</code><code class="o">.</code><code class="n">float32</code><code class="p">)</code><code class="o">.</code><code class="n">eps</code>
+    <code class="n">log_prob</code> <code class="o">=</code> <code class="n">tf</code><code class="o">.</code><code class="n">log</code><code class="p">(</code><code class="n">prob</code><code class="p">)</code>
+    <code class="n">policy_loss</code> <code class="o">=</code> <code class="o">-</code><code class="n">tf</code><code class="o">.</code><code class="n">reduce_mean</code><code class="p">(</code>
+        <code class="n">advantage</code> <code class="o">*</code> <code class="n">tf</code><code class="o">.</code><code class="n">reduce_sum</code><code class="p">(</code><code class="n">action</code> <code class="o">*</code> <code class="n">log_prob</code><code class="p">,</code> <code class="n">axis</code><code class="o">=</code><code class="mi">1</code><code class="p">))</code>
+    <code class="n">value_loss</code> <code class="o">=</code> <code class="n">tf</code><code class="o">.</code><code class="n">reduce_mean</code><code class="p">(</code><code class="n">tf</code><code class="o">.</code><code class="n">square</code><code class="p">(</code><code class="n">reward</code> <code class="o">-</code> <code class="n">value</code><code class="p">))</code>
+    <code class="n">entropy</code> <code class="o">=</code> <code class="o">-</code><code class="n">tf</code><code class="o">.</code><code class="n">reduce_mean</code><code class="p">(</code><code class="n">tf</code><code class="o">.</code><code class="n">reduce_sum</code><code class="p">(</code><code class="n">prob</code> <code class="o">*</code> <code class="n">log_prob</code><code class="p">,</code> <code class="n">axis</code><code class="o">=</code><code class="mi">1</code><code class="p">))</code>
+    <code class="bp">self</code><code class="o">.</code><code class="n">out_tensor</code> <code class="o">=</code> <code class="n">policy_loss</code> <code class="o">+</code> <code class="bp">self</code><code class="o">.</code><code class="n">value_weight</code> <code class="o">*</code> <code class="n">value_loss</code>
+    <code class="o">-</code> <code class="bp">self</code><code class="o">.</code><code class="n">entropy_weight</code> <code class="o">*</code> <code class="n">entropy</code>
+    <code class="k">return</code> <code class="bp">self</code><code class="o">.</code><code class="n">out_tensor</code></pre></div>
+
+<p>There are a lot of pieces to this definition, so let’s pull out bits of code and inspect. The <code>A3CLoss</code> layer takes in <code>reward, action, prob, value, advantage</code> layers as inputs. For mathematical stability, we convert probabilities to log probabilities (this is numerically much more stable). See <a data-type="xref" href="#ch8-a3clossinp">Example 8-22</a>.</p>
+<div id="ch8-a3clossinp" data-type="example">
+<h5><span class="label">Example 8-22. </span>This snippet from A3CLoss takes reward, action, prob, value, advantage as input layers and computes a log probability</h5>
+
+<pre data-type="programlisting" data-code-language="python"><code class="n">reward</code><code class="p">,</code> <code class="n">action</code><code class="p">,</code> <code class="n">prob</code><code class="p">,</code> <code class="n">value</code><code class="p">,</code> <code class="n">advantage</code> <code class="o">=</code> <code class="p">[</code>
+    <code class="n">layer</code><code class="o">.</code><code class="n">out_tensor</code> <code class="k">for</code> <code class="n">layer</code> <code class="ow">in</code> <code class="bp">self</code><code class="o">.</code><code class="n">in_layers</code>
+<code class="p">]</code>
+<code class="n">prob</code> <code class="o">=</code> <code class="n">prob</code> <code class="o">+</code> <code class="n">np</code><code class="o">.</code><code class="n">finfo</code><code class="p">(</code><code class="n">np</code><code class="o">.</code><code class="n">float32</code><code class="p">)</code><code class="o">.</code><code class="n">eps</code>
+<code class="n">log_prob</code> <code class="o">=</code> <code class="n">tf</code><code class="o">.</code><code class="n">log</code><code class="p">(</code><code class="n">prob</code><code class="p">)</code></pre></div>
+
+<p>The policy loss computes the sum of all advantages observed, weighted by the log-probability of the action taken. (Recall that the advantage is the difference in reward resulting from taking the given action as opposed to the expected reward from the raw policy for that state). The intuition here is that the <code>policy_loss</code> provides a signal on which actions were fruitful and which were not (<a data-type="xref" href="#ch8-a3cpolicyloss">Example 8-23</a>).</p>
+<div id="ch8-a3cpolicyloss" data-type="example">
+<h5><span class="label">Example 8-23. </span>This snippet from A3CLoss defines the policy loss</h5>
+
+<pre data-type="programlisting" data-code-language="python"><code class="n">policy_loss</code> <code class="o">=</code> <code class="o">-</code><code class="n">tf</code><code class="o">.</code><code class="n">reduce_mean</code><code class="p">(</code>
+    <code class="n">advantage</code> <code class="o">*</code> <code class="n">tf</code><code class="o">.</code><code class="n">reduce_sum</code><code class="p">(</code><code class="n">action</code> <code class="o">*</code> <code class="n">log_prob</code><code class="p">,</code> <code class="n">axis</code><code class="o">=</code><code class="mi">1</code><code class="p">))</code></pre></div>
+
+<p>The value loss computes the difference between our estimate of <em>V</em> (<code>reward</code>) and the actual value of <em>V</em> observed (<code>value</code>). Note the use of the <em>L</em><sup>2</sup> loss here (<a data-type="xref" href="#ch8-a3cvalueloss">Example 8-24</a>).</p>
+<div id="ch8-a3cvalueloss" data-type="example">
+<h5><span class="label">Example 8-24. </span>This snippet from A3CLoss defines the value loss</h5>
+
+<pre data-type="programlisting" data-code-language="python"><code class="n">value_loss</code> <code class="o">=</code> <code class="n">tf</code><code class="o">.</code><code class="n">reduce_mean</code><code class="p">(</code><code class="n">tf</code><code class="o">.</code><code class="n">square</code><code class="p">(</code><code class="n">reward</code> <code class="o">-</code> <code class="n">value</code><code class="p">))</code></pre></div>
+
+<p>The entropy term is an addition that encourages the policy to explore further by adding some noise. This term is effectively a form of regularization for A3C networks. The final loss computed by <code>A3CLoss</code> is a linear combination of these component losses. See <a data-type="xref" href="#ch8-a3centropyloss">Example 8-25</a>.</p>
+<div id="ch8-a3centropyloss" data-type="example">
+<h5><span class="label">Example 8-25. </span>This snippet from A3CLoss defines an entropy term added to the loss</h5>
+
+<pre data-type="programlisting" data-code-language="python"><code class="n">entropy</code> <code class="o">=</code> <code class="o">-</code><code class="n">tf</code><code class="o">.</code><code class="n">reduce_mean</code><code class="p">(</code><code class="n">tf</code><code class="o">.</code><code class="n">reduce_sum</code><code class="p">(</code><code class="n">prob</code> <code class="o">*</code> <code class="n">log_prob</code><code class="p">,</code> <code class="n">axis</code><code class="o">=</code><code class="mi">1</code><code class="p">))</code></pre></div>
+</div></section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<section data-type="sect2" data-pdf-bookmark="Defining Workers"><div class="sect2" id="idm139806603612048">
+<h2>Defining Workers</h2>
+
+<p>Thus<a data-type="indexterm" data-primary="A3C algorithm" data-secondary="defining workers" id="idm139806603385248"/> far, you’ve seen how the policy network is constructed, but you haven’t yet seen how the asynchronous training procedure is implemented. Conceptually, asynchronous training consists of individual workers running gradient descent on locally simulated game rollouts and contributing learned knowledge back to a global set of weights periodically. Continuing our object-oriented design, let’s introduce the <code>Worker</code> class.</p>
+
+<p>Each <code>Worker</code> instance holds a copy of the model that’s trained asynchronously on a separate thread (<a data-type="xref" href="#ch8-worker">Example 8-26</a>). Note that <code>a3c.build_graph()</code> is used to construct a local copy of the TensorFlow computation graph for the thread in question. Take special note of <code>local_vars</code> and <code>global_vars</code> here. We need to make sure to train only the variables associated with this worker’s copy of the policy and not with the global copy of the variables (which is used to share information across worker threads). As a result <code>gradients</code> uses <code>tf.gradients</code> to take gradients of the loss with respect to only <code>local_vars</code>.</p>
+<div id="ch8-worker" data-type="example" class="pagebreak-before">
+<h5><span class="label">Example 8-26. </span>The Worker class implements the computation performed by each thread</h5>
+
+<pre data-type="programlisting" data-code-language="python"><code class="k">class</code> <code class="nc">Worker</code><code class="p">(</code><code class="nb">object</code><code class="p">):</code>
+  <code class="sd">"""A Worker object is created for each training thread."""</code>
+
+  <code class="k">def</code> <code class="nf-Magic">__init__</code><code class="p">(</code><code class="bp">self</code><code class="p">,</code> <code class="n">a3c</code><code class="p">,</code> <code class="n">index</code><code class="p">):</code>
+    <code class="bp">self</code><code class="o">.</code><code class="n">a3c</code> <code class="o">=</code> <code class="n">a3c</code>
+    <code class="bp">self</code><code class="o">.</code><code class="n">index</code> <code class="o">=</code> <code class="n">index</code>
+    <code class="bp">self</code><code class="o">.</code><code class="n">scope</code> <code class="o">=</code> <code class="s2">"worker</code><code class="si">%d</code><code class="s2">"</code> <code class="o">%</code> <code class="n">index</code>
+    <code class="bp">self</code><code class="o">.</code><code class="n">env</code> <code class="o">=</code> <code class="n">copy</code><code class="o">.</code><code class="n">deepcopy</code><code class="p">(</code><code class="n">a3c</code><code class="o">.</code><code class="n">_env</code><code class="p">)</code>
+    <code class="bp">self</code><code class="o">.</code><code class="n">env</code><code class="o">.</code><code class="n">reset</code><code class="p">()</code>
+    <code class="p">(</code><code class="bp">self</code><code class="o">.</code><code class="n">graph</code><code class="p">,</code> <code class="bp">self</code><code class="o">.</code><code class="n">features</code><code class="p">,</code> <code class="bp">self</code><code class="o">.</code><code class="n">rewards</code><code class="p">,</code> <code class="bp">self</code><code class="o">.</code><code class="n">actions</code><code class="p">,</code> <code class="bp">self</code><code class="o">.</code><code class="n">action_prob</code><code class="p">,</code>
+     <code class="bp">self</code><code class="o">.</code><code class="n">value</code><code class="p">,</code> <code class="bp">self</code><code class="o">.</code><code class="n">advantages</code><code class="p">)</code> <code class="o">=</code> <code class="n">a3c</code><code class="o">.</code><code class="n">build_graph</code><code class="p">(</code>
+        <code class="n">a3c</code><code class="o">.</code><code class="n">_graph</code><code class="o">.</code><code class="n">_get_tf</code><code class="p">(</code><code class="s2">"Graph"</code><code class="p">),</code> <code class="bp">self</code><code class="o">.</code><code class="n">scope</code><code class="p">,</code> <code class="bp">None</code><code class="p">)</code>
+    <code class="k">with</code> <code class="n">a3c</code><code class="o">.</code><code class="n">_graph</code><code class="o">.</code><code class="n">_get_tf</code><code class="p">(</code><code class="s2">"Graph"</code><code class="p">)</code><code class="o">.</code><code class="n">as_default</code><code class="p">():</code>
+      <code class="n">local_vars</code> <code class="o">=</code> <code class="n">tf</code><code class="o">.</code><code class="n">get_collection</code><code class="p">(</code><code class="n">tf</code><code class="o">.</code><code class="n">GraphKeys</code><code class="o">.</code><code class="n">TRAINABLE_VARIABLES</code><code class="p">,</code>
+                                     <code class="bp">self</code><code class="o">.</code><code class="n">scope</code><code class="p">)</code>
+      <code class="n">global_vars</code> <code class="o">=</code> <code class="n">tf</code><code class="o">.</code><code class="n">get_collection</code><code class="p">(</code><code class="n">tf</code><code class="o">.</code><code class="n">GraphKeys</code><code class="o">.</code><code class="n">TRAINABLE_VARIABLES</code><code class="p">,</code>
+                                      <code class="s2">"global"</code><code class="p">)</code>
+      <code class="n">gradients</code> <code class="o">=</code> <code class="n">tf</code><code class="o">.</code><code class="n">gradients</code><code class="p">(</code><code class="bp">self</code><code class="o">.</code><code class="n">graph</code><code class="o">.</code><code class="n">loss</code><code class="o">.</code><code class="n">out_tensor</code><code class="p">,</code> <code class="n">local_vars</code><code class="p">)</code>
+      <code class="n">grads_and_vars</code> <code class="o">=</code> <code class="nb">list</code><code class="p">(</code><code class="nb">zip</code><code class="p">(</code><code class="n">gradients</code><code class="p">,</code> <code class="n">global_vars</code><code class="p">))</code>
+      <code class="bp">self</code><code class="o">.</code><code class="n">train_op</code> <code class="o">=</code> <code class="n">a3c</code><code class="o">.</code><code class="n">_graph</code><code class="o">.</code><code class="n">_get_tf</code><code class="p">(</code><code class="s2">"Optimizer"</code><code class="p">)</code><code class="o">.</code><code class="n">apply_gradients</code><code class="p">(</code>
+          <code class="n">grads_and_vars</code><code class="p">)</code>
+      <code class="bp">self</code><code class="o">.</code><code class="n">update_local_variables</code> <code class="o">=</code> <code class="n">tf</code><code class="o">.</code><code class="n">group</code><code class="p">(</code>
+          <code class="o">*</code> <code class="p">[</code><code class="n">tf</code><code class="o">.</code><code class="n">assign</code><code class="p">(</code><code class="n">v1</code><code class="p">,</code> <code class="n">v2</code><code class="p">)</code> <code class="k">for</code> <code class="n">v1</code><code class="p">,</code> <code class="n">v2</code> <code class="ow">in</code> <code class="nb">zip</code><code class="p">(</code><code class="n">local_vars</code><code class="p">,</code> <code class="n">global_vars</code><code class="p">)])</code>
+      <code class="bp">self</code><code class="o">.</code><code class="n">global_step</code> <code class="o">=</code> <code class="bp">self</code><code class="o">.</code><code class="n">graph</code><code class="o">.</code><code class="n">get_global_step</code><code class="p">()</code></pre></div>
+
+
+
+
+
+
+
+
+
+
+<section data-type="sect3" data-pdf-bookmark="Worker rollouts"><div class="sect3" id="idm139806603369520">
+<h3>Worker rollouts</h3>
+
+<p>Each <code>Worker</code> is responsible for simulating game rollouts locally. The <code>create_rollout()</code> method uses <code>session.run</code> to fetch action probabilities from the TensorFlow graph (<a data-type="xref" href="#ch8-workerrollout">Example 8-27</a>). It then samples an action from this policy using <code>np.random.choice</code>, weighted by the per-class probabilities. The reward for the action taken is computed from <code>TicTacToeEnvironment</code> via a call to <code>self.env.step(action)</code>.</p>
+<div id="ch8-workerrollout" data-type="example">
+<h5><span class="label">Example 8-27. </span>The create_rollout method simulates a game rollout locally</h5>
+
+<pre data-type="programlisting" data-code-language="python"><code class="k">def</code> <code class="nf">create_rollout</code><code class="p">(</code><code class="bp">self</code><code class="p">):</code>
+  <code class="sd">"""Generate a rollout."""</code>
+  <code class="n">n_actions</code> <code class="o">=</code> <code class="bp">self</code><code class="o">.</code><code class="n">env</code><code class="o">.</code><code class="n">n_actions</code>
+  <code class="n">session</code> <code class="o">=</code> <code class="bp">self</code><code class="o">.</code><code class="n">a3c</code><code class="o">.</code><code class="n">_session</code>
+  <code class="n">states</code> <code class="o">=</code> <code class="p">[]</code>
+  <code class="n">actions</code> <code class="o">=</code> <code class="p">[]</code>
+  <code class="n">rewards</code> <code class="o">=</code> <code class="p">[]</code>
+  <code class="n">values</code> <code class="o">=</code> <code class="p">[]</code>
+
+  <code class="c1"># Generate the rollout.</code>
+  <code class="k">for</code> <code class="n">i</code> <code class="ow">in</code> <code class="nb">range</code><code class="p">(</code><code class="bp">self</code><code class="o">.</code><code class="n">a3c</code><code class="o">.</code><code class="n">max_rollout_length</code><code class="p">):</code>
+    <code class="k">if</code> <code class="bp">self</code><code class="o">.</code><code class="n">env</code><code class="o">.</code><code class="n">terminated</code><code class="p">:</code>
+      <code class="k">break</code>
+    <code class="n">state</code> <code class="o">=</code> <code class="bp">self</code><code class="o">.</code><code class="n">env</code><code class="o">.</code><code class="n">state</code>
+    <code class="n">states</code><code class="o">.</code><code class="n">append</code><code class="p">(</code><code class="n">state</code><code class="p">)</code>
+    <code class="n">feed_dict</code> <code class="o">=</code> <code class="bp">self</code><code class="o">.</code><code class="n">create_feed_dict</code><code class="p">(</code><code class="n">state</code><code class="p">)</code>
+    <code class="n">results</code> <code class="o">=</code> <code class="n">session</code><code class="o">.</code><code class="n">run</code><code class="p">(</code>
+        <code class="p">[</code><code class="bp">self</code><code class="o">.</code><code class="n">action_prob</code><code class="o">.</code><code class="n">out_tensor</code><code class="p">,</code> <code class="bp">self</code><code class="o">.</code><code class="n">value</code><code class="o">.</code><code class="n">out_tensor</code><code class="p">],</code>
+        <code class="n">feed_dict</code><code class="o">=</code><code class="n">feed_dict</code><code class="p">)</code>
+    <code class="n">probabilities</code><code class="p">,</code> <code class="n">value</code> <code class="o">=</code> <code class="n">results</code><code class="p">[:</code><code class="mi">2</code><code class="p">]</code>
+    <code class="n">action</code> <code class="o">=</code> <code class="n">np</code><code class="o">.</code><code class="n">random</code><code class="o">.</code><code class="n">choice</code><code class="p">(</code><code class="n">np</code><code class="o">.</code><code class="n">arange</code><code class="p">(</code><code class="n">n_actions</code><code class="p">),</code> <code class="n">p</code><code class="o">=</code><code class="n">probabilities</code><code class="p">[</code><code class="mi">0</code><code class="p">])</code>
+    <code class="n">actions</code><code class="o">.</code><code class="n">append</code><code class="p">(</code><code class="n">action</code><code class="p">)</code>
+    <code class="n">values</code><code class="o">.</code><code class="n">append</code><code class="p">(</code><code class="nb">float</code><code class="p">(</code><code class="n">value</code><code class="p">))</code>
+    <code class="n">rewards</code><code class="o">.</code><code class="n">append</code><code class="p">(</code><code class="bp">self</code><code class="o">.</code><code class="n">env</code><code class="o">.</code><code class="n">step</code><code class="p">(</code><code class="n">action</code><code class="p">))</code>
+
+  <code class="c1"># Compute an estimate of the reward for the rest of the episode.</code>
+  <code class="k">if</code> <code class="ow">not</code> <code class="bp">self</code><code class="o">.</code><code class="n">env</code><code class="o">.</code><code class="n">terminated</code><code class="p">:</code>
+    <code class="n">feed_dict</code> <code class="o">=</code> <code class="bp">self</code><code class="o">.</code><code class="n">create_feed_dict</code><code class="p">(</code><code class="bp">self</code><code class="o">.</code><code class="n">env</code><code class="o">.</code><code class="n">state</code><code class="p">)</code>
+    <code class="n">final_value</code> <code class="o">=</code> <code class="bp">self</code><code class="o">.</code><code class="n">a3c</code><code class="o">.</code><code class="n">discount_factor</code> <code class="o">*</code> <code class="nb">float</code><code class="p">(</code>
+        <code class="n">session</code><code class="o">.</code><code class="n">run</code><code class="p">(</code><code class="bp">self</code><code class="o">.</code><code class="n">value</code><code class="o">.</code><code class="n">out_tensor</code><code class="p">,</code> <code class="n">feed_dict</code><code class="p">))</code>
+  <code class="k">else</code><code class="p">:</code>
+    <code class="n">final_value</code> <code class="o">=</code> <code class="mf">0.0</code>
+  <code class="n">values</code><code class="o">.</code><code class="n">append</code><code class="p">(</code><code class="n">final_value</code><code class="p">)</code>
+  <code class="k">if</code> <code class="bp">self</code><code class="o">.</code><code class="n">env</code><code class="o">.</code><code class="n">terminated</code><code class="p">:</code>
+    <code class="bp">self</code><code class="o">.</code><code class="n">env</code><code class="o">.</code><code class="n">reset</code><code class="p">()</code>
+  <code class="k">return</code> <code class="n">states</code><code class="p">,</code> <code class="n">actions</code><code class="p">,</code> <code class="n">np</code><code class="o">.</code><code class="n">array</code><code class="p">(</code><code class="n">rewards</code><code class="p">),</code> <code class="n">np</code><code class="o">.</code><code class="n">array</code><code class="p">(</code><code class="n">values</code><code class="p">)</code></pre></div>
+
+<p>The <code>process_rollouts()</code> method does preprocessing needed to compute discounted rewards, values, actions, and advantages (<a data-type="xref" href="#ch8-processrollout">Example 8-28</a>).</p>
+<div id="ch8-processrollout" data-type="example">
+<h5><span class="label">Example 8-28. </span>The process_rollout method computes rewards, values, actions, and advantages and then takes a gradient descent step against the loss</h5>
+
+<pre data-type="programlisting" data-code-language="python"><code class="k">def</code> <code class="nf">process_rollout</code><code class="p">(</code><code class="bp">self</code><code class="p">,</code> <code class="n">states</code><code class="p">,</code> <code class="n">actions</code><code class="p">,</code> <code class="n">rewards</code><code class="p">,</code> <code class="n">values</code><code class="p">,</code> <code class="n">step_count</code><code class="p">):</code>
+  <code class="sd">"""Train the network based on a rollout."""</code>
+
+  <code class="c1"># Compute the discounted rewards and advantages.</code>
+  <code class="k">if</code> <code class="nb">len</code><code class="p">(</code><code class="n">states</code><code class="p">)</code> <code class="o">==</code> <code class="mi">0</code><code class="p">:</code>
+    <code class="c1"># Rollout creation sometimes fails in multithreaded environment.</code>
+    <code class="c1"># Don't process if malformed</code>
+    <code class="k">print</code><code class="p">(</code><code class="s2">"Rollout creation failed. Skipping"</code><code class="p">)</code>
+    <code class="k">return</code>
+
+  <code class="n">discounted_rewards</code> <code class="o">=</code> <code class="n">rewards</code><code class="o">.</code><code class="n">copy</code><code class="p">()</code>
+  <code class="n">discounted_rewards</code><code class="p">[</code><code class="o">-</code><code class="mi">1</code><code class="p">]</code> <code class="o">+=</code> <code class="n">values</code><code class="p">[</code><code class="o">-</code><code class="mi">1</code><code class="p">]</code>
+  <code class="n">advantages</code> <code class="o">=</code> <code class="n">rewards</code> <code class="o">-</code> <code class="n">values</code><code class="p">[:</code><code class="o">-</code><code class="mi">1</code><code class="p">]</code> <code class="o">+</code> <code class="bp">self</code><code class="o">.</code><code class="n">a3c</code><code class="o">.</code><code class="n">discount_factor</code> <code class="o">*</code> <code class="n">np</code><code class="o">.</code><code class="n">array</code><code class="p">(</code>
+      <code class="n">values</code><code class="p">[</code><code class="mi">1</code><code class="p">:])</code>
+  <code class="k">for</code> <code class="n">j</code> <code class="ow">in</code> <code class="nb">range</code><code class="p">(</code><code class="nb">len</code><code class="p">(</code><code class="n">rewards</code><code class="p">)</code> <code class="o">-</code> <code class="mi">1</code><code class="p">,</code> <code class="mi">0</code><code class="p">,</code> <code class="o">-</code><code class="mi">1</code><code class="p">):</code>
+    <code class="n">discounted_rewards</code><code class="p">[</code><code class="n">j</code><code class="o">-</code><code class="mi">1</code><code class="p">]</code> <code class="o">+=</code> <code class="bp">self</code><code class="o">.</code><code class="n">a3c</code><code class="o">.</code><code class="n">discount_factor</code> <code class="o">*</code> <code class="n">discounted_rewards</code><code class="p">[</code><code class="n">j</code><code class="p">]</code>
+    <code class="n">advantages</code><code class="p">[</code><code class="n">j</code><code class="o">-</code><code class="mi">1</code><code class="p">]</code> <code class="o">+=</code> <code class="p">(</code>
+        <code class="bp">self</code><code class="o">.</code><code class="n">a3c</code><code class="o">.</code><code class="n">discount_factor</code> <code class="o">*</code> <code class="bp">self</code><code class="o">.</code><code class="n">a3c</code><code class="o">.</code><code class="n">advantage_lambda</code> <code class="o">*</code> <code class="n">advantages</code><code class="p">[</code><code class="n">j</code><code class="p">])</code>
+   <code class="c1"># Convert the actions to one-hot.</code>
+  <code class="n">n_actions</code> <code class="o">=</code> <code class="bp">self</code><code class="o">.</code><code class="n">env</code><code class="o">.</code><code class="n">n_actions</code>
+  <code class="n">actions_matrix</code> <code class="o">=</code> <code class="p">[]</code>
+  <code class="k">for</code> <code class="n">action</code> <code class="ow">in</code> <code class="n">actions</code><code class="p">:</code>
+    <code class="n">a</code> <code class="o">=</code> <code class="n">np</code><code class="o">.</code><code class="n">zeros</code><code class="p">(</code><code class="n">n_actions</code><code class="p">)</code>
+    <code class="n">a</code><code class="p">[</code><code class="n">action</code><code class="p">]</code> <code class="o">=</code> <code class="mf">1.0</code>
+    <code class="n">actions_matrix</code><code class="o">.</code><code class="n">append</code><code class="p">(</code><code class="n">a</code><code class="p">)</code>
+
+  <code class="c1"># Rearrange the states into the proper set of arrays.</code>
+  <code class="n">state_arrays</code> <code class="o">=</code> <code class="p">[[]</code> <code class="k">for</code> <code class="n">i</code> <code class="ow">in</code> <code class="nb">range</code><code class="p">(</code><code class="nb">len</code><code class="p">(</code><code class="bp">self</code><code class="o">.</code><code class="n">features</code><code class="p">))]</code>
+  <code class="k">for</code> <code class="n">state</code> <code class="ow">in</code> <code class="n">states</code><code class="p">:</code>
+    <code class="k">for</code> <code class="n">j</code> <code class="ow">in</code> <code class="nb">range</code><code class="p">(</code><code class="nb">len</code><code class="p">(</code><code class="n">state</code><code class="p">)):</code>
+      <code class="n">state_arrays</code><code class="p">[</code><code class="n">j</code><code class="p">]</code><code class="o">.</code><code class="n">append</code><code class="p">(</code><code class="n">state</code><code class="p">[</code><code class="n">j</code><code class="p">])</code>
+
+  <code class="c1"># Build the feed dict and apply gradients.</code>
+  <code class="n">feed_dict</code> <code class="o">=</code> <code class="p">{}</code>
+  <code class="k">for</code> <code class="n">f</code><code class="p">,</code> <code class="n">s</code> <code class="ow">in</code> <code class="nb">zip</code><code class="p">(</code><code class="bp">self</code><code class="o">.</code><code class="n">features</code><code class="p">,</code> <code class="n">state_arrays</code><code class="p">):</code>
+    <code class="n">feed_dict</code><code class="p">[</code><code class="n">f</code><code class="o">.</code><code class="n">out_tensor</code><code class="p">]</code> <code class="o">=</code> <code class="n">s</code>
+  <code class="n">feed_dict</code><code class="p">[</code><code class="bp">self</code><code class="o">.</code><code class="n">rewards</code><code class="o">.</code><code class="n">out_tensor</code><code class="p">]</code> <code class="o">=</code> <code class="n">discounted_rewards</code>
+  <code class="n">feed_dict</code><code class="p">[</code><code class="bp">self</code><code class="o">.</code><code class="n">actions</code><code class="o">.</code><code class="n">out_tensor</code><code class="p">]</code> <code class="o">=</code> <code class="n">actions_matrix</code>
+  <code class="n">feed_dict</code><code class="p">[</code><code class="bp">self</code><code class="o">.</code><code class="n">advantages</code><code class="o">.</code><code class="n">out_tensor</code><code class="p">]</code> <code class="o">=</code> <code class="n">advantages</code>
+  <code class="n">feed_dict</code><code class="p">[</code><code class="bp">self</code><code class="o">.</code><code class="n">global_step</code><code class="p">]</code> <code class="o">=</code> <code class="n">step_count</code>
+  <code class="bp">self</code><code class="o">.</code><code class="n">a3c</code><code class="o">.</code><code class="n">_session</code><code class="o">.</code><code class="n">run</code><code class="p">(</code><code class="bp">self</code><code class="o">.</code><code class="n">train_op</code><code class="p">,</code> <code class="n">feed_dict</code><code class="o">=</code><code class="n">feed_dict</code><code class="p">)</code></pre></div>
+
+<p>The <code>Worker.run()</code> method performs the training step for the <code>Worker</code>, relying on <code>process_rollouts()</code> to issue the actual call to <code>self.a3c._session.run()</code> under the hood (<a data-type="xref" href="#ch8-processrollout2">Example 8-29</a>).</p>
+<div id="ch8-processrollout2" data-type="example">
+<h5><span class="label">Example 8-29. </span>The run() method is the top level invocation for Worker</h5>
+
+<pre data-type="programlisting" data-code-language="python"><code class="k">def</code> <code class="nf">run</code><code class="p">(</code><code class="bp">self</code><code class="p">,</code> <code class="n">step_count</code><code class="p">,</code> <code class="n">total_steps</code><code class="p">):</code>
+  <code class="k">with</code> <code class="bp">self</code><code class="o">.</code><code class="n">graph</code><code class="o">.</code><code class="n">_get_tf</code><code class="p">(</code><code class="s2">"Graph"</code><code class="p">)</code><code class="o">.</code><code class="n">as_default</code><code class="p">():</code>
+    <code class="k">while</code> <code class="n">step_count</code><code class="p">[</code><code class="mi">0</code><code class="p">]</code> <code class="o">&lt;</code> <code class="n">total_steps</code><code class="p">:</code>
+      <code class="bp">self</code><code class="o">.</code><code class="n">a3c</code><code class="o">.</code><code class="n">_session</code><code class="o">.</code><code class="n">run</code><code class="p">(</code><code class="bp">self</code><code class="o">.</code><code class="n">update_local_variables</code><code class="p">)</code>
+      <code class="n">states</code><code class="p">,</code> <code class="n">actions</code><code class="p">,</code> <code class="n">rewards</code><code class="p">,</code> <code class="n">values</code> <code class="o">=</code> <code class="bp">self</code><code class="o">.</code><code class="n">create_rollout</code><code class="p">()</code>
+      <code class="bp">self</code><code class="o">.</code><code class="n">process_rollout</code><code class="p">(</code><code class="n">states</code><code class="p">,</code> <code class="n">actions</code><code class="p">,</code> <code class="n">rewards</code><code class="p">,</code> <code class="n">values</code><code class="p">,</code> <code class="n">step_count</code><code class="p">[</code><code class="mi">0</code><code class="p">])</code>
+      <code class="n">step_count</code><code class="p">[</code><code class="mi">0</code><code class="p">]</code> <code class="o">+=</code> <code class="nb">len</code><code class="p">(</code><code class="n">actions</code><code class="p">)</code></pre></div>
+</div></section>
+
+
+
+</div></section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<section data-type="sect2" data-pdf-bookmark="Training the Policy"><div class="sect2" id="idm139806602414896">
+<h2>Training the Policy</h2>
+
+<p>The <code>A3C.fit()</code> method<a data-type="indexterm" data-primary="A3C.fit() method" id="idm139806602117840"/><a data-type="indexterm" data-primary="A3C algorithm" data-secondary="training the policy" id="idm139806602117104"/><a data-type="indexterm" data-primary="fit() method" id="idm139806602116160"/> brings together all the disparate pieces introduced to train the model. The <code>fit()</code> method takes the responsibility for spawning <code>Worker</code> threads using the Python <code>threading</code> library. Since each <code>Worker</code> takes responsibility for training itself, the <code>fit()</code> method simply is responsible for periodically checkpointing the trained model to disk. See <a data-type="xref" href="#ch8-a3cfit">Example 8-30</a>.</p>
+<div id="ch8-a3cfit" data-type="example">
+<h5><span class="label">Example 8-30. </span>The fit() method brings everything together and runs the A3C training algorithm</h5>
+
+<pre data-type="programlisting" data-code-language="python"><code class="k">def</code> <code class="nf">fit</code><code class="p">(</code><code class="bp">self</code><code class="p">,</code>
+        <code class="n">total_steps</code><code class="p">,</code>
+        <code class="n">max_checkpoints_to_keep</code><code class="o">=</code><code class="mi">5</code><code class="p">,</code>
+        <code class="n">checkpoint_interval</code><code class="o">=</code><code class="mi">600</code><code class="p">,</code>
+        <code class="n">restore</code><code class="o">=</code><code class="bp">False</code><code class="p">):</code>
+  <code class="sd">"""Train the policy.</code>
+
+<code class="sd">  Parameters</code>
+<code class="sd">  ----------</code>
+<code class="sd">  total_steps: int</code>
+<code class="sd">    the total number of time steps to perform on the environment, across all</code>
+<code class="sd">    rollouts on all threads</code>
+<code class="sd">  max_checkpoints_to_keep: int</code>
+<code class="sd">    the maximum number of checkpoint files to keep.  When this number is</code>
+<code class="sd">    reached, older files are deleted.</code>
+<code class="sd">  checkpoint_interval: float</code>
+<code class="sd">    the time interval at which to save checkpoints, measured in seconds</code>
+<code class="sd">  restore: bool</code>
+<code class="sd">    if True, restore the model from the most recent checkpoint and continue</code>
+<code class="sd">    training from there.  If False, retrain the model from scratch.</code>
+<code class="sd">  """</code>
+  <code class="k">with</code> <code class="bp">self</code><code class="o">.</code><code class="n">_graph</code><code class="o">.</code><code class="n">_get_tf</code><code class="p">(</code><code class="s2">"Graph"</code><code class="p">)</code><code class="o">.</code><code class="n">as_default</code><code class="p">():</code>
+    <code class="n">step_count</code> <code class="o">=</code> <code class="p">[</code><code class="mi">0</code><code class="p">]</code>
+    <code class="n">workers</code> <code class="o">=</code> <code class="p">[]</code>
+    <code class="n">threads</code> <code class="o">=</code> <code class="p">[]</code>
+    <code class="k">for</code> <code class="n">i</code> <code class="ow">in</code> <code class="nb">range</code><code class="p">(</code><code class="n">multiprocessing</code><code class="o">.</code><code class="n">cpu_count</code><code class="p">()):</code>
+      <code class="n">workers</code><code class="o">.</code><code class="n">append</code><code class="p">(</code><code class="n">Worker</code><code class="p">(</code><code class="bp">self</code><code class="p">,</code> <code class="n">i</code><code class="p">))</code>
+    <code class="bp">self</code><code class="o">.</code><code class="n">_session</code><code class="o">.</code><code class="n">run</code><code class="p">(</code><code class="n">tf</code><code class="o">.</code><code class="n">global_variables_initializer</code><code class="p">())</code>
+    <code class="k">if</code> <code class="n">restore</code><code class="p">:</code>
+      <code class="bp">self</code><code class="o">.</code><code class="n">restore</code><code class="p">()</code>
+    <code class="k">for</code> <code class="n">worker</code> <code class="ow">in</code> <code class="n">workers</code><code class="p">:</code>
+      <code class="n">thread</code> <code class="o">=</code> <code class="n">threading</code><code class="o">.</code><code class="n">Thread</code><code class="p">(</code>
+          <code class="n">name</code><code class="o">=</code><code class="n">worker</code><code class="o">.</code><code class="n">scope</code><code class="p">,</code>
+          <code class="n">target</code><code class="o">=</code><code class="k">lambda</code><code class="p">:</code> <code class="n">worker</code><code class="o">.</code><code class="n">run</code><code class="p">(</code><code class="n">step_count</code><code class="p">,</code> <code class="n">total_steps</code><code class="p">))</code>
+      <code class="n">threads</code><code class="o">.</code><code class="n">append</code><code class="p">(</code><code class="n">thread</code><code class="p">)</code>
+      <code class="n">thread</code><code class="o">.</code><code class="n">start</code><code class="p">()</code>
+    <code class="n">variables</code> <code class="o">=</code> <code class="n">tf</code><code class="o">.</code><code class="n">get_collection</code><code class="p">(</code>
+        <code class="n">tf</code><code class="o">.</code><code class="n">GraphKeys</code><code class="o">.</code><code class="n">GLOBAL_VARIABLES</code><code class="p">,</code> <code class="n">scope</code><code class="o">=</code><code class="s2">"global"</code><code class="p">)</code>
+    <code class="n">saver</code> <code class="o">=</code> <code class="n">tf</code><code class="o">.</code><code class="n">train</code><code class="o">.</code><code class="n">Saver</code><code class="p">(</code><code class="n">variables</code><code class="p">,</code> <code class="n">max_to_keep</code><code class="o">=</code><code class="n">max_checkpoints_to_keep</code><code class="p">)</code>
+    <code class="n">checkpoint_index</code> <code class="o">=</code> <code class="mi">0</code>
+    <code class="k">while</code> <code class="bp">True</code><code class="p">:</code>
+      <code class="n">threads</code> <code class="o">=</code> <code class="p">[</code><code class="n">t</code> <code class="k">for</code> <code class="n">t</code> <code class="ow">in</code> <code class="n">threads</code> <code class="k">if</code> <code class="n">t</code><code class="o">.</code><code class="n">isAlive</code><code class="p">()]</code>
+      <code class="k">if</code> <code class="nb">len</code><code class="p">(</code><code class="n">threads</code><code class="p">)</code> <code class="o">&gt;</code> <code class="mi">0</code><code class="p">:</code>
+        <code class="n">threads</code><code class="p">[</code><code class="mi">0</code><code class="p">]</code><code class="o">.</code><code class="n">join</code><code class="p">(</code><code class="n">checkpoint_interval</code><code class="p">)</code>
+      <code class="n">checkpoint_index</code> <code class="o">+=</code> <code class="mi">1</code>
+      <code class="n">saver</code><code class="o">.</code><code class="n">save</code><code class="p">(</code>
+          <code class="bp">self</code><code class="o">.</code><code class="n">_session</code><code class="p">,</code> <code class="bp">self</code><code class="o">.</code><code class="n">_graph</code><code class="o">.</code><code class="n">save_file</code><code class="p">,</code> <code class="n">global_step</code><code class="o">=</code><code class="n">checkpoint_index</code><code class="p">)</code>
+      <code class="k">if</code> <code class="nb">len</code><code class="p">(</code><code class="n">threads</code><code class="p">)</code> <code class="o">==</code> <code class="mi">0</code><code class="p">:</code>
+        <code class="k">break</code></pre></div>
+</div></section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<section data-type="sect2" data-pdf-bookmark="Challenge for the Reader"><div class="sect2" id="idm139806602103440">
+<h2>Challenge for the Reader</h2>
+
+<p>We<a data-type="indexterm" data-primary="" data-startref="RLa3c08" id="idm139806602102304"/> strongly encourage you to try training tic-tac-toe models for yourself! Note that this example is more involved than other examples in the book, and will require greater computational power. We recommend a machine with at least a few CPU cores. This requirement isn’t too onerous; a good laptop should suffice. Try using a tool like <code>htop</code> to check that the code is indeed multithreaded. See how good a model you can train! You should be able to beat the random baseline most of the time, but this basic implementation won’t give you a model that always wins. We recommend exploring the RL literature and expanding upon the base implementation to see how well you can do.</p>
+</div></section>
+
+
+
+
+
+</div></section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<section data-type="sect1" data-pdf-bookmark="Review"><div class="sect1" id="idm139806605147280">
+<h1>Review</h1>
+
+<p>In this chapter, we introduced you to the core concepts of reinforcement learning (RL). We walked you through some recent successes of RL methods on ATARI, upside-down helicopter flight, and computer Go. We then taught you about the mathematical framework of Markov decision processes. We brought it together with a detailed case study walking you through the construction of a tic-tac-toe agent. This algorithm uses a sophisticated training method, A3C, that makes use of multiple CPU cores to speed up training. In <a data-type="xref" href="ch09.html#training_large_deep_networks">Chapter 9</a>, you’ll learn more about training models with multiple GPUs.</p>
+</div></section>
+
+
+
+
+
+
+
+</div></section></body></html>

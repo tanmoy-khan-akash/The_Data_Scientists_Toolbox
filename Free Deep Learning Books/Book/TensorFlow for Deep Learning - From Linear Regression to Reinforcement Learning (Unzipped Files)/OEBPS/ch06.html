@@ -1,0 +1,862 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html><html xmlns:epub="http://www.idpf.org/2007/ops" xmlns="http://www.w3.org/1999/xhtml"><head><title>Convolutional Neural Networks</title><link rel="stylesheet" type="text/css" href="epub.css"/></head><body data-type="book"><section data-type="chapter" epub:type="chapter" data-pdf-bookmark="Chapter 6. Convolutional Neural Networks"><div class="chapter" id="convolutional_neural_networks">
+<h1><span class="label">Chapter 6. </span>Convolutional Neural Networks</h1>
+
+
+<p>Convolutional neural networks<a data-type="indexterm" data-primary="Convolutional Neural Networks (CNNs)" data-secondary="overview of" id="CNNover06"/><a data-type="indexterm" data-primary="structured spatial data" id="idm139806611538992"/><a data-type="indexterm" data-primary="images" data-secondary="CNN networks for" id="idm139806611538320"/><a data-type="indexterm" data-primary="video" id="idm139806611537376"/> allow deep networks to learn functions on structured spatial data such as images, video, and text. Mathematically, convolutional networks provide tools for exploiting the local structure of data effectively. Images satisfy certain natural statistical properties. Let’s assume we represent an image as a two-dimensional grid of pixels. Parts of an image that are close to one other in the pixel grid are likely to vary together (for example, all pixels corresponding to a table in the image are probably brown). Convolutional networks learn to exploit this natural covariance structure in order to learn effectively.</p>
+
+<p>Convolutional networks are a relatively old invention. Versions of convolutional networks have been proposed in the literature dating back to the 1980s. While the designs of these older convolutional networks were often quite sound, they required resources that exceeded hardware available at the time. As a result, convolutional networks languished in relative obscurity in the research literature.</p>
+
+<p>This trend reversed dramatically following the 2012 ILSVRC challenge for object detection in images, where the convolutional AlexNet<a data-type="indexterm" data-primary="AlexNet" id="idm139806611534576"/> achieved error rates half that of its nearest competitors. AlexNet was able to use GPUs to train old convolutional architectures on dramatically larger datasets. This combination of old architectures with new hardware allowed AlexNet to dramatically outperform the state of the art in image object detection. This trend has only continued, with convolutional neural networks achieving tremendous boosts over other technologies for processing images. It isn’t an exaggeration to say that nearly all modern image processing pipelines are now powered by convolutional neural networks.</p>
+
+<p>There has also been a renaissance in convolutional network design that has moved convolutional networks well past the basic models from the 1980s. For one, networks have been getting much deeper with powerful state-of-the-art networks reaching hundreds of layers deep. Another broad trend has been toward generalizing convolutional architectures to work on new datatypes. For example, graph convolutional architectures allow convolutional networks to be applied to molecular data such as the Tox21 dataset we encountered a few chapters ago! Convolutional architectures are also making a mark in genomics and in text processing and even language <span class="keep-together">translation</span>.</p>
+
+<p>In this chapter, we will introduce the basic concepts of convolutional networks. These will include the basic network components that constitute convolutional architectures and an introduction to the design principles that guide how these pieces are joined together. We will also provide an in-depth example that demonstrates how to use TensorFlow to train a convolutional network. The example code for this chapter was adapted from the TensorFlow documentation tutorial on convolutional neural networks. We encourage you to access <a href="https://www.tensorflow.org/tutorials/deep_cnn">the original tutorial</a> on the TensorFlow website if you’re curious about the changes we’ve made. As always, we encourage you to work through the scripts for this chapter in the associated <a href="https://github.com/matroid/dlwithtf">GitHub repo for this book</a>.<a data-type="indexterm" data-primary="" data-startref="CNNover06" id="idm139806611528864"/></p>
+
+
+
+
+
+
+<section data-type="sect1" data-pdf-bookmark="Introduction to Convolutional Architectures"><div class="sect1" id="idm139806611527760">
+<h1>Introduction to Convolutional Architectures</h1>
+
+<p>Most<a data-type="indexterm" data-primary="Convolutional Neural Networks (CNNs)" data-secondary="convolutional architectures" id="CNNarch06"/> convolutional architectures are made up of a number of basic primitives. These primitives include layers such as convolutional layers and pooling layers. There’s also a set of associated vocabulary including local receptive field size, stride size, and number of filters. In this section, we will give you a brief introduction to the basic vocabulary and concepts underlying convolutional networks.</p>
+
+
+
+
+
+
+
+
+<section data-type="sect2" data-pdf-bookmark="Local Receptive Fields"><div class="sect2" id="idm139806611524224">
+<h2>Local Receptive Fields</h2>
+
+<p>The local receptive field<a data-type="indexterm" data-primary="local receptive fields" id="idm139806611522688"/> concept originates in neuroscience, where the receptive field of a neuron is the part of the body’s sensory perception that affects the neuron’s firing. Neurons have a certain field of “view” as they process sensory input that the brain sees. This field of view is traditionally called the local receptive field. This “field of view” could correspond to a patch of skin or to a segment of a person’s visual field. <a data-type="xref" href="#ch6-localrec">Figure 6-1</a> illustrates a neuron’s local receptive field.</p>
+
+<figure><div id="ch6-localrec" class="figure">
+<img src="assets/tfdl_0601.png" alt="neuron_receptive_field.png"/>
+<h6><span class="label">Figure 6-1. </span>An illustration of a neuron’s local receptive field.</h6>
+</div></figure>
+
+<p>Convolutional<a data-type="indexterm" data-primary="images" data-secondary="local receptive fields and" id="idm139806611518192"/> architectures borrow this latter concept with the computational notion of “local receptive fields.” <a data-type="xref" href="#ch6-localrecconv">Figure 6-2</a> provides a pictorial representation of the local receptive field concept applied to image data. Each local receptive field corresponds to a patch of pixels in the image and is handled by a separate “neuron.” These “neurons” are directly analogous to those in fully connected layers. As with fully connected layers, a nonlinear transformation is applied to incoming data (which originates from the local receptive image patch).</p>
+
+<figure><div id="ch6-localrecconv" class="figure">
+<img src="assets/tfdl_0602.png" alt="local_receiptive_input.png"/>
+<h6><span class="label">Figure 6-2. </span>The local receptive field (RF) of a “neuron” in a convolutional network.</h6>
+</div></figure>
+
+<p>A<a data-type="indexterm" data-primary="convolutional layer" data-secondary="transformations in" id="idm139806611513296"/> layer of such “convolutional neurons” can be combined into a convolutional layer. This layer can viewed as a transformation of one spatial region into another. In the case of images, one batch of images is transformed into another by a convolutional layer. <a data-type="xref" href="#ch6-convlayer">Figure 6-3</a> illustrates such a transformation. In the next section, we will show you more details about how a convolutional layer is constructed.</p>
+
+<figure><div id="ch6-convlayer" class="figure">
+<img src="assets/tfdl_0603.png" alt="conv_receptive.png"/>
+<h6><span class="label">Figure 6-3. </span>A convolutional layer performs an image transformation.</h6>
+</div></figure>
+
+<p>It’s worth emphasizing that local receptive fields don’t have to be limited to image data. For example, in stacked convolutional architectures, where the output of one convolutional layer feeds into the input of the next, the local receptive field will correspond to a “patch” of processed feature data.</p>
+</div></section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<section data-type="sect2" data-pdf-bookmark="Convolutional Kernels"><div class="sect2" id="idm139806611508080">
+<h2>Convolutional Kernels</h2>
+
+<p>In<a data-type="indexterm" data-primary="convolutional kernels" id="idm139806611506752"/> the last section, we mentioned that a convolutional layer applies nonlinear function to a local receptive field in its input. This locally applied nonlinearity is at the heart of convolutional architectures, but it’s not the only piece. The second part of the convolution is what’s called a “convolutional kernel.” A convolutional kernel is just a matrix of weights, much like the weights associated with a fully connected layer. <a data-type="xref" href="#ch6-convkernel">Figure 6-4</a> diagrammatically illustrates how a convolutional kernel is applied to inputs.</p>
+
+<figure><div id="ch6-convkernel" class="figure">
+<img src="assets/tfdl_0604.png" alt="sliding_kernal.png"/>
+<h6><span class="label">Figure 6-4. </span>A convolutional kernel is applied to inputs. The kernel weights are multiplied elementwise with the corresponding numbers in the local receptive field and the multiplied numbers are summed. Note that this corresponds to a convolutional layer without a nonlinearity.</h6>
+</div></figure>
+
+<p>The key idea behind convolutional networks is that the same (nonlinear) transformation is applied to every local receptive field in the image. Visually, picture the local receptive field as a sliding window dragged over the image. At each positioning of the local receptive field, the nonlinear function is applied to return a single number corresponding to that image patch. As <a data-type="xref" href="#ch6-convkernel">Figure 6-4</a> demonstrates, this transformation turns one grid of numbers into another grid of numbers.  For image data, it’s common to label the size of the local receptive field in terms of the number of pixels on each size of the receptive field. For example, 5 × 5 and 7 × 7 local receptive field sizes are commonly seen in convolutional networks.</p>
+
+<p>What<a data-type="indexterm" data-primary="stride size" id="idm139806611500032"/> if we want to specify that local receptive fields should not overlap? The way to do this is to alter the <em>stride size</em> of the convolutional kernel. The stride size controls how the receptive field is moved over the input. <a data-type="xref" href="#ch6-convkernel">Figure 6-4</a> demonstrates a one-dimensional convolutional kernel, with stride sizes 1 and 2, respectively. <a data-type="xref" href="#ch6-stride">Figure 6-5</a> illustrates how altering the stride size changes how the receptive field is moved over the input.</p>
+
+<figure><div id="ch6-stride" class="figure">
+<img src="assets/tfdl_0605.png" alt="stride_size.png"/>
+<h6><span class="label">Figure 6-5. </span>The stride size controls how the local receptive field “slides” over the input. This is easiest to visualize on a one-dimensional input. The network on the left has stride 1, while that on the right has stride 2. Note that each local receptive field computes the maximum of its inputs.</h6>
+</div></figure>
+
+<p>Now, note that the convolutional kernel we have defined transforms a grid of numbers into another grid of numbers. What if we want more than one grid of numbers output? It’s easy enough; we simply need to add more convolutional kernels for processing the image. Convolutional kernels<a data-type="indexterm" data-primary="filters" id="idm139806611666368"/> are also called <em>filters</em>, so the number of filters in a convolutional layer controls the number of transformed grids we obtain. A<a data-type="indexterm" data-primary="convolutional layer" data-secondary="kernels in" id="idm139806611664992"/> collection of convolutional kernels forms a <em>convolutional layer</em>.</p>
+<div data-type="note" epub:type="note"><h1>Convolutional Kernels on Multidimensional Inputs</h1>
+<p>In<a data-type="indexterm" data-primary="multidimensional inputs" id="idm139806611662080"/> this section, we primarily described convolutional kernels as transforming grids of numbers into other grids of numbers. Recalling our tensorial language from earlier chapters, convolutions transform matrices into matrices.</p>
+
+<p>What<a data-type="indexterm" data-primary="RGB images" id="idm139806611660592"/> if your input has more dimensions? For example, an RGB image typically has three color channels, so an RGB image is rightfully a rank-3 tensor. The simplest way to handle RGB data is to dictate that each local receptive field includes all the color channels associated with pixels in that patch. You might then say that the local receptive field is of size 5 × 5 × 3 for a local receptive field of size 5 × 5 pixels with three color channels.</p>
+
+<p>In general, you can generalize to tensors of higher dimension by expanding the dimensionality of the local receptive field correspondingly. This may also necessitate having multidimensional strides, especially if different dimensions are to be handled separately. The details are straightforward to work out, and we leave exploration of multidimensional convolutional kernels as an exercise for you to undertake.</p>
+</div>
+</div></section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<section data-type="sect2" data-pdf-bookmark="Pooling Layers"><div class="sect2" id="idm139806611658192">
+<h2>Pooling Layers</h2>
+
+<p>In<a data-type="indexterm" data-primary="pooling layers" id="idm139806611656624"/> the previous section, we introduced the notion of convolutional kernels. These kernels apply learnable nonlinear transformations to local patches of inputs. These transformations are learnable, and by the universal approximation theorem, capable of learning arbitrarily complex input transformations on local patches. This flexibility gives convolutional kernels much of their power. But at the same time, having many learnable weights in a deep convolutional network can slow training.</p>
+
+<p>Instead<a data-type="indexterm" data-primary="fixed nonlinear transformations" id="idm139806611654880"/><a data-type="indexterm" data-primary="transformations" id="idm139806611654176"/> of using a learnable transformation, it’s possible to instead use a fixed nonlinear transformation in order to reduce the computational cost of training a convolutional network. A<a data-type="indexterm" data-primary="max pooling" id="idm139806611653184"/> popular fixed nonlinearity is “max pooling.” Such layers select and output the maximally activating input within each local receptive patch. <a data-type="xref" href="#ch6-pool">Figure 6-6</a> demonstrates this process. Pooling layers are useful for reducing the dimensionality of input data in a structured fashion. More mathematically, they take a local receptive field and replace the nonlinear activation function at each portion of the field with the max (or min or average) function.</p>
+
+<figure><div id="ch6-pool" class="figure">
+<img src="assets/tfdl_0606.png" alt="maxpool.jpeg"/>
+<h6><span class="label">Figure 6-6. </span>An illustration of a max pooling layer. Notice how the maximal value in each colored region (each local receptive field) is reported in the output.</h6>
+</div></figure>
+
+<p>Pooling layers have become less useful as hardware has improved. While pooling is still useful as a dimensionality reduction technique, recent research tends to avoid using pooling layers due to their inherent lossiness (it’s not possible to back out of pooled data which pixel in the input originated the reported activation). Nonetheless, pooling appears in many standard convolutional architectures so it’s worth understanding.</p>
+</div></section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<section data-type="sect2" data-pdf-bookmark="Constructing Convolutional Networks"><div class="sect2" id="idm139806611648016">
+<h2>Constructing Convolutional Networks</h2>
+
+<p>A<a data-type="indexterm" data-primary="Convolutional Neural Networks (CNNs)" data-secondary="constructing" id="idm139806611646832"/> simple convolutional architecture applies a series of convolutional layers and pooling layers to its input to learn a complex function on the input image data. There are a lot of details in forming these networks, but at its heart, architecture design is simply an elaborate form of Lego stacking. <a data-type="xref" href="#ch6-convarch">Figure 6-7</a> demonstrates how a convolutional architecture might be built up out of constituent blocks.</p>
+
+<figure><div id="ch6-convarch" class="figure">
+<img src="assets/tfdl_0607.png" alt="cnnimage.png"/>
+<h6><span class="label">Figure 6-7. </span>An illustration of a simple convolutional architecture constructed out of stacked convolutional and pooling layers.</h6>
+</div></figure>
+</div></section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<section data-type="sect2" data-pdf-bookmark="Dilated Convolutions"><div class="sect2" id="idm139806611641984">
+<h2>Dilated Convolutions</h2>
+
+<p>Dilated<a data-type="indexterm" data-primary="dilated convolutions" id="idm139806611640416"/> or atrous convolutions<a data-type="indexterm" data-primary="atrous convolutions" id="idm139806611639552"/> are a newly popular form of convolutional layer. The insight here is to leave gaps in the local receptive field for each neuron (atrous means <em>a trous</em>, or “with holes” in French). The basic concept is an old one in signal processing that has recently found some good traction in the convolutional literature.</p>
+
+<p>The core advantage to the atrous convolution is the increase in visible area for each neuron. Let’s consider a convolution architecture whose first layer is a vanilla convolutional with 3 × 3 local receptive fields. Then a neuron one layer deeper in the architecture in a second vanilla convolutional layer has receptive depth 5 × 5 (each neuron in a local receptive field of the second layer itself has a local receptive field in the first layer). Then, a neuron two layers deeper has receptive view 7 × 7. In general, a neuron <em>N</em> layers within the convolutional architecture has receptive view of size (2<em>N</em> + 1) × (2<em>N</em> + 1). This linear growth in receptive view is fine for smaller images, but quickly becomes a liability for large images.</p>
+
+<p>The atrous convolution enables exponential growth in the visible receptive field by leaving gaps in its local receptive fields. A “1-dilated” convolution leaves no gaps, while a “2-dilated” convolution leaves one gap between each local receptive field element. Stacking dilated layers leads to exponentially increasing local receptive field sizes. <a data-type="xref" href="#ch6-convdil">Figure 6-8</a> illustrates this exponential increase.</p>
+
+<p>Dilated convolutions can be very useful for large images. For example, medical images can stretch thousands of pixels in every dimension. Creating vanilla convolutional networks that have global understanding could require unreasonably deep networks. Using dilated convolutions could enable networks to better understand the global structure of such images.<a data-type="indexterm" data-primary="" data-startref="CNNarch06" id="idm139806611633248"/></p>
+
+<figure><div id="ch6-convdil" class="figure">
+<img src="assets/tfdl_0608.png" alt="dilated_convolution.png"/>
+<h6><span class="label">Figure 6-8. </span>A dilated (or atrous) convolution. Gaps are left in the local receptive field for each neuron. Diagram (a) depicts a 1-dilated 3 × 3 convolution. Diagram (b) depicts the application of a 2-dilated 3 × 3 convolution to (a). Diagram (c) depicts the application of a 4-dilated 3 × 3 convolution to (b). Notice that the (a) layer has receptive field of width 3, the (b) layer has receptive field of width 7, and the (c) layer has receptive field of width 15.</h6>
+</div></figure>
+</div></section>
+
+
+
+
+
+</div></section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<section data-type="sect1" data-pdf-bookmark="Applications of Convolutional Networks"><div class="sect1" id="idm139806611629728">
+<h1>Applications of Convolutional Networks</h1>
+
+<p>In<a data-type="indexterm" data-primary="Convolutional Neural Networks (CNNs)" data-secondary="applications of" id="CNNapp06"/> the previous section, we covered the mechanics of convolutional networks and introduced you to many of the components that make up these networks. In this section, we describe some applications that convolutional architectures enable.</p>
+
+
+
+
+
+
+
+
+<section data-type="sect2" data-pdf-bookmark="Object Detection and Localization"><div class="sect2" id="idm139806611626496">
+<h2>Object Detection and Localization</h2>
+
+<p>Object detection<a data-type="indexterm" data-primary="object detection and localization" id="idm139806611624992"/><a data-type="indexterm" data-primary="bounding boxes" id="idm139806611624192"/><a data-type="indexterm" data-primary="detection and localization" id="idm139806611623520"/><a data-type="indexterm" data-primary="localization" id="idm139806611622832"/> is the task of detecting the objects (or entities) present in a photograph. Object localization is the task of identifying where in the image the objects exist and drawing a “bounding box” around each occurrence. <a data-type="xref" href="#ch6-objdet">Figure 6-9</a> demonstrates what detection and localization on standard images looks like.</p>
+
+<figure><div id="ch6-objdet" class="figure">
+<img src="assets/tfdl_0609.png" alt="detection_and_localization.jpg"/>
+<h6><span class="label">Figure 6-9. </span>Objects detected and localized with bounding boxes in some example images.</h6>
+</div></figure>
+
+<p>Why is detection and localization important? One very useful localization task is detecting pedestrians in images taken from a self-driving car. Needless to say, it’s extremely important that a self-driving car be able to identify all nearby pedestrians. Other applications of object detection could be used to find all instances of friends in photos uploaded to a social network. Yet another application could be to identify potential collision dangers from a drone.</p>
+
+<p>This wealth of applications has made detection and localization the focus of tremendous amounts of research activity. The ILSVRC challenge mentioned multiple times in this book focused on detecting and localizing objects found in the ImagetNet collection.</p>
+</div></section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<section data-type="sect2" data-pdf-bookmark="Image Segmentation"><div class="sect2" id="idm139806611617232">
+<h2>Image Segmentation</h2>
+
+<p>Image segmentation<a data-type="indexterm" data-primary="image segmentation" id="idm139806611615920"/> is the task of labeling each pixel in an image with the object it belongs to. Segmentation is related to object localization, but is significantly harder since it requires precisely understanding the boundaries between objects in images. Until recently, image segmentation was often done with graphical models, an alternate form of machine learning (as opposed to deep networks), but recently convolutional segmentations have risen to prominence and allowed image segmentation algorithms to achieve new accuracy and speed records. <a data-type="xref" href="#ch6-objseg">Figure 6-10</a> displays an example of image segmentation applied to data for self-driving car imagery.</p>
+
+<figure><div id="ch6-objseg" class="figure">
+<img src="assets/tfdl_0610.png" alt="nvidia_digits.png"/>
+<h6><span class="label">Figure 6-10. </span>Objects in an image are “segmented” into various categories. Image segmentation is expected to prove very useful for applications such as self-driving cars and robotics since it will enable fine-grained scene understanding.</h6>
+</div></figure>
+</div></section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<section data-type="sect2" data-pdf-bookmark="Graph Convolutions"><div class="sect2" id="idm139806611611072">
+<h2>Graph Convolutions</h2>
+
+<p>The<a data-type="indexterm" data-primary="graph convolutions" id="idm139806611609504"/> convolutional algorithms we’ve shown you thus far expect rectangular tensors as their inputs. Such inputs could come in the form of images, videos, or even sentences. Is it possible to generalize convolutions to apply to irregular inputs?</p>
+
+<p>The fundamental idea underlying convolutional layers is the notion of a local receptive field. Each neuron computes upon the inputs in its local receptive field, which typically constitute adjacent pixels in an image input. For<a data-type="indexterm" data-primary="local receptive fields" id="idm139806611607760"/> irregular inputs, such as the undirected graph in <a data-type="xref" href="#ch6-undgraph">Figure 6-11</a>, this simple notion of a local receptive field doesn’t make sense; there are no adjacent pixels. If we can define a more general local receptive field for an undirected graph, it stands to reason that we should be able to define convolutional layers that accept undirected graphs.</p>
+
+<figure><div id="ch6-undgraph" class="figure">
+<img src="assets/tfdl_0611.png" alt="graph_example.png"/>
+<h6><span class="label">Figure 6-11. </span>An illustration of an undirected graph consisting of nodes connected by edges.</h6>
+</div></figure>
+
+<p>As <a data-type="xref" href="#ch6-undgraph">Figure 6-11</a> shows, a graph is made up of a collection of nodes connected by edges. One potential definition of a local receptive field might be to define it to constitute a node and its collection of neighbors (where two nodes are considered neighbors if they are connected by an edge). Using this definition of local receptive fields, it’s possible to define generalized notions of convolutional and pooling layers. These layers can be assembled into graph convolutional architectures.</p>
+
+<p>Where might such graph convolutional architectures prove useful? In chemistry, it turns out molecules can be modeled as undirected graphs where atoms form nodes and chemical bonds form edges. As a result, graph convolutional architectures are particularly useful in chemical machine learning. For example, <a data-type="xref" href="#ch6-molgraph">Figure 6-12</a> demonstrates how graph convolutional architectures can be applied to process molecular inputs.</p>
+
+<figure><div id="ch6-molgraph" class="figure">
+<img src="assets/tfdl_0612.png" alt="graphconv_graphic_v2.png"/>
+<h6><span class="label">Figure 6-12. </span>An illustration of a graph convolutional architecture processing a molecular input. The molecule is modeled as an undirected graph with atoms forming nodes and chemical bond edges. The “graph topology” is the undirected graph corresponding to the molecule. “Atom features” are vectors, one per atom, summarizing local chemistry. Adapted from “Low Data Drug Discovery with One-Shot Learning.”</h6>
+</div></figure>
+</div></section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<section data-type="sect2" data-pdf-bookmark="Generating Images with Variational Autoencoders"><div class="sect2" id="idm139806611597968">
+<h2>Generating Images with Variational Autoencoders</h2>
+
+<p>The<a data-type="indexterm" data-primary="variational autoencoders" id="idm139806611596432"/><a data-type="indexterm" data-primary="autoencoders" id="idm139806611595728"/><a data-type="indexterm" data-primary="images" data-secondary="generating with variational autoencoders" id="idm139806611595056"/> applications we’ve described thus far are all supervised learning problems. There are well-defined inputs and outputs, and the task remains (using a convolutional network) to learn a sophisticated function mapping input to output. Are there unsupervised learning problems that can be solved with convolutional networks? Recall that unsupervised learning requires “understanding” the structure of input datapoints. For image modeling, a good measure of understanding the structure of input images is being able to “sample” new images that come from the input distribution.</p>
+
+<p>What<a data-type="indexterm" data-primary="sampling" id="idm139806611592912"/><a data-type="indexterm" data-primary="images" data-secondary="sampling" id="idm139806611592176"/> does “sampling” an image mean? To explain, let’s suppose we have a dataset of dog images. Sampling a new dog image requires the generation of a new image of a dog that <em>is not in the training data</em>! The idea is that we would like a picture of a dog that could have reasonably been included with the training data, but was not. How could we solve this task with convolutional networks?</p>
+
+<p>Perhaps we could train a model to take in word labels like “dog” and predict dog images. We might possibly be able to train a supervised model to solve this prediction problem, but the issue remains that our model could generate only one dog picture given the input label “dog.” Suppose now that we could attach a random tag to each dog—say “dog3422” or “dog9879.” Then all we’d need to do to get a new dog image would be to attach a new random tag, say “dog2221,” to get out a new picture of a dog.</p>
+
+<p>Variational autoencoders formalize these intuitions. Variational autoencoders consist of two convolutional networks: the encoder and decoder network. The encoder network is used to transform an image into a flat “embedded” vector. The decoder network is responsible for transforming the embedded vector into images. Noise is added to ensure that different images can be sampled by the decoder. <a data-type="xref" href="#ch6-varencod">Figure 6-13</a> illustrates a variational autoencoder.</p>
+
+<figure><div id="ch6-varencod" class="figure">
+<img src="assets/tfdl_0613.png" alt="variational_autoencoder.png"/>
+<h6><span class="label">Figure 6-13. </span>A diagrammatic illustration of a variational autoencoder. A variational autoencoder consists of two convolutional networks, the encoder and decoder.</h6>
+</div></figure>
+
+<p>There are more details involved in an actual implementation, but variational autoencoders are capable of sampling images. However, naive variational encoders seem to generate blurry image samples, as <a data-type="xref" href="#ch6-varencodsamp">Figure 6-14</a> demonstrates. This blurriness may be because the <em>L</em><sup>2</sup> loss doesn’t penalize image blurriness sharply (recall our discussion about <em>L</em><sup>2</sup> not penalizing small deviations). To generate crisp image samples, we will need other architectures.</p>
+
+<figure><div id="ch6-varencodsamp" class="figure">
+<img src="assets/tfdl_0614.png" alt="variational-autoencoder-faces.jpg"/>
+<h6><span class="label">Figure 6-14. </span>Images sampled from a variational autoencoder trained on a dataset of faces. Note that sampled images are quite blurry.</h6>
+</div></figure>
+
+
+
+
+
+
+
+
+
+
+<section data-type="sect3" data-pdf-bookmark="Adversarial models"><div class="sect3" id="idm139806611580224">
+<h3>Adversarial models</h3>
+
+<p>The L2 loss<a data-type="indexterm" data-primary="L2 loss" id="idm139806611578656"/><a data-type="indexterm" data-primary="adversarial models" id="idm139806611577920"/><a data-type="indexterm" data-primary="models" data-secondary="adversarial models" id="idm139806611390576"/><a data-type="indexterm" data-primary="loss functions" id="idm139806611389728"/> sharply penalizes large local deviations, but doesn’t severely penalize many small local deviations, causing blurriness. How could we design an alternate loss function that penalizes blurriness in images more sharply? It turns out that it’s quite challenging to write down a loss function that does the trick. While our eyes can quickly spot blurriness, our analytical tools aren’t quite so fast to capture the problem.</p>
+
+<p>What if we could somehow “learn” a loss function? This idea sounds a little nonsensical at first; where would we get training data? But it turns out that there’s a clever idea that makes it feasible.</p>
+
+<p>Suppose<a data-type="indexterm" data-primary="GAN (generative adversarial network)" id="idm139806611387520"/> we could train a separate network that learns the loss. Let’s call this network the discriminator. Let’s call the network that makes the images the generator. The generator can be set to duel against the discriminator until the generator is capable of producing images that are photorealistic. This form of architecture is commonly called a generative adversarial network, or GAN.</p>
+
+<p class="pagebreak-before">Faces generated by a GAN (<a data-type="xref" href="#ch6-gansamp">Figure 6-15</a>) are considerably crisper than those generated by the naive variational autoencoder (<a data-type="xref" href="#ch6-varencodsamp">Figure 6-14</a>)! There are a number of other promising results that have been achieved by GANs. The<a data-type="indexterm" data-primary="CycleGAN" id="idm139806611384000"/> CycleGAN, for example, appears capable of learning complex image transformations such as transmuting horses into zebras and vice versa. <a data-type="xref" href="#ch6-cycgan">Figure 6-16</a> shows some CycleGAN image transformations.</p>
+
+<figure><div id="ch6-gansamp" class="figure">
+<img src="assets/tfdl_0615.png" alt="GAN_faces.png"/>
+<h6><span class="label">Figure 6-15. </span>Images sampled from a generative adversarial network (GAN) trained on a dataset of faces. Note that sampled images are less blurry than those from the variational autoencoder.</h6>
+</div></figure>
+
+<figure><div id="ch6-cycgan" class="figure">
+<img src="assets/tfdl_0616.png" alt="CycleGAN.jpg"/>
+<h6><span class="label">Figure 6-16. </span>The CycleGAN is capable of performing complex image transformations, such as transforming images of horses into those of zebras (and vice versa).</h6>
+</div></figure>
+
+<p>Unfortunately, generative adversarial networks are still challenging to train in practice. Making generators and discriminators learn reasonable functions requires a deep bag of tricks. As a result, while there have been many exciting GAN demonstrations, GANs have not yet matured into a state where they can be widely deployed in industrial applications.<a data-type="indexterm" data-primary="" data-startref="CNNapp06" id="idm139806611376944"/></p>
+</div></section>
+
+
+
+</div></section>
+
+
+
+
+
+</div></section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<section data-type="sect1" data-pdf-bookmark="Training a Convolutional Network in TensorFlow"><div class="sect1" id="idm139806611375840">
+<h1>Training a Convolutional Network in TensorFlow</h1>
+
+<p>In<a data-type="indexterm" data-primary="Convolutional Neural Networks (CNNs)" data-secondary="training in TensorFlow" id="CNNtrain06"/> this section we consider a code sample for training a simple convolutional neural network. In particular, our code sample will demonstrate how to train a LeNet-5 convolutional architecture on the MNIST dataset using TensorFlow. As always, we recommend that you follow along by running the full code sample from the <a href="https://github.com/matroid/dlwithtf">GitHub repo associated with the book</a>.</p>
+
+
+
+
+
+
+
+
+<section data-type="sect2" data-pdf-bookmark="The MNIST Dataset"><div class="sect2" id="idm139806611371856">
+<h2>The MNIST Dataset</h2>
+
+<p>The<a data-type="indexterm" data-primary="LeNet-5 convolutional architecture" data-secondary="MNIST dataset and" id="idm139806611370352"/><a data-type="indexterm" data-primary="MNIST dataset" id="idm139806611369280"/><a data-type="indexterm" data-primary="handwritten digits" id="idm139806611368608"/> MNIST dataset consists of images of handwritten digits. The machine learning challenge associated with MNIST consists of creating a model trained on the training set of digits that generalizes to the validation set. <a data-type="xref" href="#ch6-mnist">Figure 6-17</a> shows some images drawn from the MNIST dataset.</p>
+
+<figure><div id="ch6-mnist" class="figure">
+<img src="assets/tfdl_0617.png" alt="minst_images.png"/>
+<h6><span class="label">Figure 6-17. </span>Some images of handwritten digits from the MNIST dataset. The learning challenge is to predict the digit from the image.</h6>
+</div></figure>
+
+<p>MNIST was a very important dataset for the development of machine learning methods for computer vision. The dataset is challenging enough that obvious, non-learning methods don’t tend to do well. At the same time, MNIST is small enough that experimenting with new architectures doesn’t require very large amounts of computing power.</p>
+
+<p>However, the MNIST dataset has mostly become obsolete. The best models achieve near one hundred percent test accuracy. Note that this fact doesn’t mean that the problem of handwritten digit recognition is solved! Rather, it is likely that human scientists have overfit architectures to the MNIST dataset and capitalized on its quirks to achieve very high predictive accuracies. As a result, it’s no longer good practice to use MNIST to design new deep architectures. That said, MNIST is still a superb dataset for pedagogical purposes.</p>
+</div></section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<section data-type="sect2" data-pdf-bookmark="Loading MNIST"><div class="sect2" id="idm139806611362880">
+<h2>Loading MNIST</h2>
+
+<p>The MNIST codebase is located online on <a href="http://yann.lecun.com/exdb/mnist/">Yann LeCun’s website</a>. The download script pulls down the raw file from the website. Notice how the script caches the download so repeated calls to <code>download()</code> won’t waste effort.</p>
+
+<p>As a more general note, it’s quite common to store ML datasets in the cloud and have user code retrieve it before processing for input into a learning algorithm. The Tox21 dataset we accessed via the DeepChem library in <a data-type="xref" href="ch04.html#fully_connected_networks">Chapter 4</a> followed this same design pattern. In general, if you would like to host a large dataset for analysis, hosting on the cloud and downloading to a local machine for processing as necessary seems good practice. (This breaks down for very large datasets however, where network transfer times become exorbitantly expensive.) See <a data-type="xref" href="#ch6-mnistdownload">Example 6-1</a>.</p>
+<div id="ch6-mnistdownload" data-type="example">
+<h5><span class="label">Example 6-1. </span>This function downloads the MNIST dataset</h5>
+
+<pre data-type="programlisting" data-code-language="python"><code class="k">def</code> <code class="nf">download</code><code class="p">(</code><code class="n">filename</code><code class="p">):</code>
+  <code class="sd">"""Download the data from Yann's website, unless it's already here."""</code>
+  <code class="k">if</code> <code class="ow">not</code> <code class="n">os</code><code class="o">.</code><code class="n">path</code><code class="o">.</code><code class="n">exists</code><code class="p">(</code><code class="n">WORK_DIRECTORY</code><code class="p">):</code>
+    <code class="n">os</code><code class="o">.</code><code class="n">makedirs</code><code class="p">(</code><code class="n">WORK_DIRECTORY</code><code class="p">)</code>
+  <code class="n">filepath</code> <code class="o">=</code> <code class="n">os</code><code class="o">.</code><code class="n">path</code><code class="o">.</code><code class="n">join</code><code class="p">(</code><code class="n">WORK_DIRECTORY</code><code class="p">,</code> <code class="n">filename</code><code class="p">)</code>
+  <code class="k">if</code> <code class="ow">not</code> <code class="n">os</code><code class="o">.</code><code class="n">path</code><code class="o">.</code><code class="n">exists</code><code class="p">(</code><code class="n">filepath</code><code class="p">):</code>
+    <code class="n">filepath</code><code class="p">,</code> <code class="n">_</code> <code class="o">=</code> <code class="n">urllib</code><code class="o">.</code><code class="n">request</code><code class="o">.</code><code class="n">urlretrieve</code><code class="p">(</code><code class="n">SOURCE_URL</code> <code class="o">+</code> <code class="n">filename</code><code class="p">,</code> <code class="n">filepath</code><code class="p">)</code>
+    <code class="n">size</code> <code class="o">=</code> <code class="n">os</code><code class="o">.</code><code class="n">stat</code><code class="p">(</code><code class="n">filepath</code><code class="p">)</code><code class="o">.</code><code class="n">st_size</code>
+    <code class="k">print</code><code class="p">(</code><code class="s1">'Successfully downloaded'</code><code class="p">,</code> <code class="n">filename</code><code class="p">,</code> <code class="n">size</code><code class="p">,</code> <code class="s1">'bytes.'</code><code class="p">)</code>
+  <code class="k">return</code> <code class="n">filepath</code></pre></div>
+
+<p>This download checks for the existence of <code>WORK_DIRECTORY</code>. If this directory exists, it assumes that the MNIST dataset has already been downloaded. Else, the script uses the <code>urllib</code> Python library to perform the download and prints the number of bytes downloaded.</p>
+
+<p>The MNIST dataset is stored as a raw string of bytes encoding pixel values. In order to easily process this data, we need to convert it into a NumPy array. The function <code>np.frombuffer</code> provides a convenience that allows the conversion of a raw byte buffer into a numerical array (<a data-type="xref" href="#ch6-mnistdownload2">Example 6-2</a>). As we have noted elsewhere in this book, deep networks can be destabilized by input data that occupies wide ranges. For stable gradient descent, it is often necessary to constrain inputs to span a bounded range. The original MNIST dataset contains pixel values ranging from 0 to 255. For stability, this range needs to be shifted to have mean zero and unit range (from –0.5 to +0.5).</p>
+<div id="ch6-mnistdownload2" data-type="example">
+<h5><span class="label">Example 6-2. </span>Extracting images from a downloaded dataset into NumPy arrays</h5>
+
+<pre data-type="programlisting" data-code-language="python"><code class="k">def</code> <code class="nf">extract_data</code><code class="p">(</code><code class="n">filename</code><code class="p">,</code> <code class="n">num_images</code><code class="p">):</code>
+  <code class="sd">"""Extract the images into a 4D tensor [image index, y, x, channels].</code>
+
+<code class="sd">  Values are rescaled from [0, 255] down to [-0.5, 0.5].</code>
+<code class="sd">  """</code>
+  <code class="k">print</code><code class="p">(</code><code class="s1">'Extracting'</code><code class="p">,</code> <code class="n">filename</code><code class="p">)</code>
+  <code class="k">with</code> <code class="n">gzip</code><code class="o">.</code><code class="n">open</code><code class="p">(</code><code class="n">filename</code><code class="p">)</code> <code class="k">as</code> <code class="n">bytestream</code><code class="p">:</code>
+    <code class="n">bytestream</code><code class="o">.</code><code class="n">read</code><code class="p">(</code><code class="mi">16</code><code class="p">)</code>
+    <code class="n">buf</code> <code class="o">=</code> <code class="n">bytestream</code><code class="o">.</code><code class="n">read</code><code class="p">(</code><code class="n">IMAGE_SIZE</code> <code class="o">*</code> <code class="n">IMAGE_SIZE</code> <code class="o">*</code> <code class="n">num_images</code> <code class="o">*</code> <code class="n">NUM_CHANNELS</code><code class="p">)</code>
+    <code class="n">data</code> <code class="o">=</code> <code class="n">numpy</code><code class="o">.</code><code class="n">frombuffer</code><code class="p">(</code><code class="n">buf</code><code class="p">,</code> <code class="n">dtype</code><code class="o">=</code><code class="n">numpy</code><code class="o">.</code><code class="n">uint8</code><code class="p">)</code><code class="o">.</code><code class="n">astype</code><code class="p">(</code><code class="n">numpy</code><code class="o">.</code><code class="n">float32</code><code class="p">)</code>
+    <code class="n">data</code> <code class="o">=</code> <code class="p">(</code><code class="n">data</code> <code class="o">-</code> <code class="p">(</code><code class="n">PIXEL_DEPTH</code> <code class="o">/</code> <code class="mf">2.0</code><code class="p">))</code> <code class="o">/</code> <code class="n">PIXEL_DEPTH</code>
+    <code class="n">data</code> <code class="o">=</code> <code class="n">data</code><code class="o">.</code><code class="n">reshape</code><code class="p">(</code><code class="n">num_images</code><code class="p">,</code> <code class="n">IMAGE_SIZE</code><code class="p">,</code> <code class="n">IMAGE_SIZE</code><code class="p">,</code> <code class="n">NUM_CHANNELS</code><code class="p">)</code>
+    <code class="k">return</code> <code class="n">data</code></pre></div>
+
+<p>The labels are stored in a simple file as a string of bytes. There is a header consisting of 8 bytes, with the remainder of the data containing labels (<a data-type="xref" href="#ch6-mnistlabels">Example 6-3</a>).</p>
+<div id="ch6-mnistlabels" data-type="example">
+<h5><span class="label">Example 6-3. </span>This function extracts labels from the downloaded dataset into an array of labels</h5>
+
+<pre data-type="programlisting" data-code-language="python"><code class="k">def</code> <code class="nf">extract_labels</code><code class="p">(</code><code class="n">filename</code><code class="p">,</code> <code class="n">num_images</code><code class="p">):</code>
+  <code class="sd">"""Extract the labels into a vector of int64 label IDs."""</code>
+  <code class="k">print</code><code class="p">(</code><code class="s1">'Extracting'</code><code class="p">,</code> <code class="n">filename</code><code class="p">)</code>
+  <code class="k">with</code> <code class="n">gzip</code><code class="o">.</code><code class="n">open</code><code class="p">(</code><code class="n">filename</code><code class="p">)</code> <code class="k">as</code> <code class="n">bytestream</code><code class="p">:</code>
+    <code class="n">bytestream</code><code class="o">.</code><code class="n">read</code><code class="p">(</code><code class="mi">8</code><code class="p">)</code>
+    <code class="n">buf</code> <code class="o">=</code> <code class="n">bytestream</code><code class="o">.</code><code class="n">read</code><code class="p">(</code><code class="mi">1</code> <code class="o">*</code> <code class="n">num_images</code><code class="p">)</code>
+    <code class="n">labels</code> <code class="o">=</code> <code class="n">numpy</code><code class="o">.</code><code class="n">frombuffer</code><code class="p">(</code><code class="n">buf</code><code class="p">,</code> <code class="n">dtype</code><code class="o">=</code><code class="n">numpy</code><code class="o">.</code><code class="n">uint8</code><code class="p">)</code><code class="o">.</code><code class="n">astype</code><code class="p">(</code><code class="n">numpy</code><code class="o">.</code><code class="n">int64</code><code class="p">)</code>
+  <code class="k">return</code> <code class="n">labels</code></pre></div>
+
+<p>Given the functions defined in the previous examples, it is now feasible to download and process the MNIST training and test dataset (<a data-type="xref" href="#ch6-mnisttogether">Example 6-4</a>).</p>
+<div id="ch6-mnisttogether" data-type="example">
+<h5><span class="label">Example 6-4. </span>Using the functions defined in the previous examples, this code snippet downloads and processes the MNIST train and test datasets</h5>
+
+<pre data-type="programlisting" data-code-language="python"><code class="c1"># Get the data.</code>
+<code class="n">train_data_filename</code> <code class="o">=</code> <code class="n">download</code><code class="p">(</code><code class="s1">'train-images-idx3-ubyte.gz'</code><code class="p">)</code>
+<code class="n">train_labels_filename</code> <code class="o">=</code> <code class="n">download</code><code class="p">(</code><code class="s1">'train-labels-idx1-ubyte.gz'</code><code class="p">)</code>
+<code class="n">test_data_filename</code> <code class="o">=</code> <code class="n">download</code><code class="p">(</code><code class="s1">'t10k-images-idx3-ubyte.gz'</code><code class="p">)</code>
+<code class="n">test_labels_filename</code> <code class="o">=</code> <code class="n">download</code><code class="p">(</code><code class="s1">'t10k-labels-idx1-ubyte.gz'</code><code class="p">)</code>
+
+<code class="c1"># Extract it into NumPy arrays.</code>
+<code class="n">train_data</code> <code class="o">=</code> <code class="n">extract_data</code><code class="p">(</code><code class="n">train_data_filename</code><code class="p">,</code> <code class="mi">60000</code><code class="p">)</code>
+<code class="n">train_labels</code> <code class="o">=</code> <code class="n">extract_labels</code><code class="p">(</code><code class="n">train_labels_filename</code><code class="p">,</code> <code class="mi">60000</code><code class="p">)</code>
+<code class="n">test_data</code> <code class="o">=</code> <code class="n">extract_data</code><code class="p">(</code><code class="n">test_data_filename</code><code class="p">,</code> <code class="mi">10000</code><code class="p">)</code>
+<code class="n">test_labels</code> <code class="o">=</code> <code class="n">extract_labels</code><code class="p">(</code><code class="n">test_labels_filename</code><code class="p">,</code> <code class="mi">10000</code><code class="p">)</code></pre></div>
+
+<p>The MNIST dataset doesn’t explicitly define a validation dataset for hyperparameter tuning. Consequently, we manually designate the final 5,000 datapoints of the training dataset as validation data (<a data-type="xref" href="#ch6-mnistval">Example 6-5</a>).</p>
+<div id="ch6-mnistval" data-type="example">
+<h5><span class="label">Example 6-5. </span>Extract the final 5,000 datasets of the training data for hyperparameter validation</h5>
+
+<pre data-type="programlisting" data-code-language="python"><code class="n">VALIDATION_SIZE</code> <code class="o">=</code> <code class="mi">5000</code>  <code class="c1"># Size of the validation set.</code>
+
+<code class="c1"># Generate a validation set.</code>
+<code class="n">validation_data</code> <code class="o">=</code> <code class="n">train_data</code><code class="p">[:</code><code class="n">VALIDATION_SIZE</code><code class="p">,</code> <code class="o">...</code><code class="p">]</code>
+<code class="n">validation_labels</code> <code class="o">=</code> <code class="n">train_labels</code><code class="p">[:</code><code class="n">VALIDATION_SIZE</code><code class="p">]</code>
+<code class="n">train_data</code> <code class="o">=</code> <code class="n">train_data</code><code class="p">[</code><code class="n">VALIDATION_SIZE</code><code class="p">:,</code> <code class="o">...</code><code class="p">]</code>
+<code class="n">train_labels</code> <code class="o">=</code> <code class="n">train_labels</code><code class="p">[</code><code class="n">VALIDATION_SIZE</code><code class="p">:]</code></pre></div>
+<div data-type="warning" epub:type="warning"><h1>Choosing the Correct Validation Set</h1>
+<p>In <a data-type="xref" href="#ch6-mnistval">Example 6-5</a>, we<a data-type="indexterm" data-primary="validation sets" id="idm139806610795552"/><a data-type="indexterm" data-primary="LeNet-5 convolutional architecture" data-secondary="validation set selection" id="idm139806610794848"/> use the final fragment of training data as a validation set to gauge the progress of our learning methods. In this case, this method is relatively harmless. The distribution of data in the test set is well represented by the distribution of data in the validation set.</p>
+
+<p>However, in other situations, this type of simple validation set selection can be disastrous. In<a data-type="indexterm" data-primary="molecular machine learning" id="idm139806610793008"/> molecular machine learning (the use of machine learning to predict properties of molecules), it is almost always the case that the test distribution is dramatically different from the training distribution. Scientists<a data-type="indexterm" data-primary="prospective prediction" id="idm139806610791920"/> are most interested in <em>prospective</em> prediction. That is, scientists would like to predict the properties of molecules that have never been tested for the property at hand. In this case, using the last fragment of training data for validation, or even a random subsample of the training data, will lead to misleadingly high accuracies. It’s quite common for a molecular machine learning model to have 90% accuracy on validation and, say, 60% on test.</p>
+
+<p>To correct for this error, it becomes necessary to design validation set selection methods that take pains to make the validation dissimilar from the training set. A variety of such algorithms exist for molecular machine learning, most of which use various mathematical estimates of graph dissimilarity (treating a molecule as a mathematical graph with atoms as nodes and chemical bonds as edges).</p>
+
+<p>This issue crops up in many other areas of machine learning as well. In medical machine learning or in financial machine learning, relying on historical data to make forecasts can be disastrous. For each application, it’s important to critically reason about whether performance on the selected validation set is actually a good proxy for true performance.</p>
+</div>
+</div></section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<section data-type="sect2" data-pdf-bookmark="TensorFlow Convolutional Primitives"><div class="sect2" id="idm139806611362416">
+<h2>TensorFlow Convolutional Primitives</h2>
+
+<p>We<a data-type="indexterm" data-primary="LeNet-5 convolutional architecture" data-secondary="TensorFlow convolutional primitives" id="idm139806611244192"/><a data-type="indexterm" data-primary="2D convolutions" id="idm139806611243200"/><a data-type="indexterm" data-primary="primitives" data-secondary="TensorFlow convolutional primitives" id="idm139806611242528"/> start by introducing the TensorFlow primitives that are used to construct our convolutional networks (<a data-type="xref" href="#ch6-tfconv2d">Example 6-6</a>).</p>
+<div id="ch6-tfconv2d" data-type="example" class="pagebreak-before">
+<h5><span class="label">Example 6-6. </span>Defining a 2D convolution in TensorFlow</h5>
+
+<pre data-type="programlisting" data-code-language="python"><code class="n">tf</code><code class="o">.</code><code class="n">nn</code><code class="o">.</code><code class="n">conv2d</code><code class="p">(</code>
+    <code class="nb">input</code><code class="p">,</code>
+    <code class="nb">filter</code><code class="p">,</code>
+    <code class="n">strides</code><code class="p">,</code>
+    <code class="n">padding</code><code class="p">,</code>
+    <code class="n">use_cudnn_on_gpu</code><code class="o">=</code><code class="bp">None</code><code class="p">,</code>
+    <code class="n">data_format</code><code class="o">=</code><code class="bp">None</code><code class="p">,</code>
+    <code class="n">name</code><code class="o">=</code><code class="bp">None</code>
+<code class="p">)</code></pre></div>
+
+<p>The<a data-type="indexterm" data-primary="tf.nn.conv2d" id="idm139806611215584"/> function <code>tf.nn.conv2d</code> is the built-in TensorFlow function that defines convolutional layers. Here, <code>input</code> is assumed to be a tensor of shape <code>(batch, height, width, channels)</code> where <code>batch</code> is the number of images in a minibatch.</p>
+
+<p>Note that the conversion functions defined previously read the MNIST data into this format. The argument <code>filter</code> is a tensor of shape <code>(filter_height, filter_width, channels, out_channels)</code> that specifies the learnable weights for the nonlinear transformation learned in the convolutional kernel. <code>strides</code> contains the filter strides and is a list of length 4 (one for each input dimension).</p>
+
+<p><code>padding</code> controls whether the input tensors are padded (with extra zeros as in <a data-type="xref" href="#ch6-convpad">Figure 6-18</a>) to guarantee that output from the convolutional layer has the same shape as the input. If <code>padding="SAME"</code>, then <code>input</code> is padded to ensure that the convolutional layer outputs an image tensor of the same shape as the original input image tensor. If <code>padding="VALID"</code> then extra padding is not added.</p>
+
+<figure><div id="ch6-convpad" class="figure">
+<img src="assets/tfdl_0618.png" alt="conv_padding.png"/>
+<h6><span class="label">Figure 6-18. </span>Padding for convolutional layers ensures that the output image has the same shape as the input image.</h6>
+</div></figure>
+
+<p>The code in <a data-type="xref" href="#ch6-tfconv2d2">Example 6-7</a> defines max pooling in TensorFlow.</p>
+<div id="ch6-tfconv2d2" data-type="example">
+<h5><span class="label">Example 6-7. </span>Defining max pooling in TensorFlow</h5>
+
+<pre data-type="programlisting" data-code-language="python"><code class="n">tf</code><code class="o">.</code><code class="n">nn</code><code class="o">.</code><code class="n">max_pool</code><code class="p">(</code>
+    <code class="n">value</code><code class="p">,</code>
+    <code class="n">ksize</code><code class="p">,</code>
+    <code class="n">strides</code><code class="p">,</code>
+    <code class="n">padding</code><code class="p">,</code>
+    <code class="n">data_format</code><code class="o">=</code><code class="s1">'NHWC'</code><code class="p">,</code>
+    <code class="n">name</code><code class="o">=</code><code class="bp">None</code>
+<code class="p">)</code></pre></div>
+
+<p>The <code>tf.nn.max_pool</code> function<a data-type="indexterm" data-primary="tf.nn.max_pool" id="idm139806610728080"/> performs<a data-type="indexterm" data-primary="max pooling" id="idm139806610727344"/> max pooling. Here <code>value</code> has the same shape as <code>input</code> for <code>tf.nn.conv2d</code>, <code>(batch, height, width, channels)</code>. <code>ksize</code> is the size of the pooling window and is a list of length 4. <code>strides</code> and <code>padding</code> behave as for <code>tf.nn.conv2d</code>.</p>
+</div></section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<section data-type="sect2" data-pdf-bookmark="The Convolutional Architecture"><div class="sect2" id="idm139806610728368">
+<h2>The Convolutional Architecture</h2>
+
+<p>The<a data-type="indexterm" data-primary="LeNet-5 convolutional architecture" data-secondary="architecture for" id="LNarch06"/> architecture defined in this section will closely resemble LeNet-5, the original architecture used to train convolutional neural networks on the MNIST dataset. At the time the LeNet-5 architecture was invented, it was exorbitantly expensive computationally, requiring multiple weeks of compute to complete training. Today’s laptops thankfully are more than sufficient to train LeNet-5 models. <a data-type="xref" href="#ch6-lenet5">Figure 6-19</a> illustrates the structure of the LeNet-5 architecture.</p>
+
+<figure><div id="ch6-lenet5" class="figure">
+<img src="assets/tfdl_0619.png" alt="lenet5.png"/>
+<h6><span class="label">Figure 6-19. </span>An illustration of the LeNet-5 convolutional architecture.</h6>
+</div></figure>
+<div data-type="note" epub:type="note"><h1>Where Would More Compute Make a Difference?</h1>
+<p>The LeNet-5 architecture is decades old, but is essentially the right architecture for the problem of digit recognition. However, its computational requirements forced the architecture into relative obscurity for decades. It’s interesting to ask, then, what research problems today are similarly solved but limited solely by lack of adequate computational power?</p>
+
+<p>One<a data-type="indexterm" data-primary="videos" id="idm139806610735936"/> good contender is video processing. Convolutional models are quite good at processing video. However, it is unwieldy to store and train models on large video datasets, so most academic papers don’t report results on video datasets. As a result, it’s not so easy to hack together a good video processing system.</p>
+
+<p>This situation will likely change as computing capabilities increase and it’s likely that video processing systems will become much more commonplace. However, there’s one critical difference between today’s hardware improvements and those of past decades. Unlike in years past, Moore’s law has slowed dramatically. As a result, improvements in hardware require more than natural transistor shrinkage and often require considerable ingenuity in architecture design. We will return to this topic in later chapters and discuss the architectural needs of deep networks.</p>
+</div>
+
+<p>Let’s define the weights needed to train our LeNet-5 network. We start by defining some basic constants that are used to define our weight tensors (<a data-type="xref" href="#ch6-lenetconsts">Example 6-8</a>).</p>
+<div id="ch6-lenetconsts" data-type="example">
+<h5><span class="label">Example 6-8. </span>Defining basic constants for the LeNet-5 model</h5>
+
+<pre data-type="programlisting" data-code-language="python"><code class="n">NUM_CHANNELS</code> <code class="o">=</code> <code class="mi">1</code>
+<code class="n">IMAGE_SIZE</code> <code class="o">=</code> <code class="mi">28</code>
+<code class="n">NUM_LABELS</code> <code class="o">=</code> <code class="mi">10</code></pre></div>
+
+<p>The architecture we define will use two convolutional layers interspersed with two pooling layers, topped off by two fully connected layers. Recall that pooling requires no learnable weights, so we simply need to create<a data-type="indexterm" data-primary="learnable weights" id="idm139806610644816"/> weights for the convolutional and fully connected layers. For<a data-type="indexterm" data-primary="tf.nn.conv2d" id="idm139806610644080"/> each <code>tf.nn.conv2d</code>, we need to create a learnable weight tensor corresponding to the <code>filter</code> argument for <code>tf.nn.conv2d</code>. In this particular architecture, we will also add a convolutional bias, one for each output channel (<a data-type="xref" href="#ch6-lenetweights">Example 6-9</a>).</p>
+<div id="ch6-lenetweights" data-type="example" class="pagebreak-before">
+<h5><span class="label">Example 6-9. </span>Defining learnable weights for the convolutional layers</h5>
+
+<pre data-type="programlisting" data-code-language="python"><code class="n">conv1_weights</code> <code class="o">=</code> <code class="n">tf</code><code class="o">.</code><code class="n">Variable</code><code class="p">(</code>
+    <code class="n">tf</code><code class="o">.</code><code class="n">truncated_normal</code><code class="p">([</code><code class="mi">5</code><code class="p">,</code> <code class="mi">5</code><code class="p">,</code> <code class="n">NUM_CHANNELS</code><code class="p">,</code> <code class="mi">32</code><code class="p">],</code>  <code class="c1"># 5x5 filter, depth 32.</code>
+                        <code class="n">stddev</code><code class="o">=</code><code class="mf">0.1</code><code class="p">,</code>
+                        <code class="n">seed</code><code class="o">=</code><code class="n">SEED</code><code class="p">,</code> <code class="n">dtype</code><code class="o">=</code><code class="n">tf</code><code class="o">.</code><code class="n">float32</code><code class="p">))</code>
+<code class="n">conv1_biases</code> <code class="o">=</code> <code class="n">tf</code><code class="o">.</code><code class="n">Variable</code><code class="p">(</code><code class="n">tf</code><code class="o">.</code><code class="n">zeros</code><code class="p">([</code><code class="mi">32</code><code class="p">],</code> <code class="n">dtype</code><code class="o">=</code><code class="n">tf</code><code class="o">.</code><code class="n">float32</code><code class="p">))</code>
+<code class="n">conv2_weights</code> <code class="o">=</code> <code class="n">tf</code><code class="o">.</code><code class="n">Variable</code><code class="p">(</code><code class="n">tf</code><code class="o">.</code><code class="n">truncated_normal</code><code class="p">(</code>
+    <code class="p">[</code><code class="mi">5</code><code class="p">,</code> <code class="mi">5</code><code class="p">,</code> <code class="mi">32</code><code class="p">,</code> <code class="mi">64</code><code class="p">],</code> <code class="n">stddev</code><code class="o">=</code><code class="mf">0.1</code><code class="p">,</code>
+    <code class="n">seed</code><code class="o">=</code><code class="n">SEED</code><code class="p">,</code> <code class="n">dtype</code><code class="o">=</code><code class="n">tf</code><code class="o">.</code><code class="n">float32</code><code class="p">))</code>
+<code class="n">conv2_biases</code> <code class="o">=</code> <code class="n">tf</code><code class="o">.</code><code class="n">Variable</code><code class="p">(</code><code class="n">tf</code><code class="o">.</code><code class="n">constant</code><code class="p">(</code><code class="mf">0.1</code><code class="p">,</code> <code class="n">shape</code><code class="o">=</code><code class="p">[</code><code class="mi">64</code><code class="p">],</code> <code class="n">dtype</code><code class="o">=</code><code class="n">tf</code><code class="o">.</code><code class="n">float32</code><code class="p">))</code></pre></div>
+
+<p>Note<a data-type="indexterm" data-primary="convolutional weights" id="idm139806610601264"/> that the convolutional weights are 4-tensors, while the biases are 1-tensors. The first fully connected layer converts the outputs of the convolutional layer to a vector of size 512. The input images start with size <code>IMAGE_SIZE=28</code>. After the two pooling layers (each of which reduces the input by a factor of 2), we end with images of size <code>IMAGE_SIZE//4</code>. We create the shape of the fully connected weights accordingly.</p>
+
+<p>The second fully connected layer is used to provide the 10-way classification output, so it has weight shape <code>(512,10)</code> and bias shape <code>(10)</code>, shown in <a data-type="xref" href="#ch6-lenetfcweights">Example 6-10</a>.</p>
+<div id="ch6-lenetfcweights" data-type="example">
+<h5><span class="label">Example 6-10. </span>Defining learnable weights for the fully connected layers</h5>
+
+<pre data-type="programlisting" data-code-language="python"><code class="n">fc1_weights</code> <code class="o">=</code> <code class="n">tf</code><code class="o">.</code><code class="n">Variable</code><code class="p">(</code>  <code class="c1"># fully connected, depth 512.</code>
+    <code class="n">tf</code><code class="o">.</code><code class="n">truncated_normal</code><code class="p">([</code><code class="n">IMAGE_SIZE</code> <code class="o">//</code> <code class="mi">4</code> <code class="o">*</code> <code class="n">IMAGE_SIZE</code> <code class="o">//</code> <code class="mi">4</code> <code class="o">*</code> <code class="mi">64</code><code class="p">,</code> <code class="mi">512</code><code class="p">],</code>
+                        <code class="n">stddev</code><code class="o">=</code><code class="mf">0.1</code><code class="p">,</code>
+                        <code class="n">seed</code><code class="o">=</code><code class="n">SEED</code><code class="p">,</code>
+                        <code class="n">dtype</code><code class="o">=</code><code class="n">tf</code><code class="o">.</code><code class="n">float32</code><code class="p">))</code>
+<code class="n">fc1_biases</code> <code class="o">=</code> <code class="n">tf</code><code class="o">.</code><code class="n">Variable</code><code class="p">(</code><code class="n">tf</code><code class="o">.</code><code class="n">constant</code><code class="p">(</code><code class="mf">0.1</code><code class="p">,</code> <code class="n">shape</code><code class="o">=</code><code class="p">[</code><code class="mi">512</code><code class="p">],</code> <code class="n">dtype</code><code class="o">=</code><code class="n">tf</code><code class="o">.</code><code class="n">float32</code><code class="p">))</code>
+<code class="n">fc2_weights</code> <code class="o">=</code> <code class="n">tf</code><code class="o">.</code><code class="n">Variable</code><code class="p">(</code><code class="n">tf</code><code class="o">.</code><code class="n">truncated_normal</code><code class="p">([</code><code class="mi">512</code><code class="p">,</code> <code class="n">NUM_LABELS</code><code class="p">],</code>
+                                              <code class="n">stddev</code><code class="o">=</code><code class="mf">0.1</code><code class="p">,</code>
+                                              <code class="n">seed</code><code class="o">=</code><code class="n">SEED</code><code class="p">,</code>
+                                              <code class="n">dtype</code><code class="o">=</code><code class="n">tf</code><code class="o">.</code><code class="n">float32</code><code class="p">))</code>
+<code class="n">fc2_biases</code> <code class="o">=</code> <code class="n">tf</code><code class="o">.</code><code class="n">Variable</code><code class="p">(</code><code class="n">tf</code><code class="o">.</code><code class="n">constant</code><code class="p">(</code>
+    <code class="mf">0.1</code><code class="p">,</code> <code class="n">shape</code><code class="o">=</code><code class="p">[</code><code class="n">NUM_LABELS</code><code class="p">],</code> <code class="n">dtype</code><code class="o">=</code><code class="n">tf</code><code class="o">.</code><code class="n">float32</code><code class="p">))</code></pre></div>
+
+<p>With all the weights defined, we are now free to define the architecture of the network. The architecture has six layers in the pattern conv-pool-conv-pool-full-full (<a data-type="xref" href="#ch6-lenetdef">Example 6-11</a>).</p>
+<div id="ch6-lenetdef" data-type="example">
+<h5><span class="label">Example 6-11. </span>Defining the LeNet-5 architecture. Calling the function defined in this example will instantiate the architecture.</h5>
+
+<pre data-type="programlisting" data-code-language="python"><code class="k">def</code> <code class="nf">model</code><code class="p">(</code><code class="n">data</code><code class="p">,</code> <code class="n">train</code><code class="o">=</code><code class="bp">False</code><code class="p">):</code>
+  <code class="sd">"""The Model definition."""</code>
+  <code class="c1"># 2D convolution, with 'SAME' padding (i.e. the output feature map has</code>
+  <code class="c1"># the same size as the input). Note that {strides} is a 4D array whose</code>
+  <code class="c1"># shape matches the data layout: [image index, y, x, depth].</code>
+  <code class="n">conv</code> <code class="o">=</code> <code class="n">tf</code><code class="o">.</code><code class="n">nn</code><code class="o">.</code><code class="n">conv2d</code><code class="p">(</code><code class="n">data</code><code class="p">,</code>
+                      <code class="n">conv1_weights</code><code class="p">,</code>
+                      <code class="n">strides</code><code class="o">=</code><code class="p">[</code><code class="mi">1</code><code class="p">,</code> <code class="mi">1</code><code class="p">,</code> <code class="mi">1</code><code class="p">,</code> <code class="mi">1</code><code class="p">],</code>
+                      <code class="n">padding</code><code class="o">=</code><code class="s1">'SAME'</code><code class="p">)</code>
+  <code class="c1"># Bias and rectified linear non-linearity.</code>
+  <code class="n">relu</code> <code class="o">=</code> <code class="n">tf</code><code class="o">.</code><code class="n">nn</code><code class="o">.</code><code class="n">relu</code><code class="p">(</code><code class="n">tf</code><code class="o">.</code><code class="n">nn</code><code class="o">.</code><code class="n">bias_add</code><code class="p">(</code><code class="n">conv</code><code class="p">,</code> <code class="n">conv1_biases</code><code class="p">))</code>
+  <code class="c1"># Max pooling. The kernel size spec {ksize} also follows the layout of</code>
+  <code class="c1"># the data. Here we have a pooling window of 2, and a stride of 2.</code>
+  <code class="n">pool</code> <code class="o">=</code> <code class="n">tf</code><code class="o">.</code><code class="n">nn</code><code class="o">.</code><code class="n">max_pool</code><code class="p">(</code><code class="n">relu</code><code class="p">,</code>
+                        <code class="n">ksize</code><code class="o">=</code><code class="p">[</code><code class="mi">1</code><code class="p">,</code> <code class="mi">2</code><code class="p">,</code> <code class="mi">2</code><code class="p">,</code> <code class="mi">1</code><code class="p">],</code>
+                        <code class="n">strides</code><code class="o">=</code><code class="p">[</code><code class="mi">1</code><code class="p">,</code> <code class="mi">2</code><code class="p">,</code> <code class="mi">2</code><code class="p">,</code> <code class="mi">1</code><code class="p">],</code>
+                        <code class="n">padding</code><code class="o">=</code><code class="s1">'SAME'</code><code class="p">)</code>
+  <code class="n">conv</code> <code class="o">=</code> <code class="n">tf</code><code class="o">.</code><code class="n">nn</code><code class="o">.</code><code class="n">conv2d</code><code class="p">(</code><code class="n">pool</code><code class="p">,</code>
+                      <code class="n">conv2_weights</code><code class="p">,</code>
+                      <code class="n">strides</code><code class="o">=</code><code class="p">[</code><code class="mi">1</code><code class="p">,</code> <code class="mi">1</code><code class="p">,</code> <code class="mi">1</code><code class="p">,</code> <code class="mi">1</code><code class="p">],</code>
+                      <code class="n">padding</code><code class="o">=</code><code class="s1">'SAME'</code><code class="p">)</code>
+  <code class="n">relu</code> <code class="o">=</code> <code class="n">tf</code><code class="o">.</code><code class="n">nn</code><code class="o">.</code><code class="n">relu</code><code class="p">(</code><code class="n">tf</code><code class="o">.</code><code class="n">nn</code><code class="o">.</code><code class="n">bias_add</code><code class="p">(</code><code class="n">conv</code><code class="p">,</code> <code class="n">conv2_biases</code><code class="p">))</code>
+  <code class="n">pool</code> <code class="o">=</code> <code class="n">tf</code><code class="o">.</code><code class="n">nn</code><code class="o">.</code><code class="n">max_pool</code><code class="p">(</code><code class="n">relu</code><code class="p">,</code>
+                        <code class="n">ksize</code><code class="o">=</code><code class="p">[</code><code class="mi">1</code><code class="p">,</code> <code class="mi">2</code><code class="p">,</code> <code class="mi">2</code><code class="p">,</code> <code class="mi">1</code><code class="p">],</code>
+                        <code class="n">strides</code><code class="o">=</code><code class="p">[</code><code class="mi">1</code><code class="p">,</code> <code class="mi">2</code><code class="p">,</code> <code class="mi">2</code><code class="p">,</code> <code class="mi">1</code><code class="p">],</code>
+                        <code class="n">padding</code><code class="o">=</code><code class="s1">'SAME'</code><code class="p">)</code>
+  <code class="c1"># Reshape the feature map cuboid into a 2D matrix to feed it to the</code>
+  <code class="c1"># fully connected layers.</code>
+  <code class="n">pool_shape</code> <code class="o">=</code> <code class="n">pool</code><code class="o">.</code><code class="n">get_shape</code><code class="p">()</code><code class="o">.</code><code class="n">as_list</code><code class="p">()</code>
+  <code class="n">reshape</code> <code class="o">=</code> <code class="n">tf</code><code class="o">.</code><code class="n">reshape</code><code class="p">(</code>
+      <code class="n">pool</code><code class="p">,</code>
+      <code class="p">[</code><code class="n">pool_shape</code><code class="p">[</code><code class="mi">0</code><code class="p">],</code> <code class="n">pool_shape</code><code class="p">[</code><code class="mi">1</code><code class="p">]</code> <code class="o">*</code> <code class="n">pool_shape</code><code class="p">[</code><code class="mi">2</code><code class="p">]</code> <code class="o">*</code> <code class="n">pool_shape</code><code class="p">[</code><code class="mi">3</code><code class="p">]])</code>
+  <code class="c1"># Fully connected layer. Note that the '+' operation automatically</code>
+  <code class="c1"># broadcasts the biases.</code>
+  <code class="n">hidden</code> <code class="o">=</code> <code class="n">tf</code><code class="o">.</code><code class="n">nn</code><code class="o">.</code><code class="n">relu</code><code class="p">(</code><code class="n">tf</code><code class="o">.</code><code class="n">matmul</code><code class="p">(</code><code class="n">reshape</code><code class="p">,</code> <code class="n">fc1_weights</code><code class="p">)</code> <code class="o">+</code> <code class="n">fc1_biases</code><code class="p">)</code>
+  <code class="c1"># Add a 50% dropout during training only. Dropout also scales</code>
+  <code class="c1"># activations such that no rescaling is needed at evaluation time.</code>
+  <code class="k">if</code> <code class="n">train</code><code class="p">:</code>
+    <code class="n">hidden</code> <code class="o">=</code> <code class="n">tf</code><code class="o">.</code><code class="n">nn</code><code class="o">.</code><code class="n">dropout</code><code class="p">(</code><code class="n">hidden</code><code class="p">,</code> <code class="mf">0.5</code><code class="p">,</code> <code class="n">seed</code><code class="o">=</code><code class="n">SEED</code><code class="p">)</code>
+  <code class="k">return</code> <code class="n">tf</code><code class="o">.</code><code class="n">matmul</code><code class="p">(</code><code class="n">hidden</code><code class="p">,</code> <code class="n">fc2_weights</code><code class="p">)</code> <code class="o">+</code> <code class="n">fc2_biases</code></pre></div>
+
+<p>As<a data-type="indexterm" data-primary="tf.nn.max_pool" id="idm139806610258112"/> noted previously, the basic architecture of the network intersperses <code>tf.nn.conv2d</code>, <code>tf.nn.max_pool</code>, with nonlinearities, and a final fully connected layer. For regularization, a dropout layer is applied after the final fully connected layer, but only during training. Note that we pass in the input as an argument <code>data</code> to the function <code>model()</code>.</p>
+
+<p>The<a data-type="indexterm" data-primary="placeholders" id="idm139806610255152"/> only part of the network that remains to be defined are the placeholders (<a data-type="xref" href="#ch6-lenetplace">Example 6-12</a>). We need to define two placeholders for inputting the training images and the training labels. In this particular network, we also define a separate placeholder for evaluation that allows us to input larger batches when evaluating.</p>
+<div id="ch6-lenetplace" data-type="example">
+<h5><span class="label">Example 6-12. </span>Define placeholders for the architecture</h5>
+
+<pre data-type="programlisting" data-code-language="python"><code class="n">BATCH_SIZE</code> <code class="o">=</code> <code class="mi">64</code>
+<code class="n">EVAL_BATCH_SIZE</code> <code class="o">=</code> <code class="mi">64</code>
+
+<code class="n">train_data_node</code> <code class="o">=</code> <code class="n">tf</code><code class="o">.</code><code class="n">placeholder</code><code class="p">(</code>
+    <code class="n">tf</code><code class="o">.</code><code class="n">float32</code><code class="p">,</code>
+    <code class="n">shape</code><code class="o">=</code><code class="p">(</code><code class="n">BATCH_SIZE</code><code class="p">,</code> <code class="n">IMAGE_SIZE</code><code class="p">,</code> <code class="n">IMAGE_SIZE</code><code class="p">,</code> <code class="n">NUM_CHANNELS</code><code class="p">))</code>
+<code class="n">train_labels_node</code> <code class="o">=</code> <code class="n">tf</code><code class="o">.</code><code class="n">placeholder</code><code class="p">(</code><code class="n">tf</code><code class="o">.</code><code class="n">int64</code><code class="p">,</code> <code class="n">shape</code><code class="o">=</code><code class="p">(</code><code class="n">BATCH_SIZE</code><code class="p">,))</code>
+<code class="n">eval_data</code> <code class="o">=</code> <code class="n">tf</code><code class="o">.</code><code class="n">placeholder</code><code class="p">(</code>
+    <code class="n">tf</code><code class="o">.</code><code class="n">float32</code><code class="p">,</code>
+    <code class="n">shape</code><code class="o">=</code><code class="p">(</code><code class="n">EVAL_BATCH_SIZE</code><code class="p">,</code> <code class="n">IMAGE_SIZE</code><code class="p">,</code> <code class="n">IMAGE_SIZE</code><code class="p">,</code> <code class="n">NUM_CHANNELS</code><code class="p">))</code></pre></div>
+
+<p>With these definitions in place, we now have the data processed, inputs and weights specified, and the model constructed. We are now prepared to train the network (<a data-type="xref" href="#ch6-lenettrain">Example 6-13</a>).</p>
+<div id="ch6-lenettrain" data-type="example">
+<h5><span class="label">Example 6-13. </span>Training the LeNet-5 architecture</h5>
+
+<pre data-type="programlisting" data-code-language="python"><code class="c1"># Create a local session to run the training.</code>
+<code class="n">start_time</code> <code class="o">=</code> <code class="n">time</code><code class="o">.</code><code class="n">time</code><code class="p">()</code>
+<code class="k">with</code> <code class="n">tf</code><code class="o">.</code><code class="n">Session</code><code class="p">()</code> <code class="k">as</code> <code class="n">sess</code><code class="p">:</code>
+  <code class="c1"># Run all the initializers to prepare the trainable parameters.</code>
+  <code class="n">tf</code><code class="o">.</code><code class="n">global_variables_initializer</code><code class="p">()</code><code class="o">.</code><code class="n">run</code><code class="p">()</code>
+  <code class="c1"># Loop through training steps.</code>
+  <code class="k">for</code> <code class="n">step</code> <code class="ow">in</code> <code class="nb">xrange</code><code class="p">(</code><code class="nb">int</code><code class="p">(</code><code class="n">num_epochs</code> <code class="o">*</code> <code class="n">train_size</code><code class="p">)</code> <code class="o">//</code> <code class="n">BATCH_SIZE</code><code class="p">):</code>
+    <code class="c1"># Compute the offset of the current minibatch in the data.</code>
+    <code class="c1"># Note that we could use better randomization across epochs.</code>
+    <code class="n">offset</code> <code class="o">=</code> <code class="p">(</code><code class="n">step</code> <code class="o">*</code> <code class="n">BATCH_SIZE</code><code class="p">)</code> <code class="o">%</code> <code class="p">(</code><code class="n">train_size</code> <code class="o">-</code> <code class="n">BATCH_SIZE</code><code class="p">)</code>
+    <code class="n">batch_data</code> <code class="o">=</code> <code class="n">train_data</code><code class="p">[</code><code class="n">offset</code><code class="p">:(</code><code class="n">offset</code> <code class="o">+</code> <code class="n">BATCH_SIZE</code><code class="p">),</code> <code class="o">...</code><code class="p">]</code>
+    <code class="n">batch_labels</code> <code class="o">=</code> <code class="n">train_labels</code><code class="p">[</code><code class="n">offset</code><code class="p">:(</code><code class="n">offset</code> <code class="o">+</code> <code class="n">BATCH_SIZE</code><code class="p">)]</code>
+    <code class="c1"># This dictionary maps the batch data (as a NumPy array) to the</code>
+    <code class="c1"># node in the graph it should be fed to.</code>
+    <code class="n">feed_dict</code> <code class="o">=</code> <code class="p">{</code><code class="n">train_data_node</code><code class="p">:</code> <code class="n">batch_data</code><code class="p">,</code>
+                 <code class="n">train_labels_node</code><code class="p">:</code> <code class="n">batch_labels</code><code class="p">}</code>
+    <code class="c1"># Run the optimizer to update weights.</code>
+    <code class="n">sess</code><code class="o">.</code><code class="n">run</code><code class="p">(</code><code class="n">optimizer</code><code class="p">,</code> <code class="n">feed_dict</code><code class="o">=</code><code class="n">feed_dict</code><code class="p">)</code></pre></div>
+
+<p>The structure of this fitting code looks quite similar to other code for fitting we’ve seen so far in this book. In each step, we construct a feed dictionary, and then run a step of the optimizer. Note that we use minibatch training as before.<a data-type="indexterm" data-primary="" data-startref="LNarch06" id="idm139806609800640"/></p>
+</div></section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<section data-type="sect2" data-pdf-bookmark="Evaluating Trained Models"><div class="sect2" id="idm139806610743728">
+<h2>Evaluating Trained Models</h2>
+
+<p>We<a data-type="indexterm" data-primary="LeNet-5 convolutional architecture" data-secondary="model evaluation" id="idm139806609604016"/><a data-type="indexterm" data-primary="models" data-secondary="evaluating with error metrics" id="idm139806609602944"/><a data-type="indexterm" data-primary="metrics" data-secondary="error metrics" id="idm139806609601984"/><a data-type="indexterm" data-primary="error metrics" id="idm139806609601040"/><a data-type="indexterm" data-primary="classification metrics" id="idm139806609600368"/><a data-type="indexterm" data-primary="metrics" data-secondary="classification metrics" id="idm139806609599696"/> now have a model training. How can we evaluate the accuracy of the trained model? A simple method is to define an error metric. As in previous chapters, we shall use a simple classification metric to gauge accuracy (<a data-type="xref" href="#ch6-leneterror">Example 6-14</a>).</p>
+<div id="ch6-leneterror" data-type="example">
+<h5><span class="label">Example 6-14. </span>Evaluating the error of trained architectures</h5>
+
+<pre data-type="programlisting" data-code-language="python"><code class="k">def</code> <code class="nf">error_rate</code><code class="p">(</code><code class="n">predictions</code><code class="p">,</code> <code class="n">labels</code><code class="p">):</code>
+  <code class="sd">"""Return the error rate based on dense predictions and sparse labels."""</code>
+  <code class="k">return</code> <code class="mf">100.0</code> <code class="o">-</code> <code class="p">(</code>
+      <code class="mf">100.0</code> <code class="o">*</code>
+      <code class="n">numpy</code><code class="o">.</code><code class="n">sum</code><code class="p">(</code><code class="n">numpy</code><code class="o">.</code><code class="n">argmax</code><code class="p">(</code><code class="n">predictions</code><code class="p">,</code> <code class="mi">1</code><code class="p">)</code> <code class="o">==</code> <code class="n">labels</code><code class="p">)</code> <code class="o">/</code>
+      <code class="n">predictions</code><code class="o">.</code><code class="n">shape</code><code class="p">[</code><code class="mi">0</code><code class="p">])</code></pre></div>
+
+<p>We can use this function to evaluate the error of the network as we train. Let’s introduce an additional convenience function that evaluates predictions on any given dataset in batches (<a data-type="xref" href="#ch6-leneterrorbatch">Example 6-15</a>). This convenience is necessary since our network can only handle inputs with fixed batch sizes.</p>
+<div id="ch6-leneterrorbatch" data-type="example">
+<h5><span class="label">Example 6-15. </span>Evaluating a batch of data at a time</h5>
+
+<pre data-type="programlisting" data-code-language="python"><code class="k">def</code> <code class="nf">eval_in_batches</code><code class="p">(</code><code class="n">data</code><code class="p">,</code> <code class="n">sess</code><code class="p">):</code>
+  <code class="sd">"""Get predictions for a dataset by running it in small batches."""</code>
+  <code class="n">size</code> <code class="o">=</code> <code class="n">data</code><code class="o">.</code><code class="n">shape</code><code class="p">[</code><code class="mi">0</code><code class="p">]</code>
+  <code class="k">if</code> <code class="n">size</code> <code class="o">&lt;</code> <code class="n">EVAL_BATCH_SIZE</code><code class="p">:</code>
+    <code class="k">raise</code> <code class="ne">ValueError</code><code class="p">(</code><code class="s2">"batch size for evals larger than dataset: </code><code class="si">%d</code><code class="s2">"</code>
+                     <code class="o">%</code> <code class="n">size</code><code class="p">)</code>
+  <code class="n">predictions</code> <code class="o">=</code> <code class="n">numpy</code><code class="o">.</code><code class="n">ndarray</code><code class="p">(</code><code class="n">shape</code><code class="o">=</code><code class="p">(</code><code class="n">size</code><code class="p">,</code> <code class="n">NUM_LABELS</code><code class="p">),</code>
+                              <code class="n">dtype</code><code class="o">=</code><code class="n">numpy</code><code class="o">.</code><code class="n">float32</code><code class="p">)</code>
+  <code class="k">for</code> <code class="n">begin</code> <code class="ow">in</code> <code class="nb">xrange</code><code class="p">(</code><code class="mi">0</code><code class="p">,</code> <code class="n">size</code><code class="p">,</code> <code class="n">EVAL_BATCH_SIZE</code><code class="p">):</code>
+    <code class="n">end</code> <code class="o">=</code> <code class="n">begin</code> <code class="o">+</code> <code class="n">EVAL_BATCH_SIZE</code>
+    <code class="k">if</code> <code class="n">end</code> <code class="o">&lt;=</code> <code class="n">size</code><code class="p">:</code>
+      <code class="n">predictions</code><code class="p">[</code><code class="n">begin</code><code class="p">:</code><code class="n">end</code><code class="p">,</code> <code class="p">:]</code> <code class="o">=</code> <code class="n">sess</code><code class="o">.</code><code class="n">run</code><code class="p">(</code>
+          <code class="n">eval_prediction</code><code class="p">,</code>
+          <code class="n">feed_dict</code><code class="o">=</code><code class="p">{</code><code class="n">eval_data</code><code class="p">:</code> <code class="n">data</code><code class="p">[</code><code class="n">begin</code><code class="p">:</code><code class="n">end</code><code class="p">,</code> <code class="o">...</code><code class="p">]})</code>
+    <code class="k">else</code><code class="p">:</code>
+      <code class="n">batch_predictions</code> <code class="o">=</code> <code class="n">sess</code><code class="o">.</code><code class="n">run</code><code class="p">(</code>
+          <code class="n">eval_prediction</code><code class="p">,</code>
+          <code class="n">feed_dict</code><code class="o">=</code><code class="p">{</code><code class="n">eval_data</code><code class="p">:</code> <code class="n">data</code><code class="p">[</code><code class="o">-</code><code class="n">EVAL_BATCH_SIZE</code><code class="p">:,</code> <code class="o">...</code><code class="p">]})</code>
+      <code class="n">predictions</code><code class="p">[</code><code class="n">begin</code><code class="p">:,</code> <code class="p">:]</code> <code class="o">=</code> <code class="n">batch_predictions</code><code class="p">[</code><code class="n">begin</code> <code class="o">-</code> <code class="n">size</code><code class="p">:,</code> <code class="p">:]</code>
+  <code class="k">return</code> <code class="n">predictions</code></pre></div>
+
+<p>We can now add a little instrumentation (in the inner <code>for</code>-loop of training) that periodically evaluates the model’s accuracy on the validation set. We can end training by scoring test accuracy. <a data-type="xref" href="#ch6-lenetfullfit">Example 6-16</a> shows the full fitting code with instrumentation added in.</p>
+<div id="ch6-lenetfullfit" data-type="example">
+<h5><span class="label">Example 6-16. </span>The full code for training the network, with instrumentation added</h5>
+
+<pre data-type="programlisting" data-code-language="python"><code class="c1"># Create a local session to run the training.</code>
+<code class="n">start_time</code> <code class="o">=</code> <code class="n">time</code><code class="o">.</code><code class="n">time</code><code class="p">()</code>
+<code class="k">with</code> <code class="n">tf</code><code class="o">.</code><code class="n">Session</code><code class="p">()</code> <code class="k">as</code> <code class="n">sess</code><code class="p">:</code>
+  <code class="c1"># Run all the initializers to prepare the trainable parameters.</code>
+  <code class="n">tf</code><code class="o">.</code><code class="n">global_variables_initializer</code><code class="p">()</code><code class="o">.</code><code class="n">run</code><code class="p">()</code>
+  <code class="c1"># Loop through training steps.</code>
+  <code class="k">for</code> <code class="n">step</code> <code class="ow">in</code> <code class="nb">xrange</code><code class="p">(</code><code class="nb">int</code><code class="p">(</code><code class="n">num_epochs</code> <code class="o">*</code> <code class="n">train_size</code><code class="p">)</code> <code class="o">//</code> <code class="n">BATCH_SIZE</code><code class="p">):</code>
+    <code class="c1"># Compute the offset of the current minibatch in the data.</code>
+    <code class="c1"># Note that we could use better randomization across epochs.</code>
+    <code class="n">offset</code> <code class="o">=</code> <code class="p">(</code><code class="n">step</code> <code class="o">*</code> <code class="n">BATCH_SIZE</code><code class="p">)</code> <code class="o">%</code> <code class="p">(</code><code class="n">train_size</code> <code class="o">-</code> <code class="n">BATCH_SIZE</code><code class="p">)</code>
+    <code class="n">batch_data</code> <code class="o">=</code> <code class="n">train_data</code><code class="p">[</code><code class="n">offset</code><code class="p">:(</code><code class="n">offset</code> <code class="o">+</code> <code class="n">BATCH_SIZE</code><code class="p">),</code> <code class="o">...</code><code class="p">]</code>
+    <code class="n">batch_labels</code> <code class="o">=</code> <code class="n">train_labels</code><code class="p">[</code><code class="n">offset</code><code class="p">:(</code><code class="n">offset</code> <code class="o">+</code> <code class="n">BATCH_SIZE</code><code class="p">)]</code>
+    <code class="c1"># This dictionary maps the batch data (as a NumPy array) to the</code>
+    <code class="c1"># node in the graph it should be fed to.</code>
+    <code class="n">feed_dict</code> <code class="o">=</code> <code class="p">{</code><code class="n">train_data_node</code><code class="p">:</code> <code class="n">batch_data</code><code class="p">,</code>
+                 <code class="n">train_labels_node</code><code class="p">:</code> <code class="n">batch_labels</code><code class="p">}</code>
+    <code class="c1"># Run the optimizer to update weights.</code>
+    <code class="n">sess</code><code class="o">.</code><code class="n">run</code><code class="p">(</code><code class="n">optimizer</code><code class="p">,</code> <code class="n">feed_dict</code><code class="o">=</code><code class="n">feed_dict</code><code class="p">)</code>
+    <code class="c1"># print some extra information once reach the evaluation frequency</code>
+    <code class="k">if</code> <code class="n">step</code> <code class="o">%</code> <code class="n">EVAL_FREQUENCY</code> <code class="o">==</code> <code class="mi">0</code><code class="p">:</code>
+      <code class="c1"># fetch some extra nodes' data</code>
+      <code class="n">l</code><code class="p">,</code> <code class="n">lr</code><code class="p">,</code> <code class="n">predictions</code> <code class="o">=</code> <code class="n">sess</code><code class="o">.</code><code class="n">run</code><code class="p">([</code><code class="n">loss</code><code class="p">,</code> <code class="n">learning_rate</code><code class="p">,</code>
+                                     <code class="n">train_prediction</code><code class="p">],</code>
+                                    <code class="n">feed_dict</code><code class="o">=</code><code class="n">feed_dict</code><code class="p">)</code>
+      <code class="n">elapsed_time</code> <code class="o">=</code> <code class="n">time</code><code class="o">.</code><code class="n">time</code><code class="p">()</code> <code class="o">-</code> <code class="n">start_time</code>
+      <code class="n">start_time</code> <code class="o">=</code> <code class="n">time</code><code class="o">.</code><code class="n">time</code><code class="p">()</code>
+      <code class="k">print</code><code class="p">(</code><code class="s1">'Step </code><code class="si">%d</code><code class="s1"> (epoch </code><code class="si">%.2f</code><code class="s1">), </code><code class="si">%.1f</code><code class="s1"> ms'</code> <code class="o">%</code>
+            <code class="p">(</code><code class="n">step</code><code class="p">,</code> <code class="nb">float</code><code class="p">(</code><code class="n">step</code><code class="p">)</code> <code class="o">*</code> <code class="n">BATCH_SIZE</code> <code class="o">/</code> <code class="n">train_size</code><code class="p">,</code>
+             <code class="mi">1000</code> <code class="o">*</code> <code class="n">elapsed_time</code> <code class="o">/</code> <code class="n">EVAL_FREQUENCY</code><code class="p">))</code>
+      <code class="k">print</code><code class="p">(</code><code class="s1">'Minibatch loss: </code><code class="si">%.3f</code><code class="s1">, learning rate: </code><code class="si">%.6f</code><code class="s1">'</code> <code class="o">%</code> <code class="p">(</code><code class="n">l</code><code class="p">,</code> <code class="n">lr</code><code class="p">))</code>
+      <code class="k">print</code><code class="p">(</code><code class="s1">'Minibatch error: </code><code class="si">%.1f%%</code><code class="s1">'</code>
+            <code class="o">%</code> <code class="n">error_rate</code><code class="p">(</code><code class="n">predictions</code><code class="p">,</code> <code class="n">batch_labels</code><code class="p">))</code>
+      <code class="k">print</code><code class="p">(</code><code class="s1">'Validation error: </code><code class="si">%.1f%%</code><code class="s1">'</code> <code class="o">%</code> <code class="n">error_rate</code><code class="p">(</code>
+          <code class="n">eval_in_batches</code><code class="p">(</code><code class="n">validation_data</code><code class="p">,</code> <code class="n">sess</code><code class="p">),</code> <code class="n">validation_labels</code><code class="p">))</code>
+      <code class="n">sys</code><code class="o">.</code><code class="n">stdout</code><code class="o">.</code><code class="n">flush</code><code class="p">()</code>
+  <code class="c1"># Finally print the result!</code>
+  <code class="n">test_error</code> <code class="o">=</code> <code class="n">error_rate</code><code class="p">(</code><code class="n">eval_in_batches</code><code class="p">(</code><code class="n">test_data</code><code class="p">,</code> <code class="n">sess</code><code class="p">),</code>
+                          <code class="n">test_labels</code><code class="p">)</code>
+  <code class="k">print</code><code class="p">(</code><code class="s1">'Test error: </code><code class="si">%.1f%%</code><code class="s1">'</code> <code class="o">%</code> <code class="n">test_error</code><code class="p">)</code></pre></div>
+</div></section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<section data-type="sect2" data-pdf-bookmark="Challenge for the Reader"><div class="sect2" id="idm139806609500336">
+<h2>Challenge for the Reader</h2>
+
+<p>Try<a data-type="indexterm" data-primary="" data-startref="CNNtrain06" id="idm139806609499200"/> training the network yourself. You should be able to achieve test error of &lt; 1%!</p>
+</div></section>
+
+
+
+
+
+</div></section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<section data-type="sect1" data-pdf-bookmark="Review"><div class="sect1" id="idm139806609497872">
+<h1>Review</h1>
+
+<p>In this chapter, we have shown you the basic concepts of convolutional network design. These concepts include convolutional and pooling layers that constitute core building blocks of convolutional networks. We then discussed applications of convolutional architectures such as object detection, image segmentation, and image generation. We ended the chapter with an in-depth case study that showed you how to train a convolutional architecture on the MNIST handwritten digit dataset.</p>
+
+<p class="pagebreak-before">In <a data-type="xref" href="ch07.html#recurrent_neural_networks">Chapter 7</a>, we will cover recurrent neural networks, another core deep learning architecture. Unlike convolutional networks, which were designed for image processing, recurrent architectures are powerfully suited to handling sequential data such as natural language datasets.</p>
+</div></section>
+
+
+
+
+
+
+
+</div></section></body></html>

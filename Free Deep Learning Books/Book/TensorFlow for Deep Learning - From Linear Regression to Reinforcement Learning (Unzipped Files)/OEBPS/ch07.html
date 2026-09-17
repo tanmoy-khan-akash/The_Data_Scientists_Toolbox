@@ -1,0 +1,646 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html><html xmlns:epub="http://www.idpf.org/2007/ops" xmlns="http://www.w3.org/1999/xhtml"><head><title>Recurrent Neural Networks</title><link rel="stylesheet" type="text/css" href="epub.css"/></head><body data-type="book"><section data-type="chapter" epub:type="chapter" data-pdf-bookmark="Chapter 7. Recurrent Neural Networks"><div class="chapter" id="recurrent_neural_networks">
+<h1><span class="label">Chapter 7. </span>Recurrent Neural Networks</h1>
+
+
+<p>So far in this book, we’ve introduced you to the use of deep learning to process various types of inputs. We started from simple linear and logistic regression on fixed dimensional feature vectors, and then followed up with a discussion of fully connected deep networks. These models take in arbitrary feature vectors with fixed, predetermined sizes. These models make no assumptions about the type of data encoded into these vectors. On the other hand, convolutional networks place strong assumptions upon the structure of their data. Inputs to convolutional networks have to satisfy a locality assumption that allows for the definition of a local receptive field.</p>
+
+<p>How could we use the networks that we’ve described thus far to process data like sentences? Sentences do have some locality properties (nearby words are typically related), and it is indeed possible to use a one-dimensional convolutional network to process sentence data. That said, most practitioners resort to a different type of architecture, the recurrent neural network, in order to handle sequences of data.</p>
+
+<p>Recurrent neural networks (RNNs)<a data-type="indexterm" data-primary="recurrent neural networks (RNNs)" data-secondary="overview of" id="idm139806609330816"/> are designed natively to allow deep networks to process sequences of data. RNNs assume that incoming data takes the form of a sequence of vectors or tensors. If we transform each word in a sentence into a vector (more on how to do this later), sentences can be fed into RNNs. Similarly, video (considered as a sequence of images) can similarly be processed by an RNN. At each sequence position, an RNN applies an arbitrary nonlinear transformation to the input at that sequence location. This nonlinear transformation is shared for all sequence steps.</p>
+
+<p>The description in the previous paragraph is a little abstract, but turns out to be immensely powerful. In this chapter, you will learn more details about how RNNs are structured and about how to implement RNNs in TensorFlow. We will also discuss how RNNs can be used in practice to perform tasks like sampling new sentences or generating text for applications such as chatbots.</p>
+
+<p>The<a data-type="indexterm" data-primary="Penn Treebank corpus" data-secondary="overview of" id="idm139806609327872"/> case study for this chapter trains a recurrent neural network language model on the Penn Treebank corpus, a body of sentences extracted from <em>Wall Street Journal</em> articles. This tutorial was adapted from the TensorFlow official documentation tutorial on recurrent networks. (We encourage you to access the original tutorial on the TensorFlow website if you’re curious about the changes we’ve made.) As always, we recommend that you follow along with the code in the <a href="https://github.com/matroid/dlwithtf">GitHub repo associated with this book</a>.</p>
+
+
+
+
+
+
+<section data-type="sect1" data-pdf-bookmark="Overview of Recurrent Architectures"><div class="sect1" id="idm139806609325040">
+<h1>Overview of Recurrent Architectures</h1>
+
+<p>Recurrent architectures<a data-type="indexterm" data-primary="recurrent neural networks (RNNs)" data-secondary="recurrent architectures" id="idm139806609323296"/><a data-type="indexterm" data-primary="time-series modeling" id="idm139806609322224"/> are useful for modeling very complex time varying datasets. Time varying datasets are traditionally called <em>time-series</em>. <a data-type="xref" href="#ch7-timeseries">Figure 7-1</a> displays a number of time-series datasets.</p>
+
+<figure><div id="ch7-timeseries" class="figure">
+<img src="assets/tfdl_0701.png" alt="time_series.png"/>
+<h6><span class="label">Figure 7-1. </span>Some time-series datasets that we might be interested in modeling.</h6>
+</div></figure>
+
+<p>In time-series modeling, we design learning systems that are capable of learning the evolution rule that models how the future of the system at hand evolves depending on the past. Mathematically, let’s suppose that at each time step, we receive a datapoint <math xmlns="http://www.w3.org/1998/Math/MathML" alttext="x Subscript t">
+  <msub><mi>x</mi> <mi>t</mi> </msub>
+</math> where <em>t</em> is the current time. Then, time-series methods seek to learn some function <em>f</em> such that</p>
+<div data-type="equation">
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
+  <mrow>
+    <msub><mi>x</mi> <mrow><mi>t</mi><mo>+</mo><mn>1</mn></mrow> </msub>
+    <mo>=</mo>
+    <mi>f</mi>
+    <mrow>
+      <mo>(</mo>
+      <msub><mi>x</mi> <mn>1</mn> </msub>
+      <mo>,</mo>
+      <mo>⋯</mo>
+      <mo>,</mo>
+      <msub><mi>x</mi> <mi>t</mi> </msub>
+      <mo>)</mo>
+    </mrow>
+  </mrow>
+</math>
+</div>
+
+<p>The idea is that <em>f</em> encodes the underlying dynamics of the system well and learning it from data would enable a learning system to predict the future of the system at hand. In practice, it’s too unwieldy to learn a function that depends on all past inputs, so learning systems often assume that all information about last datapoints <math xmlns="http://www.w3.org/1998/Math/MathML" alttext="x 1 comma ellipsis comma x Subscript t minus 1 Baseline">
+  <mrow>
+    <msub><mi>x</mi> <mn>1</mn> </msub>
+    <mo>,</mo>
+    <mo>⋯</mo>
+    <mo>,</mo>
+    <msub><mi>x</mi> <mrow><mi>t</mi><mo>-</mo><mn>1</mn></mrow> </msub>
+  </mrow>
+</math> can be encoded into some fixed vector <math xmlns="http://www.w3.org/1998/Math/MathML" alttext="h Subscript t">
+  <msub><mi>h</mi> <mi>t</mi> </msub>
+</math>. Then, the update equation simplifies into the format</p>
+<div data-type="equation">
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
+  <mrow>
+    <msub><mi>x</mi> <mrow><mi>t</mi><mo>+</mo><mn>1</mn></mrow> </msub>
+    <mo>,</mo>
+    <msub><mi>h</mi> <mrow><mi>t</mi><mo>+</mo><mn>1</mn></mrow> </msub>
+    <mo>=</mo>
+    <mi>f</mi>
+    <mrow>
+      <mo>(</mo>
+      <msub><mi>x</mi> <mi>t</mi> </msub>
+      <mo>,</mo>
+      <msub><mi>h</mi> <mi>t</mi> </msub>
+      <mo>)</mo>
+    </mrow>
+  </mrow>
+</math>
+</div>
+
+<p>Notice that we assume that the same function <em>f</em> here applies for all timesteps <em>t</em>. That<a data-type="indexterm" data-primary="stationary evolution rule" id="idm139806609195872"/> is, we assume the time-series to be <em>stationary</em> (<a data-type="xref" href="#ch7-timeseriesmodel">Figure 7-2</a>). This assumption is broken for many systems, notably including the stock market where today’s rules need not hold tomorrow.</p>
+
+<figure><div id="ch7-timeseriesmodel" class="figure">
+<img src="assets/tfdl_0702.png" alt="RNN-unrolled.png"/>
+<h6><span class="label">Figure 7-2. </span>A mathematical model of a time-series with a stationary evolution rule. Recall that a stationary system is one whose underlying dynamics don’t shift over time.</h6>
+</div></figure>
+
+<p>What does this equation have to do with recurrent neural nets? The basic answer derives from the universal approximation theorem that we introduced in <a data-type="xref" href="ch04.html#fully_connected_networks">Chapter 4</a>. The function <em>f</em> can be arbitrarily complex, so using a fully connected deep network to learn <em>f</em> seems like a reasonable idea. This intuition essentially defines the RNN. A simple recurrent network can be viewed as a fully connected network that is applied repeatedly to each time step of the data.</p>
+
+<p>In fact, recurrent neural networks really become interesting only for complex high-dimensional time-series. For simpler systems, there are classical signal processing time-series methods that often do a good job of modeling time dynamics. However, for<a data-type="indexterm" data-primary="speech spectrograms" id="idm139806609188400"/> complex systems, such as speech (see the speech spectrogram in <a data-type="xref" href="#ch7-spect">Figure 7-3</a>), RNNs come into their own and offer capabilities that other methods can’t.</p>
+
+<figure><div id="ch7-spect" class="figure">
+<img src="assets/tfdl_0703.png" alt="sepctrogram.GIF"/>
+<h6><span class="label">Figure 7-3. </span>A speech spectrogram representing the frequencies found in a speech sample.</h6>
+</div></figure>
+</div></section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<section data-type="sect1" data-pdf-bookmark="Recurrent Cells"><div class="sect1" id="idm139806609324416">
+<h1>Recurrent Cells</h1>
+<div data-type="warning" epub:type="warning"><h1>Gradient Instability</h1>
+<p>Recurrent<a data-type="indexterm" data-primary="recurrent neural networks (RNNs)" data-secondary="recurrent cells" id="RNNcell07"/><a data-type="indexterm" data-primary="gradient instability" id="idm139806609181168"/> networks tend to degrade signal over time. Think of it as attenuating a signal by a multiplicative factor at each timestep. As a result, after 50 timesteps, the signal is quite degraded.</p>
+
+<p>As a result of this instability, it has been challenging to train recurrent neural networks on longer time-series. A number of methods have arisen to combat this instability, which we will discuss in the remainder of this section.</p>
+</div>
+
+<p>There are a number of elaborations on the concept of a simple recurrent neural network that have proven significantly more successful in practical applications. In this section, we will briefly review some of these variations.</p>
+
+
+
+
+
+
+
+
+<section data-type="sect2" data-pdf-bookmark="Long Short-Term Memory (LSTM)"><div class="sect2" id="idm139806609178624">
+<h2>Long Short-Term Memory (LSTM)</h2>
+
+<p>Part<a data-type="indexterm" data-primary="long short-term memory (LSTM) cells" id="idm139806609177088"/> of the challenge with the standard recurrent cell is that signals from the distant past attenuate rapidly. As a result, RNNs can fail to learn models of complex dependencies. This failure becomes particularly notable in applications such as language modeling, where words can have complex dependencies on earlier phrases.</p>
+
+<p>One potential solution to this issue is to allow states from the past to pass through unmodified. The long short-term memory (LSTM) architecture proposes a mechanism to allow past state to pass through to the present with minimal modifications. Empirically using an LSTM “cell” (shown in <a data-type="xref" href="#ch7-lstm">Figure 7-4</a>) seems to offer superior learning performance when compared to simple recurrent neural networks using fully connected layers.</p>
+
+<figure><div id="ch7-lstm" class="figure">
+<img src="assets/tfdl_0704.png" alt="colah_lstm.png"/>
+<h6><span class="label">Figure 7-4. </span>A long short-term memory (LSTM) cell. LSTMs perform better than standard recurrent neural networks at preserving long-range dependencies in inputs. As a result, LSTMs are often preferred for complex sequential data, such as natural language.</h6>
+</div></figure>
+<div data-type="warning" epub:type="warning"><h1>So Many Equations!</h1>
+<p>The LSTM equations involve many sophisticated terms. If you are interested in understanding precisely the mathematical intuitions behind the LSTM, we encourage you to play with the equations with pencil and paper and trying to take derivatives of the LSTM cell.</p>
+
+<p>However, for other readers who are primarily interested in using recurrent architectures to solve practical problems, we believe it isn’t absolutely necessary to delve into the nitty-gritty details of how LSTMs work. Rather, keep the high-level intuition that past state is allowed to pass through, and work through the example code for this chapter in some depth.</p>
+</div>
+<div data-type="note" epub:type="note"><h1>Optimizing Recurrent Networks</h1>
+<p>Unlike<a data-type="indexterm" data-primary="recurrent neural networks (RNNs)" data-secondary="optimizing" id="idm139806609168208"/><a data-type="indexterm" data-primary="control-flow operations" id="idm139806609167136"/> fully connected networks or convolutional networks, LSTMs involve some sophisticated mathematical operations and control-flow operations. As a result, training large recurrent networks at scale has proven to be challenging, even with modern GPU hardware.</p>
+
+<p>Significant effort has been put into optimizing RNN implementations to run quickly on GPU hardware. In<a data-type="indexterm" data-primary="CuDNN library" id="idm139806609165568"/> particular, Nvidia has incorporated RNNs into their CuDNN library that provides specially optimized code for training deep networks on GPUs. Luckily for TensorFlow users, integration with libraries such as CuDNN is performed within TensorFlow itself so you don’t need to worry too much about code optimization (unless of course, you’re working on very large-scale datasets). We will discuss hardware needs for deep neural networks at greater depth in <a data-type="xref" href="ch09.html#training_large_deep_networks">Chapter 9</a>.</p>
+</div>
+</div></section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<section data-type="sect2" data-pdf-bookmark="Gated Recurrent Units (GRU)"><div class="sect2" id="idm139806609163184">
+<h2>Gated Recurrent Units (GRU)</h2>
+
+<p>The<a data-type="indexterm" data-primary="gated recurrent units (GRU)" id="idm139806609162000"/> complexity, both conceptual and computational, for LSTM cells has motivated a number of researchers to attempt to simplify the LSTM equations while retaining the performance gains and modeling capabilities of the original equations.</p>
+
+<p>There are a number of contenders for LSTM replacement, but one of the frontrunners is the gated recurrent unit (GRU), shown in <a data-type="xref" href="#ch7-gru">Figure 7-5</a>. The GRU removes one of the subcomponents of the LSTM but empirically seems to achieve performance similar to that of the LSTM. The GRU might be a suitable replacement for LSTM cells on sequence modeling projects.<a data-type="indexterm" data-primary="" data-startref="RNNcell07" id="idm139806609159232"/></p>
+
+<figure><div id="ch7-gru" class="figure">
+<img src="assets/tfdl_0705.png" alt="lstm_gru.png"/>
+<h6><span class="label">Figure 7-5. </span>A gated recurrent unit (GRU) cell. GRUs preserve many of the benefits of LSTMs at lower computational cost.</h6>
+</div></figure>
+</div></section>
+
+
+
+
+
+</div></section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<section data-type="sect1" data-pdf-bookmark="Applications of Recurrent Models"><div class="sect1" id="idm139806609155968">
+<h1>Applications of Recurrent Models</h1>
+
+<p>While<a data-type="indexterm" data-primary="recurrent neural networks (RNNs)" data-secondary="applications of" id="RNNapp07"/> recurrent neural networks are useful tools for modeling time-series datasets, there are a host of other applications of recurrent networks. These include applications such as natural language modeling, machine translation, chemical retrosynthesis, and arbitrary computation with Neural Turing machines. In this section, we provide a brief tour of some of these exciting applications.</p>
+
+
+
+
+
+
+
+
+<section data-type="sect2" data-pdf-bookmark="Sampling from Recurrent Networks"><div class="sect2" id="idm139806609152784">
+<h2>Sampling from Recurrent Networks</h2>
+
+<p>So far, we’ve taught you how recurrent networks can learn to model the time evolution of sequences of data. It stands to reason that if you understand the evolution rule for a set of sequences, you ought to be able to sample new sequences from the distribution of training sequences. And indeed, it turns out that that good sequences can be sampled from trained models. The<a data-type="indexterm" data-primary="language modeling" id="idm139806609151136"/> most useful application thus far is in language modeling. Being able to generate realistic sentences is a very useful tool that underpins systems such as autocomplete and chatbots.</p>
+<div data-type="note" epub:type="note"><h1>Why Don’t We Use GANs for Sequences?</h1>
+<p>In <a data-type="xref" href="ch06.html#convolutional_neural_networks">Chapter 6</a>, we<a data-type="indexterm" data-primary="variational autoencoders" id="idm139806609147904"/><a data-type="indexterm" data-primary="autoencoders" id="idm139806609147184"/><a data-type="indexterm" data-primary="architectures" data-secondary="generative adversarial networks (GANs)" id="idm139806609146512"/><a data-type="indexterm" data-primary="GAN (generative adversarial network)" id="idm139806609145552"/> discussed the problem of generating new images. We discussed models such as variational autoencoders that produced only blurry images and introduced the technology of generative adversarial networks that proves capable of producing sharp images. The question remains, though: if we need GANs for good image samples, why don’t we use them for good sentences?</p>
+
+<p>It<a data-type="indexterm" data-primary="sampling sequences" id="idm139806609143968"/> turns out that today’s generative adversarial models are mediocre at sampling sequences. It’s not clear why this is the case. Theoretical understanding of GANs remains very weak (even by the standards of deep learning theory), but something about the game theoretic equilibrium discovery seems to perform worse for sequences than for images.</p>
+</div>
+</div></section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<section data-type="sect2" data-pdf-bookmark="Seq2seq Models"><div class="sect2" id="idm139806609142352">
+<h2>Seq2seq Models</h2>
+
+<p>Sequence-to-sequence (seq2seq) models<a data-type="indexterm" data-primary="sequence-to-sequence (seq2seq) models" id="idm139806609140816"/><a data-type="indexterm" data-primary="models" data-secondary="sequence-to-sequence (seq2seq)" id="idm139806609140048"/> are powerful tools that enable models to transform one sequence into another. The core idea of a sequence-to-sequence model is to use an encoding recurrent network that embeds input sequences into vector spaces alongside a decoding network that enables sampling of output sequences as described in previous sentences. <a data-type="xref" href="#ch7-seq2seq">Figure 7-6</a> illustrates a seq2seq model.</p>
+
+<figure><div id="ch7-seq2seq" class="figure">
+<img src="assets/tfdl_0706.png" alt="seq2seq_colah.png"/>
+<h6><span class="label">Figure 7-6. </span>Sequence-to-sequence models are powerful tools that can learn sequence transformations. They have been applied to machine translation (for example, transforming a sequence of English words to Mandarin) and chemical retrosynthesis (transforming a sequence of chemical products into a sequence of reactants).</h6>
+</div></figure>
+
+<p>Things get interesting since encoder and decoder layers can themselves be deep. (RNN layers can be stacked in a natural fashion.) The<a data-type="indexterm" data-primary="Google neural machine translation (GNMT)" id="idm139806609135008"/> Google neural machine translation (GNMT) system has many stacked encoding and decoding layers. As a result of this powerful representational capacity, it is capable of performing state-of-the-art translations far beyond the capabilities of its nearest nondeep competitors. <a data-type="xref" href="#ch7-gnmt">Figure 7-7</a> illustrates the GNMT architecture.</p>
+
+<figure><div id="ch7-gnmt" class="figure">
+<img src="assets/tfdl_0707.png" alt="google_nmt.png"/>
+<h6><span class="label">Figure 7-7. </span>The Google neural machine translation (GNMT) architecture is a deep seq2seq model that learns to perform machine translation.</h6>
+</div></figure>
+
+<p>While so far we’ve mainly discussed applications to natural language processing, the seq2seq architecture has myriad applications in other domains. One of the authors has used seq2seq architectures to perform chemical retrosynthesis, the act of deconstructing molecules into simpler constituents. <a data-type="xref" href="#ch7-seqret">Figure 7-8</a> illustrates.<a data-type="indexterm" data-primary="" data-startref="RNNapp07" id="idm139806609129360"/></p>
+
+<figure><div id="ch7-seqret" class="figure">
+<img src="assets/tfdl_0708.png" alt="seq2seq_retrosynthesis.png"/>
+<h6><span class="label">Figure 7-8. </span>A seq2seq model for chemical retrosynthesis transforms a sequence of chemical products into a sequence of chemical reactants.</h6>
+</div></figure>
+</div></section>
+
+
+
+
+
+</div></section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<section data-type="sect1" data-pdf-bookmark="Neural Turing Machines"><div class="sect1" id="idm139806609125984">
+<h1>Neural Turing Machines</h1>
+
+<p>The<a data-type="indexterm" data-primary="recurrent neural networks (RNNs)" data-secondary="Neural Turing machines" id="idm139806609124416"/><a data-type="indexterm" data-primary="Turing machines" id="idm139806609123440"/> dream of machine learning has been to move further up the abstraction stack: moving from learning short pattern-matching engines to learning to perform arbitrary computations. The Neural Turing machine is a powerful step in this evolution.</p>
+
+<p>The Turing machine was a seminal contribution to the mathematical theory of computation. It was the first mathematical model of a machine capable of performing any computation. The Turing machine maintains a “tape” that provides a memory of the performed computation. The second part of the machine is a “head” that performs transformations on single tape cells. The insight of the Turing machine was that the “head” didn’t need to be very complicated in order to perform arbitrarily complicated calculations.</p>
+
+<p>The Neural Turing machine (NTM) is a very clever attempt to transmute a Turing machine itself into a neural network. The trick in this transmutation is to turn discrete actions into soft continuous functions (this is a trick that pops up in deep learning repeatedly, so take note!)</p>
+
+<p>The Turing machine head is quite similar to the RNN cell! As a result, the NTM can be trained end-to-end to learn to perform arbitrary computations, in principle at least (<a data-type="xref" href="#ch7-neuraltm">Figure 7-9</a>). In practice, there are severe limitations to the set of computations that the NTM can perform. Gradient flow instabilities (as always) limit what can be learned. More research and experimentation will be needed to devise successors to NTMs capable of learning more useful functions.</p>
+
+<figure><div id="ch7-neuraltm" class="figure">
+<img src="assets/tfdl_0709.png" alt="turing_machine.png"/>
+<h6><span class="label">Figure 7-9. </span>A Neural Turing machine (NTM) is a learnable version of a Turing machine. It maintains a tape where it can store the outputs of intermediate computations. While NTMs have many practical limitations, it’s possible that their intellectual descendants will be capable of learning powerful algorithms.</h6>
+</div></figure>
+<div data-type="note" epub:type="note"><h1>Turing Completeness</h1>
+<p>The<a data-type="indexterm" data-primary="Turing completeness" id="idm139806609115440"/> concept of Turing completeness is an important notion in computer science. A programming language is said to be Turing complete if it is capable of performing any computation that can be performed by a Turing machine. The Turing machine itself was invented to provide a mathematical model of what it means for a function to be “computable.” The machine provides the capability to read, write, and store in memory various instructions, abstract primitives that underlie all computing machines.</p>
+
+<p>Over time, a large body of work has shown that the Turing machine closely models the set of computations performable in the physical world. To a first approximation, if it can be shown that a Turing machine is incapable of performing a computation, no computing device is capable of it either. On the other side, if it can be shown that a computing system can perform the basic operations of a Turing machine, it is then “Turing complete” and capable of performing in principle any computation that can be performed at all. A number of surprising systems are Turing complete. We encourage you to read more about this topic if interested.</p>
+</div>
+<div data-type="tip"><h1>Recurrent Networks Are Turing Complete</h1>
+<p>Perhaps<a data-type="indexterm" data-primary="recurrent neural networks (RNNs)" data-secondary="Turing completeness of" id="idm139806609111632"/> unsurprisingly, NTMs are capable of performing any computation a Turing machine can and are consequently Turing complete. However, a less known fact is that vanilla recurrent neural networks are themselves Turing complete! Put another way, in principle, a recurrent neural network is capable of learning to perform arbitrary computation.</p>
+
+<p>The basic idea is that the transition operator can learn to perform basic reading, writing, and storage operations. The unrolling of the recurrent network over time allows for the performance of complex computations. In some sense, this fact shouldn’t be too <span class="keep-together">surprising</span>. The universal approximation theorem already demonstrates that fully connected networks are capable of learning arbitrary functions. Chaining arbitrary functions together over time leads to arbitrary computations. (The technical details required to formally prove this are formidable, though.)</p>
+</div>
+</div></section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<section data-type="sect1" data-pdf-bookmark="Working with Recurrent Neural Networks in Practice"><div class="sect1" id="idm139806609108176">
+<h1>Working with Recurrent Neural Networks in Practice</h1>
+
+<p>In<a data-type="indexterm" data-primary="recurrent neural networks (RNNs)" data-secondary="working with inpractice" id="RNNwork07"/> this section, you will learn about the use of recurrent neural networks for language modeling on the Penn Treebank dataset, a natural language dataset built from <em>Wall Street Journal</em> articles. We will introduce the TensorFlow primitives needed to perform this modeling and will also walk you through the data handling and preprocessing steps needed to prepare data for training. We encourage you to follow along and try running the code in the <a href="https://github.com/matroid/dlwithtf">GitHub repo associated with the book</a>.</p>
+</div></section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<section data-type="sect1" data-pdf-bookmark="Processing the Penn Treebank Corpus"><div class="sect1" id="idm139806609103776">
+<h1>Processing the Penn Treebank Corpus</h1>
+
+<p>The<a data-type="indexterm" data-primary="Penn Treebank corpus" data-secondary="overview of" id="idm139806609102032"/><a data-type="indexterm" data-primary="character-level modeling" id="idm139806609101024"/><a data-type="indexterm" data-primary="word-level modeling" id="idm139806609100288"/> Penn Treebank contains a million-word corpus of <em>Wall Street Journal</em> articles. This corpus can be used for either character-level or word-level modeling (the tasks of predicting the next character or word in a sentence given those preceding). The efficacy of models is measured using the perplexity of trained models (more on this metric later).</p>
+
+<p>The Penn Treebank corpus consists of sentences. How can we transform sentences into a form that can be fed to machine learning systems such as recurrent language models? Recall that machine learning models accept tensors (with recurrent models accepting sequences of tensors) as input. Consequently, we need to transform words into tensors for machine learning.</p>
+
+<p>The<a data-type="indexterm" data-primary="one-hot encoding" id="idm139806609097600"/> simplest method of transforming words into vectors is to use “one-hot” encoding. In this encoding, let’s suppose that our language dataset uses a vocabulary that has <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mrow>
+    <mo>|</mo>
+    <mi>V</mi>
+    <mo>|</mo>
+  </mrow>
+</math> words. Then each word is transformed into a vector of shape <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mrow>
+    <mo>(</mo>
+    <mo>|</mo>
+    <mi>V</mi>
+    <mo>|</mo>
+    <mo>)</mo>
+  </mrow>
+</math>. All the entries of this vector are zero, except for one entry, at the index that corresponds to the current word. For an example of this embedding, see <a data-type="xref" href="#ch7-one-hot">Figure 7-10</a>.</p>
+
+<figure><div id="ch7-one-hot" class="figure">
+<img src="assets/tfdl_0710.png" alt="one-hot.jpg"/>
+<h6><span class="label">Figure 7-10. </span>One-hot encodings transform words into vectors with only one nonzero entry (which is typically set to one). Different indices in the vector uniquely represent words in a language corpus.</h6>
+</div></figure>
+
+<p>It’s also possible to use more sophisticated embeddings. The basic idea is similar to that for the one-hot encoding. Each word is associated with a unique vector. However,<a data-type="indexterm" data-primary="word embeddings" id="idm139806609087200"/> the key difference is that it’s possible to learn this encoding vector directly from data to obtain a “word embedding” for the word in question that’s meaningful for the dataset at hand. We will show you how to learn word embeddings later in this <span class="keep-together">chapter</span>.</p>
+
+<p>In order to process the Penn Treebank data, we need to find the vocabulary of words used in the corpus, then transform each word into its associated word vector. We will then show how to feed the processed data into a TensorFlow model.</p>
+<div data-type="note" epub:type="note"><h1>Penn Treebank Limitations</h1>
+<p>The<a data-type="indexterm" data-primary="Penn Treebank corpus" data-secondary="limitations of" id="idm139806609083424"/> Penn Treebank is a very useful dataset for language modeling, but it no longer poses a challenge for state-of-the-art language models; researchers have already overfit models on the peculiarities of this collection. State-of-the-art research would use larger datasets such as the billion-word-corpus language benchmark. However, for our exploratory purposes, the Penn Treebank easily suffices.</p>
+</div>
+
+
+
+
+
+
+
+
+<section data-type="sect2" data-pdf-bookmark="Code for Preprocessing"><div class="sect2" id="idm139806609081616">
+<h2>Code for Preprocessing</h2>
+
+<p>The<a data-type="indexterm" data-primary="Penn Treebank corpus" data-secondary="preprocessing" id="idm139806609080080"/> snippet of code in <a data-type="xref" href="#ch7-readwords">Example 7-1</a> reads in the raw files associated with the Penn Treebank corpus. The corpus is stored with one sentence per line. Some Python string handling is done to replace <code>"\n"</code> newline markers with fixed-token <code>"&lt;eos&gt;"</code> and then split the file into a list of tokens.</p>
+<div id="ch7-readwords" data-type="example">
+<h5><span class="label">Example 7-1. </span>This function reads in the raw Penn Treebank file</h5>
+
+<pre data-type="programlisting" data-code-language="python"><code class="k">def</code> <code class="nf">_read_words</code><code class="p">(</code><code class="n">filename</code><code class="p">):</code>
+  <code class="k">with</code> <code class="n">tf</code><code class="o">.</code><code class="n">gfile</code><code class="o">.</code><code class="n">GFile</code><code class="p">(</code><code class="n">filename</code><code class="p">,</code> <code class="s2">"r"</code><code class="p">)</code> <code class="k">as</code> <code class="n">f</code><code class="p">:</code>
+    <code class="k">if</code> <code class="n">sys</code><code class="o">.</code><code class="n">version_info</code><code class="p">[</code><code class="mi">0</code><code class="p">]</code> <code class="o">&gt;=</code> <code class="mi">3</code><code class="p">:</code>
+      <code class="k">return</code> <code class="n">f</code><code class="o">.</code><code class="n">read</code><code class="p">()</code><code class="o">.</code><code class="n">replace</code><code class="p">(</code><code class="s2">"</code><code class="se">\n</code><code class="s2">"</code><code class="p">,</code> <code class="s2">"&lt;eos&gt;"</code><code class="p">)</code><code class="o">.</code><code class="n">split</code><code class="p">()</code>
+    <code class="k">else</code><code class="p">:</code>
+      <code class="k">return</code> <code class="n">f</code><code class="o">.</code><code class="n">read</code><code class="p">()</code><code class="o">.</code><code class="n">decode</code><code class="p">(</code><code class="s2">"utf-8"</code><code class="p">)</code><code class="o">.</code><code class="n">replace</code><code class="p">(</code><code class="s2">"</code><code class="se">\n</code><code class="s2">"</code><code class="p">,</code> <code class="s2">"&lt;eos&gt;"</code><code class="p">)</code><code class="o">.</code><code class="n">split</code><code class="p">()</code></pre></div>
+
+<p>With <code>_read_words</code> defined, we can build the vocabulary associated with a given file using function <code>_build_vocab</code> defined in <a data-type="xref" href="#ch7-vocab">Example 7-2</a>. We simply read in the words in the file, and count the number of unique words in the file using Python’s <code>collections</code> library. For convenience, we construct a dictionary object mapping words to their unique integer identifiers (their positions in the vocabulary). Tying<a data-type="indexterm" data-primary="vocabulary, building" id="idm139806608827392"/> it all together, <code>_file_to_word_ids</code> transforms a file into a list of word identifiers (<a data-type="xref" href="#ch7-file-to-words">Example 7-3</a>).</p>
+<div id="ch7-vocab" data-type="example">
+<h5><span class="label">Example 7-2. </span>This function builds a vocabulary consisting of all words in the specified file</h5>
+
+<pre data-type="programlisting" data-code-language="python"><code class="k">def</code> <code class="nf">_build_vocab</code><code class="p">(</code><code class="n">filename</code><code class="p">):</code>
+  <code class="n">data</code> <code class="o">=</code> <code class="n">_read_words</code><code class="p">(</code><code class="n">filename</code><code class="p">)</code>
+
+  <code class="n">counter</code> <code class="o">=</code> <code class="n">collections</code><code class="o">.</code><code class="n">Counter</code><code class="p">(</code><code class="n">data</code><code class="p">)</code>
+  <code class="n">count_pairs</code> <code class="o">=</code> <code class="nb">sorted</code><code class="p">(</code><code class="n">counter</code><code class="o">.</code><code class="n">items</code><code class="p">(),</code> <code class="n">key</code><code class="o">=</code><code class="k">lambda</code> <code class="n">x</code><code class="p">:</code> <code class="p">(</code><code class="o">-</code><code class="n">x</code><code class="p">[</code><code class="mi">1</code><code class="p">],</code> <code class="n">x</code><code class="p">[</code><code class="mi">0</code><code class="p">]))</code>
+
+  <code class="n">words</code><code class="p">,</code> <code class="n">_</code> <code class="o">=</code> <code class="nb">list</code><code class="p">(</code><code class="nb">zip</code><code class="p">(</code><code class="o">*</code><code class="n">count_pairs</code><code class="p">))</code>
+  <code class="n">word_to_id</code> <code class="o">=</code> <code class="nb">dict</code><code class="p">(</code><code class="nb">zip</code><code class="p">(</code><code class="n">words</code><code class="p">,</code> <code class="nb">range</code><code class="p">(</code><code class="nb">len</code><code class="p">(</code><code class="n">words</code><code class="p">))))</code>
+
+  <code class="k">return</code> <code class="n">word_to_id</code></pre></div>
+<div id="ch7-file-to-words" data-type="example">
+<h5><span class="label">Example 7-3. </span>This function transforms words in a file into id numbers</h5>
+
+<pre data-type="programlisting" data-code-language="python"><code class="k">def</code> <code class="nf">_file_to_word_ids</code><code class="p">(</code><code class="n">filename</code><code class="p">,</code> <code class="n">word_to_id</code><code class="p">):</code>
+  <code class="n">data</code> <code class="o">=</code> <code class="n">_read_words</code><code class="p">(</code><code class="n">filename</code><code class="p">)</code>
+  <code class="k">return</code> <code class="p">[</code><code class="n">word_to_id</code><code class="p">[</code><code class="n">word</code><code class="p">]</code> <code class="k">for</code> <code class="n">word</code> <code class="ow">in</code> <code class="n">data</code> <code class="k">if</code> <code class="n">word</code> <code class="ow">in</code> <code class="n">word_to_id</code><code class="p">]</code></pre></div>
+
+<p>With these utilities in place, we can process the Penn Treebank corpus with function <code>ptb_raw_data</code> (<a data-type="xref" href="#ch7-ptb-raw">Example 7-4</a>). Note that training, validation, and test datasets are pre-specified, so we need only read each file into a list of unique indices.</p>
+<div id="ch7-ptb-raw" data-type="example">
+<h5><span class="label">Example 7-4. </span>This function loads the Penn Treebank data from the specified location</h5>
+
+<pre data-type="programlisting" data-code-language="python"><code class="k">def</code> <code class="nf">ptb_raw_data</code><code class="p">(</code><code class="n">data_path</code><code class="o">=</code><code class="bp">None</code><code class="p">):</code>
+  <code class="sd">"""Load PTB raw data from data directory "data_path".</code>
+
+<code class="sd">  Reads PTB text files, converts strings to integer ids,</code>
+<code class="sd">  and performs mini-batching of the inputs.</code>
+
+<code class="sd">  The PTB dataset comes from Tomas Mikolov's webpage:</code>
+<code class="sd">  http://www.fit.vutbr.cz/~imikolov/rnnlm/simple-examples.tgz</code>
+
+<code class="sd">  Args:</code>
+<code class="sd">    data_path: string path to the directory where simple-examples.tgz</code>
+<code class="sd">               has been extracted.</code>
+
+<code class="sd">  Returns:</code>
+<code class="sd">    tuple (train_data, valid_data, test_data, vocabulary)</code>
+<code class="sd">    where each of the data objects can be passed to PTBIterator.</code>
+<code class="sd">  """</code>
+
+  <code class="n">train_path</code> <code class="o">=</code> <code class="n">os</code><code class="o">.</code><code class="n">path</code><code class="o">.</code><code class="n">join</code><code class="p">(</code><code class="n">data_path</code><code class="p">,</code> <code class="s2">"ptb.train.txt"</code><code class="p">)</code>
+  <code class="n">valid_path</code> <code class="o">=</code> <code class="n">os</code><code class="o">.</code><code class="n">path</code><code class="o">.</code><code class="n">join</code><code class="p">(</code><code class="n">data_path</code><code class="p">,</code> <code class="s2">"ptb.valid.txt"</code><code class="p">)</code>
+  <code class="n">test_path</code> <code class="o">=</code> <code class="n">os</code><code class="o">.</code><code class="n">path</code><code class="o">.</code><code class="n">join</code><code class="p">(</code><code class="n">data_path</code><code class="p">,</code> <code class="s2">"ptb.test.txt"</code><code class="p">)</code>
+
+  <code class="n">word_to_id</code> <code class="o">=</code> <code class="n">_build_vocab</code><code class="p">(</code><code class="n">train_path</code><code class="p">)</code>
+  <code class="n">train_data</code> <code class="o">=</code> <code class="n">_file_to_word_ids</code><code class="p">(</code><code class="n">train_path</code><code class="p">,</code> <code class="n">word_to_id</code><code class="p">)</code>
+  <code class="n">valid_data</code> <code class="o">=</code> <code class="n">_file_to_word_ids</code><code class="p">(</code><code class="n">valid_path</code><code class="p">,</code> <code class="n">word_to_id</code><code class="p">)</code>
+  <code class="n">test_data</code> <code class="o">=</code> <code class="n">_file_to_word_ids</code><code class="p">(</code><code class="n">test_path</code><code class="p">,</code> <code class="n">word_to_id</code><code class="p">)</code>
+  <code class="n">vocabulary</code> <code class="o">=</code> <code class="nb">len</code><code class="p">(</code><code class="n">word_to_id</code><code class="p">)</code>
+  <code class="k">return</code> <code class="n">train_data</code><code class="p">,</code> <code class="n">valid_data</code><code class="p">,</code> <code class="n">test_data</code><code class="p">,</code> <code class="n">vocabulary</code></pre></div>
+<div data-type="note" epub:type="note"><h1>tf.GFile and tf.Flags</h1>
+<p>TensorFlow is a large project that contains many bits and pieces. While most of the library is devoted to machine learning, there’s also a large proportion that’s dedicated to loading and massaging data. Some of these functions provide useful capabilities that aren’t found elsewhere. Other parts of the loading functionality are less useful, however.</p>
+
+<p><code>tf.GFile</code> and <code>tf.FLags</code> provide<a data-type="indexterm" data-primary="tf.GFile" id="idm139806608593680"/><a data-type="indexterm" data-primary="tf.FLags" id="idm139806608592944"/><a data-type="indexterm" data-primary="argparse tool" id="idm139806608592272"/> functionality that is more or less identical to standard Python file handling and <code>argparse</code>. The provenance of these tools is historical. With Google, custom file handlers and flag handling are required by internal code standards. For the rest of us, though, it’s better style to use standard Python tools whenever possible. It’s much better for readability and stability.</p>
+</div>
+</div></section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<section data-type="sect2" data-pdf-bookmark="Loading Data into TensorFlow"><div class="sect2" id="idm139806608667920">
+<h2>Loading Data into TensorFlow</h2>
+
+<p>In<a data-type="indexterm" data-primary="Penn Treebank corpus" data-secondary="loading data into TensorFlow" id="idm139806608589312"/> this section, we cover the code needed to load our processed indices into TensorFlow. To do so, we will introduce you to a new bit of TensorFlow machinery. Until now, we’ve used feed dictionaries to pass data into TensorFlow. While feed dictionaries are fine for small toy datasets, they are often not good choices for larger datasets, since large Python overheads involving packing and unpacking dictionaries are introduced. For more performant code, it’s better to use TensorFlow queues.</p>
+
+<p><code>tf.Queue</code> provides<a data-type="indexterm" data-primary="tf.Queue" id="idm139806608587024"/> a way to load data asynchronously. This allows decoupling of the GPU compute thread from the CPU-bound data preprocessing thread. This decoupling is particularly useful for large datasets where we want to keep the GPU maximally active.</p>
+
+<p>It’s possible to feed <code>tf.Queue</code> objects into TensorFlow placeholders to train models and achieve greater performance. We will demonstrate how to do so later in this chapter.</p>
+
+<p>The function <code>ptb_producer</code> introduced in <a data-type="xref" href="#ch7-ptb-producer">Example 7-5</a> transforms raw lists of indices into <code>tf.Queues</code> that can pass data into a TensorFlow computational graph. Let’s start by introducing some of the computational primitives we use. <code>tf.train.range_input_producer</code> is a convenience operation that produces a <code>tf.Queue</code> from an input tensor. The method <code>tf.Queue.dequeue()</code> pulls a tensor from the queue for training. <code>tf.strided_slice</code> extracts the part of this tensor that corresponds to the data for the current minibatch.</p>
+<div id="ch7-ptb-producer" data-type="example">
+<h5><span class="label">Example 7-5. </span>This function loads the Penn Treebank data from the specified location</h5>
+
+<pre data-type="programlisting" data-code-language="python"><code class="k">def</code> <code class="nf">ptb_producer</code><code class="p">(</code><code class="n">raw_data</code><code class="p">,</code> <code class="n">batch_size</code><code class="p">,</code> <code class="n">num_steps</code><code class="p">,</code> <code class="n">name</code><code class="o">=</code><code class="bp">None</code><code class="p">):</code>
+  <code class="sd">"""Iterate on the raw PTB data.</code>
+
+<code class="sd">  This chunks up raw_data into batches of examples and returns</code>
+<code class="sd">  Tensors that are drawn from these batches.</code>
+
+<code class="sd">  Args:</code>
+<code class="sd">    raw_data: one of the raw data outputs from ptb_raw_data.</code>
+<code class="sd">    batch_size: int, the batch size.</code>
+<code class="sd">    num_steps: int, the number of unrolls.</code>
+<code class="sd">    name: the name of this operation (optional).</code>
+
+<code class="sd">  Returns:</code>
+<code class="sd">    A pair of Tensors, each shaped [batch_size, num_steps]. The</code>
+<code class="sd">    second element of the tuple is the same data time-shifted to the</code>
+<code class="sd">    right by one.</code>
+
+<code class="sd">  Raises:</code>
+<code class="sd">    tf.errors.InvalidArgumentError: if batch_size or num_steps are</code>
+<code class="sd">    too high.</code>
+<code class="sd">  """</code>
+  <code class="k">with</code> <code class="n">tf</code><code class="o">.</code><code class="n">name_scope</code><code class="p">(</code><code class="n">name</code><code class="p">,</code> <code class="s2">"PTBProducer"</code><code class="p">,</code>
+                     <code class="p">[</code><code class="n">raw_data</code><code class="p">,</code> <code class="n">batch_size</code><code class="p">,</code> <code class="n">num_steps</code><code class="p">]):</code>
+    <code class="n">raw_data</code> <code class="o">=</code> <code class="n">tf</code><code class="o">.</code><code class="n">convert_to_tensor</code><code class="p">(</code><code class="n">raw_data</code><code class="p">,</code> <code class="n">name</code><code class="o">=</code><code class="s2">"raw_data"</code><code class="p">,</code>
+                                    <code class="n">dtype</code><code class="o">=</code><code class="n">tf</code><code class="o">.</code><code class="n">int32</code><code class="p">)</code>
+
+    <code class="n">data_len</code> <code class="o">=</code> <code class="n">tf</code><code class="o">.</code><code class="n">size</code><code class="p">(</code><code class="n">raw_data</code><code class="p">)</code>
+    <code class="n">batch_len</code> <code class="o">=</code> <code class="n">data_len</code> <code class="o">//</code> <code class="n">batch_size</code>
+    <code class="n">data</code> <code class="o">=</code> <code class="n">tf</code><code class="o">.</code><code class="n">reshape</code><code class="p">(</code><code class="n">raw_data</code><code class="p">[</code><code class="mi">0</code> <code class="p">:</code> <code class="n">batch_size</code> <code class="o">*</code> <code class="n">batch_len</code><code class="p">],</code>
+                      <code class="p">[</code><code class="n">batch_size</code><code class="p">,</code> <code class="n">batch_len</code><code class="p">])</code>
+
+    <code class="n">epoch_size</code> <code class="o">=</code> <code class="p">(</code><code class="n">batch_len</code> <code class="o">-</code> <code class="mi">1</code><code class="p">)</code> <code class="o">//</code> <code class="n">num_steps</code>
+    <code class="n">assertion</code> <code class="o">=</code> <code class="n">tf</code><code class="o">.</code><code class="n">assert_positive</code><code class="p">(</code>
+        <code class="n">epoch_size</code><code class="p">,</code>
+        <code class="n">message</code><code class="o">=</code><code class="s2">"epoch_size == 0, decrease batch_size or num_steps"</code><code class="p">)</code>
+    <code class="k">with</code> <code class="n">tf</code><code class="o">.</code><code class="n">control_dependencies</code><code class="p">([</code><code class="n">assertion</code><code class="p">]):</code>
+      <code class="n">epoch_size</code> <code class="o">=</code> <code class="n">tf</code><code class="o">.</code><code class="n">identity</code><code class="p">(</code><code class="n">epoch_size</code><code class="p">,</code> <code class="n">name</code><code class="o">=</code><code class="s2">"epoch_size"</code><code class="p">)</code>
+
+    <code class="n">i</code> <code class="o">=</code> <code class="n">tf</code><code class="o">.</code><code class="n">train</code><code class="o">.</code><code class="n">range_input_producer</code><code class="p">(</code><code class="n">epoch_size</code><code class="p">,</code>
+                                      <code class="n">shuffle</code><code class="o">=</code><code class="bp">False</code><code class="p">)</code><code class="o">.</code><code class="n">dequeue</code><code class="p">()</code>
+    <code class="n">x</code> <code class="o">=</code> <code class="n">tf</code><code class="o">.</code><code class="n">strided_slice</code><code class="p">(</code><code class="n">data</code><code class="p">,</code> <code class="p">[</code><code class="mi">0</code><code class="p">,</code> <code class="n">i</code> <code class="o">*</code> <code class="n">num_steps</code><code class="p">],</code>
+                         <code class="p">[</code><code class="n">batch_size</code><code class="p">,</code> <code class="p">(</code><code class="n">i</code> <code class="o">+</code> <code class="mi">1</code><code class="p">)</code> <code class="o">*</code> <code class="n">num_steps</code><code class="p">])</code>
+    <code class="n">x</code><code class="o">.</code><code class="n">set_shape</code><code class="p">([</code><code class="n">batch_size</code><code class="p">,</code> <code class="n">num_steps</code><code class="p">])</code>
+    <code class="n">y</code> <code class="o">=</code> <code class="n">tf</code><code class="o">.</code><code class="n">strided_slice</code><code class="p">(</code><code class="n">data</code><code class="p">,</code> <code class="p">[</code><code class="mi">0</code><code class="p">,</code> <code class="n">i</code> <code class="o">*</code> <code class="n">num_steps</code> <code class="o">+</code> <code class="mi">1</code><code class="p">],</code>
+                         <code class="p">[</code><code class="n">batch_size</code><code class="p">,</code> <code class="p">(</code><code class="n">i</code> <code class="o">+</code> <code class="mi">1</code><code class="p">)</code> <code class="o">*</code> <code class="n">num_steps</code> <code class="o">+</code> <code class="mi">1</code><code class="p">])</code>
+    <code class="n">y</code><code class="o">.</code><code class="n">set_shape</code><code class="p">([</code><code class="n">batch_size</code><code class="p">,</code> <code class="n">num_steps</code><code class="p">])</code>
+    <code class="k">return</code> <code class="n">x</code><code class="p">,</code> <code class="n">y</code></pre></div>
+<div data-type="note" epub:type="note"><h1>tf.data</h1>
+<p>TensorFlow (from version 1.4 onward) supports a new module<a data-type="indexterm" data-primary="tf.data" id="idm139806608543104"/> <code>tf.data</code> with a new class <code>tf.data.Dataset</code> that provides an explicit API for representing streams of data. It’s likely that <code>tf.data</code> will eventually supersede queues as the preferred input modality, especially since it has a well-thought-out functional API.</p>
+
+<p>At the time of writing, the <code>tf.data</code> module was just released and remained relatively immature compared with other parts of the API, so we decided to stick with queues for the examples. However, we encourage you to learn about <code>tf.data</code> yourself.</p>
+</div>
+</div></section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<section data-type="sect2" data-pdf-bookmark="The Basic Recurrent Architecture"><div class="sect2" id="idm139806608539168">
+<h2>The Basic Recurrent Architecture</h2>
+
+<p>We<a data-type="indexterm" data-primary="Penn Treebank corpus" data-secondary="basic recurrent architecture" id="idm139806608291136"/><a data-type="indexterm" data-primary="long short-term memory (LSTM) cells" id="idm139806608290112"/> will use an LSTM cell for modeling the Penn Treebank, since LSTMs often offer superior performance for language modeling challenges. The function <code>tf.contrib.rnn.BasicLSTMCell</code> implements the basic LSTM cell for us already, so no need to implement it ourselves (<a data-type="xref" href="#ch7-lstm-wrap">Example 7-6</a>).</p>
+<div id="ch7-lstm-wrap" data-type="example">
+<h5><span class="label">Example 7-6. </span>This function wraps an LSTM cell from tf.contrib</h5>
+
+<pre data-type="programlisting" data-code-language="python"><code class="k">def</code> <code class="nf">lstm_cell</code><code class="p">():</code>
+  <code class="k">return</code> <code class="n">tf</code><code class="o">.</code><code class="n">contrib</code><code class="o">.</code><code class="n">rnn</code><code class="o">.</code><code class="n">BasicLSTMCell</code><code class="p">(</code>
+      <code class="n">size</code><code class="p">,</code> <code class="n">forget_bias</code><code class="o">=</code><code class="mf">0.0</code><code class="p">,</code> <code class="n">state_is_tuple</code><code class="o">=</code><code class="bp">True</code><code class="p">,</code>
+      <code class="n">reuse</code><code class="o">=</code><code class="n">tf</code><code class="o">.</code><code class="n">get_variable_scope</code><code class="p">()</code><code class="o">.</code><code class="n">reuse</code><code class="p">)</code></pre></div>
+<div data-type="note" epub:type="note"><h1>Is Using TensorFlow Contrib Code OK?</h1>
+<p>Note<a data-type="indexterm" data-primary="tf.contrib" id="idm139806608113392"/> that the LSTM implementation we use is drawn from <code>tf.contrib</code>. Is it acceptable to use code from <code>tf.contrib</code> for industrial-strength projects? The jury still appears to be out on this one. From our personal experience, code in <code>tf.contrib</code> tends to be a bit shakier than code in the core TensorFlow library, but is usually still pretty solid. There are often many useful libraries and utilities that are only available as part of <code>tf.contrib</code>. Our recommendation is to use pieces from <code>tf.contrib</code> as necessary, but make note of the pieces you use and replace them if an equivalent in the core TensorFlow library becomes available.</p>
+</div>
+
+<p>The<a data-type="indexterm" data-primary="tf.nn.embedding_lookup" id="idm139806608109552"/> snippet in <a data-type="xref" href="#ch7-embed">Example 7-7</a> instructs TensorFlow to learn a word embedding for each word in our vocabulary. The key function for us is <code>tf.nn.embedding_lookup</code>, which allows us to perform the correct tensorial lookup operation. Note that we need to manually define the embedding matrix as a TensorFlow variable.</p>
+<div id="ch7-embed" data-type="example">
+<h5><span class="label">Example 7-7. </span>Learn a word embedding for each word in the vocabulary</h5>
+
+<pre data-type="programlisting" data-code-language="python"><code class="k">with</code> <code class="n">tf</code><code class="o">.</code><code class="n">device</code><code class="p">(</code><code class="s2">"/cpu:0"</code><code class="p">):</code>
+  <code class="n">embedding</code> <code class="o">=</code> <code class="n">tf</code><code class="o">.</code><code class="n">get_variable</code><code class="p">(</code>
+      <code class="s2">"embedding"</code><code class="p">,</code> <code class="p">[</code><code class="n">vocab_size</code><code class="p">,</code> <code class="n">size</code><code class="p">],</code> <code class="n">dtype</code><code class="o">=</code><code class="n">tf</code><code class="o">.</code><code class="n">float32</code><code class="p">)</code>
+  <code class="n">inputs</code> <code class="o">=</code> <code class="n">tf</code><code class="o">.</code><code class="n">nn</code><code class="o">.</code><code class="n">embedding_lookup</code><code class="p">(</code><code class="n">embedding</code><code class="p">,</code> <code class="n">input_</code><code class="o">.</code><code class="n">input_data</code><code class="p">)</code></pre></div>
+
+<p>With our word vectors in hand, we simply need to apply the LSTM cell (using function <code>lstm_cell</code>) to each word vector in our sequence. To do this, we simply use a Python <code>for</code>-loop to construct the needed set of calls to <code>cell()</code>. There’s only one trick here: we need to make sure we reuse the same variables at each timestep, since the LSTM cell should perform the same operation at each timestep. Luckily, the<a data-type="indexterm" data-primary="reuse_variables()" id="idm139806608063632"/> method <code>reuse_variables()</code> for variable scopes allows us to do so without much effort. See <a data-type="xref" href="#ch7-embed2">Example 7-8</a>.</p>
+<div id="ch7-embed2" data-type="example">
+<h5><span class="label">Example 7-8. </span>Apply LSTM cell to each word vector in input sequence</h5>
+
+<pre data-type="programlisting" data-code-language="python"><code class="n">outputs</code> <code class="o">=</code> <code class="p">[]</code>
+<code class="n">state</code> <code class="o">=</code> <code class="bp">self</code><code class="o">.</code><code class="n">_initial_state</code>
+<code class="k">with</code> <code class="n">tf</code><code class="o">.</code><code class="n">variable_scope</code><code class="p">(</code><code class="s2">"RNN"</code><code class="p">):</code>
+  <code class="k">for</code> <code class="n">time_step</code> <code class="ow">in</code> <code class="nb">range</code><code class="p">(</code><code class="n">num_steps</code><code class="p">):</code>
+    <code class="k">if</code> <code class="n">time_step</code> <code class="o">&gt;</code> <code class="mi">0</code><code class="p">:</code> <code class="n">tf</code><code class="o">.</code><code class="n">get_variable_scope</code><code class="p">()</code><code class="o">.</code><code class="n">reuse_variables</code><code class="p">()</code>
+    <code class="p">(</code><code class="n">cell_output</code><code class="p">,</code> <code class="n">state</code><code class="p">)</code> <code class="o">=</code> <code class="n">cell</code><code class="p">(</code><code class="n">inputs</code><code class="p">[:,</code> <code class="n">time_step</code><code class="p">,</code> <code class="p">:],</code> <code class="n">state</code><code class="p">)</code>
+    <code class="n">outputs</code><code class="o">.</code><code class="n">append</code><code class="p">(</code><code class="n">cell_output</code><code class="p">)</code></pre></div>
+
+<p class="pagebreak-before">All that remains now is to define the loss associated with the graph in order to train it. Conveniently, TensorFlow offers a loss for training language models in <code>tf.contrib</code>. We need only make a call to <code>tf.contrib.seq2seq.sequence_loss</code> (<a data-type="xref" href="#ch7-seqloss">Example 7-9</a>). Underneath the hood, this loss turns out to be a form of perplexity.</p>
+<div id="ch7-seqloss" data-type="example">
+<h5><span class="label">Example 7-9. </span>Add the sequence loss</h5>
+
+<pre data-type="programlisting" data-code-language="python"><code class="c1"># use the contrib sequence loss and average over the batches</code>
+<code class="n">loss</code> <code class="o">=</code> <code class="n">tf</code><code class="o">.</code><code class="n">contrib</code><code class="o">.</code><code class="n">seq2seq</code><code class="o">.</code><code class="n">sequence_loss</code><code class="p">(</code>
+   <code class="n">logits</code><code class="p">,</code>
+   <code class="n">input_</code><code class="o">.</code><code class="n">targets</code><code class="p">,</code>
+   <code class="n">tf</code><code class="o">.</code><code class="n">ones</code><code class="p">([</code><code class="n">batch_size</code><code class="p">,</code> <code class="n">num_steps</code><code class="p">],</code> <code class="n">dtype</code><code class="o">=</code><code class="n">tf</code><code class="o">.</code><code class="n">float32</code><code class="p">),</code>
+   <code class="n">average_across_timesteps</code><code class="o">=</code><code class="bp">False</code><code class="p">,</code>
+   <code class="n">average_across_batch</code><code class="o">=</code><code class="bp">True</code>
+<code class="p">)</code>
+<code class="c1"># update the cost variables</code>
+<code class="bp">self</code><code class="o">.</code><code class="n">_cost</code> <code class="o">=</code> <code class="n">cost</code> <code class="o">=</code> <code class="n">tf</code><code class="o">.</code><code class="n">reduce_sum</code><code class="p">(</code><code class="n">loss</code><code class="p">)</code></pre></div>
+<div data-type="note" epub:type="note"><h1>Perplexity</h1>
+<p>Perplexity<a data-type="indexterm" data-primary="perplexity" id="idm139806607778592"/> is often used for language modeling challenges. It is a variant of the binary cross-entropy that is useful for measuring how close the learned distribution is to the true distribution of data. Empirically, perplexity has proven useful for many language modeling challenges and we make use of it here in that capacity (since the <code>sequence_loss</code> just implements perplexity specialized to sequences inside).</p>
+</div>
+
+<p>We can then train this graph using a<a data-type="indexterm" data-primary="gradient descent" id="idm139806607776544"/> standard gradient descent method. We leave out some of the messy details of the underlying code, but suggest you check GitHub if curious. Evaluating the quality of the trained model turns out to be straightforward as well, since the perplexity is used both as the training loss and the evaluation metric. As a result, we can simply display <code>self._cost</code> to gauge how the model is training. We encourage you to train the model for yourself!<a data-type="indexterm" data-primary="" data-startref="RNNwork07" id="idm139806607774976"/></p>
+</div></section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<section data-type="sect2" data-pdf-bookmark="Challenge for the Reader"><div class="sect2" id="idm139806608291920">
+<h2>Challenge for the Reader</h2>
+
+<p>Try lowering perplexity on the Penn Treebank by experimenting with different model architectures. Note that these experiments might be time-consuming without a GPU.</p>
+</div></section>
+
+
+
+
+
+</div></section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<section data-type="sect1" data-pdf-bookmark="Review"><div class="sect1" id="idm139806609103152">
+<h1>Review</h1>
+
+<p>This chapter introduced you to recurrent neural networks (RNNs), a powerful architecture for learning on sequential data. RNNs are capable of learning the underlying evolution rule that governs a sequence of data. While RNNs can be used for modeling simple time-series, they are most powerful when modeling complex sequential data such as speech and natural language.</p>
+
+<p>We introduced you to a number of RNN variants such as LSTMs and GRUs, which perform better on data with complex long-range interactions, and also took a brief detour to discuss the exciting prospect of Neural Turing machines. We ended the chapter with an in-depth case study that applied LSTMs to model the Penn Treebank.</p>
+
+<p>In <a data-type="xref" href="ch08.html#reinforcement_learning">Chapter 8</a>, we will introduce you to reinforcement learning, a powerful technique for learning to play games.</p>
+</div></section>
+
+
+
+
+
+
+
+</div></section></body></html>

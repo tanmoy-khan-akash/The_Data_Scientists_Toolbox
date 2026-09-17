@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<package xmlns="http://www.idpf.org/2007/opf" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dcterms="http://purl.org/dc/terms/" version="3.0" unique-identifier="pub-identifier" prefix="ibooks: http://vocabulary.itunes.apple.com/rdf/ibooks/vocabulary-extensions-1.0/">
+  <metadata>
+    <dc:identifier id="pub-identifier">9781491980453</dc:identifier>
+    <meta id="meta-identifier" property="dcterms:identifier">9781491980453</meta>
+    <dc:title id="pub-title">TensorFlow for Deep Learning</dc:title>
+    <meta property="dcterms:title" id="meta-title">TensorFlow for Deep Learning</meta>
+    <dc:language id="pub-language">en</dc:language>
+    <meta property="dcterms:language" id="meta-language">en</meta>
+    <meta property="dcterms:modified">2018-03-01T14:44:07Z</meta>
+    <dc:publisher>O'Reilly Media, Inc.</dc:publisher>
+    <meta property="dcterms:publisher">O'Reilly Media, Inc.</meta>
+    <dc:date>2018-03-20</dc:date>
+    <meta property="dcterms:date">2018-03-20</meta>
+    <dc:description>Learn how to solve challenging machine learning problems with Tensorflow, Google’s revolutionary new system for deep learning. If you have some background with basic linear algebra and calculus, this practical book shows you how to build—and when to use—deep learning architectures. You’ll learn how to design systems capable of detecting objects in images, understanding human speech, analyzing video, and predicting the properties of potential medicines. TensorFlow for Deep Learning teaches concepts through practical examples and builds understanding of deep learning foundations from the ground up.</dc:description>
+    <meta property="dcterms:description">Learn how to solve challenging machine learning problems with Tensorflow, Google’s revolutionary new system for deep learning. If you have some background with basic linear algebra and calculus, this practical book shows you how to build—and when to use—deep learning architectures. You’ll learn how to design systems capable of detecting objects in images, understanding human speech, analyzing video, and predicting the properties of potential medicines. TensorFlow for Deep Learning teaches concepts through practical examples and builds understanding of deep learning foundations from the ground up.</meta>
+    <dc:creator>Bharath Ramsundar, Reza Bosagh Zadeh</dc:creator>
+    <meta property="dcterms:creator">Bharath Ramsundar, Reza Bosagh Zadeh</meta>
+    <meta name="cover" content="cover-image" />
+    <meta property="ibooks:specified-fonts">true</meta>
+    <meta xmlns="" name="BNContentKind" content="" />
+  </metadata>
+  <manifest>
+    <item id="toc.ncx" href="toc.ncx" media-type="application/x-dtbncx+xml" />
+    <item id="epub-css" href="epub.css" media-type="text/css" />
+    <item id="epub.embedded.asset.1" href="DejaVuSans-Bold.otf" media-type="application/vnd.ms-opentype" />
+    <item id="epub.embedded.asset.2" href="DejaVuSerif.otf" media-type="application/vnd.ms-opentype" />
+    <item id="epub.embedded.asset.3" href="UbuntuMono-Bold.otf" media-type="application/vnd.ms-opentype" />
+    <item id="epub.embedded.asset.4" href="UbuntuMono-BoldItalic.otf" media-type="application/vnd.ms-opentype" />
+    <item id="epub.embedded.asset.5" href="UbuntuMono-Italic.otf" media-type="application/vnd.ms-opentype" />
+    <item id="epub.embedded.asset.6" href="UbuntuMono-Regular.otf" media-type="application/vnd.ms-opentype" />
+    <item id="epub.embedded.asset.7" href="css_assets/titlepage_footer_ebook.png" media-type="image/png" />
+    <item id="cover" href="cover.html" media-type="application/xhtml+xml" />
+    <item id="cover-image" properties="cover-image" href="assets/cover.png" media-type="image/png" />
+    <item id="img-idm139806619209824" href="assets/tfdl_0101.png" media-type="image/png" />
+    <item id="img-idm139806619499760" href="assets/tfdl_0102.png" media-type="image/png" />
+    <item id="img-idm139806619574448" href="assets/tfdl_0103.png" media-type="image/png" />
+    <item id="img-idm139806619538208" href="assets/tfdl_0104.png" media-type="image/png" />
+    <item id="img-idm139806619488288" href="assets/tfdl_0105.png" media-type="image/png" />
+    <item id="img-idm139806619542880" href="assets/tfdl_0106.png" media-type="image/png" />
+    <item id="img-idm139806619576208" href="assets/tfdl_0107.png" media-type="image/png" />
+    <item id="img-idm139806619569952" href="assets/tfdl_0108.png" media-type="image/png" />
+    <item id="img-idm139806619563312" href="assets/tfdl_0109.png" media-type="image/png" />
+    <item id="img-idm139806619617008" href="assets/tfdl_0110.png" media-type="image/png" />
+    <item id="img-idm139806619556144" href="assets/tfdl_0111.png" media-type="image/png" />
+    <item id="img-idm139806619551920" href="assets/tfdl_0112.png" media-type="image/png" />
+    <item id="img-idm139806619609248" href="assets/tfdl_0113.png" media-type="image/png" />
+    <item id="img-idm139806619824400" href="assets/tfdl_0114.png" media-type="image/png" />
+    <item id="img-idm139806619162800" href="assets/tfdl_0115.png" media-type="image/png" />
+    <item id="img-idm139806619839120" href="assets/tfdl_0201.png" media-type="image/png" />
+    <item id="img-idm139806619832080" href="assets/tfdl_0202.png" media-type="image/png" />
+    <item id="img-idm139806619670112" href="assets/tfdl_0203.png" media-type="image/png" />
+    <item id="img-idm139806623008000" href="assets/tfdl_0204.png" media-type="image/png" />
+    <item id="img-idm139806622950304" href="assets/tfdl_0205.png" media-type="image/png" />
+    <item id="img-idm139806616307792" href="assets/tfdl_0301.png" media-type="image/png" />
+    <item id="img-idm139806616303616" href="assets/tfdl_0302.png" media-type="image/png" />
+    <item id="img-idm139806616094128" href="assets/tfdl_0303.png" media-type="image/png" />
+    <item id="img-idm139806615904176" href="assets/tfdl_0304.png" media-type="image/png" />
+    <item id="img-idm139806615754560" href="assets/tfdl_0305.png" media-type="image/png" />
+    <item id="img-idm139806615609312" href="assets/tfdl_0306.png" media-type="image/png" />
+    <item id="img-idm139806615447120" href="assets/tfdl_0307.png" media-type="image/png" />
+    <item id="img-idm139806614191376" href="assets/tfdl_0308.png" media-type="image/png" />
+    <item id="img-idm139806614470848" href="assets/tfdl_0309.png" media-type="image/png" />
+    <item id="img-idm139806614459136" href="assets/tfdl_0310.png" media-type="image/png" />
+    <item id="img-idm139806614455664" href="assets/tfdl_0311.png" media-type="image/png" />
+    <item id="img-idm139806614412096" href="assets/tfdl_0312.png" media-type="image/png" />
+    <item id="img-idm139806614410064" href="assets/tfdl_0313.png" media-type="image/png" />
+    <item id="img-idm139806614393808" href="assets/tfdl_0314.png" media-type="image/png" />
+    <item id="img-idm139806613940464" href="assets/tfdl_0315.png" media-type="image/png" />
+    <item id="img-idm139806613937072" href="assets/tfdl_0316.png" media-type="image/png" />
+    <item id="img-idm139806613933664" href="assets/tfdl_0317.png" media-type="image/png" />
+    <item id="img-idm139806613921072" href="assets/tfdl_0318.png" media-type="image/png" />
+    <item id="img-idm139806613899280" href="assets/tfdl_0401.png" media-type="image/png" />
+    <item id="img-idm139806613838864" href="assets/tfdl_0402.png" media-type="image/png" />
+    <item id="img-idm139806613817792" href="assets/tfdl_0403.png" media-type="image/png" />
+    <item id="img-idm139806613809728" href="assets/tfdl_0404.png" media-type="image/png" />
+    <item id="img-idm139806613645808" href="assets/tfdl_0405.png" media-type="image/png" />
+    <item id="img-idm139806613640240" href="assets/tfdl_0406.png" media-type="image/png" />
+    <item id="img-idm139806613572992" href="assets/tfdl_0407.png" media-type="image/png" />
+    <item id="img-idm139806613553104" href="assets/tfdl_0408.png" media-type="image/png" />
+    <item id="img-idm139806613537344" href="assets/tfdl_0409.png" media-type="image/png" />
+    <item id="img-idm139806612457232" href="assets/tfdl_0410.png" media-type="image/png" />
+    <item id="img-idm139806612455264" href="assets/tfdl_0411.png" media-type="image/png" />
+    <item id="img-idm139806612451856" href="assets/tfdl_0412.png" media-type="image/png" />
+    <item id="img-idm139806612448464" href="assets/tfdl_0413.png" media-type="image/png" />
+    <item id="img-idm139806612266016" href="assets/tfdl_0501.png" media-type="image/png" />
+    <item id="img-idm139806612244272" href="assets/tfdl_0502.png" media-type="image/png" />
+    <item id="img-idm139806612152304" href="assets/tfdl_0503.png" media-type="image/png" />
+    <item id="img-idm139806611700736" href="assets/tfdl_0504.png" media-type="image/png" />
+    <item id="img-idm139806611519952" href="assets/tfdl_0601.png" media-type="image/png" />
+    <item id="img-idm139806611515008" href="assets/tfdl_0602.png" media-type="image/png" />
+    <item id="img-idm139806611510288" href="assets/tfdl_0603.png" media-type="image/png" />
+    <item id="img-idm139806611503984" href="assets/tfdl_0604.png" media-type="image/png" />
+    <item id="img-idm139806611668672" href="assets/tfdl_0605.png" media-type="image/png" />
+    <item id="img-idm139806611650448" href="assets/tfdl_0606.png" media-type="image/png" />
+    <item id="img-idm139806611643744" href="assets/tfdl_0607.png" media-type="image/png" />
+    <item id="img-idm139806611631616" href="assets/tfdl_0608.png" media-type="image/png" />
+    <item id="img-idm139806611620336" href="assets/tfdl_0609.png" media-type="image/png" />
+    <item id="img-idm139806611612944" href="assets/tfdl_0610.png" media-type="image/png" />
+    <item id="img-idm139806611605168" href="assets/tfdl_0611.png" media-type="image/png" />
+    <item id="img-idm139806611599808" href="assets/tfdl_0612.png" media-type="image/png" />
+    <item id="img-idm139806611587024" href="assets/tfdl_0613.png" media-type="image/png" />
+    <item id="img-idm139806611581776" href="assets/tfdl_0614.png" media-type="image/png" />
+    <item id="img-idm139806611381424" href="assets/tfdl_0615.png" media-type="image/png" />
+    <item id="img-idm139806611379168" href="assets/tfdl_0616.png" media-type="image/png" />
+    <item id="img-idm139806611366048" href="assets/tfdl_0617.png" media-type="image/png" />
+    <item id="img-idm139806611207600" href="assets/tfdl_0618.png" media-type="image/png" />
+    <item id="img-idm139806610739344" href="assets/tfdl_0619.png" media-type="image/png" />
+    <item id="img-idm139806609319392" href="assets/tfdl_0701.png" media-type="image/png" />
+    <item id="img-idm139806609193024" href="assets/tfdl_0702.png" media-type="image/png" />
+    <item id="img-idm139806609186112" href="assets/tfdl_0703.png" media-type="image/png" />
+    <item id="img-idm139806609173504" href="assets/tfdl_0704.png" media-type="image/png" />
+    <item id="img-idm139806609157632" href="assets/tfdl_0705.png" media-type="image/png" />
+    <item id="img-idm139806609137168" href="assets/tfdl_0706.png" media-type="image/png" />
+    <item id="img-idm139806609132352" href="assets/tfdl_0707.png" media-type="image/png" />
+    <item id="img-idm139806609127728" href="assets/tfdl_0708.png" media-type="image/png" />
+    <item id="img-idm139806609118336" href="assets/tfdl_0709.png" media-type="image/png" />
+    <item id="img-idm139806609089296" href="assets/tfdl_0710.png" media-type="image/png" />
+    <item id="img-idm139806607753632" href="assets/tfdl_0801.png" media-type="image/png" />
+    <item id="img-idm139806607749504" href="assets/tfdl_0802.png" media-type="image/png" />
+    <item id="img-idm139806607737664" href="assets/tfdl_0803.png" media-type="image/png" />
+    <item id="img-idm139806607870544" href="assets/tfdl_0804.png" media-type="image/png" />
+    <item id="img-idm139806607681648" href="assets/tfdl_0805.png" media-type="image/png" />
+    <item id="img-idm139806607673536" href="assets/tfdl_0806.png" media-type="image/png" />
+    <item id="img-idm139806602214128" href="assets/tfdl_0901.png" media-type="image/png" />
+    <item id="img-idm139806602036944" href="assets/tfdl_0902.png" media-type="image/png" />
+    <item id="img-idm139806602020256" href="assets/tfdl_0903.png" media-type="image/png" />
+    <item id="img-idm139806602004656" href="assets/tfdl_0904.png" media-type="image/png" />
+    <item id="img-idm139806601992448" href="assets/tfdl_0905.png" media-type="image/png" />
+    <item id="img-idm139806601981040" href="assets/tfdl_0906.png" media-type="image/png" />
+    <item id="img-idm139806601962048" href="assets/tfdl_0907.png" media-type="image/png" />
+    <item id="img-idm139806601958512" href="assets/tfdl_0908.png" media-type="image/png" />
+    <item id="img-idm139806599961968" href="assets/tfdl_1001.png" media-type="image/png" />
+    <item id="img-idm139806599951152" href="assets/tfdl_1002.png" media-type="image/png" />
+    <item id="titlepage-idm139806628738656" href="titlepage01.html" media-type="application/xhtml+xml" />
+    <item id="copyright-page-idm139806627132784" href="copyright-page01.html" media-type="application/xhtml+xml" />
+    <item id="toc-idm139806622834320" href="toc01.html" media-type="application/xhtml+xml" properties="nav" />
+    <item id="preface-idm139806619547216" href="preface01.html" media-type="application/xhtml+xml" />
+    <item id="chapter-idm139806619546800" href="ch01.html" media-type="application/xhtml+xml" />
+    <item id="chapter-idm139806619154608" href="ch02.html" media-type="application/xhtml+xml" properties="mathml" />
+    <item id="chapter-idm139806616326224" href="ch03.html" media-type="application/xhtml+xml" properties="mathml" />
+    <item id="chapter-idm139806613914704" href="ch04.html" media-type="application/xhtml+xml" properties="mathml" />
+    <item id="chapter-idm139806613914272" href="ch05.html" media-type="application/xhtml+xml" properties="mathml" />
+    <item id="chapter-idm139806612441712" href="ch06.html" media-type="application/xhtml+xml" />
+    <item id="chapter-idm139806611541520" href="ch07.html" media-type="application/xhtml+xml" properties="mathml" />
+    <item id="chapter-idm139806609334080" href="ch08.html" media-type="application/xhtml+xml" properties="mathml" />
+    <item id="chapter-idm139806602098560" href="ch09.html" media-type="application/xhtml+xml" />
+    <item id="chapter-idm139806599984992" href="ch10.html" media-type="application/xhtml+xml" />
+    <item id="index-idm139806599927152" href="ix01.html" media-type="application/xhtml+xml" />
+    <item id="colophon-idm139806599926560" href="colophon01.html" media-type="application/xhtml+xml" />
+    <item id="colophon-idm139806599921648" href="colophon02.html" media-type="application/xhtml+xml" />
+  </manifest>
+  <spine toc="toc.ncx">
+    <itemref idref="cover" />
+    <itemref idref="titlepage-idm139806628738656" />
+    <itemref idref="copyright-page-idm139806627132784" />
+    <itemref idref="preface-idm139806619547216" />
+    <itemref idref="chapter-idm139806619546800" />
+    <itemref idref="chapter-idm139806619154608" />
+    <itemref idref="chapter-idm139806616326224" />
+    <itemref idref="chapter-idm139806613914704" />
+    <itemref idref="chapter-idm139806613914272" />
+    <itemref idref="chapter-idm139806612441712" />
+    <itemref idref="chapter-idm139806611541520" />
+    <itemref idref="chapter-idm139806609334080" />
+    <itemref idref="chapter-idm139806602098560" />
+    <itemref idref="chapter-idm139806599984992" />
+    <itemref idref="index-idm139806599927152" />
+    <itemref idref="colophon-idm139806599926560" />
+    <itemref idref="colophon-idm139806599921648" />
+  </spine>
+  <guide>
+    <reference href="cover.html" type="cover" title="Cover" />
+    <reference href="toc01.html" type="toc" title="Table of Contents" />
+    <reference href="titlepage01.html" type="text" />
+  </guide>
+</package>
+

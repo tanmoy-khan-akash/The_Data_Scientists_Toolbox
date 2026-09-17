@@ -1,0 +1,992 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html><html xmlns:epub="http://www.idpf.org/2007/ops" xmlns="http://www.w3.org/1999/xhtml"><head><title>Fully Connected Deep Networks</title><link rel="stylesheet" type="text/css" href="epub.css"/></head><body data-type="book"><section data-type="chapter" epub:type="chapter" data-pdf-bookmark="Chapter 4. Fully Connected Deep Networks"><div class="chapter" id="fully_connected_networks">
+<h1><span class="label">Chapter 4. </span>Fully Connected Deep Networks</h1>
+
+
+<p>This<a data-type="indexterm" data-primary="fully connected deep networks" data-secondary="advantages of" id="idm139806613912800"/> chapter will introduce you to fully connected deep networks. Fully<a data-type="indexterm" data-primary="structure agnostic networks" id="idm139806613911600"/> connected networks are the workhorses of deep learning, used for thousands of applications. The major advantage of fully connected networks is that they are “structure agnostic.” That is, no special assumptions need to be made about the input (for example, that the input consists of images or videos). We will make use of this generality to use fully connected deep networks to address a problem in chemical modeling later in this chapter.</p>
+
+<p>We<a data-type="indexterm" data-primary="universal approximators" id="idm139806613909936"/> delve briefly into the mathematical theory underpinning fully connected networks. In particular, we explore the concept that fully connected architectures are “universal approximators” capable of learning any function. This concept provides an explanation of the generality of fully connected architectures, but comes with many caveats that we discuss at some depth.</p>
+
+<p>While being structure agnostic makes fully connected networks very broadly applicable, such networks do tend to have weaker performance than special-purpose networks tuned to the structure of a problem space. We will discuss some of the limitations of fully connected architectures later in this chapter.</p>
+
+
+
+
+
+
+<section data-type="sect1" data-pdf-bookmark="What Is a Fully Connected Deep Network?"><div class="sect1" id="idm139806613907856">
+<h1>What Is a Fully Connected Deep Network?</h1>
+
+<p>A<a data-type="indexterm" data-primary="fully connected deep networks" data-secondary="components of" id="idm139806613906160"/> fully connected neural network consists of a series of fully connected layers. A fully connected layer is a function from <math xmlns="http://www.w3.org/1998/Math/MathML" alttext="double-struck upper R Superscript m">
+  <msup><mi>ℝ</mi> <mi>m</mi> </msup>
+</math> to <math xmlns="http://www.w3.org/1998/Math/MathML" alttext="double-struck upper R Superscript n">
+  <msup><mi>ℝ</mi> <mi>n</mi> </msup>
+</math>. Each output dimension depends on each input dimension. Pictorially, a fully connected layer is represented as follows in <a data-type="xref" href="#ch4-fclayer">Figure 4-1</a>.</p>
+
+<figure><div id="ch4-fclayer" class="figure">
+<img src="assets/tfdl_0401.png" alt="FCLayer.png"/>
+<h6><span class="label">Figure 4-1. </span>A fully connected layer in a deep network.</h6>
+</div></figure>
+
+<p>Let’s<a data-type="indexterm" data-primary="fully connected deep networks" data-secondary="mathematical form of" id="idm139806613897296"/> dig a little deeper into what the mathematical form of a fully connected network is. Let <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mrow>
+    <mi>x</mi>
+    <mo>∈</mo>
+    <msup><mi>ℝ</mi> <mi>m</mi> </msup>
+  </mrow>
+</math> represent the input to a fully connected layer. Let <math xmlns="http://www.w3.org/1998/Math/MathML" alttext="y Subscript i Baseline element-of double-struck upper R">
+  <mrow>
+    <msub><mi>y</mi> <mi>i</mi> </msub>
+    <mo>∈</mo>
+    <mi>ℝ</mi>
+  </mrow>
+</math> be the <math xmlns="http://www.w3.org/1998/Math/MathML" alttext="i">
+  <mi>i</mi>
+</math>-th output from the fully connected layer. Then <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mrow>
+    <msub><mi>y</mi> <mi>i</mi> </msub>
+    <mo>∈</mo>
+    <mi>ℝ</mi>
+  </mrow>
+</math> is computed as follows:</p>
+<div data-type="equation">
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
+  <mrow>
+    <msub><mi>y</mi> <mi>i</mi> </msub>
+    <mo>=</mo>
+    <mi>σ</mi>
+    <mrow>
+      <mo>(</mo>
+      <msub><mi>w</mi> <mn>1</mn> </msub>
+      <msub><mi>x</mi> <mn>1</mn> </msub>
+      <mo>+</mo>
+      <mo>⋯</mo>
+      <mo>+</mo>
+      <msub><mi>w</mi> <mi>m</mi> </msub>
+      <msub><mi>x</mi> <mi>m</mi> </msub>
+      <mo>)</mo>
+    </mrow>
+  </mrow>
+</math>
+</div>
+
+<p>Here, <math xmlns="http://www.w3.org/1998/Math/MathML" alttext="sigma">
+  <mi>σ</mi>
+</math> is a nonlinear function (for now, think of <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>σ</mi>
+</math> as the sigmoid function introduced in the previous chapter), and the <math xmlns="http://www.w3.org/1998/Math/MathML" alttext="w Subscript i">
+  <msub><mi>w</mi> <mi>i</mi> </msub>
+</math> are learnable parameters in the network. The full output <em>y</em> is then</p>
+<div data-type="equation">
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
+<mrow>
+    <mi>y</mi>
+    <mo>=</mo>
+    <mfenced open="(" close=")">
+      <mtable>
+        <mtr>
+          <mtd>
+            <mrow>
+              <mi>σ</mi>
+              <mo>(</mo>
+              <msub><mi>w</mi> <mrow><mn>1</mn><mo>,</mo><mn>1</mn></mrow> </msub>
+              <msub><mi>x</mi> <mn>1</mn> </msub>
+              <mo>+</mo>
+              <mo>⋯</mo>
+              <mo>+</mo>
+              <msub><mi>w</mi> <mrow><mn>1</mn><mo>,</mo><mi>m</mi></mrow> </msub>
+              <msub><mi>x</mi> <mi>m</mi> </msub>
+              <mo>)</mo>
+            </mrow>
+          </mtd>
+        </mtr>
+        <mtr>
+          <mtd>
+            <mo>⋮</mo>
+          </mtd>
+        </mtr>
+        <mtr>
+          <mtd>
+            <mrow>
+              <mi>σ</mi>
+              <mo>(</mo>
+              <msub><mi>w</mi> <mrow><mi>n</mi><mo>,</mo><mn>1</mn></mrow> </msub>
+              <msub><mi>x</mi> <mn>1</mn> </msub>
+              <mo>+</mo>
+              <mo>⋯</mo>
+              <mo>+</mo>
+              <msub><mi>w</mi> <mrow><mi>n</mi><mo>,</mo><mi>m</mi></mrow> </msub>
+              <msub><mi>x</mi> <mi>m</mi> </msub>
+              <mo>)</mo>
+            </mrow>
+          </mtd>
+        </mtr>
+      </mtable>
+    </mfenced>
+  </mrow>
+</math>
+</div>
+
+<p>Note<a data-type="indexterm" data-primary="deep networks" data-secondary="defined" id="idm139806613841664"/> that it’s directly possible to stack fully connected networks. A network with multiple fully connected networks is often called a “deep” network as depicted in <a data-type="xref" href="#ch4-multifcnet">Figure 4-2</a>.</p>
+
+<figure><div id="ch4-multifcnet" class="figure">
+<img src="assets/tfdl_0402.png" alt="multilayer_fcnet.png"/>
+<h6><span class="label">Figure 4-2. </span>A multilayer deep fully connected network.</h6>
+</div></figure>
+
+<p>As a quick implementation note, note that the equation for a single neuron looks very similar to a dot-product of two vectors (recall the discussion of tensor basics). For a layer of neurons, it is often convenient for efficiency purposes to compute <em>y</em> as a matrix multiply:</p>
+<div data-type="equation">
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
+  <mrow>
+    <mi>y</mi>
+    <mo>=</mo>
+    <mi>σ</mi>
+    <mo>(</mo>
+    <mi>w</mi>
+    <mi>x</mi>
+    <mo>)</mo>
+  </mrow>
+</math>
+</div>
+
+<p>where sigma is a matrix in <math xmlns="http://www.w3.org/1998/Math/MathML" alttext="double-struck upper R Superscript n times m">
+  <msup><mi>ℝ</mi> <mrow><mi>n</mi><mo>×</mo><mi>m</mi></mrow> </msup>
+</math> and the nonlinearity <math xmlns="http://www.w3.org/1998/Math/MathML" alttext="sigma">
+  <mi>σ</mi>
+</math> is applied componentwise.</p>
+</div></section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<section data-type="sect1" data-pdf-bookmark="“Neurons” in Fully Connected Networks"><div class="sect1" id="idm139806613907232">
+<h1>“Neurons” in Fully Connected Networks</h1>
+
+<p>The<a data-type="indexterm" data-primary="fully connected deep networks" data-secondary="neurons (nodes) in" id="FCDNneu04"/><a data-type="indexterm" data-primary="neural networks" data-seealso="fully connected deep networks" id="idm139806613823776"/> nodes in fully connected networks are commonly referred to as “neurons.” Consequently, elsewhere in the literature, fully connected networks will commonly be referred to as “neural networks.” This nomenclature is largely a historical accident.</p>
+
+<p>In<a data-type="indexterm" data-primary="McCulloch, Warren S." id="idm139806613822032"/><a data-type="indexterm" data-primary="Pitts, Walter" id="idm139806613821296"/> the 1940s, Warren S. McCulloch and Walter Pitts published a first mathematical model of the brain that argued that neurons were capable of computing arbitrary functions on Boolean quantities. Successors to this work slightly refined this logical model by making mathematical “neurons” continuous functions that varied between zero and one. If the inputs of these functions grew large enough, the neuron “fired” (took on the value one), else was quiescent. With the addition of adjustable weights, this description matches the previous equations.</p>
+
+<p>Is this how a real neuron behaves? Of course not! A real neuron (<a data-type="xref" href="#ch4-neuron">Figure 4-3</a>) is an exceedingly complex engine, with over 100 trillion atoms, and tens of thousands of different signaling proteins capable of responding to varying signals. A microprocessor is a better analogy for a neuron than a one-line equation.</p>
+
+<figure><div id="ch4-neuron" class="figure">
+<img src="assets/tfdl_0403.png" alt="neuron.png"/>
+<h6><span class="label">Figure 4-3. </span>A more biologically accurate representation of a neuron.</h6>
+</div></figure>
+
+<p>In many ways, this disconnect between biological neurons and artificial neurons is quite unfortunate. Uninitiated experts read breathless press releases claiming artificial neural networks with billions of “neurons” have been created (while the brain has only 100 billion biological neurons) and reasonably come away believing scientists are close to creating human-level intelligences. Needless to say, state of the art in deep learning is decades (or centuries) away from such an achievement.</p>
+
+<p>As<a data-type="indexterm" data-primary="artificial intelligence" data-secondary="overhyped claims regarding" id="idm139806613815168"/><a data-type="indexterm" data-primary="deep learning" data-secondary="overhyped claims regarding" id="idm139806613814144"/> you read further about deep learning, you may come across overhyped claims about artificial intelligence. Don’t be afraid to call out these statements. Deep learning<a data-type="indexterm" data-primary="deep learning" data-secondary="defined" id="idm139806613812864"/> in its current form is a set of techniques for solving calculus problems on fast hardware. It is not a precursor to <em>Terminator</em> (<a data-type="xref" href="#ch4-terminator">Figure 4-4</a>).</p>
+
+<figure><div id="ch4-terminator" class="figure">
+<img src="assets/tfdl_0404.png" alt="terminator.png"/>
+<h6><span class="label">Figure 4-4. </span>Unfortunately (or perhaps fortunately), this book won’t teach you to build a Terminator!</h6>
+</div></figure>
+<div data-type="note" epub:type="note"><h1>AI Winters</h1>
+<p>Artificial intelligence<a data-type="indexterm" data-primary="artificial intelligence" data-secondary="cyclical development of" id="idm139806613807040"/> has gone through multiple rounds of boom-and-bust development. This cyclical development is characteristic of the field. Each new advance in learning spawns a wave of optimism in which prophets claim that human-level (or superhuman) intelligences are incipient. After a few years, no such intelligences manifest, and disappointed funders pull out. The resulting period is called an AI winter.</p>
+
+<p>There<a data-type="indexterm" data-primary="AI winters" id="idm139806613654544"/> have been multiple AI winters so far. As a thought exercise, we encourage you to consider when the next AI winter will happen. The current wave of deep learning progress has solved many more practical problems than any previous wave of advances. Is it possible AI has finally taken off and exited the boom-and-bust cycle or do you think we’re in for the “Great Depression” of AI soon?<a data-type="indexterm" data-primary="" data-startref="FCDNneu04" id="idm139806613653312"/></p>
+</div>
+
+
+
+
+
+
+
+
+<section data-type="sect2" data-pdf-bookmark="Learning Fully Connected Networks with Backpropagation"><div class="sect2" id="idm139806613652112">
+<h2>Learning Fully Connected Networks with Backpropagation</h2>
+
+<p>The<a data-type="indexterm" data-primary="fully connected deep networks" data-secondary="learning with backpropagation" id="idm139806613650608"/><a data-type="indexterm" data-primary="backpropagation" id="idm139806613649568"/><a data-type="indexterm" data-primary="perceptrons" id="idm139806613648896"/><a data-type="indexterm" data-primary="Rosenblatt, Frank" id="idm139806613648224"/> first version of a fully connected neural network was the Perceptron, (<a data-type="xref" href="#ch4-perceptron">Figure 4-5</a>), created by Frank Rosenblatt in the 1950s. These perceptrons are identical to the “neurons” we introduced in the previous equations.</p>
+
+<figure><div id="ch4-perceptron" class="figure">
+<img src="assets/tfdl_0405.png" alt="perceptron.png"/>
+<h6><span class="label">Figure 4-5. </span>A diagrammatic representation of the perceptron.</h6>
+</div></figure>
+
+<p>Perceptrons were trained by a custom “perceptron” rule. While they were moderately useful solving simple problems, perceptrons were fundamentally limited. The<a data-type="indexterm" data-primary="Minsky, Marvin" id="idm139806613643872"/><a data-type="indexterm" data-primary="Papert, Seymour" id="idm139806613643168"/> book <em>Perceptrons</em> by Marvin Minsky and Seymour Papert from the end of the 1960s proved that simple perceptrons were incapable of learning the XOR function. <a data-type="xref" href="#ch4-perceptron2">Figure 4-6</a> illustrates the proof of this statement.</p>
+
+<figure><div id="ch4-perceptron2" class="figure">
+<img src="assets/tfdl_0406.png" alt="xor2.gif"/>
+<h6><span class="label">Figure 4-6. </span>The perceptron’s linear rule can’t learn the perceptron.</h6>
+</div></figure>
+
+<p>This<a data-type="indexterm" data-primary="multilayer perceptron networks" data-seealso="fully connected deep networks" id="idm139806613638464"/> problem was overcome with the invention of the multilayer perceptron (another name for a deep fully connected network). This invention was a formidable achievement, since earlier simple learning algorithms couldn’t learn deep networks effectively. The “credit assignment” problem stumped them; how does an algorithm decide which neuron learns what?</p>
+
+<p>The<a data-type="indexterm" data-primary="automatic differentiation" data-seealso="backpropagation" id="idm139806613636544"/> full solution to this problem requires backpropagation. Backpropagation is a generalized rule for learning the weights of neural networks. Unfortunately, complicated explanations of backpropagation are epidemic in the literature. This situation is unfortunate since backpropagation is simply another word for automatic differentiation.</p>
+
+<p>Let’s suppose that <math xmlns="http://www.w3.org/1998/Math/MathML" alttext="f left-parenthesis theta comma x right-parenthesis">
+  <mrow>
+    <mi>f</mi>
+    <mo>(</mo>
+    <mi>θ</mi>
+    <mo>,</mo>
+    <mi>x</mi>
+    <mo>)</mo>
+  </mrow>
+</math> is a function that represents a deep fully connected network. Here <math xmlns="http://www.w3.org/1998/Math/MathML" alttext="x">
+  <mi>x</mi>
+</math> is the inputs to the fully connected network and <math xmlns="http://www.w3.org/1998/Math/MathML" alttext="theta">
+  <mi>θ</mi>
+</math> is the learnable weights. Then the backpropagation algorithm simply computes <math xmlns="http://www.w3.org/1998/Math/MathML" alttext="StartFraction normal partial-differential f Over normal partial-differential theta EndFraction">
+  <mfrac><mrow><mi>∂</mi><mi>f</mi></mrow> <mrow><mi>∂</mi><mi>θ</mi></mrow></mfrac>
+</math>. The practical complexities arise in implementing backpropagation for all possible functions <em>f</em> that arise in practice. Luckily for us, TensorFlow takes care of this already!</p>
+</div></section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<section data-type="sect2" data-pdf-bookmark="Universal Convergence Theorem"><div class="sect2" id="idm139806613624864">
+<h2>Universal Convergence Theorem</h2>
+
+<p>The<a data-type="indexterm" data-primary="fully connected deep networks" data-secondary="universal convergence theorem" id="idm139806613623408"/><a data-type="indexterm" data-primary="universal convergence theorem" id="idm139806613622368"/> preceding discussion has touched on the ideas that deep fully connected networks are powerful approximations. McCulloch and Pitts showed that logical networks can code (almost) any Boolean function. Rosenblatt’s Perceptron was the continuous analog of McCulloch and Pitt’s logical functions, but was shown to be fundamentally limited by Minsky and Papert. Multilayer perceptrons looked to solve the limitations of simple perceptrons and empirically seemed capable of learning complex functions. However, it wasn’t theoretically clear whether this empirical ability had undiscovered limitations. In<a data-type="indexterm" data-primary="Cybenko, George" id="idm139806613620928"/> 1989, George Cybenko demonstrated that <span class="keep-together">multilayer</span> perceptrons were capable of representing arbitrary functions. This demonstration provided a considerable boost to the claims of generality for fully connected networks as a learning architecture, partially explaining their continued <span class="keep-together">popularity</span>.</p>
+
+<p>However, if both backpropagation and fully connected network theory were understood in the late 1980s, why didn’t “deep” learning become more popular earlier? A large part of this failure was due to<a data-type="indexterm" data-primary="computational limitations" id="idm139806613617792"/> computational limitations; learning fully connected networks took an exorbitant amount of computing power. In addition, deep networks were very difficult to train due to lack of understanding about good hyperparameters. As a result, alternative learning algorithms such as SVMs that had lower computational requirements became more popular. The recent surge in popularity in deep learning is partly due to the increased availability of better computing hardware that enables faster computing, and partly due to increased understanding of good training regimens that enable stable learning.</p>
+<div data-type="note" epub:type="note"><h1>Is Universal Approximation That Surprising?</h1>
+<p>Universal approximation properties<a data-type="indexterm" data-primary="universal approximators" id="idm139806613614816"/> are more common in mathematics than one might expect. For example, the<a data-type="indexterm" data-primary="Stone-Weierstrass theorem" id="idm139806613613984"/> Stone-Weierstrass theorem proves that any continuous function on a closed interval can be a suitable polynomial function. Loosening our criteria further, Taylor series<a data-type="indexterm" data-primary="Taylor series" id="idm139806613612896"/> and Fourier series<a data-type="indexterm" data-primary="Fourier series" id="idm139806613612096"/> themselves offer some <span class="keep-together">universal</span> approximation capabilities (within their domains of convergence). The fact that universal convergence is fairly common in mathematics provides partial justification for the empirical observation that there are many slight variants of fully connected networks that seem to share a universal approximation property.</p>
+</div>
+<div data-type="warning" epub:type="warning"><h1>Universal Approximation Doesn’t Mean Universal Learning!</h1>
+<p>A<a data-type="indexterm" data-primary="universal learning" id="idm139806613608896"/><a data-type="indexterm" data-primary="backpropagation" id="idm139806613608160"/> critical subtlety exists in the universal approximation theorem. The fact that a fully connected network can represent any function doesn’t mean that backpropagation can learn any function! One of the major limitations of backpropagation is that there is no guarantee the fully connected network “converges”; that is, finds the best available solution of a learning problem. This critical theoretical gap has left generations of computer scientists queasy with neural networks. Even today, many academics will prefer to work with alternative algorithms that have stronger theoretical guarantees.</p>
+
+<p>Empirical research has yielded many practical tricks that allow backpropagation to find good solutions for problems. We will go into many of these tricks in significant depth in the remainder of this chapter. For the practicing data scientist, the universal approximation theorem isn’t something to take too seriously. It’s reassuring, but the art of deep learning lies in mastering the practical hacks that make learning work.</p>
+</div>
+</div></section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<section data-type="sect2" data-pdf-bookmark="Why Deep Networks?"><div class="sect2" id="idm139806613605648">
+<h2>Why Deep Networks?</h2>
+
+<p>A<a data-type="indexterm" data-primary="fully connected deep networks" data-secondary="usefulness of deep networks" id="idm139806613604320"/><a data-type="indexterm" data-primary="deep networks" data-secondary="benefits of" id="idm139806613603376"/> subtlety in the universal approximation theorem is that it in fact holds true for fully connected networks with only one fully connected layer. What then is the use of “deep” learning with multiple fully connected layers? It turns out that this question is still quite controversial in academic and practical circles.</p>
+
+<p>In practice, it seems that deeper networks can sometimes learn richer models on large datasets. (This is only a rule of thumb, however; every practitioner has a bevy of examples where deep fully connected networks don’t do well.) This observation has led researchers to hypothesize that deeper networks can represent complex functions “more efficiently.” That is, a deeper network may be able to learn more complex functions than shallower networks with the same number of neurons. For example, the ResNet architecture mentioned briefly in the first chapter, with 130 layers, seems to outperform its shallower competitors such as AlexNet. In general, for a fixed neuron budget, stacking deeper leads to better results.</p>
+
+<p>A number of erroneous “proofs” for this “fact” have been given in the literature, but all of them have holes. It seems the question of depth versus width touches on profound concepts in complexity theory (which studies the minimal amount of resources required to solve given computational problems). At present day, it looks like theoretically demonstrating (or disproving) the superiority of deep networks is far outside the ability of our mathematicians.</p>
+</div></section>
+
+
+
+
+
+</div></section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<section data-type="sect1" data-pdf-bookmark="Training Fully Connected Neural Networks"><div class="sect1" id="idm139806613826144">
+<h1>Training Fully Connected Neural Networks</h1>
+
+<p>As<a data-type="indexterm" data-primary="fully connected deep networks" data-secondary="training" id="FCDNtrain04"/> we mentioned previously, the theory of fully connected networks falls short of practice. In this section, we will introduce you to a number of empirical observations about fully connected networks that aid practitioners. We strongly encourage you to use our code (introduced later in the chapter) to check our claims for yourself.</p>
+
+
+
+
+
+
+
+
+<section data-type="sect2" data-pdf-bookmark="Learnable Representations"><div class="sect2" id="idm139806613596448">
+<h2>Learnable Representations</h2>
+
+<p>One<a data-type="indexterm" data-primary="learnable representations" id="idm139806613595008"/><a data-type="indexterm" data-primary="transformations" id="idm139806613594208"/> way of thinking about fully connected networks is that each fully connected layer effects a transformation of the feature space in which the problem resides. The idea of transforming the representation of a problem to render it more malleable is a very old one in engineering and physics. It<a data-type="indexterm" data-primary="representation learning" id="idm139806613593104"/> follows that deep learning methods are sometimes called “representation learning.” (An interesting factoid is that one of the major conferences for deep learning is called the “International Conference on Learning Representations.”)</p>
+
+<p>Generations<a data-type="indexterm" data-primary="Fourier transforms" id="idm139806613591664"/><a data-type="indexterm" data-primary="Legendre transforms" id="idm139806613590928"/><a data-type="indexterm" data-primary="Laplace transforms" id="idm139806613590256"/> of analysts have used Fourier transforms, Legendre transforms, Laplace transforms, and so on in order to simplify complicated equations and functions to forms more suitable for handwritten analysis. One way of thinking about deep learning networks is that they effect a data-driven transform suited to the problem at hand.</p>
+
+<p>The ability to perform problem-specific transformations can be immensely powerful. Standard transformation techniques couldn’t solve problems of image or speech analysis, while deep networks are capable of solving these problems with relative ease due to the inherent flexibility of the learned representations. This flexibility comes with a price: the transformations learned by deep architectures tend to be much less general than mathematical transforms such as the Fourier transform. Nonetheless, having deep transforms in an analytic toolkit can be a powerful problem-solving tool.</p>
+
+<p>There’s a reasonable argument that deep learning is simply the first representation learning method that works. In the future, there may well be alternative representation learning methods that supplant deep learning methods.</p>
+</div></section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<section data-type="sect2" data-pdf-bookmark="Activations"><div class="sect2" id="idm139806613587344">
+<h2>Activations</h2>
+
+<p>We<a data-type="indexterm" data-primary="activations" id="idm139806613585792"/><a data-type="indexterm" data-primary="sigmoid function" id="idm139806613585088"/><a data-type="indexterm" data-primary="rectified linear activation (ReLU)" id="idm139806613584384"/><a data-type="indexterm" data-primary="vanishing gradient problem" id="idm139806613583744"/> previously introduced the nonlinear function <math xmlns="http://www.w3.org/1998/Math/MathML" alttext="sigma">
+  <mi>σ</mi>
+</math> as the sigmoidal function. While the sigmoidal is the classical nonlinearity in fully connected networks, in recent years researchers have found that other activations, notably the rectified linear activation (commonly abbreviated ReLU or relu) <math xmlns="http://www.w3.org/1998/Math/MathML" alttext="sigma left-parenthesis x right-parenthesis equals max left-parenthesis x comma 0 right-parenthesis">
+  <mrow>
+    <mi>σ</mi>
+    <mo>(</mo>
+    <mi>x</mi>
+    <mo>)</mo>
+    <mo>=</mo>
+    <mi> max </mi>
+    <mo>(</mo>
+    <mi>x</mi>
+    <mo>,</mo>
+    <mn>0</mn>
+    <mo>)</mo>
+  </mrow>
+</math> work better than the sigmoidal unit. This empirical observation may be due to the <em>vanishing gradient</em> problem in deep networks. For the sigmoidal function, the slope is zero for almost all values of its input. As a result, for deeper networks, the gradient would tend to zero. For the ReLU function, the slope is nonzero for a much greater part of input space, allowing nonzero gradients to propagate. <a data-type="xref" href="#ch4-activation">Figure 4-7</a> illustrates sigmoidal and ReLU activations side by side.</p>
+
+<figure><div id="ch4-activation" class="figure">
+<img src="assets/tfdl_0407.png" alt="activation-functions.png"/>
+<h6><span class="label">Figure 4-7. </span>Sigmoidal and ReLU activation functions.</h6>
+</div></figure>
+</div></section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<section data-type="sect2" data-pdf-bookmark="Fully Connected Networks Memorize"><div class="sect2" id="idm139806613571424">
+<h2>Fully Connected Networks Memorize</h2>
+
+<p>One of the striking aspects about fully connected networks is that they tend to memorize training data entirely given enough time. As a result, training a fully connected network to “convergence” isn’t really a meaningful metric. The network will keep training and learning as long as the user is willing to wait.</p>
+
+<p>For large enough networks, it is quite common for training loss to trend all the way to zero. This<a data-type="indexterm" data-primary="universal approximators" id="idm139806613569264"/><a data-type="indexterm" data-primary="training loss" id="idm139806613568560"/> empirical observation is one the most practical demonstrations of the universal approximation capabilities of fully connected networks. Note however, that training loss trending to zero does not mean that the network has learned a more powerful model. It’s rather likely that the model has started to memorize peculiarities of the training set that aren’t applicable to any other datapoints.</p>
+
+<p>It’s<a data-type="indexterm" data-primary="spurious correlations" id="idm139806613566960"/> worth digging into what we mean by peculiarities here. One of the interesting properties of high-dimensional statistics is that given a large enough dataset, there will be plenty of spurious correlations and patterns available for the picking. In practice, fully connected networks are entirely capable of finding and utilizing these spurious correlations. Controlling networks and preventing them from misbehaving in this fashion is critical for modeling success.</p>
+</div></section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<section data-type="sect2" data-pdf-bookmark="Regularization"><div class="sect2" id="idm139806613565360">
+<h2>Regularization</h2>
+
+<p>Regularization<a data-type="indexterm" data-primary="regularization" data-secondary="defined" id="idm139806613563888"/> is the general statistical term for a mathematical operation that limits memorization while promoting generalizable learning. There are many different types of regularization available, which we will cover in the next few sections.</p>
+<div data-type="warning" epub:type="warning"><h1>Not Your Statistician’s Regularization</h1>
+<p>Regularization<a data-type="indexterm" data-primary="regularization" data-secondary="in statistics vs. deep networks" data-secondary-sortas="statistics vs. deep networks" id="idm139806613561200"/> has a long history in the statistical literature, with entire sheaves of papers written on the topic. Unfortunately, only some of this classical analysis carries over to deep networks. The linear models used widely in statistics can behave very differently from deep networks, and many of the intuitions built in that setting can be downright wrong for deep networks.</p>
+
+<p>The first rule for working with deep networks, especially for readers with prior statistical modeling experience, is to trust empirical results over past intuition. Don’t assume that past knowledge about techniques such as LASSO has much meaning for modeling deep architectures. Rather, set up an experiment to methodically test your proposed idea. We will return at greater depth to this methodical experimentation process in the next chapter.</p>
+</div>
+
+
+
+
+
+
+
+
+
+
+<section data-type="sect3" data-pdf-bookmark="Dropout"><div class="sect3" id="idm139806613558224">
+<h3>Dropout</h3>
+
+<p>Dropout<a data-type="indexterm" data-primary="dropout" id="idm139806613556720"/><a data-type="indexterm" data-primary="regularization" data-secondary="dropout" id="idm139806613555984"/> is a form of regularization that randomly drops some proportion of the nodes that feed into a fully connected layer (<a data-type="xref" href="#ch4-dropout">Figure 4-8</a>). Here, dropping a node means that its contribution to the corresponding activation function is set to 0. Since there is no activation contribution, the gradients for dropped nodes drop to zero as well.</p>
+
+<figure><div id="ch4-dropout" class="figure">
+<img src="assets/tfdl_0408.png" alt="dropout.png"/>
+<h6><span class="label">Figure 4-8. </span>Dropout randomly drops neurons from a network while training. Empirically, this technique often provides powerful regularization for network training.</h6>
+</div></figure>
+
+<p>The nodes to be dropped are chosen at random during each step of gradient descent. The<a data-type="indexterm" data-primary="co-adaptation" id="idm139806613551248"/> underlying design principle is that the network will be forced to avoid “co-adaptation.” Briefly, we will explain what co-adaptation is and how it arises in non-regularized deep architectures. Suppose that one neuron in a deep network has learned a useful representation. Then other neurons deeper in the network will <span class="keep-together">rapidly</span> learn to depend on that particular neuron for information. This process will render the network brittle since the network will depend excessively on the features learned by that neuron, which might represent a quirk of the dataset, instead of learning a general rule.</p>
+
+<p>Dropout prevents this type of co-adaptation because it will no longer be possible to depend on the presence of single powerful neurons (since that neuron might drop randomly during training). As a result, other neurons will be forced to “pick up the slack” and learn useful representations as well. The theoretical argument follows that this process should result in stronger learned models.</p>
+
+<p>In practice, dropout has a pair of empirical effects. First, it prevents the network from memorizing the training data; with dropout, training loss will no longer tend rapidly toward 0, even for very large deep networks. Next, dropout tends to slightly boost the predictive power of the model on new data. This effect often holds for a wide range of datasets, part of the reason that dropout is recognized as a powerful invention, and not just a simple statistical hack.</p>
+
+<p>You should note that dropout should be turned off when making predictions. Forgetting to turn off dropout can cause predictions to be much noisier and less useful than they would be otherwise. We discuss how to handle dropout for training and predictions correctly later in the chapter.</p>
+<div data-type="note" epub:type="note"><h1>How Can Big Networks Not Overfit?</h1>
+<p>One<a data-type="indexterm" data-primary="overfitting" id="idm139806613545424"/> of the most jarring points for classically trained statisticians is that deep networks may routinely have more internal degrees of freedom than are present in the training data. In classical statistics, the presence of these extra degrees of freedom would render the model useless, since there will no longer exist a guarantee that the model learned is “real” in the classical sense.</p>
+
+<p>How then can a deep network with millions of parameters learn meaningful results on datasets with only thousands of exemplars? Dropout can make a big difference here and prevent brute memorization. But, there’s also a deeper unexplained mystery in that deep networks will tend to learn useful facts even in the absence of dropout. This tendency might be due to some quirk of backpropagation or fully connected network structure that we don’t yet understand.</p>
+</div>
+</div></section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<section data-type="sect3" data-pdf-bookmark="Early stopping"><div class="sect3" id="idm139806613543040">
+<h3>Early stopping</h3>
+
+<p>As<a data-type="indexterm" data-primary="validation sets" id="idm139806613541536"/><a data-type="indexterm" data-primary="early stopping" id="idm139806613540800"/> mentioned, fully connected networks tend to memorize whatever is put before them. As a result, it’s often useful in practice to track the performance of the network on a held-out “validation” set and stop the network when performance on this validation set starts to go down. This simple technique is known as early stopping.</p>
+
+<p>In practice, early stopping can be quite tricky to implement. As you will see, loss curves for deep networks can vary quite a bit in the course of normal training. Devising a rule that separates healthy variation from a marked downward trend can take significant effort. In practice, many practitioners just train models with differing (fixed) numbers of epochs, and choose the model that does best on the validation set. <a data-type="xref" href="#ch4-traintest">Figure 4-9</a> illustrates how training and test set accuracy typically change as training proceeds.</p>
+
+<figure><div id="ch4-traintest" class="figure">
+<img src="assets/tfdl_0409.png" alt="earlystopping.png"/>
+<h6><span class="label">Figure 4-9. </span>Model accuracy on training and test sets as training proceeds.</h6>
+</div></figure>
+
+<p>We will dig more into proper methods for working with validation sets in the following chapter.</p>
+</div></section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<section data-type="sect3" data-pdf-bookmark="Weight regularization"><div class="sect3" id="idm139806613535232">
+<h3>Weight regularization</h3>
+
+<p>A<a data-type="indexterm" data-primary="weight regularization" id="idm139806613533728"/><a data-type="indexterm" data-primary="classical regularization" id="idm139806613532992"/><a data-type="indexterm" data-primary="regularization" data-secondary="weight regularization" id="idm139806613532352"/> classical regularization technique drawn from the statistical literature penalizes learned weights that grow large. Following notation from the previous chapter, let <math xmlns="http://www.w3.org/1998/Math/MathML" alttext="script upper L left-parenthesis x comma y right-parenthesis">
+  <mrow>
+    <mi>ℒ</mi>
+    <mo>(</mo>
+    <mi>x</mi>
+    <mo>,</mo>
+    <mi>y</mi>
+    <mo>)</mo>
+  </mrow>
+</math> denote the loss function for a particular model and let <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>θ</mi>
+</math> denote the learnable parameters of this model. Then the regularized loss function is defined by</p>
+<div data-type="equation">
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
+  <mrow>
+    <msup><mi>ℒ</mi> <mo>'</mo> </msup>
+    <mrow>
+      <mo>(</mo>
+      <mi>x</mi>
+      <mo>,</mo>
+      <mi>y</mi>
+      <mo>)</mo>
+    </mrow>
+    <mo>=</mo>
+    <mi>ℒ</mi>
+    <mrow>
+      <mo>(</mo>
+      <mi>x</mi>
+      <mo>,</mo>
+      <mi>y</mi>
+      <mo>)</mo>
+    </mrow>
+    <mo>+</mo>
+    <mi>α</mi>
+    <mrow>
+      <mo>∥</mo>
+      <mi>θ</mi>
+      <mo>∥</mo>
+    </mrow>
+  </mrow>
+</math>
+</div>
+
+<p>where <math xmlns="http://www.w3.org/1998/Math/MathML" alttext="parallel-to theta parallel-to">
+  <mrow>
+    <mo>∥</mo>
+    <mi>θ</mi>
+    <mo>∥</mo>
+  </mrow>
+</math> is the weight penalty and <math xmlns="http://www.w3.org/1998/Math/MathML" alttext="alpha">
+  <mi>α</mi>
+</math> is a tunable parameter. The two common choices for penalty are the <em>L</em><sup>1</sup> and <em>L</em><sup>2</sup> penalties</p>
+<div data-type="equation">
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
+  <mrow>
+    <msub><mrow><mo>∥</mo><mi>θ</mi><mo>∥</mo></mrow> <mn>2</mn> </msub>
+    <mo>=</mo>
+    <msqrt>
+      <mrow>
+        <msubsup><mo>∑</mo> <mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow> <mi>N</mi> </msubsup>
+        <msubsup><mi>θ</mi> <mi>i</mi> <mn>2</mn> </msubsup>
+      </mrow>
+    </msqrt>
+  </mrow>
+</math>
+</div>
+<div data-type="equation">
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
+  <mrow>
+    <msub><mrow><mo>∥</mo><mi>θ</mi><mo>∥</mo></mrow> <mn>1</mn> </msub>
+    <mo>=</mo>
+    <munderover><mo>∑</mo> <mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow> <mi>N</mi> </munderover>
+    <mrow>
+      <mo>|</mo>
+      <msub><mi>θ</mi> <mi>i</mi> </msub>
+      <mo>|</mo>
+    </mrow>
+  </mrow>
+</math>
+</div>
+
+<p>where <math xmlns="http://www.w3.org/1998/Math/MathML" alttext="parallel-to theta parallel-to">
+  <msub><mrow><mo>∥</mo><mi>θ</mi><mo>∥</mo></mrow> <mn>2</mn> </msub>
+</math> and <math xmlns="http://www.w3.org/1998/Math/MathML" alttext="parallel-to theta parallel-to">
+  <msub><mrow><mo>∥</mo><mi>θ</mi><mo>∥</mo></mrow> <mn>1</mn> </msub>
+</math> denote the <em>L</em><sup>1</sup> and <em>L</em><sup>2</sup> penalties, respectively. From personal experience, these penalties tend to be less useful for deep models than dropout and early stopping. Some practitioners still make use of weight regularization, so it’s worth understanding how to apply these penalties when tuning deep networks.</p>
+</div></section>
+
+
+
+</div></section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<section data-type="sect2" data-pdf-bookmark="Training Fully Connected Networks"><div class="sect2" id="idm139806613481104">
+<h2>Training Fully Connected Networks</h2>
+
+<p>Training fully connected networks requires a few tricks beyond those you have seen so far in this book. First, unlike in the previous chapters, we will train models on larger datasets. For these datasets, we will show you how to use minibatches to speed up gradient descent. Second, we will return to the topic of tuning learning rates.</p>
+
+
+
+
+
+
+
+
+
+
+<section data-type="sect3" data-pdf-bookmark="Minibatching"><div class="sect3" id="idm139806613479360">
+<h3>Minibatching</h3>
+
+<p>For<a data-type="indexterm" data-primary="minibatches" id="mini04"/> large datasets (which may not even fit in memory), it isn’t feasible to compute gradients on the full dataset at each step. Rather, practitioners often select a small chunk of data (typically 50–500 datapoints) and compute the gradient on these datapoints. This small chunk of data is traditionally called a minibatch.</p>
+
+<p>In practice, minibatching seems to help convergence since more gradient descent steps can be taken with the same amount of compute. The correct size for a minibatch is an empirical question often set with hyperparameter tuning.</p>
+</div></section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<section data-type="sect3" data-pdf-bookmark="Learning rates"><div class="sect3" id="idm139806613475680">
+<h3>Learning rates</h3>
+
+<p>The learning rate<a data-type="indexterm" data-primary="learning rates" id="idm139806613474352"/> dictates the amount of importance to give to each gradient descent step. Setting a correct learning rate can be tricky. Many beginning deep-learners set learning rates incorrectly and are surprised to find that their models don’t learn or start returning NaNs. This situation has improved significantly with the development of methods such as ADAM that simplify choice of learning rate significantly, but it’s worth tweaking the learning rate if models aren’t learning anything.<a data-type="indexterm" data-primary="" data-startref="FCDNtrain04" id="idm139806613472992"/></p>
+</div></section>
+
+
+
+</div></section>
+
+
+
+
+
+</div></section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<section data-type="sect1" data-pdf-bookmark="Implementation in TensorFlow"><div class="sect1" id="idm139806613471664">
+<h1>Implementation in TensorFlow</h1>
+
+<p>In<a data-type="indexterm" data-primary="fully connected deep networks" data-secondary="implementation in TensorFlow" id="FCDNimp04"/> this section, we will show you how to implement a fully connected network in TensorFlow. We won’t need to introduce many new TensorFlow primitives in this section since we have already covered most of the required basics.</p>
+
+
+
+
+
+
+
+
+<section data-type="sect2" data-pdf-bookmark="Installing DeepChem"><div class="sect2" id="idm139806613468304">
+<h2>Installing DeepChem</h2>
+
+<p>In<a data-type="indexterm" data-primary="DeepChem" data-secondary="installing" id="idm139806613467008"/><a data-type="indexterm" data-primary="Anaconda Python" id="idm139806613466000"/> this section, you will use the DeepChem machine learning toolchain for your experiments (full disclosure: one of the authors was the creator of DeepChem). <a href="https://deepchem.io">Detailed installation directions</a> for DeepChem can be found online, but briefly the Anaconda installation via the <code>conda</code> tool will likely be most convenient.</p>
+</div></section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<section data-type="sect2" data-pdf-bookmark="Tox21 Dataset"><div class="sect2" id="idm139806613463680">
+<h2>Tox21 Dataset</h2>
+
+<p>For<a data-type="indexterm" data-primary="DeepChem" data-secondary="Tox21 dataset" id="idm139806613462176"/><a data-type="indexterm" data-primary="Tox21 dataset" id="idm139806613461168"/> our modeling case study, we will use a chemical dataset. Toxicologists are very interested in the task of using machine learning to predict whether a given compound will be toxic or not. This task is extremely complicated, since today’s science has only a limited understanding of the metabolic processes that happen in a human body. However, biologists and chemists have worked out a limited set of experiments that provide indications of toxicity. If a compound is a “hit” in one of these experiments, it will likely be toxic for a human to ingest. However, these experiments are often costly to run, so data scientists aim to build machine learning models that can predict the outcomes of these experiments on new molecules.</p>
+
+<p>One of the most important toxicological dataset collections is called Tox21. It was released by the NIH and EPA as part of a data science initiative and was used as the dataset in a model building challenge. The winner of this challenge used multitask fully connected networks (a variant of fully connected networks where each network predicts multiple quantities for each datapoint). We will analyze one of the datasets from the Tox21 collection. This dataset consists of a set of 10,000 molecules tested for interaction with the androgen receptor. The data science challenge is to predict whether new molecules will interact with the androgen receptor.</p>
+
+<p>Processing<a data-type="indexterm" data-primary="DeepChem" data-secondary="MoleculeNet dataset collection" id="idm139806613458144"/> this dataset can be tricky, so we will make use of the MoleculeNet dataset collection curated as part of DeepChem. Each molecule in Tox21 is processed into a bit-vector of length 1024 by DeepChem. Loading the dataset is then a few simple calls into DeepChem (<a data-type="xref" href="#ch4-tox21load">Example 4-1</a>).</p>
+<div id="ch4-tox21load" data-type="example">
+<h5><span class="label">Example 4-1. </span>Load the Tox21 dataset</h5>
+
+<pre data-type="programlisting" data-code-language="python"><code class="kn">import</code> <code class="nn">deepchem</code> <code class="kn">as</code> <code class="nn">dc</code>
+
+<code class="n">_</code><code class="p">,</code> <code class="p">(</code><code class="n">train</code><code class="p">,</code> <code class="n">valid</code><code class="p">,</code> <code class="n">test</code><code class="p">),</code> <code class="n">_</code> <code class="o">=</code> <code class="n">dc</code><code class="o">.</code><code class="n">molnet</code><code class="o">.</code><code class="n">load_tox21</code><code class="p">()</code>
+<code class="n">train_X</code><code class="p">,</code> <code class="n">train_y</code><code class="p">,</code> <code class="n">train_w</code> <code class="o">=</code> <code class="n">train</code><code class="o">.</code><code class="n">X</code><code class="p">,</code> <code class="n">train</code><code class="o">.</code><code class="n">y</code><code class="p">,</code> <code class="n">train</code><code class="o">.</code><code class="n">w</code>
+<code class="n">valid_X</code><code class="p">,</code> <code class="n">valid_y</code><code class="p">,</code> <code class="n">valid_w</code> <code class="o">=</code> <code class="n">valid</code><code class="o">.</code><code class="n">X</code><code class="p">,</code> <code class="n">valid</code><code class="o">.</code><code class="n">y</code><code class="p">,</code> <code class="n">valid</code><code class="o">.</code><code class="n">w</code>
+<code class="n">test_X</code><code class="p">,</code> <code class="n">test_y</code><code class="p">,</code> <code class="n">test_w</code> <code class="o">=</code> <code class="n">test</code><code class="o">.</code><code class="n">X</code><code class="p">,</code> <code class="n">test</code><code class="o">.</code><code class="n">y</code><code class="p">,</code> <code class="n">test</code><code class="o">.</code><code class="n">w</code></pre></div>
+
+<p>Here the <code>X</code> variables hold processed feature vectors, <code>y</code> holds labels, and <code>w</code> holds example weights. The labels are binary 1/0 for compounds that interact or don’t interact with the androgen receptor. Tox21<a data-type="indexterm" data-primary="imbalanced datasets" id="idm139806613379312"/> holds <em>imbalanced</em> datasets, where there are far fewer positive examples than negative examples. <code>w</code> holds recommended per-example weights that give more emphasis to positive examples (increasing the importance of rare examples is a common technique for handling imbalanced datasets). We won’t use these weights during training for simplicity. All of these variables are NumPy arrays.</p>
+
+<p>Tox21 has more datasets than we will analyze here, so we need to remove the labels associated with these extra datasets (<a data-type="xref" href="#ch4-tox21trim">Example 4-2</a>).</p>
+<div id="ch4-tox21trim" data-type="example">
+<h5><span class="label">Example 4-2. </span>Remove extra datasets from Tox21</h5>
+
+<pre data-type="programlisting" data-code-language="python"><code class="c1"># Remove extra tasks</code>
+<code class="n">train_y</code> <code class="o">=</code> <code class="n">train_y</code><code class="p">[:,</code> <code class="mi">0</code><code class="p">]</code>
+<code class="n">valid_y</code> <code class="o">=</code> <code class="n">valid_y</code><code class="p">[:,</code> <code class="mi">0</code><code class="p">]</code>
+<code class="n">test_y</code> <code class="o">=</code> <code class="n">test_y</code><code class="p">[:,</code> <code class="mi">0</code><code class="p">]</code>
+<code class="n">train_w</code> <code class="o">=</code> <code class="n">train_w</code><code class="p">[:,</code> <code class="mi">0</code><code class="p">]</code>
+<code class="n">valid_w</code> <code class="o">=</code> <code class="n">valid_w</code><code class="p">[:,</code> <code class="mi">0</code><code class="p">]</code>
+<code class="n">test_w</code> <code class="o">=</code> <code class="n">test_w</code><code class="p">[:,</code> <code class="mi">0</code><code class="p">]</code></pre></div>
+</div></section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<section data-type="sect2" data-pdf-bookmark="Accepting Minibatches of Placeholders"><div class="sect2" id="idm139806613373904">
+<h2>Accepting Minibatches of Placeholders</h2>
+
+<p>In<a data-type="indexterm" data-primary="DeepChem" data-secondary="accepting minibatches of placeholders" id="idm139806613190976"/><a data-type="indexterm" data-primary="placeholders" id="idm139806613190096"/> the previous chapters, we created placeholders that accepted arguments of fixed size. When dealing with minibatched data, it is often convenient to be able to feed batches of variable size. Suppose that a dataset has 947 elements. Then with a minibatch size of 50, the last batch will have 47 elements. This would cause the code in <a data-type="xref" href="ch03.html#linear_and_logistic_regression_with_tensorflow">Chapter 3</a> to crash. Luckily, TensorFlow has a simple fix to the situation: using <code>None</code> as a dimensional argument to a placeholder allows the placeholder to accept tensors with arbitrary size in that dimension (<a data-type="xref" href="#ch4-tox21place">Example 4-3</a>).</p>
+<div id="ch4-tox21place" data-type="example">
+<h5><span class="label">Example 4-3. </span>Defining placeholders that accept minibatches of different sizes</h5>
+
+<pre data-type="programlisting" data-code-language="python"><code class="n">d</code> <code class="o">=</code> <code class="mi">1024</code>
+<code class="k">with</code> <code class="n">tf</code><code class="o">.</code><code class="n">name_scope</code><code class="p">(</code><code class="s2">"placeholders"</code><code class="p">):</code>
+  <code class="n">x</code> <code class="o">=</code> <code class="n">tf</code><code class="o">.</code><code class="n">placeholder</code><code class="p">(</code><code class="n">tf</code><code class="o">.</code><code class="n">float32</code><code class="p">,</code> <code class="p">(</code><code class="bp">None</code><code class="p">,</code> <code class="n">d</code><code class="p">))</code>
+  <code class="n">y</code> <code class="o">=</code> <code class="n">tf</code><code class="o">.</code><code class="n">placeholder</code><code class="p">(</code><code class="n">tf</code><code class="o">.</code><code class="n">float32</code><code class="p">,</code> <code class="p">(</code><code class="bp">None</code><code class="p">,))</code></pre></div>
+
+<p>Note <code>d</code> is 1024, the dimensionality of our feature vectors.</p>
+</div></section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<section data-type="sect2" data-pdf-bookmark="Implementing a Hidden Layer"><div class="sect2" id="idm139806613147008">
+<h2>Implementing a Hidden Layer</h2>
+
+<p>The<a data-type="indexterm" data-primary="hidden layers" id="idm139806613145568"/><a data-type="indexterm" data-primary="DeepChem" data-secondary="hidden layers" id="idm139806613144832"/> code to implement a hidden layer is very similar to code we’ve seen in the last chapter for implementing logistic regression, as shown in <a data-type="xref" href="#ch4-tox21hidden">Example 4-4</a>.</p>
+<div id="ch4-tox21hidden" data-type="example">
+<h5><span class="label">Example 4-4. </span>Defining a hidden layer</h5>
+
+<pre data-type="programlisting" data-code-language="python"><code class="k">with</code> <code class="n">tf</code><code class="o">.</code><code class="n">name_scope</code><code class="p">(</code><code class="s2">"hidden-layer"</code><code class="p">):</code>
+  <code class="n">W</code> <code class="o">=</code> <code class="n">tf</code><code class="o">.</code><code class="n">Variable</code><code class="p">(</code><code class="n">tf</code><code class="o">.</code><code class="n">random_normal</code><code class="p">((</code><code class="n">d</code><code class="p">,</code> <code class="n">n_hidden</code><code class="p">)))</code>
+  <code class="n">b</code> <code class="o">=</code> <code class="n">tf</code><code class="o">.</code><code class="n">Variable</code><code class="p">(</code><code class="n">tf</code><code class="o">.</code><code class="n">random_normal</code><code class="p">((</code><code class="n">n_hidden</code><code class="p">,)))</code>
+  <code class="n">x_hidden</code> <code class="o">=</code> <code class="n">tf</code><code class="o">.</code><code class="n">nn</code><code class="o">.</code><code class="n">relu</code><code class="p">(</code><code class="n">tf</code><code class="o">.</code><code class="n">matmul</code><code class="p">(</code><code class="n">x</code><code class="p">,</code> <code class="n">W</code><code class="p">)</code> <code class="o">+</code> <code class="n">b</code><code class="p">)</code></pre></div>
+
+<p>We<a data-type="indexterm" data-primary="tf.name_scope" id="idm139806613315744"/><a data-type="indexterm" data-primary="tf.nn.relu" id="idm139806613293264"/> use a <code>tf.name_scope</code> to group together introduced variables. Note that we use the matricial form of the fully connected layer. We use the form <em>xW</em> instead of <em>Wx</em> in order to deal more conveniently with a minibatch of input at a time. (As an exercise, try working out the dimensions involved to see why this is so.) Finally, we apply the ReLU nonlinearity with the built-in <code>tf.nn.relu</code> activation function.</p>
+
+<p>The remainder of the code for the fully connected layer is quite similar to that used for the logistic regression in the previous chapter. For completeness, we display the full code used to specify the network in <a data-type="xref" href="#ch4-tox21fcnet">Example 4-5</a>. As a quick reminder, the full code for all models covered is available in the GitHub repo associated with this book. We strongly encourage you to try running the code for yourself.</p>
+<div id="ch4-tox21fcnet" data-type="example">
+<h5><span class="label">Example 4-5. </span>Defining the fully connected architecture</h5>
+
+<pre data-type="programlisting" data-code-language="python"><code class="k">with</code> <code class="n">tf</code><code class="o">.</code><code class="n">name_scope</code><code class="p">(</code><code class="s2">"placeholders"</code><code class="p">):</code>
+  <code class="n">x</code> <code class="o">=</code> <code class="n">tf</code><code class="o">.</code><code class="n">placeholder</code><code class="p">(</code><code class="n">tf</code><code class="o">.</code><code class="n">float32</code><code class="p">,</code> <code class="p">(</code><code class="bp">None</code><code class="p">,</code> <code class="n">d</code><code class="p">))</code>
+  <code class="n">y</code> <code class="o">=</code> <code class="n">tf</code><code class="o">.</code><code class="n">placeholder</code><code class="p">(</code><code class="n">tf</code><code class="o">.</code><code class="n">float32</code><code class="p">,</code> <code class="p">(</code><code class="bp">None</code><code class="p">,))</code>
+<code class="k">with</code> <code class="n">tf</code><code class="o">.</code><code class="n">name_scope</code><code class="p">(</code><code class="s2">"hidden-layer"</code><code class="p">):</code>
+  <code class="n">W</code> <code class="o">=</code> <code class="n">tf</code><code class="o">.</code><code class="n">Variable</code><code class="p">(</code><code class="n">tf</code><code class="o">.</code><code class="n">random_normal</code><code class="p">((</code><code class="n">d</code><code class="p">,</code> <code class="n">n_hidden</code><code class="p">)))</code>
+  <code class="n">b</code> <code class="o">=</code> <code class="n">tf</code><code class="o">.</code><code class="n">Variable</code><code class="p">(</code><code class="n">tf</code><code class="o">.</code><code class="n">random_normal</code><code class="p">((</code><code class="n">n_hidden</code><code class="p">,)))</code>
+  <code class="n">x_hidden</code> <code class="o">=</code> <code class="n">tf</code><code class="o">.</code><code class="n">nn</code><code class="o">.</code><code class="n">relu</code><code class="p">(</code><code class="n">tf</code><code class="o">.</code><code class="n">matmul</code><code class="p">(</code><code class="n">x</code><code class="p">,</code> <code class="n">W</code><code class="p">)</code> <code class="o">+</code> <code class="n">b</code><code class="p">)</code>
+<code class="k">with</code> <code class="n">tf</code><code class="o">.</code><code class="n">name_scope</code><code class="p">(</code><code class="s2">"output"</code><code class="p">):</code>
+  <code class="n">W</code> <code class="o">=</code> <code class="n">tf</code><code class="o">.</code><code class="n">Variable</code><code class="p">(</code><code class="n">tf</code><code class="o">.</code><code class="n">random_normal</code><code class="p">((</code><code class="n">n_hidden</code><code class="p">,</code> <code class="mi">1</code><code class="p">)))</code>
+  <code class="n">b</code> <code class="o">=</code> <code class="n">tf</code><code class="o">.</code><code class="n">Variable</code><code class="p">(</code><code class="n">tf</code><code class="o">.</code><code class="n">random_normal</code><code class="p">((</code><code class="mi">1</code><code class="p">,)))</code>
+  <code class="n">y_logit</code> <code class="o">=</code> <code class="n">tf</code><code class="o">.</code><code class="n">matmul</code><code class="p">(</code><code class="n">x_hidden</code><code class="p">,</code> <code class="n">W</code><code class="p">)</code> <code class="o">+</code> <code class="n">b</code>
+  <code class="c1"># the sigmoid gives the class probability of 1</code>
+  <code class="n">y_one_prob</code> <code class="o">=</code> <code class="n">tf</code><code class="o">.</code><code class="n">sigmoid</code><code class="p">(</code><code class="n">y_logit</code><code class="p">)</code>
+  <code class="c1"># Rounding P(y=1) will give the correct prediction.</code>
+  <code class="n">y_pred</code> <code class="o">=</code> <code class="n">tf</code><code class="o">.</code><code class="n">round</code><code class="p">(</code><code class="n">y_one_prob</code><code class="p">)</code>
+<code class="k">with</code> <code class="n">tf</code><code class="o">.</code><code class="n">name_scope</code><code class="p">(</code><code class="s2">"loss"</code><code class="p">):</code>
+  <code class="c1"># Compute the cross-entropy term for each datapoint</code>
+  <code class="n">y_expand</code> <code class="o">=</code> <code class="n">tf</code><code class="o">.</code><code class="n">expand_dims</code><code class="p">(</code><code class="n">y</code><code class="p">,</code> <code class="mi">1</code><code class="p">)</code>
+  <code class="n">entropy</code> <code class="o">=</code> <code class="n">tf</code><code class="o">.</code><code class="n">nn</code><code class="o">.</code><code class="n">sigmoid_cross_entropy_with_logits</code><code class="p">(</code><code class="n">logits</code><code class="o">=</code><code class="n">y_logit</code><code class="p">,</code> <code class="n">labels</code><code class="o">=</code><code class="n">y_expand</code><code class="p">)</code>
+  <code class="c1"># Sum all contributions</code>
+  <code class="n">l</code> <code class="o">=</code> <code class="n">tf</code><code class="o">.</code><code class="n">reduce_sum</code><code class="p">(</code><code class="n">entropy</code><code class="p">)</code>
+
+<code class="k">with</code> <code class="n">tf</code><code class="o">.</code><code class="n">name_scope</code><code class="p">(</code><code class="s2">"optim"</code><code class="p">):</code>
+  <code class="n">train_op</code> <code class="o">=</code> <code class="n">tf</code><code class="o">.</code><code class="n">train</code><code class="o">.</code><code class="n">AdamOptimizer</code><code class="p">(</code><code class="n">learning_rate</code><code class="p">)</code><code class="o">.</code><code class="n">minimize</code><code class="p">(</code><code class="n">l</code><code class="p">)</code>
+
+<code class="k">with</code> <code class="n">tf</code><code class="o">.</code><code class="n">name_scope</code><code class="p">(</code><code class="s2">"summaries"</code><code class="p">):</code>
+  <code class="n">tf</code><code class="o">.</code><code class="n">summary</code><code class="o">.</code><code class="n">scalar</code><code class="p">(</code><code class="s2">"loss"</code><code class="p">,</code> <code class="n">l</code><code class="p">)</code>
+  <code class="n">merged</code> <code class="o">=</code> <code class="n">tf</code><code class="o">.</code><code class="n">summary</code><code class="o">.</code><code class="n">merge_all</code><code class="p">()</code></pre></div>
+</div></section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<section data-type="sect2" data-pdf-bookmark="Adding Dropout to a Hidden Layer"><div class="sect2" id="idm139806613286416">
+<h2>Adding Dropout to a Hidden Layer</h2>
+
+<p>TensorFlow<a data-type="indexterm" data-primary="DeepChem" data-secondary="adding dropouts to hidden layers" id="idm139806613284816"/><a data-type="indexterm" data-primary="dropout" id="idm139806612917696"/><a data-type="indexterm" data-primary="tf.nn.dropout(x, keep_prob)" id="idm139806612917024"/> takes care of implementing dropout for us in the built-in primitive <code>tf.nn.dropout(x, keep_prob)</code>, where <code>keep_prob</code> is the probability that any given node is kept. Recall from our earlier discussion that we want to turn on dropout when training and turn off dropout when making predictions. To handle this correctly, we will introduce a new placeholder for <code>keep_prob</code>, as shown in <a data-type="xref" href="#ch4-tox21keep">Example 4-6</a>.</p>
+<div id="ch4-tox21keep" data-type="example">
+<h5><span class="label">Example 4-6. </span>Add a placeholder for dropout probability</h5>
+
+<pre data-type="programlisting" data-code-language="python"><code class="n">keep_prob</code> <code class="o">=</code> <code class="n">tf</code><code class="o">.</code><code class="n">placeholder</code><code class="p">(</code><code class="n">tf</code><code class="o">.</code><code class="n">float32</code><code class="p">)</code></pre></div>
+
+<p>During training, we pass in the desired value, often 0.5, but at test time we set <code>keep_prob</code> to 1.0 since we want predictions made with all learned nodes. With this setup, adding dropout to the fully connected network specified in the previous section is simply a single extra line of code (<a data-type="xref" href="#ch4-tox21drophidden">Example 4-7</a>).</p>
+<div id="ch4-tox21drophidden" data-type="example">
+<h5><span class="label">Example 4-7. </span>Defining a hidden layer with dropout</h5>
+
+<pre data-type="programlisting" data-code-language="python"><code class="k">with</code> <code class="n">tf</code><code class="o">.</code><code class="n">name_scope</code><code class="p">(</code><code class="s2">"hidden-layer"</code><code class="p">):</code>
+  <code class="n">W</code> <code class="o">=</code> <code class="n">tf</code><code class="o">.</code><code class="n">Variable</code><code class="p">(</code><code class="n">tf</code><code class="o">.</code><code class="n">random_normal</code><code class="p">((</code><code class="n">d</code><code class="p">,</code> <code class="n">n_hidden</code><code class="p">)))</code>
+  <code class="n">b</code> <code class="o">=</code> <code class="n">tf</code><code class="o">.</code><code class="n">Variable</code><code class="p">(</code><code class="n">tf</code><code class="o">.</code><code class="n">random_normal</code><code class="p">((</code><code class="n">n_hidden</code><code class="p">,)))</code>
+  <code class="n">x_hidden</code> <code class="o">=</code> <code class="n">tf</code><code class="o">.</code><code class="n">nn</code><code class="o">.</code><code class="n">relu</code><code class="p">(</code><code class="n">tf</code><code class="o">.</code><code class="n">matmul</code><code class="p">(</code><code class="n">x</code><code class="p">,</code> <code class="n">W</code><code class="p">)</code> <code class="o">+</code> <code class="n">b</code><code class="p">)</code>
+  <code class="c1"># Apply dropout</code>
+  <code class="n">x_hidden</code> <code class="o">=</code> <code class="n">tf</code><code class="o">.</code><code class="n">nn</code><code class="o">.</code><code class="n">dropout</code><code class="p">(</code><code class="n">x_hidden</code><code class="p">,</code> <code class="n">keep_prob</code><code class="p">)</code></pre></div>
+</div></section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<section data-type="sect2" data-pdf-bookmark="Implementing Minibatching"><div class="sect2" id="idm139806612903552">
+<h2>Implementing Minibatching</h2>
+
+<p>To<a data-type="indexterm" data-primary="DeepChem" data-secondary="implementing minibatching" id="idm139806612902416"/><a data-type="indexterm" data-primary="sess.run()" id="idm139806612836976"/> implement minibatching, we need to pull out a minibatch’s worth of data each time we call <code>sess.run</code>. Luckily for us, our features and labels are already in NumPy arrays, and we can make use of NumPy’s convenient syntax for slicing portions of arrays (<a data-type="xref" href="#ch4-tox21minibatch">Example 4-8</a>).<a data-type="indexterm" data-primary="" data-startref="mini04" id="idm139806612834672"/></p>
+<div id="ch4-tox21minibatch" data-type="example">
+<h5><span class="label">Example 4-8. </span>Training on minibatches</h5>
+
+<pre data-type="programlisting" data-code-language="python"><code class="n">step</code> <code class="o">=</code> <code class="mi">0</code>
+<code class="k">for</code> <code class="n">epoch</code> <code class="ow">in</code> <code class="nb">range</code><code class="p">(</code><code class="n">n_epochs</code><code class="p">):</code>
+  <code class="n">pos</code> <code class="o">=</code> <code class="mi">0</code>
+  <code class="k">while</code> <code class="n">pos</code> <code class="o">&lt;</code> <code class="n">N</code><code class="p">:</code>
+    <code class="n">batch_X</code> <code class="o">=</code> <code class="n">train_X</code><code class="p">[</code><code class="n">pos</code><code class="p">:</code><code class="n">pos</code><code class="o">+</code><code class="n">batch_size</code><code class="p">]</code>
+    <code class="n">batch_y</code> <code class="o">=</code> <code class="n">train_y</code><code class="p">[</code><code class="n">pos</code><code class="p">:</code><code class="n">pos</code><code class="o">+</code><code class="n">batch_size</code><code class="p">]</code>
+    <code class="n">feed_dict</code> <code class="o">=</code> <code class="p">{</code><code class="n">x</code><code class="p">:</code> <code class="n">batch_X</code><code class="p">,</code> <code class="n">y</code><code class="p">:</code> <code class="n">batch_y</code><code class="p">,</code> <code class="n">keep_prob</code><code class="p">:</code> <code class="n">dropout_prob</code><code class="p">}</code>
+    <code class="n">_</code><code class="p">,</code> <code class="n">summary</code><code class="p">,</code> <code class="n">loss</code> <code class="o">=</code> <code class="n">sess</code><code class="o">.</code><code class="n">run</code><code class="p">([</code><code class="n">train_op</code><code class="p">,</code> <code class="n">merged</code><code class="p">,</code> <code class="n">l</code><code class="p">],</code> <code class="n">feed_dict</code><code class="o">=</code><code class="n">feed_dict</code><code class="p">)</code>
+    <code class="k">print</code><code class="p">(</code><code class="s2">"epoch </code><code class="si">%d</code><code class="s2">, step </code><code class="si">%d</code><code class="s2">, loss: </code><code class="si">%f</code><code class="s2">"</code> <code class="o">%</code> <code class="p">(</code><code class="n">epoch</code><code class="p">,</code> <code class="n">step</code><code class="p">,</code> <code class="n">loss</code><code class="p">))</code>
+    <code class="n">train_writer</code><code class="o">.</code><code class="n">add_summary</code><code class="p">(</code><code class="n">summary</code><code class="p">,</code> <code class="n">step</code><code class="p">)</code>
+
+    <code class="n">step</code> <code class="o">+=</code> <code class="mi">1</code>
+    <code class="n">pos</code> <code class="o">+=</code> <code class="n">batch_size</code></pre></div>
+</div></section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<section data-type="sect2" data-pdf-bookmark="Evaluating Model Accuracy"><div class="sect2" id="idm139806612791136">
+<h2>Evaluating Model Accuracy</h2>
+
+<p>To<a data-type="indexterm" data-primary="DeepChem" data-secondary="evaluating model accuracy" id="idm139806612500912"/><a data-type="indexterm" data-primary="models" data-secondary="evaluating model accuracy" id="idm139806612500000"/> evaluate model accuracy, standard practice requires measuring the accuracy of the model on data not used for training (namely the validation set). However, the fact that the data is imbalanced makes this tricky. The classification accuracy metric we used in the previous chapter simply measures the fraction of datapoints that were labeled correctly. However, 95% of data in our dataset is labeled 0 and only 5% are labeled 1. As a result the all-0 model (which labels everything negative) would achieve 95% accuracy! This isn’t what we want.</p>
+
+<p>A better choice would be to increase the weights of positive examples so that they count for more. For this purpose, we use the recommended per-example weights from MoleculeNet to compute a weighted classification accuracy where positive samples are weighted 19 times the weight of negative samples. Under this weighted accuracy, the all-0 model would have 50% accuracy, which seems much more reasonable.</p>
+
+<p>ForI<a data-type="indexterm" data-primary="sklearn.metrics" id="idm139806612496960"/><a data-type="indexterm" data-primary="sample_weight argument" id="idm139806612496224"/><a data-type="indexterm" data-primary="accuracy_score()" id="idm139806612495552"/> computing the weighted accuracy, we use the function <code>accuracy_score(true, pred, sample_weight=given_sample_weight)</code> from <code>sklearn.metrics</code>. This function has a keyword argument <code>sample_weight</code>, which lets us specify the desired weight for each datapoint. We use this function to compute the weighted metric on both the training and validation sets (<a data-type="xref" href="#ch4-tox21weightaccuracy">Example 4-9</a>).</p>
+<div id="ch4-tox21weightaccuracy" data-type="example">
+<h5><span class="label">Example 4-9. </span>Computing a weighted accuracy</h5>
+
+<pre data-type="programlisting" data-code-language="python"><code class="n">train_weighted_score</code> <code class="o">=</code> <code class="n">accuracy_score</code><code class="p">(</code><code class="n">train_y</code><code class="p">,</code> <code class="n">train_y_pred</code><code class="p">,</code> <code class="n">sample_weight</code><code class="o">=</code><code class="n">train_w</code><code class="p">)</code>
+<code class="k">print</code><code class="p">(</code><code class="s2">"Train Weighted Classification Accuracy: </code><code class="si">%f</code><code class="s2">"</code> <code class="o">%</code> <code class="n">train_weighted_score</code><code class="p">)</code>
+<code class="n">valid_weighted_score</code> <code class="o">=</code> <code class="n">accuracy_score</code><code class="p">(</code><code class="n">valid_y</code><code class="p">,</code> <code class="n">valid_y_pred</code><code class="p">,</code> <code class="n">sample_weight</code><code class="o">=</code><code class="n">valid_w</code><code class="p">)</code>
+<code class="k">print</code><code class="p">(</code><code class="s2">"Valid Weighted Classification Accuracy: </code><code class="si">%f</code><code class="s2">"</code> <code class="o">%</code> <code class="n">valid_weighted_score</code><code class="p">)</code></pre></div>
+
+<p>While we could reimplement this function ourselves, sometimes it’s easier (and less error prone) to use standard functions from the Python data science infrastructure. Learning about this infrastructure and available functions is part of being a practicing data scientist. Now, we can train the model (for 10 epochs in the default setting) and gauge its accuracy:</p>
+
+<pre data-type="programlisting">Train Weighted Classification Accuracy: 0.742045
+Valid Weighted Classification Accuracy: 0.648828</pre>
+
+<p>In <a data-type="xref" href="ch05.html#hyperparameter_optimization">Chapter 5</a>, we will show you methods to systematically improve this accuracy and tune our fully connected model more carefully.</p>
+</div></section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<section data-type="sect2" data-pdf-bookmark="Using TensorBoard to Track Model Convergence"><div class="sect2" id="idm139806612308512">
+<h2>Using TensorBoard to Track Model Convergence</h2>
+
+<p>Now<a data-type="indexterm" data-primary="DeepChem" data-secondary="using TensorBoard to track model convergence" id="idm139806612306848"/><a data-type="indexterm" data-primary="TensorBoard" data-secondary="tracking model convergence with" id="idm139806612305744"/><a data-type="indexterm" data-primary="models" data-secondary="tracking convergence" id="idm139806612304832"/> that we have specified our model, let’s use TensorBoard to inspect the model. Let’s first check the graph structure in TensorBoard (<a data-type="xref" href="#ch4-tensorboardfcnet">Figure 4-10</a>).</p>
+
+<p>The graph looks similar to that for logistic regression, with the addition of a new hidden layer. Let’s expand the hidden layer to see what’s inside (<a data-type="xref" href="#ch4-tensorboardfcnetexp">Figure 4-11</a>).</p>
+
+<figure><div id="ch4-tensorboardfcnet" class="figure">
+<img src="assets/tfdl_0410.png" alt="fcgraph.png"/>
+<h6><span class="label">Figure 4-10. </span>Visualizing the computation graph for a fully connected network.</h6>
+</div></figure>
+
+<figure><div id="ch4-tensorboardfcnetexp" class="figure">
+<img src="assets/tfdl_0411.png" alt="hidden_expand.png"/>
+<h6><span class="label">Figure 4-11. </span>Visualizing the expanded computation graph for a fully connected network.</h6>
+</div></figure>
+
+<p>You can see how the new trainable variables and the dropout operation are represented here. Everything looks to be in the right place. Let’s end now by looking at the loss curve over time (<a data-type="xref" href="#ch4-tensorboardfcnetloss">Figure 4-12</a>).</p>
+
+<figure><div id="ch4-tensorboardfcnetloss" class="figure">
+<img src="assets/tfdl_0412.png" alt="fcnet_loss_curve.png"/>
+<h6><span class="label">Figure 4-12. </span>Visualizing the loss curve for a fully connected network.</h6>
+</div></figure>
+
+<p>The loss curve trends down as we saw in the previous section. But, let’s zoom in to see what this loss looks like up close (<a data-type="xref" href="#ch4-tensorboardfcnetlosszoom">Figure 4-13</a>).</p>
+
+<figure><div id="ch4-tensorboardfcnetlosszoom" class="figure">
+<img src="assets/tfdl_0413.png" alt="fcnet_zoomed_loss.png"/>
+<h6><span class="label">Figure 4-13. </span>Zooming in on a section of the loss curve.</h6>
+</div></figure>
+
+<p>Note that loss looks much bumpier! This is one of the prices of using minibatch training. We no longer have the beautiful, smooth loss curves that we saw in the previous sections.<a data-type="indexterm" data-primary="" data-startref="FCDNimp04" id="idm139806612446576"/></p>
+</div></section>
+
+
+
+
+
+</div></section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<section data-type="sect1" data-pdf-bookmark="Review"><div class="sect1" id="idm139806613471200">
+<h1>Review</h1>
+
+<p>In this chapter, we’ve introduced you to fully connected deep networks. We delved into the mathematical theory of these networks, and explored the concept of “universal approximation,” which partially explains the learning power of fully connected networks. We ended with a case study, where you trained a deep fully connected architecture on the Tox21 dataset.</p>
+
+<p>In this chapter, we haven’t yet shown you how to tune the fully connected network to achieve good predictive performance. In <a data-type="xref" href="ch05.html#hyperparameter_optimization">Chapter 5</a>, we will discuss “hyperparameter optimization,” the process of tuning network parameters, and have you tune the parameters of the Tox21 network introduced in this chapter.</p>
+</div></section>
+
+
+
+
+
+
+
+</div></section></body></html>

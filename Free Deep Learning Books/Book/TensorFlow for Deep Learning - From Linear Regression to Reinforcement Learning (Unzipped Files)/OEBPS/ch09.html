@@ -1,0 +1,660 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html><html xmlns:epub="http://www.idpf.org/2007/ops" xmlns="http://www.w3.org/1999/xhtml"><head><title>Training Large Deep Networks</title><link rel="stylesheet" type="text/css" href="epub.css"/></head><body data-type="book"><section data-type="chapter" epub:type="chapter" data-pdf-bookmark="Chapter 9. Training Large Deep Networks"><div class="chapter" id="training_large_deep_networks">
+<h1><span class="label">Chapter 9. </span>Training Large Deep Networks</h1>
+
+
+<p>Thus<a data-type="indexterm" data-primary="deep networks" data-secondary="training large deep networks" id="DNtrain09"/><a data-type="indexterm" data-primary="large deep networks" data-secondary="overview of training" id="idm139806602230032"/> far, you have seen how to train small models that can be completely trained on a good laptop computer. All of these models can be run fruitfully on GPU-equipped hardware with notable speed boosts (with the notable exception of reinforcement learning models for reasons discussed in the previous chapter). However, training larger models still requires considerable sophistication. In this chapter, we will discuss various types of hardware that can be used to train deep networks, including graphics processing units (GPUs), tensor processing units (TPUs), and neuromorphic chips. We will also briefly cover the principles of distributed training for larger deep learning models.  We end the chapter with an in-depth case study, adapated from one of the TensorFlow tutorials, demonstrating how to train a CIFAR-10 convolutional neural network on a server with multiple GPUs. We recommend that you attempt to try running this code yourself, but readily acknowledge that gaining access to a multi-GPU server is trickier than finding a good laptop. Luckily, access to multi-GPU servers on the cloud is becoming possible and is likely the best solution for industrial users of TensorFlow seeking to train large models.</p>
+
+
+
+
+
+
+<section data-type="sect1" data-pdf-bookmark="Custom Hardware for Deep Networks"><div class="sect1" id="idm139806603019648">
+<h1>Custom Hardware for Deep Networks</h1>
+
+<p>As<a data-type="indexterm" data-primary="large deep networks" data-secondary="custom hardware for" id="idm139806602226688"/> you’ve seen throughout the book, deep network training requires chains of tensorial operations performed repeatedly on minibatches of data. Tensorial operations are commonly transformed into matrix multiplication operations by software, so rapid training of deep networks fundamentally depends on the ability to perform matrix multiplication operations rapidly. While CPUs are perfectly capable of implementing matrix multiplications, the generality of CPU hardware means much effort will be wasted on overhead unneeded for mathematical operations.</p>
+
+<p class="pagebreak-before">Hardware engineers have noted this fact for years, and there exist a variety of alternative hardware for working with deep networks. Such<a data-type="indexterm" data-primary="inference only hardware" id="idm139806602224176"/><a data-type="indexterm" data-primary="training and inference hardware" id="idm139806602223472"/> hardware can be broadly divided into <em>inference only</em> or <em>training and inference</em>. Inference-only hardware cannot be used to train new deep networks, but can be used to deploy trained models in production, allowing for potentially orders-of-magnitude increases in performance. Training and inference hardware allows for models to be trained natively. Currently, Nvidia’s GPU hardware holds a dominant position in the training and inference market due to significant investment in software and outreach by Nvidia’s teams, but a number of other competitors are snapping at the GPU’s heels. In this section, we will briefly cover some of these newer hardware alternatives. With the exception of GPUs and CPUs, most of these alternative forms of hardware are not yet widely available, so much of this section is forward looking.</p>
+</div></section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<section data-type="sect1" data-pdf-bookmark="CPU Training"><div class="sect1" id="idm139806602220752">
+<h1>CPU Training</h1>
+
+<p>Although<a data-type="indexterm" data-primary="large deep networks" data-secondary="CPU training" id="LDNcpu09"/><a data-type="indexterm" data-primary="central processing unit (CPU) training" data-secondary="benefits of" id="idm139806602217872"/> CPU training is by no means state of the art for training deep networks, it often does quite well for smaller models (as you’ve seen firsthand in this book). For reinforcement learning problems, a multicore CPU machine can even outperform GPU training.</p>
+
+<p>CPUs also see wide usage for inference-only applications of deep networks. Most companies have invested heavily in developing cloud servers built primarily on Intel server boxes. It’s very likely that the first generation of deep networks deployed widely (outside tech companies) will be primarily deployed into production on such Intel servers. While such CPU-based deployment isn’t sufficient for heavy-duty deployment of learning models, it is often plenty for first customer needs. <a data-type="xref" href="#ch9-cpu">Figure 9-1</a> illustrates a standard Intel CPU.</p>
+
+<figure><div id="ch9-cpu" class="figure">
+<img src="assets/tfdl_0901.png" alt="cpu_pic.jpg"/>
+<h6><span class="label">Figure 9-1. </span>A CPU from Intel. CPUs are still the dominant form of computer hardware and are present in all modern laptops, desktops, servers, and phones. Most software is written to execute on CPUs. Numerical computations (such as neural network training) can be executed on CPUs, but might be slower than on customized hardware optimized for numerical methods.</h6>
+</div></figure>
+
+
+
+
+
+
+
+
+<section data-type="sect2" data-pdf-bookmark="GPU Training"><div class="sect2" id="idm139806602212352">
+<h2>GPU Training</h2>
+
+<p>GPUs were<a data-type="indexterm" data-primary="graphics processing unit (GPU) Training" id="idm139806602210784"/><a data-type="indexterm" data-primary="central processing unit (CPU) training" data-secondary="vs. GPU training" data-secondary-sortas="GPU training" id="idm139806602044288"/> first developed to perform computations needed by the graphics community. In a fortuitous coincidence, it turned out that the primitives used to define graphics shaders could be repurposed to perform deep learning. At their mathematical hearts, both graphics and machine learning rely critically on matrix multiplications. Empirically, GPU matrix multiplications offer speedups of an order of magnitude or two over CPU implementations. How do GPUs succeed at this feat? The trick is that GPUs make use of thousands of identical threads. Clever hackers have succeeded in decomposing matrix multiplications into massively parallel operations that can offer dramatic speedups. <a data-type="xref" href="#ch9-gpu">Figure 9-2</a> illustrates a GPU architecture.</p>
+
+<p>Although<a data-type="indexterm" data-primary="Nvidia" id="idm139806602041056"/><a data-type="indexterm" data-primary="CUDA (compute unified device architecture)" id="idm139806602040320"/><a data-type="indexterm" data-primary="CuDNN library" id="idm139806602039680"/> there are a number of GPU vendors, Nvidia currently dominates the GPU market. Much of the power of Nvidia’s GPUs stems from its custom library CUDA (compute unified device architecture), which offers primitives that make it easier to write GPU programs. Nvidia offers a CUDA extension, CUDNN, for speeding up deep networks (<a data-type="xref" href="#ch9-gpu">Figure 9-2</a>). TensorFlow has built-in CUDNN support, so you can make use of CUDNN to speed up your networks as well through TensorFlow.</p>
+
+<figure><div id="ch9-gpu" class="figure">
+<img src="assets/tfdl_0902.png" alt="GPU_architecture.jpg"/>
+<h6><span class="label">Figure 9-2. </span>A GPU architecture from Nvidia. GPUs possess many more cores than CPUs and are well suited to performing numerical linear algebra, of the sort useful in both graphics and machine learning computations. GPUs have emerged as the dominant hardware platform for training deep networks.</h6>
+</div></figure>
+<div data-type="note" epub:type="note"><h1>How Important Are Transistor Sizes?</h1>
+<p>For<a data-type="indexterm" data-primary="transistor sizes" id="idm139806602034048"/><a data-type="indexterm" data-primary="chip speeds" id="idm139806602033312"/><a data-type="indexterm" data-primary="semiconductors" id="idm139806602032640"/> years, the semiconductor industry has tracked progression of chip speeds by watching transistor sizes. As transistors got smaller, more of them could be packed onto a standard chip, and algorithms could run faster. At the time of writing of this book, Intel is currently operating on 10-nanometer transistors, and working on transitioning down to 7 nanometers. The rate of shrinkage of transistor sizes has slowed significantly in recent years, since formidable heat dissipation issues arise at these scales.</p>
+
+<p>Nvidia’s GPUs<a data-type="indexterm" data-primary="Nvidia" id="idm139806602030928"/><a data-type="indexterm" data-primary="Intel" id="idm139806602030192"/><a data-type="indexterm" data-primary="machine learning" data-secondary="chip speeds and" id="idm139806602029520"/> partially buck this trend. They tend to use transistor sizes a generation or two behind Intel’s best, and focus on solving architectural and software bottlenecks instead of transistor engineering. So far, Nvidia’s strategy has paid dividends and the company has achieved market domination in the machine learning chip space.</p>
+
+<p>It’s not yet clear how far architectural and software optimizations can go. Will GPU optimizations soon run into the same Moore’s law roadblocks as CPUs? Or will clever architectural innovations enable years of faster GPUs? Only time can tell.</p>
+</div>
+</div></section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<section data-type="sect2" data-pdf-bookmark="Tensor Processing Units"><div class="sect2" id="idm139806602027200">
+<h2>Tensor Processing Units</h2>
+
+<p>The tensor processing unit (TPU)<a data-type="indexterm" data-primary="tensor processing units (TPU)" id="idm139806602025744"/><a data-type="indexterm" data-primary="central processing unit (CPU) training" data-secondary="TPU training" id="idm139806602024976"/><a data-type="indexterm" data-primary="ASIC (application specific integrated circuits)" id="idm139806602024016"/> is a custom ASIC (application specific integrated circuit) designed by Google to speed up deep learning workloads designed in TensorFlow. Unlike the GPU, the TPU is stripped down and implements only the bare minimum on-die needed to perform necessary matrix multiplications. Unlike the GPU, the TPU is dependent on an adjoining CPU to do much of its preprocessing work for it. This slimmed-down approach enables the TPU to achieve higher speeds than the GPU at lower energy costs.</p>
+
+<p>The first version of the TPU only allowed for inference on trained models, but the most recent version (TPU2) allows for training of (certain) deep networks as well. However, Google has not released many details about the TPU, and access is limited to Google collaborators, with plans to enable TPU access via the Google cloud. Nvidia is taking notes from the TPU, and it’s quite likely that future releases of Nvidia GPUs will come to resemble the TPU, so downstream users will likely benefit from Google’s innovations regardless of whether Google or Nvidia wins the consumer deep learning market. <a data-type="xref" href="#ch9-tpu">Figure 9-3</a> illustrates the TPU architecture design.</p>
+
+<figure><div id="ch9-tpu" class="figure">
+<img src="assets/tfdl_0903.png" alt="TPU_architecture.jpg"/>
+<h6><span class="label">Figure 9-3. </span>A tensor processing unit (TPU) architecture from Google. TPUs are specialized chips designed by Google to speed up deep learning workloads. The TPU is a <span class="keep-together">coprocessor</span> and not a standalone piece of hardware.</h6>
+</div></figure>
+<div data-type="note" epub:type="note"><h1>What Are ASICs?</h1>
+<p>Both CPUs and GPUs are general-purpose chips. CPUs generally support instruction sets in assembly and are designed to be universal. Care is taken to enable a wide range of applications. GPUs are less universal, but still allow for a wide range of algorithms to be implemented via languages such as CUDA.</p>
+
+<p>Application specific integrated circuits (ASICs) attempt to do away with the generality in favor of focusing on the needs of a particular application. Historically, ASICs have only achieved limited market penetration. The drumbeat of Moore’s law meant that general-purpose CPUs stayed only a breath or two behind custom ASICs, so the hardware design overhead was often not worth the effort.</p>
+
+<p>This state of affairs has started shifting in the last few years. The slowdown of transistor shrinkage has expanded ASIC usage. For example, Bitcoin mining depends entirely on custom ASICs that implement specialized cryptography operations.</p>
+</div>
+</div></section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<section data-type="sect2" data-pdf-bookmark="Field Programmable Gate Arrays"><div class="sect2" id="idm139806602014736">
+<h2>Field Programmable Gate Arrays</h2>
+
+<p>Field programmable gate arrays (FPGAs)<a data-type="indexterm" data-primary="field programmable gate arrays (FPGAs)" id="idm139806602013440"/><a data-type="indexterm" data-primary="central processing unit (CPU) training" data-secondary="field programmable gate arrays" id="idm139806602012672"/> are a type of “field programmable” ASIC. Standard FPGAs can often be reconfigured via hardware description languages such as Verilog to implement new ASIC designs dynamically. While FPGAs are generally less efficient than custom ASICs, they can offer significant speed improvements over CPU implementations. Microsoft in particular has used FPGAs to perform deep learning inference and claims to have achieved significant speedups with their deployment. However, the approach has not yet caught on widely outside Microsoft.</p>
+</div></section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<section data-type="sect2" data-pdf-bookmark="Neuromorphic Chips"><div class="sect2" id="idm139806602010768">
+<h2>Neuromorphic Chips</h2>
+
+<p>The “neurons” in<a data-type="indexterm" data-primary="central processing unit (CPU) training" data-secondary="neuromorphic chips" id="idm139806602009232"/><a data-type="indexterm" data-primary="neuromorphic chips" id="idm139806602008208"/> deep networks mathematically model the 1940s understanding of neuronal biology. Needless to say, biological understanding of neuronal behavior has progressed dramatically since then. For one, it’s now known that the nonlinear activations used in deep networks aren’t accurate models of neuronal nonlinearity. The “spike trains” is<a data-type="indexterm" data-primary="spike train" id="idm139806602007056"/> a better model (see <a data-type="xref" href="#ch9-neuromorphic">Figure 9-4</a>), where neurons activate in short-lived bursts (spikes) but fall to background most of the time.</p>
+
+<figure><div id="ch9-neuromorphic" class="figure">
+<img src="assets/tfdl_0904.png" alt="spike_trains.jpg"/>
+<h6><span class="label">Figure 9-4. </span>Neurons often activate in short-lived bursts called spike trains (A). Neuromorphic chips attempt to model spiking behavior in computing hardware. Biological neurons are complex entities (B), so these models are still only approximate.</h6>
+</div></figure>
+
+<p>Hardware engineers have spent significant effort exploring whether it’s possible to create chip designs based on spike trains rather than on existing circuit technologies (CPUs, GPUs, ASICs). These designers argue that today’s chip designs suffer from fundamental power limitations; the brain consumes many orders of magnitude less power than computer chips and smart designs should aim to learn from the brain’s architecture.</p>
+
+<p>A<a data-type="indexterm" data-primary="IBM's TrueNorth project" id="idm139806602001840"/><a data-type="indexterm" data-primary="TrueNorth project" id="idm139806602001104"/> number of projects have built large spike train chips attempting to expand upon this core thesis. IBM’s TrueNorth project has succeeded in building spike train processors with millions of “neurons” and demonstrated that this hardware can perform basic image recognition with significantly lower power requirements than existing chip designs. However, despite these successes, it is not clear how to translate modern deep architectures onto spike train chips. Without the ability to “compile” TensorFlow models onto spike train hardware, it’s unlikely that such projects will see widespread adoption in the near future.<a data-type="indexterm" data-primary="" data-startref="LDNcpu09" id="idm139806601999664"/></p>
+</div></section>
+
+
+
+
+
+</div></section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<section data-type="sect1" data-pdf-bookmark="Distributed Deep Network Training"><div class="sect1" id="idm139806601998592">
+<h1>Distributed Deep Network Training</h1>
+
+<p>In<a data-type="indexterm" data-primary="large deep networks" data-secondary="distributed training" id="LDNdist09"/><a data-type="indexterm" data-primary="distributed deep network training" data-secondary="main modes of" id="idm139806601995968"/> the previous section, we surveyed a variety of hardware options for training deep networks. However, most organizations will likely only have access to CPUs and perhaps GPUs. Luckily, it’s possible to perform <em>distributed training</em> of deep networks, where multiple CPUs or GPUs are used to train models faster and more effectively. <a data-type="xref" href="#ch9-dist">Figure 9-5</a> illustrates the two major paradigms for training deep networks with multiple CPUs/GPUs, namely data parallel and model parallel training. You will learn about these methods in more detail in the next two sections.</p>
+
+<figure><div id="ch9-dist" class="figure">
+<img src="assets/tfdl_0905.png" alt="parallelism_modes.jpg"/>
+<h6><span class="label">Figure 9-5. </span>Data parallelism and model parallelism are the two main modes of distributed training of deep architectures. Data parallel training splits large datasets across multiple computing nodes, while model parallel training splits large models across multiple nodes. The next two sections will cover these two methods in greater depth.</h6>
+</div></figure>
+
+
+
+
+
+
+
+
+<section data-type="sect2" data-pdf-bookmark="Data Parallelism"><div class="sect2" id="idm139806601990688">
+<h2>Data Parallelism</h2>
+
+<p>Data parallelism<a data-type="indexterm" data-primary="distributed deep network training" data-secondary="data parallelism" id="idm139806601989360"/><a data-type="indexterm" data-primary="data parallelism" id="idm139806601988336"/> is the most common type of multinode deep network training. Data parallel models split large datasets onto different machines. Most nodes are workers and have access to a fraction of the total data used to train the network. Each worker node has a complete copy of the model being trained. One node is designated as the supervisor that gathers updated weights from the workers at regular intervals and pushes averaged  versions of the weights out to worker nodes. Note that you’ve already seen a data parallel example in this book; the A3C implementation presented in <a data-type="xref" href="ch08.html#reinforcement_learning">Chapter 8</a> is a simple example of data parallel deep network training.</p>
+
+<p>As<a data-type="indexterm" data-primary="DistBelief" id="idm139806601985760"/> a historical note, Google’s predecessor to TensorFlow, DistBelief, was based on data parallel training on CPU servers. This system was capable of achieving distributed CPU speeds (using 32–128 nodes) that matched or exceeded GPU training speeds. <a data-type="xref" href="#ch9-downpourSGD">Figure 9-6</a> illustrates the data parallel training method implemented by Dist⁠Belief. However, the success of systems like DistBelief tends to depend on the presence of high throughput network interconnects that can allow for rapid model parameter sharing. Many organizations lack the network infrastructure that enables effective multinode data parallel CPU training. However, as the A3C example demonstrates, it is possible to perform data parallel training on a single node, using different CPU cores. For modern servers, it is also possible to perform data parallel training using multiple GPUs stocked within a single server, as we will show you later.<a data-type="indexterm" data-primary="stochastic gradient descent (SGD)" id="idm139806601983152"/><a data-type="indexterm" data-primary="Downpour stochastic gradient descent (SGD)" id="idm139806601982464"/></p>
+
+<figure><div id="ch9-downpourSGD" class="figure">
+<img src="assets/tfdl_0906.png" alt="downpour_sgd.png"/>
+<h6><span class="label">Figure 9-6. </span>The Downpour stochastic gradient descent (SGD) method maintains multiple replicas of the model and trains them on different subsets of a dataset. The learned weights from these shards are periodically synced to global weights stored on a parameter server.</h6>
+</div></figure>
+</div></section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<section data-type="sect2" data-pdf-bookmark="Model Parallelism"><div class="sect2" id="idm139806601979232">
+<h2>Model Parallelism</h2>
+
+<p>The<a data-type="indexterm" data-primary="model parallelism" id="idm139806601977904"/><a data-type="indexterm" data-primary="distributed deep network training" data-secondary="model parallelism" id="idm139806601977168"/> human brain provides the only known example of a generally intelligent piece of hardware, so there have naturally been comparisons drawn between the complexity of deep networks and the complexity of the brain. Simple arguments state the brain has roughly 100 billion neurons; would constructing deep networks with that many “neurons” suffice to achieve general intelligence? Unfortunately, such arguments miss the point that biological neurons are significantly more complex than “mathematical neurons.” As a result, simple comparisons yield little value. Nonetheless, building larger deep networks has been a major research focus over the last few years.</p>
+
+<p>The major difficulty with training very large deep networks is that GPUs tend to have limited memory (dozens of gigabytes typically). Even with careful encodings, neural networks with more than a few hundred million parameters are not feasible to train on single GPUs due to memory requirements. Model parallel training algorithms attempt to sidestep this limitation by storing large deep networks on the memories of multiple GPUs. A few teams have successfully implemented these ideas on arrays of GPUs to train deep networks with billions of parameters. Unfortunately, these models have not thus far shown performance improvements justifying the extra difficulty. For now, it seems that the increase in experimental ease from using smaller models outweighs the gains from model parallelism.</p>
+<div data-type="note" epub:type="note"><h1>Hardware Memory Interconnects</h1>
+<p>Enabling<a data-type="indexterm" data-primary="hardware memory interconnects" id="idm139806601972928"/> model parallelism requires having very high bandwidth connections between compute nodes since each gradient update by necessity requires internode communication. Note that while data parallelism requires strong interconnects, sync operations need only be performed sporadically after multiple local gradient updates.</p>
+
+<p>A<a data-type="indexterm" data-primary="InfiniBand interconnects" id="idm139806601971280"/><a data-type="indexterm" data-primary="NVLINK interconnects" id="idm139806601970528"/> few groups have used InfiniBand interconnects (InfiniBand is a high-throughput, low-latency networking standard), or Nvidia’s proprietary NVLINK interconnects to attempt to build such large models. However, the results from such experiments have been mixed thus far, and the hardware requirements for such systems tend to be expensive.<a data-type="indexterm" data-primary="" data-startref="LDNdist09" id="idm139806601969376"/></p>
+</div>
+</div></section>
+
+
+
+
+
+</div></section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<section data-type="sect1" class="pagebreak-before" data-pdf-bookmark="Data Parallel Training with Multiple GPUs on Cifar10"><div class="sect1" id="idm139806601968048">
+<h1>Data Parallel Training with Multiple GPUs on Cifar10</h1>
+
+<p>In<a data-type="indexterm" data-primary="large deep networks" data-secondary="with multiple GPUs on Cifar10" id="LDNmulti09"/><a data-type="indexterm" data-primary="Cifar10 benchmark set" data-secondary="overview of" id="idm139806601964864"/> this section, we will give you an in-depth walkthrough of how to train a data-parallel convolutional network on the Cifar10 benchmark set. Cifar10 consists of 60,000 images of size 32 × 32. The Cifar10 dataset is often used to benchmark convolutional architectures. <a data-type="xref" href="#ch9-cifar10">Figure 9-7</a> displays sample images from the Cifar10 dataset.</p>
+
+<figure><div id="ch9-cifar10" class="figure">
+<img src="assets/tfdl_0907.png" alt="cifar10.png"/>
+<h6><span class="label">Figure 9-7. </span>The Cifar10 dataset consists of 60,000 images drawn from 10 classes. Some sample images from various classes are displayed here.</h6>
+</div></figure>
+
+<p>The architecture we will use in this section loads separate copies of the model architecture on different GPUs and periodically syncs learned weights across cores, as <a data-type="xref" href="#ch9-cifararch">Figure 9-8</a> illustrates.</p>
+
+<figure><div id="ch9-cifararch" class="figure">
+<img src="assets/tfdl_0908.png" alt="cifar_parallelism.png"/>
+<h6><span class="label">Figure 9-8. </span>The data parallel architecture you will train in this chapter.</h6>
+</div></figure>
+
+
+
+
+
+
+
+
+<section data-type="sect2" data-pdf-bookmark="Downloading and Loading the DATA"><div class="sect2" id="idm139806601957104">
+<h2>Downloading and Loading the DATA</h2>
+
+<p>The <code>read_cifar10()</code> method<a data-type="indexterm" data-primary="Cifar10 benchmark set" data-secondary="data loading" id="idm139806601955136"/><a data-type="indexterm" data-primary="read_cifar10() method" id="idm139806601954128"/><a data-type="indexterm" data-primary="tf.FixedLengthRecordReader" id="idm139806601953456"/> reads and parses the Cifar10 raw data files. <a data-type="xref" href="#ch8-readcifar">Example 9-1</a> uses <code>tf.FixedLengthRecordReader</code> to read raw data from the Cifar10 files.</p>
+<div id="ch8-readcifar" data-type="example">
+<h5><span class="label">Example 9-1. </span>This function reads and parses data from Cifar10 raw data files</h5>
+
+<pre data-type="programlisting" data-code-language="python"><code class="k">def</code> <code class="nf">read_cifar10</code><code class="p">(</code><code class="n">filename_queue</code><code class="p">):</code>
+  <code class="sd">"""Reads and parses examples from CIFAR10 data files.</code>
+
+<code class="sd">  Recommendation: if you want N-way read parallelism, call this function</code>
+<code class="sd">  N times.  This will give you N independent Readers reading different</code>
+<code class="sd">  files &amp; positions within those files, which will give better mixing of</code>
+<code class="sd">  examples.</code>
+
+<code class="sd">  Args:</code>
+<code class="sd">    filename_queue: A queue of strings with the filenames to read from.</code>
+
+<code class="sd">  Returns:</code>
+<code class="sd">    An object representing a single example, with the following fields:</code>
+<code class="sd">      height: number of rows in the result (32)</code>
+<code class="sd">      width: number of columns in the result (32)</code>
+<code class="sd">      depth: number of color channels in the result (3)</code>
+<code class="sd">      key: a scalar string Tensor describing the filename &amp; record number</code>
+<code class="sd">        for this example.</code>
+<code class="sd">      label: an int32 Tensor with the label in the range 0..9.</code>
+<code class="sd">      uint8image:: a [height, width, depth] uint8 Tensor with the image data</code>
+<code class="sd">  """</code>
+
+  <code class="k">class</code> <code class="nc">CIFAR10Record</code><code class="p">(</code><code class="nb">object</code><code class="p">):</code>
+    <code class="k">pass</code>
+  <code class="n">result</code> <code class="o">=</code> <code class="n">CIFAR10Record</code><code class="p">()</code>
+
+  <code class="c1"># Dimensions of the images in the CIFAR-10 dataset.</code>
+  <code class="c1"># See http://www.cs.toronto.edu/~kriz/cifar.html for a description of the</code>
+  <code class="c1"># input format.</code>
+  <code class="n">label_bytes</code> <code class="o">=</code> <code class="mi">1</code>  <code class="c1"># 2 for CIFAR-100</code>
+  <code class="n">result</code><code class="o">.</code><code class="n">height</code> <code class="o">=</code> <code class="mi">32</code>
+  <code class="n">result</code><code class="o">.</code><code class="n">width</code> <code class="o">=</code> <code class="mi">32</code>
+  <code class="n">result</code><code class="o">.</code><code class="n">depth</code> <code class="o">=</code> <code class="mi">3</code>
+  <code class="n">image_bytes</code> <code class="o">=</code> <code class="n">result</code><code class="o">.</code><code class="n">height</code> <code class="o">*</code> <code class="n">result</code><code class="o">.</code><code class="n">width</code> <code class="o">*</code> <code class="n">result</code><code class="o">.</code><code class="n">depth</code>
+  <code class="c1"># Every record consists of a label followed by the image, with a</code>
+  <code class="c1"># fixed number of bytes for each.</code>
+  <code class="n">record_bytes</code> <code class="o">=</code> <code class="n">label_bytes</code> <code class="o">+</code> <code class="n">image_bytes</code>
+
+  <code class="c1"># Read a record, getting filenames from the filename_queue.  No</code>
+  <code class="c1"># header or footer in the CIFAR-10 format, so we leave header_bytes</code>
+  <code class="c1"># and footer_bytes at their default of 0.</code>
+  <code class="n">reader</code> <code class="o">=</code> <code class="n">tf</code><code class="o">.</code><code class="n">FixedLengthRecordReader</code><code class="p">(</code><code class="n">record_bytes</code><code class="o">=</code><code class="n">record_bytes</code><code class="p">)</code>
+  <code class="n">result</code><code class="o">.</code><code class="n">key</code><code class="p">,</code> <code class="n">value</code> <code class="o">=</code> <code class="n">reader</code><code class="o">.</code><code class="n">read</code><code class="p">(</code><code class="n">filename_queue</code><code class="p">)</code>
+
+  <code class="c1"># Convert from a string to a vector of uint8 that is record_bytes long.</code>
+  <code class="n">record_bytes</code> <code class="o">=</code> <code class="n">tf</code><code class="o">.</code><code class="n">decode_raw</code><code class="p">(</code><code class="n">value</code><code class="p">,</code> <code class="n">tf</code><code class="o">.</code><code class="n">uint8</code><code class="p">)</code>
+
+  <code class="c1"># Read a record, getting filenames from the filename_queue.  No</code>
+  <code class="c1"># header or footer in the CIFAR-10 format, so we leave header_bytes</code>
+  <code class="c1"># and footer_bytes at their default of 0.</code>
+  <code class="n">reader</code> <code class="o">=</code> <code class="n">tf</code><code class="o">.</code><code class="n">FixedLengthRecordReader</code><code class="p">(</code><code class="n">record_bytes</code><code class="o">=</code><code class="n">record_bytes</code><code class="p">)</code>
+  <code class="n">result</code><code class="o">.</code><code class="n">key</code><code class="p">,</code> <code class="n">value</code> <code class="o">=</code> <code class="n">reader</code><code class="o">.</code><code class="n">read</code><code class="p">(</code><code class="n">filename_queue</code><code class="p">)</code>
+
+  <code class="c1"># Convert from a string to a vector of uint8 that is record_bytes long.</code>
+  <code class="n">record_bytes</code> <code class="o">=</code> <code class="n">tf</code><code class="o">.</code><code class="n">decode_raw</code><code class="p">(</code><code class="n">value</code><code class="p">,</code> <code class="n">tf</code><code class="o">.</code><code class="n">uint8</code><code class="p">)</code>
+
+  <code class="c1"># The first bytes represent the label, which we convert from uint8-&gt;int32.</code>
+  <code class="n">result</code><code class="o">.</code><code class="n">label</code> <code class="o">=</code> <code class="n">tf</code><code class="o">.</code><code class="n">cast</code><code class="p">(</code>
+      <code class="n">tf</code><code class="o">.</code><code class="n">strided_slice</code><code class="p">(</code><code class="n">record_bytes</code><code class="p">,</code> <code class="p">[</code><code class="mi">0</code><code class="p">],</code> <code class="p">[</code><code class="n">label_bytes</code><code class="p">]),</code> <code class="n">tf</code><code class="o">.</code><code class="n">int32</code><code class="p">)</code>
+
+  <code class="c1"># The remaining bytes after the label represent the image, which we reshape</code>
+  <code class="c1"># from [depth * height * width] to [depth, height, width].</code>
+  <code class="n">depth_major</code> <code class="o">=</code> <code class="n">tf</code><code class="o">.</code><code class="n">reshape</code><code class="p">(</code>
+      <code class="n">tf</code><code class="o">.</code><code class="n">strided_slice</code><code class="p">(</code><code class="n">record_bytes</code><code class="p">,</code> <code class="p">[</code><code class="n">label_bytes</code><code class="p">],</code>
+                       <code class="p">[</code><code class="n">label_bytes</code> <code class="o">+</code> <code class="n">image_bytes</code><code class="p">]),</code>
+      <code class="p">[</code><code class="n">result</code><code class="o">.</code><code class="n">depth</code><code class="p">,</code> <code class="n">result</code><code class="o">.</code><code class="n">height</code><code class="p">,</code> <code class="n">result</code><code class="o">.</code><code class="n">width</code><code class="p">])</code>
+  <code class="c1"># Convert from [depth, height, width] to [height, width, depth].</code>
+  <code class="n">result</code><code class="o">.</code><code class="n">uint8image</code> <code class="o">=</code> <code class="n">tf</code><code class="o">.</code><code class="n">transpose</code><code class="p">(</code><code class="n">depth_major</code><code class="p">,</code> <code class="p">[</code><code class="mi">1</code><code class="p">,</code> <code class="mi">2</code><code class="p">,</code> <code class="mi">0</code><code class="p">])</code>
+
+  <code class="k">return</code> <code class="n">result</code></pre></div>
+</div></section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<section data-type="sect2" data-pdf-bookmark="Deep Dive on the Architecture"><div class="sect2" id="idm139806601948096">
+<h2>Deep Dive on the Architecture</h2>
+
+<p>The<a data-type="indexterm" data-primary="Cifar10 benchmark set" data-secondary="multilayer convnet architecture for" id="idm139806601946960"/> architecture for the network is a standard multilayer convnet, similar to a more complicated version of the LeNet5 architecture you saw in <a data-type="xref" href="ch06.html#convolutional_neural_networks">Chapter 6</a>. The <code>inference()</code> method constructs the architecture (<a data-type="xref" href="#ch8-inference">Example 9-2</a>). This convolutional architecture follows a relatively standard architecture, with convolutional layers interspersed with local normalization layers.</p>
+<div id="ch8-inference" data-type="example">
+<h5><span class="label">Example 9-2. </span>This function builds the Cifar10 architecture</h5>
+
+<pre data-type="programlisting" data-code-language="python"><code class="k">def</code> <code class="nf">inference</code><code class="p">(</code><code class="n">images</code><code class="p">):</code>
+  <code class="sd">"""Build the CIFAR10 model.</code>
+
+<code class="sd">  Args:</code>
+<code class="sd">    images: Images returned from distorted_inputs() or inputs().</code>
+
+<code class="sd">  Returns:</code>
+<code class="sd">    Logits.</code>
+<code class="sd">  """</code>
+  <code class="c1"># We instantiate all variables using tf.get_variable() instead of</code>
+  <code class="c1"># tf.Variable() in order to share variables across multiple GPU training runs.</code>
+  <code class="c1"># If we only ran this model on a single GPU, we could simplify this function</code>
+  <code class="c1"># by replacing all instances of tf.get_variable() with tf.Variable().</code>
+  <code class="c1">#</code>
+  <code class="c1"># conv1</code>
+  <code class="k">with</code> <code class="n">tf</code><code class="o">.</code><code class="n">variable_scope</code><code class="p">(</code><code class="s1">'conv1'</code><code class="p">)</code> <code class="k">as</code> <code class="n">scope</code><code class="p">:</code>
+    <code class="n">kernel</code> <code class="o">=</code> <code class="n">_variable_with_weight_decay</code><code class="p">(</code><code class="s1">'weights'</code><code class="p">,</code>
+                                         <code class="n">shape</code><code class="o">=</code><code class="p">[</code><code class="mi">5</code><code class="p">,</code> <code class="mi">5</code><code class="p">,</code> <code class="mi">3</code><code class="p">,</code> <code class="mi">64</code><code class="p">],</code>
+                                         <code class="n">stddev</code><code class="o">=</code><code class="mf">5e-2</code><code class="p">,</code>
+                                         <code class="n">wd</code><code class="o">=</code><code class="mf">0.0</code><code class="p">)</code>
+    <code class="n">conv</code> <code class="o">=</code> <code class="n">tf</code><code class="o">.</code><code class="n">nn</code><code class="o">.</code><code class="n">conv2d</code><code class="p">(</code><code class="n">images</code><code class="p">,</code> <code class="n">kernel</code><code class="p">,</code> <code class="p">[</code><code class="mi">1</code><code class="p">,</code> <code class="mi">1</code><code class="p">,</code> <code class="mi">1</code><code class="p">,</code> <code class="mi">1</code><code class="p">],</code> <code class="n">padding</code><code class="o">=</code><code class="s1">'SAME'</code><code class="p">)</code>
+    <code class="n">biases</code> <code class="o">=</code> <code class="n">_variable_on_cpu</code><code class="p">(</code><code class="s1">'biases'</code><code class="p">,</code> <code class="p">[</code><code class="mi">64</code><code class="p">],</code> <code class="n">tf</code><code class="o">.</code><code class="n">constant_initializer</code><code class="p">(</code><code class="mf">0.0</code><code class="p">))</code>
+    <code class="n">pre_activation</code> <code class="o">=</code> <code class="n">tf</code><code class="o">.</code><code class="n">nn</code><code class="o">.</code><code class="n">bias_add</code><code class="p">(</code><code class="n">conv</code><code class="p">,</code> <code class="n">biases</code><code class="p">)</code>
+    <code class="n">conv1</code> <code class="o">=</code> <code class="n">tf</code><code class="o">.</code><code class="n">nn</code><code class="o">.</code><code class="n">relu</code><code class="p">(</code><code class="n">pre_activation</code><code class="p">,</code> <code class="n">name</code><code class="o">=</code><code class="n">scope</code><code class="o">.</code><code class="n">name</code><code class="p">)</code>
+    <code class="n">_activation_summary</code><code class="p">(</code><code class="n">conv1</code><code class="p">)</code>
+
+  <code class="c1"># pool1</code>
+  <code class="n">pool1</code> <code class="o">=</code> <code class="n">tf</code><code class="o">.</code><code class="n">nn</code><code class="o">.</code><code class="n">max_pool</code><code class="p">(</code><code class="n">conv1</code><code class="p">,</code> <code class="n">ksize</code><code class="o">=</code><code class="p">[</code><code class="mi">1</code><code class="p">,</code> <code class="mi">3</code><code class="p">,</code> <code class="mi">3</code><code class="p">,</code> <code class="mi">1</code><code class="p">],</code> <code class="n">strides</code><code class="o">=</code><code class="p">[</code><code class="mi">1</code><code class="p">,</code> <code class="mi">2</code><code class="p">,</code> <code class="mi">2</code><code class="p">,</code> <code class="mi">1</code><code class="p">],</code>
+                         <code class="n">padding</code><code class="o">=</code><code class="s1">'SAME'</code><code class="p">,</code> <code class="n">name</code><code class="o">=</code><code class="s1">'pool1'</code><code class="p">)</code>
+  <code class="c1"># norm1</code>
+  <code class="n">norm1</code> <code class="o">=</code> <code class="n">tf</code><code class="o">.</code><code class="n">nn</code><code class="o">.</code><code class="n">lrn</code><code class="p">(</code><code class="n">pool1</code><code class="p">,</code> <code class="mi">4</code><code class="p">,</code> <code class="n">bias</code><code class="o">=</code><code class="mf">1.0</code><code class="p">,</code> <code class="n">alpha</code><code class="o">=</code><code class="mf">0.001</code> <code class="o">/</code> <code class="mf">9.0</code><code class="p">,</code> <code class="n">beta</code><code class="o">=</code><code class="mf">0.75</code><code class="p">,</code>
+                    <code class="n">name</code><code class="o">=</code><code class="s1">'norm1'</code><code class="p">)</code>
+
+  <code class="c1"># conv2</code>
+  <code class="k">with</code> <code class="n">tf</code><code class="o">.</code><code class="n">variable_scope</code><code class="p">(</code><code class="s1">'conv2'</code><code class="p">)</code> <code class="k">as</code> <code class="n">scope</code><code class="p">:</code>
+    <code class="n">kernel</code> <code class="o">=</code> <code class="n">_variable_with_weight_decay</code><code class="p">(</code><code class="s1">'weights'</code><code class="p">,</code>
+                                         <code class="n">shape</code><code class="o">=</code><code class="p">[</code><code class="mi">5</code><code class="p">,</code> <code class="mi">5</code><code class="p">,</code> <code class="mi">64</code><code class="p">,</code> <code class="mi">64</code><code class="p">],</code>
+                                         <code class="n">stddev</code><code class="o">=</code><code class="mf">5e-2</code><code class="p">,</code>
+                                         <code class="n">wd</code><code class="o">=</code><code class="mf">0.0</code><code class="p">)</code>
+    <code class="n">conv</code> <code class="o">=</code> <code class="n">tf</code><code class="o">.</code><code class="n">nn</code><code class="o">.</code><code class="n">conv2d</code><code class="p">(</code><code class="n">norm1</code><code class="p">,</code> <code class="n">kernel</code><code class="p">,</code> <code class="p">[</code><code class="mi">1</code><code class="p">,</code> <code class="mi">1</code><code class="p">,</code> <code class="mi">1</code><code class="p">,</code> <code class="mi">1</code><code class="p">],</code> <code class="n">padding</code><code class="o">=</code><code class="s1">'SAME'</code><code class="p">)</code>
+    <code class="n">biases</code> <code class="o">=</code> <code class="n">_variable_on_cpu</code><code class="p">(</code><code class="s1">'biases'</code><code class="p">,</code> <code class="p">[</code><code class="mi">64</code><code class="p">],</code> <code class="n">tf</code><code class="o">.</code><code class="n">constant_initializer</code><code class="p">(</code><code class="mf">0.1</code><code class="p">))</code>
+    <code class="n">pre_activation</code> <code class="o">=</code> <code class="n">tf</code><code class="o">.</code><code class="n">nn</code><code class="o">.</code><code class="n">bias_add</code><code class="p">(</code><code class="n">conv</code><code class="p">,</code> <code class="n">biases</code><code class="p">)</code>
+    <code class="n">conv2</code> <code class="o">=</code> <code class="n">tf</code><code class="o">.</code><code class="n">nn</code><code class="o">.</code><code class="n">relu</code><code class="p">(</code><code class="n">pre_activation</code><code class="p">,</code> <code class="n">name</code><code class="o">=</code><code class="n">scope</code><code class="o">.</code><code class="n">name</code><code class="p">)</code>
+    <code class="n">_activation_summary</code><code class="p">(</code><code class="n">conv2</code><code class="p">)</code>
+
+  <code class="c1"># norm2</code>
+  <code class="n">norm2</code> <code class="o">=</code> <code class="n">tf</code><code class="o">.</code><code class="n">nn</code><code class="o">.</code><code class="n">lrn</code><code class="p">(</code><code class="n">conv2</code><code class="p">,</code> <code class="mi">4</code><code class="p">,</code> <code class="n">bias</code><code class="o">=</code><code class="mf">1.0</code><code class="p">,</code> <code class="n">alpha</code><code class="o">=</code><code class="mf">0.001</code> <code class="o">/</code> <code class="mf">9.0</code><code class="p">,</code> <code class="n">beta</code><code class="o">=</code><code class="mf">0.75</code><code class="p">,</code>
+                    <code class="n">name</code><code class="o">=</code><code class="s1">'norm2'</code><code class="p">)</code>
+  <code class="c1"># pool2</code>
+  <code class="n">pool2</code> <code class="o">=</code> <code class="n">tf</code><code class="o">.</code><code class="n">nn</code><code class="o">.</code><code class="n">max_pool</code><code class="p">(</code><code class="n">norm2</code><code class="p">,</code> <code class="n">ksize</code><code class="o">=</code><code class="p">[</code><code class="mi">1</code><code class="p">,</code> <code class="mi">3</code><code class="p">,</code> <code class="mi">3</code><code class="p">,</code> <code class="mi">1</code><code class="p">],</code>
+                         <code class="n">strides</code><code class="o">=</code><code class="p">[</code><code class="mi">1</code><code class="p">,</code> <code class="mi">2</code><code class="p">,</code> <code class="mi">2</code><code class="p">,</code> <code class="mi">1</code><code class="p">],</code> <code class="n">padding</code><code class="o">=</code><code class="s1">'SAME'</code><code class="p">,</code> <code class="n">name</code><code class="o">=</code><code class="s1">'pool2'</code><code class="p">)</code>
+
+  <code class="c1"># local3</code>
+  <code class="k">with</code> <code class="n">tf</code><code class="o">.</code><code class="n">variable_scope</code><code class="p">(</code><code class="s1">'local3'</code><code class="p">)</code> <code class="k">as</code> <code class="n">scope</code><code class="p">:</code>
+    <code class="c1"># Move everything into depth so we can perform a single matrix multiply.</code>
+    <code class="n">reshape</code> <code class="o">=</code> <code class="n">tf</code><code class="o">.</code><code class="n">reshape</code><code class="p">(</code><code class="n">pool2</code><code class="p">,</code> <code class="p">[</code><code class="n">FLAGS</code><code class="o">.</code><code class="n">batch_size</code><code class="p">,</code> <code class="o">-</code><code class="mi">1</code><code class="p">])</code>
+    <code class="n">dim</code> <code class="o">=</code> <code class="n">reshape</code><code class="o">.</code><code class="n">get_shape</code><code class="p">()[</code><code class="mi">1</code><code class="p">]</code><code class="o">.</code><code class="n">value</code>
+    <code class="n">weights</code> <code class="o">=</code> <code class="n">_variable_with_weight_decay</code><code class="p">(</code><code class="s1">'weights'</code><code class="p">,</code> <code class="n">shape</code><code class="o">=</code><code class="p">[</code><code class="n">dim</code><code class="p">,</code> <code class="mi">384</code><code class="p">],</code>
+                                          <code class="n">stddev</code><code class="o">=</code><code class="mf">0.04</code><code class="p">,</code> <code class="n">wd</code><code class="o">=</code><code class="mf">0.004</code><code class="p">)</code>
+    <code class="n">biases</code> <code class="o">=</code> <code class="n">_variable_on_cpu</code><code class="p">(</code><code class="s1">'biases'</code><code class="p">,</code> <code class="p">[</code><code class="mi">384</code><code class="p">],</code> <code class="n">tf</code><code class="o">.</code><code class="n">constant_initializer</code><code class="p">(</code><code class="mf">0.1</code><code class="p">))</code>
+    <code class="n">local3</code> <code class="o">=</code> <code class="n">tf</code><code class="o">.</code><code class="n">nn</code><code class="o">.</code><code class="n">relu</code><code class="p">(</code><code class="n">tf</code><code class="o">.</code><code class="n">matmul</code><code class="p">(</code><code class="n">reshape</code><code class="p">,</code> <code class="n">weights</code><code class="p">)</code> <code class="o">+</code> <code class="n">biases</code><code class="p">,</code> <code class="n">name</code><code class="o">=</code><code class="n">scope</code><code class="o">.</code><code class="n">name</code><code class="p">)</code>
+    <code class="n">_activation_summary</code><code class="p">(</code><code class="n">local3</code><code class="p">)</code>
+
+  <code class="c1"># local4</code>
+  <code class="k">with</code> <code class="n">tf</code><code class="o">.</code><code class="n">variable_scope</code><code class="p">(</code><code class="s1">'local4'</code><code class="p">)</code> <code class="k">as</code> <code class="n">scope</code><code class="p">:</code>
+    <code class="n">weights</code> <code class="o">=</code> <code class="n">_variable_with_weight_decay</code><code class="p">(</code><code class="s1">'weights'</code><code class="p">,</code> <code class="n">shape</code><code class="o">=</code><code class="p">[</code><code class="mi">384</code><code class="p">,</code> <code class="mi">192</code><code class="p">],</code>
+                                          <code class="n">stddev</code><code class="o">=</code><code class="mf">0.04</code><code class="p">,</code> <code class="n">wd</code><code class="o">=</code><code class="mf">0.004</code><code class="p">)</code>
+    <code class="n">biases</code> <code class="o">=</code> <code class="n">_variable_on_cpu</code><code class="p">(</code><code class="s1">'biases'</code><code class="p">,</code> <code class="p">[</code><code class="mi">192</code><code class="p">],</code> <code class="n">tf</code><code class="o">.</code><code class="n">constant_initializer</code><code class="p">(</code><code class="mf">0.1</code><code class="p">))</code>
+    <code class="n">local4</code> <code class="o">=</code> <code class="n">tf</code><code class="o">.</code><code class="n">nn</code><code class="o">.</code><code class="n">relu</code><code class="p">(</code><code class="n">tf</code><code class="o">.</code><code class="n">matmul</code><code class="p">(</code><code class="n">local3</code><code class="p">,</code> <code class="n">weights</code><code class="p">)</code> <code class="o">+</code> <code class="n">biases</code><code class="p">,</code> <code class="n">name</code><code class="o">=</code><code class="n">scope</code><code class="o">.</code><code class="n">name</code><code class="p">)</code>
+    <code class="n">_activation_summary</code><code class="p">(</code><code class="n">local4</code><code class="p">)</code>
+
+  <code class="c1"># linear layer(WX + b),</code>
+  <code class="c1"># We don't apply softmax here because</code>
+  <code class="c1"># tf.nn.sparse_softmax_cross_entropy_with_logits accepts the unscaled logits</code>
+  <code class="c1"># and performs the softmax internally for efficiency.</code>
+  <code class="k">with</code> <code class="n">tf</code><code class="o">.</code><code class="n">variable_scope</code><code class="p">(</code><code class="s1">'softmax_linear'</code><code class="p">)</code> <code class="k">as</code> <code class="n">scope</code><code class="p">:</code>
+    <code class="n">weights</code> <code class="o">=</code> <code class="n">_variable_with_weight_decay</code><code class="p">(</code><code class="s1">'weights'</code><code class="p">,</code> <code class="p">[</code><code class="mi">192</code><code class="p">,</code> <code class="n">cifar10</code><code class="o">.</code><code class="n">NUM_CLASSES</code><code class="p">],</code>
+                                          <code class="n">stddev</code><code class="o">=</code><code class="mi">1</code><code class="o">/</code><code class="mf">192.0</code><code class="p">,</code> <code class="n">wd</code><code class="o">=</code><code class="mf">0.0</code><code class="p">)</code>
+    <code class="n">biases</code> <code class="o">=</code> <code class="n">_variable_on_cpu</code><code class="p">(</code><code class="s1">'biases'</code><code class="p">,</code> <code class="p">[</code><code class="n">cifar10</code><code class="o">.</code><code class="n">NUM_CLASSES</code><code class="p">],</code>
+                              <code class="n">tf</code><code class="o">.</code><code class="n">constant_initializer</code><code class="p">(</code><code class="mf">0.0</code><code class="p">))</code>
+    <code class="n">softmax_linear</code> <code class="o">=</code> <code class="n">tf</code><code class="o">.</code><code class="n">add</code><code class="p">(</code><code class="n">tf</code><code class="o">.</code><code class="n">matmul</code><code class="p">(</code><code class="n">local4</code><code class="p">,</code> <code class="n">weights</code><code class="p">),</code> <code class="n">biases</code><code class="p">,</code> <code class="n">name</code><code class="o">=</code><code class="n">scope</code><code class="o">.</code><code class="n">name</code><code class="p">)</code>
+    <code class="n">_activation_summary</code><code class="p">(</code><code class="n">softmax_linear</code><code class="p">)</code>
+
+  <code class="k">return</code> <code class="n">softmax_linear</code></pre></div>
+<div data-type="note" epub:type="note"><h1>Missing Object Orientation?</h1>
+<p>Contrast the model code presented in this architecture with the policy code from the previous architecture. Note how the introduction of the <code>Layer</code> object allows for dramatically simplified code with concomitant improvements in readability. This sharp improvement in readability is part of the reason most developers prefer to use an object-oriented overlay on top of TensorFlow in practice.</p>
+
+<p>That said, in this chapter, we use raw TensorFlow, since making classes like <code>TensorGraph</code> work with multiple GPUs would require significant additional overhead. In general, raw TensorFlow code offers maximum flexibility, but object orientation offers convenience. Pick the abstraction necessary for the problem at hand.</p>
+</div>
+</div></section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<section data-type="sect2" data-pdf-bookmark="Training on Multiple GPUs"><div class="sect2" id="idm139806601581680">
+<h2>Training on Multiple GPUs</h2>
+
+<p>We<a data-type="indexterm" data-primary="Cifar10 benchmark set" data-secondary="training on multiple GPUs" id="idm139806601580096"/> instantiate a separate version of the model and architecture on each GPU. We then use the CPU to average the weights for the separate GPU nodes (<a data-type="xref" href="#ch8-train">Example 9-3</a>).</p>
+<div id="ch8-train" data-type="example">
+<h5><span class="label">Example 9-3. </span>This function trains the Cifar10 model</h5>
+
+<pre data-type="programlisting" data-code-language="python"><code class="k">def</code> <code class="nf">train</code><code class="p">():</code>
+  <code class="sd">"""Train CIFAR10 for a number of steps."""</code>
+  <code class="k">with</code> <code class="n">tf</code><code class="o">.</code><code class="n">Graph</code><code class="p">()</code><code class="o">.</code><code class="n">as_default</code><code class="p">(),</code> <code class="n">tf</code><code class="o">.</code><code class="n">device</code><code class="p">(</code><code class="s1">'/cpu:0'</code><code class="p">):</code>
+    <code class="c1"># Create a variable to count the number of train() calls. This equals the</code>
+    <code class="c1"># number of batches processed * FLAGS.num_gpus.</code>
+    <code class="n">global_step</code> <code class="o">=</code> <code class="n">tf</code><code class="o">.</code><code class="n">get_variable</code><code class="p">(</code>
+        <code class="s1">'global_step'</code><code class="p">,</code> <code class="p">[],</code>
+        <code class="n">initializer</code><code class="o">=</code><code class="n">tf</code><code class="o">.</code><code class="n">constant_initializer</code><code class="p">(</code><code class="mi">0</code><code class="p">),</code> <code class="n">trainable</code><code class="o">=</code><code class="bp">False</code><code class="p">)</code>
+
+    <code class="c1"># Calculate the learning rate schedule.</code>
+    <code class="n">num_batches_per_epoch</code> <code class="o">=</code> <code class="p">(</code><code class="n">cifar10</code><code class="o">.</code><code class="n">NUM_EXAMPLES_PER_EPOCH_FOR_TRAIN</code> <code class="o">/</code>
+                             <code class="n">FLAGS</code><code class="o">.</code><code class="n">batch_size</code><code class="p">)</code>
+    <code class="n">decay_steps</code> <code class="o">=</code> <code class="nb">int</code><code class="p">(</code><code class="n">num_batches_per_epoch</code> <code class="o">*</code> <code class="n">cifar10</code><code class="o">.</code><code class="n">NUM_EPOCHS_PER_DECAY</code><code class="p">)</code>
+
+    <code class="c1"># Decay the learning rate exponentially based on the number of steps.</code>
+    <code class="n">lr</code> <code class="o">=</code> <code class="n">tf</code><code class="o">.</code><code class="n">train</code><code class="o">.</code><code class="n">exponential_decay</code><code class="p">(</code><code class="n">cifar10</code><code class="o">.</code><code class="n">INITIAL_LEARNING_RATE</code><code class="p">,</code>
+                                    <code class="n">global_step</code><code class="p">,</code>
+                                    <code class="n">decay_steps</code><code class="p">,</code>
+                                    <code class="n">cifar10</code><code class="o">.</code><code class="n">LEARNING_RATE_DECAY_FACTOR</code><code class="p">,</code>
+                                    <code class="n">staircase</code><code class="o">=</code><code class="bp">True</code><code class="p">)</code>
+
+    <code class="c1"># Create an optimizer that performs gradient descent.</code>
+    <code class="n">opt</code> <code class="o">=</code> <code class="n">tf</code><code class="o">.</code><code class="n">train</code><code class="o">.</code><code class="n">GradientDescentOptimizer</code><code class="p">(</code><code class="n">lr</code><code class="p">)</code>
+
+    <code class="c1"># Get images and labels for CIFAR-10.</code>
+    <code class="n">images</code><code class="p">,</code> <code class="n">labels</code> <code class="o">=</code> <code class="n">cifar10</code><code class="o">.</code><code class="n">distorted_inputs</code><code class="p">()</code>
+    <code class="n">batch_queue</code> <code class="o">=</code> <code class="n">tf</code><code class="o">.</code><code class="n">contrib</code><code class="o">.</code><code class="n">slim</code><code class="o">.</code><code class="n">prefetch_queue</code><code class="o">.</code><code class="n">prefetch_queue</code><code class="p">(</code>
+          <code class="p">[</code><code class="n">images</code><code class="p">,</code> <code class="n">labels</code><code class="p">],</code> <code class="n">capacity</code><code class="o">=</code><code class="mi">2</code> <code class="o">*</code> <code class="n">FLAGS</code><code class="o">.</code><code class="n">num_gpus</code><code class="p">)</code></pre></div>
+
+<p>The code in <a data-type="xref" href="#ch8-gradtower">Example 9-4</a> performs the essential multi-GPU training. Note how different batches are dequeued for each GPU, but weight sharing via <code>tf.get_variable_score().reuse_variables()</code> enables training to happen correctly.</p>
+<div id="ch8-gradtower" data-type="example">
+<h5><span class="label">Example 9-4. </span>This snippet implements multi-GPU training</h5>
+
+<pre data-type="programlisting" data-code-language="python">    <code class="c1"># Calculate the gradients for each model tower.</code>
+    <code class="n">tower_grads</code> <code class="o">=</code> <code class="p">[]</code>
+    <code class="k">with</code> <code class="n">tf</code><code class="o">.</code><code class="n">variable_scope</code><code class="p">(</code><code class="n">tf</code><code class="o">.</code><code class="n">get_variable_scope</code><code class="p">()):</code>
+      <code class="k">for</code> <code class="n">i</code> <code class="ow">in</code> <code class="nb">xrange</code><code class="p">(</code><code class="n">FLAGS</code><code class="o">.</code><code class="n">num_gpus</code><code class="p">):</code>
+        <code class="k">with</code> <code class="n">tf</code><code class="o">.</code><code class="n">device</code><code class="p">(</code><code class="s1">'/gpu:</code><code class="si">%d</code><code class="s1">'</code> <code class="o">%</code> <code class="n">i</code><code class="p">):</code>
+          <code class="k">with</code> <code class="n">tf</code><code class="o">.</code><code class="n">name_scope</code><code class="p">(</code><code class="s1">'</code><code class="si">%s</code><code class="s1">_</code><code class="si">%d</code><code class="s1">'</code> <code class="o">%</code> <code class="p">(</code><code class="n">cifar10</code><code class="o">.</code><code class="n">TOWER_NAME</code><code class="p">,</code> <code class="n">i</code><code class="p">))</code> <code class="k">as</code> <code class="n">scope</code><code class="p">:</code>
+            <code class="c1"># Dequeues one batch for the GPU</code>
+            <code class="n">image_batch</code><code class="p">,</code> <code class="n">label_batch</code> <code class="o">=</code> <code class="n">batch_queue</code><code class="o">.</code><code class="n">dequeue</code><code class="p">()</code>
+            <code class="c1"># Calculate the loss for one tower of the CIFAR model. This function</code>
+            <code class="c1"># constructs the entire CIFAR model but shares the variables across</code>
+            <code class="c1"># all towers.</code>
+            <code class="n">loss</code> <code class="o">=</code> <code class="n">tower_loss</code><code class="p">(</code><code class="n">scope</code><code class="p">,</code> <code class="n">image_batch</code><code class="p">,</code> <code class="n">label_batch</code><code class="p">)</code>
+
+            <code class="c1"># Reuse variables for the next tower.</code>
+            <code class="n">tf</code><code class="o">.</code><code class="n">get_variable_scope</code><code class="p">()</code><code class="o">.</code><code class="n">reuse_variables</code><code class="p">()</code>
+
+            <code class="c1"># Retain the summaries from the final tower.</code>
+            <code class="n">summaries</code> <code class="o">=</code> <code class="n">tf</code><code class="o">.</code><code class="n">get_collection</code><code class="p">(</code><code class="n">tf</code><code class="o">.</code><code class="n">GraphKeys</code><code class="o">.</code><code class="n">SUMMARIES</code><code class="p">,</code> <code class="n">scope</code><code class="p">)</code>
+
+            <code class="c1"># Calculate the gradients for the batch of data on this CIFAR tower.</code>
+            <code class="n">grads</code> <code class="o">=</code> <code class="n">opt</code><code class="o">.</code><code class="n">compute_gradients</code><code class="p">(</code><code class="n">loss</code><code class="p">)</code>
+
+            <code class="c1"># Keep track of the gradients across all towers.</code>
+            <code class="n">tower_grads</code><code class="o">.</code><code class="n">append</code><code class="p">(</code><code class="n">grads</code><code class="p">)</code>
+
+    <code class="c1"># We must calculate the mean of each gradient. Note that this is the</code>
+    <code class="c1"># synchronization point across all towers.</code>
+    <code class="n">grads</code> <code class="o">=</code> <code class="n">average_gradients</code><code class="p">(</code><code class="n">tower_grads</code><code class="p">)</code></pre></div>
+
+<p>We end by applying the joint training operation and writing summary checkpoints as needed in <a data-type="xref" href="#ch8-joint">Example 9-5</a>.</p>
+<div id="ch8-joint" data-type="example">
+<h5><span class="label">Example 9-5. </span>This snippet groups updates from the various GPUs and writes summary checkpoints as needed</h5>
+
+<pre data-type="programlisting" data-code-language="python">    <code class="c1"># Add a summary to track the learning rate.</code>
+    <code class="n">summaries</code><code class="o">.</code><code class="n">append</code><code class="p">(</code><code class="n">tf</code><code class="o">.</code><code class="n">summary</code><code class="o">.</code><code class="n">scalar</code><code class="p">(</code><code class="s1">'learning_rate'</code><code class="p">,</code> <code class="n">lr</code><code class="p">))</code>
+
+    <code class="c1"># Add histograms for gradients.</code>
+    <code class="k">for</code> <code class="n">grad</code><code class="p">,</code> <code class="n">var</code> <code class="ow">in</code> <code class="n">grads</code><code class="p">:</code>
+      <code class="k">if</code> <code class="n">grad</code> <code class="ow">is</code> <code class="ow">not</code> <code class="bp">None</code><code class="p">:</code>
+        <code class="n">summaries</code><code class="o">.</code><code class="n">append</code><code class="p">(</code><code class="n">tf</code><code class="o">.</code><code class="n">summary</code><code class="o">.</code><code class="n">histogram</code><code class="p">(</code><code class="n">var</code><code class="o">.</code><code class="n">op</code><code class="o">.</code><code class="n">name</code> <code class="o">+</code> <code class="s1">'/gradients'</code><code class="p">,</code> <code class="n">grad</code><code class="p">))</code>
+
+    <code class="c1"># Apply the gradients to adjust the shared variables.</code>
+    <code class="n">apply_gradient_op</code> <code class="o">=</code> <code class="n">opt</code><code class="o">.</code><code class="n">apply_gradients</code><code class="p">(</code><code class="n">grads</code><code class="p">,</code> <code class="n">global_step</code><code class="o">=</code><code class="n">global_step</code><code class="p">)</code>
+
+    <code class="c1"># Add histograms for trainable variables.</code>
+    <code class="k">for</code> <code class="n">var</code> <code class="ow">in</code> <code class="n">tf</code><code class="o">.</code><code class="n">trainable_variables</code><code class="p">():</code>
+      <code class="n">summaries</code><code class="o">.</code><code class="n">append</code><code class="p">(</code><code class="n">tf</code><code class="o">.</code><code class="n">summary</code><code class="o">.</code><code class="n">histogram</code><code class="p">(</code><code class="n">var</code><code class="o">.</code><code class="n">op</code><code class="o">.</code><code class="n">name</code><code class="p">,</code> <code class="n">var</code><code class="p">))</code>
+
+    <code class="c1"># Track the moving averages of all trainable variables.</code>
+    <code class="n">variable_averages</code> <code class="o">=</code> <code class="n">tf</code><code class="o">.</code><code class="n">train</code><code class="o">.</code><code class="n">ExponentialMovingAverage</code><code class="p">(</code>
+        <code class="n">cifar10</code><code class="o">.</code><code class="n">MOVING_AVERAGE_DECAY</code><code class="p">,</code> <code class="n">global_step</code><code class="p">)</code>
+    <code class="n">variables_averages_op</code> <code class="o">=</code> <code class="n">variable_averages</code><code class="o">.</code><code class="n">apply</code><code class="p">(</code><code class="n">tf</code><code class="o">.</code><code class="n">trainable_variables</code><code class="p">())</code>
+
+    <code class="c1"># Group all updates into a single train op.</code>
+    <code class="n">train_op</code> <code class="o">=</code> <code class="n">tf</code><code class="o">.</code><code class="n">group</code><code class="p">(</code><code class="n">apply_gradient_op</code><code class="p">,</code> <code class="n">variables_averages_op</code><code class="p">)</code>
+
+    <code class="c1"># Create a saver.</code>
+    <code class="n">saver</code> <code class="o">=</code> <code class="n">tf</code><code class="o">.</code><code class="n">train</code><code class="o">.</code><code class="n">Saver</code><code class="p">(</code><code class="n">tf</code><code class="o">.</code><code class="n">global_variables</code><code class="p">())</code>
+
+    <code class="c1"># Build the summary operation from the last tower summaries.</code>
+    <code class="n">summary_op</code> <code class="o">=</code> <code class="n">tf</code><code class="o">.</code><code class="n">summary</code><code class="o">.</code><code class="n">merge</code><code class="p">(</code><code class="n">summaries</code><code class="p">)</code>
+
+    <code class="c1"># Build an initialization operation to run below.</code>
+    <code class="n">init</code> <code class="o">=</code> <code class="n">tf</code><code class="o">.</code><code class="n">global_variables_initializer</code><code class="p">()</code>
+
+    <code class="c1"># Start running operations on the Graph. allow_soft_placement must be set to</code>
+    <code class="c1"># True to build towers on GPU, as some of the ops do not have GPU</code>
+    <code class="c1"># implementations.</code>
+    <code class="n">sess</code> <code class="o">=</code> <code class="n">tf</code><code class="o">.</code><code class="n">Session</code><code class="p">(</code><code class="n">config</code><code class="o">=</code><code class="n">tf</code><code class="o">.</code><code class="n">ConfigProto</code><code class="p">(</code>
+        <code class="n">allow_soft_placement</code><code class="o">=</code><code class="bp">True</code><code class="p">,</code>
+        <code class="n">log_device_placement</code><code class="o">=</code><code class="n">FLAGS</code><code class="o">.</code><code class="n">log_device_placement</code><code class="p">))</code>
+    <code class="n">sess</code><code class="o">.</code><code class="n">run</code><code class="p">(</code><code class="n">init</code><code class="p">)</code>
+
+    <code class="c1"># Start the queue runners.</code>
+    <code class="n">tf</code><code class="o">.</code><code class="n">train</code><code class="o">.</code><code class="n">start_queue_runners</code><code class="p">(</code><code class="n">sess</code><code class="o">=</code><code class="n">sess</code><code class="p">)</code>
+
+    <code class="n">summary_writer</code> <code class="o">=</code> <code class="n">tf</code><code class="o">.</code><code class="n">summary</code><code class="o">.</code><code class="n">FileWriter</code><code class="p">(</code><code class="n">FLAGS</code><code class="o">.</code><code class="n">train_dir</code><code class="p">,</code> <code class="n">sess</code><code class="o">.</code><code class="n">graph</code><code class="p">)</code>
+
+    <code class="k">for</code> <code class="n">step</code> <code class="ow">in</code> <code class="nb">xrange</code><code class="p">(</code><code class="n">FLAGS</code><code class="o">.</code><code class="n">max_steps</code><code class="p">):</code>
+      <code class="n">start_time</code> <code class="o">=</code> <code class="n">time</code><code class="o">.</code><code class="n">time</code><code class="p">()</code>
+      <code class="n">_</code><code class="p">,</code> <code class="n">loss_value</code> <code class="o">=</code> <code class="n">sess</code><code class="o">.</code><code class="n">run</code><code class="p">([</code><code class="n">train_op</code><code class="p">,</code> <code class="n">loss</code><code class="p">])</code>
+      <code class="n">duration</code> <code class="o">=</code> <code class="n">time</code><code class="o">.</code><code class="n">time</code><code class="p">()</code> <code class="o">-</code> <code class="n">start_time</code>
+
+      <code class="k">assert</code> <code class="ow">not</code> <code class="n">np</code><code class="o">.</code><code class="n">isnan</code><code class="p">(</code><code class="n">loss_value</code><code class="p">),</code> <code class="s1">'Model diverged with loss = NaN'</code>
+
+      <code class="k">if</code> <code class="n">step</code> <code class="o">%</code> <code class="mi">10</code> <code class="o">==</code> <code class="mi">0</code><code class="p">:</code>
+        <code class="n">num_examples_per_step</code> <code class="o">=</code> <code class="n">FLAGS</code><code class="o">.</code><code class="n">batch_size</code> <code class="o">*</code> <code class="n">FLAGS</code><code class="o">.</code><code class="n">num_gpus</code>
+        <code class="n">examples_per_sec</code> <code class="o">=</code> <code class="n">num_examples_per_step</code> <code class="o">/</code> <code class="n">duration</code>
+        <code class="n">sec_per_batch</code> <code class="o">=</code> <code class="n">duration</code> <code class="o">/</code> <code class="n">FLAGS</code><code class="o">.</code><code class="n">num_gpus</code>
+
+        <code class="n">format_str</code> <code class="o">=</code> <code class="p">(</code><code class="s1">'</code><code class="si">%s</code><code class="s1">: step </code><code class="si">%d</code><code class="s1">, loss = </code><code class="si">%.2f</code><code class="s1"> (</code><code class="si">%.1f</code><code class="s1"> examples/sec; </code><code class="si">%.3f</code><code class="s1"> '</code>
+                      <code class="s1">'sec/batch)'</code><code class="p">)</code>
+        <code class="k">print</code> <code class="p">(</code><code class="n">format_str</code> <code class="o">%</code> <code class="p">(</code><code class="n">datetime</code><code class="o">.</code><code class="n">now</code><code class="p">(),</code> <code class="n">step</code><code class="p">,</code> <code class="n">loss_value</code><code class="p">,</code>
+                             <code class="n">examples_per_sec</code><code class="p">,</code> <code class="n">sec_per_batch</code><code class="p">))</code>
+
+      <code class="k">if</code> <code class="n">step</code> <code class="o">%</code> <code class="mi">100</code> <code class="o">==</code> <code class="mi">0</code><code class="p">:</code>
+        <code class="n">summary_str</code> <code class="o">=</code> <code class="n">sess</code><code class="o">.</code><code class="n">run</code><code class="p">(</code><code class="n">summary_op</code><code class="p">)</code>
+        <code class="n">summary_writer</code><code class="o">.</code><code class="n">add_summary</code><code class="p">(</code><code class="n">summary_str</code><code class="p">,</code> <code class="n">step</code><code class="p">)</code>
+      <code class="c1"># Save the model checkpoint periodically.</code>
+
+      <code class="k">if</code> <code class="n">step</code> <code class="o">%</code> <code class="mi">1000</code> <code class="o">==</code> <code class="mi">0</code> <code class="ow">or</code> <code class="p">(</code><code class="n">step</code> <code class="o">+</code> <code class="mi">1</code><code class="p">)</code> <code class="o">==</code> <code class="n">FLAGS</code><code class="o">.</code><code class="n">max_steps</code><code class="p">:</code>
+        <code class="n">checkpoint_path</code> <code class="o">=</code> <code class="n">os</code><code class="o">.</code><code class="n">path</code><code class="o">.</code><code class="n">join</code><code class="p">(</code><code class="n">FLAGS</code><code class="o">.</code><code class="n">train_dir</code><code class="p">,</code> <code class="s1">'model.ckpt'</code><code class="p">)</code>
+        <code class="n">saver</code><code class="o">.</code><code class="n">save</code><code class="p">(</code><code class="n">sess</code><code class="p">,</code> <code class="n">checkpoint_path</code><code class="p">,</code> <code class="n">global_step</code><code class="o">=</code><code class="n">step</code><code class="p">)</code></pre></div>
+</div></section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<section data-type="sect2" data-pdf-bookmark="Challenge for the Reader"><div class="sect2" id="idm139806600566720">
+<h2>Challenge for the Reader</h2>
+
+<p>You now have all the pieces required to train this model in practice. Try running it on a suitable GPU server! You may want to use tools such as <code>nvidia-smi</code> to ensure that all GPUs are actually being used.<a data-type="indexterm" data-primary="" data-startref="LDNmulti09" id="idm139806600564976"/></p>
+</div></section>
+
+
+
+
+
+</div></section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<section data-type="sect1" data-pdf-bookmark="Review"><div class="sect1" id="idm139806601967616">
+<h1>Review</h1>
+
+<p>In this chapter, you learned about various types of hardware commonly used to train deep architectures. You also learned about data parallel and model parallel designs for training deep architectures on multiple CPUs or GPUs. We ended the chapter by walking through a case study on how to implement data parallel training of convolutional networks in TensorFlow.</p>
+
+<p>In <a data-type="xref" href="ch10.html#the_future_of_deep_learning">Chapter 10</a>, we will discuss the future of deep learning and how you can use the skills you’ve learned in this book effectively and ethically.<a data-type="indexterm" data-primary="" data-startref="DNtrain09" id="idm139806599986224"/></p>
+</div></section>
+
+
+
+
+
+
+
+</div></section></body></html>

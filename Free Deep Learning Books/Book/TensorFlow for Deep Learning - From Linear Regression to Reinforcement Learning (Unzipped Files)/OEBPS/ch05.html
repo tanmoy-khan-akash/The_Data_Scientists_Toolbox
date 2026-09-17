@@ -1,0 +1,556 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html><html xmlns:epub="http://www.idpf.org/2007/ops" xmlns="http://www.w3.org/1999/xhtml"><head><title>Hyperparameter Optimization</title><link rel="stylesheet" type="text/css" href="epub.css"/></head><body data-type="book"><section data-type="chapter" epub:type="chapter" data-pdf-bookmark="Chapter 5. Hyperparameter Optimization"><div class="chapter" id="hyperparameter_optimization">
+<h1><span class="label">Chapter 5. </span>Hyperparameter Optimization</h1>
+
+
+<p>Training<a data-type="indexterm" data-primary="hyperparameter optimization" id="hyperop05"/><a data-type="indexterm" data-primary="tuning" data-see="hyperparameter optimization" id="idm139806612439392"/><a data-type="indexterm" data-primary="optimization" data-see="hyperparameter optimization" id="idm139806612438432"/><a data-type="indexterm" data-primary="models" data-secondary="deep models vs. good deep models" id="idm139806612437472"/> a deep model and training a good deep model are very different things. While it’s easy enough to copy-paste some TensorFlow code from the internet to get a first prototype running, it’s much harder to transform that prototype into a high-quality model. The process of taking a prototype to a high-quality model involves many steps. We’ll explore one of these steps, hyperparameter optimization, in the rest of this chapter.</p>
+
+<p>To<a data-type="indexterm" data-primary="hyperparameter optimization" data-secondary="defined" id="idm139806612435552"/> first approximation, hyperparameter optimization is the process of tweaking all parameters of a model not learned by gradient descent. These quantities are called “hyperparameters.” Consider fully connected networks from the previous chapter. While the weights of fully connected networks can be learned from data, the other settings of the network can’t. These hyperparameters include the number of hidden layers, the number of neurons per hidden layer, the learning rate, and more. How can you systematically find good values for these quantities? Hyperparameter optimization methods provide our answer to this question.</p>
+
+<p>Recall<a data-type="indexterm" data-primary="hyperparameter optimization" data-secondary="overview of" id="idm139806612433376"/> that we mentioned previously that model performance is tracked on a held-out “validation” set. Hyperparameter optimization methods systematically try multiple choices for hyperparameters on the validation set. The best-performing set of hyperparameter values is then evaluated on a second held-out “test” set to gauge the true model performance. Different hyperparameter optimization methods differ in the algorithm they use to propose new hyperparameter settings. These algorithms range from the obvious to quite sophisticated. We will only cover some of the simpler methods in these chapters, since the more sophisticated hyperparameter optimization techniques tend to require very large amounts of computational power.</p>
+
+<p>As<a data-type="indexterm" data-primary="Tox21 dataset" id="idm139806612431088"/> a case study, we will tune the Tox21 toxicity fully connected network introduced in <a data-type="xref" href="ch04.html#fully_connected_networks">Chapter 4</a> to achieve good performance. We strongly encourage you (as always) to run the hyperparameter optimization methods yourself using the code in the <a href="https://github.com/matroid/dlwithtf">GitHub repo associated with this book</a>.</p>
+<div data-type="note" epub:type="note"><h1>Hyperparameter Optimization Isn’t Just for Deep Networks!</h1>
+<p>It’s worth emphasizing that hyperparameter optimization isn’t only for deep networks. Most forms of machine learning algorithms have parameters that can’t be learned with the default learning methods. These parameters are also called hyperparameters. You will see some examples of hyperparameters for random forests (another common machine learning method) later in this chapter.</p>
+
+<p>It’s worth noting, however, that deep networks tend to be more sensitive to hyperparameter choice than other algorithms. While a random forest might underperform slightly with default choices for hyperparameters, deep networks might fail to learn entirely. For this reason, mastering hyperparameter optimization is a critical skill for a would-be deep learner.</p>
+</div>
+
+
+
+
+
+
+<section data-type="sect1" data-pdf-bookmark="Model Evaluation and Hyperparameter Optimization"><div class="sect1" id="idm139806612425856">
+<h1>Model Evaluation and Hyperparameter Optimization</h1>
+
+<p>In<a data-type="indexterm" data-primary="hyperparameter optimization" data-secondary="model evaluation and" id="idm139806612424320"/><a data-type="indexterm" data-primary="models" data-secondary="evaluating performance of" id="idm139806612423248"/> the previous chapters, we have only entered briefly into the question of how to tell whether a machine learning model is good or not. Any<a data-type="indexterm" data-primary="generalization" id="idm139806612422000"/> measurement of model performance must gauge the model’s ability to generalize. That is, can the model make predictions on datapoints it has never seen before? The best test of model performance is to create a model, then evaluate <em>prospectively</em> on data that becomes available <em>after</em> the model was constructed. However, this sort of test is unwieldy to do regularly. During a design phase, a practicing data scientist may want to evaluate many different types of models or learning algorithms to find which is best.</p>
+
+<p>The<a data-type="indexterm" data-primary="validation sets" id="idm139806612419472"/> solution to this dilemma is to “hold-out” part of the available dataset as a validation set. This validation set will be used to measure the performance of different models (with differing hyperparameter choices). It’s also good practice to have a second held-out set, the test set, for gauging the performance of the final model chosen by hyperparameter selection methods.</p>
+
+<p>Let’s assume you have a hundred datapoints. A simple procedure would be to use 80 of these datapoints to train prospective models with 20 held-out datapoints used to validate the model choice. The “goodness” of a proposed model can then be tracked by its “score” on the held-out 20 datapoints. Models can be iteratively improved by proposing new designs, and accepting only those that improve performance on the held-out set.</p>
+
+<p>In<a data-type="indexterm" data-primary="overfitting" id="idm139806612416960"/> practice, though, this procedure leads to <em>overfitting</em>. Practitioners quickly learn peculiarities of the held-out set and tweak model structure to artificially boost scores on the held-out set. To combat this, practitioners commonly break the held-out set into two parts: one part for validation of hyperparameters and the other for final model validation. In this case, let’s say you reserve 10 datapoints for validation and 10 for final testing. This would be called an 80/10/10 data split.</p>
+<div data-type="tip"><h1>Why Is the Test Set Necessary?</h1>
+<p>An<a data-type="indexterm" data-primary="test sets" id="idm139806612413936"/> important point worth noting is that hyperparameter optimization methods are themselves a form of learning algorithm. In particular, they are a learning algorithm for setting nondifferentiable quantities that aren’t easily amenable to calculus-based analysis. The “training set” for the hyperparameter learning algorithm is simply the held-out validation set.</p>
+
+<p>In general, it isn’t very meaningful to gauge model performance on their training sets. As always, learned quantities must generalize and it is consequently necessary to test performance on a different set. Since the training set is used for gradient-based learning, and the validation set is used for hyperparameter learning, the test set is necessary to gauge how well learned hyperparameters generalize to new data.</p>
+</div>
+<div data-type="note" epub:type="note"><h1>Black-Box Learning Algorithms</h1>
+<p>Black-box learning algorithms<a data-type="indexterm" data-primary="black-box learning algorithms" id="idm139806612410384"/><a data-type="indexterm" data-primary="hyperparameter optimization" data-secondary="black-box learning algorithms" id="idm139806612409616"/> assume no structural information about the systems they are trying to optimize. Most hyperparameter methods are black-box; they work for any type of deep learning or machine learning algorithm.</p>
+
+<p>Black-box methods in general don’t scale as well as white-box methods (such as gradient descent) since they tend to get lost in high-dimensional spaces. Due to the lack of directional information from a gradient, black-box methods can get lost in even 50 dimensional spaces (optimizing 50 hyperparameters is quite challenging in practice).</p>
+
+<p>To understand why, suppose there are 50 hyperparameters, each with 3 potential values. Then the black-box algorithm must blindly search a space of size <math xmlns="http://www.w3.org/1998/Math/MathML" alttext="3 Superscript 50">
+  <msup><mn>3</mn> <mn>50</mn> </msup>
+</math>. This can be done, but performing the search will require lots of computational power in general.</p>
+</div>
+</div></section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<section data-type="sect1" data-pdf-bookmark="Metrics, Metrics, Metrics"><div class="sect1" id="idm139806612404736">
+<h1>Metrics, Metrics, Metrics</h1>
+
+<p>When<a data-type="indexterm" data-primary="hyperparameter optimization" data-secondary="metrics selection" id="HOmetric05"/><a data-type="indexterm" data-primary="metrics" data-secondary="defined" id="idm139806612401856"/> choosing hyperparameters, you want to select those that make the models you design more accurate. In machine learning, a <em>metric</em> is a function that gauges the accuracy of predictions from a trained model. Hyperparameter optimization is done to optimize for hyperparameters that maximize (or minimize) this metric on the validation set. While this sounds simple up front, the notion of accuracy can in fact be quite subtle. Suppose you have a binary classifier. Is it more important to never mislabel false samples as true or to never mislabel true samples as false? How can you choose for model hyperparameters that satisfy the needs of your applications?</p>
+
+<p>The answer turns out to be to choose the correct metric. In this section, we will discuss many different metrics for classification and regression problems. We will comment on the qualities each metric emphasizes. There is no best metric, but there are more suitable and less suitable metrics for different applications.</p>
+<div data-type="warning" epub:type="warning"><h1>Metrics Aren’t a Replacement for Common Sense!</h1>
+<p>Metrics<a data-type="indexterm" data-primary="metrics" data-secondary="role of common sense in" id="idm139806612397696"/><a data-type="indexterm" data-primary="blind optimization" id="idm139806612396688"/> are terribly blind. They only optimize for a single quantity. Consequently, blind optimization of metrics can lead to entirely unsuitable outcomes. On the web, media sites often choose to optimize the metric of “user clicks.” Some enterprising young journalist or advertiser then realized that titles like “You’ll never believe what happened when X” induced users to click at higher fractions. Lo and behold, clickbait was born. While clickbait headlines do indeed induce readers to click, they also turn off readers and lead them to avoid spending time on clickbait-filled sites. Optimizing for user clicks resulted in drops in user engagement and trust.</p>
+
+<p>The lesson here is general. Optimizing for one metric often comes at the cost of a separate quantity. Make sure that the quantity you wish to optimize for is indeed the “right” quantity. Isn’t it interesting how machine learning still seems to require human judgment at its core?</p>
+</div>
+
+
+
+
+
+
+
+
+<section data-type="sect2" data-pdf-bookmark="Binary Classification Metrics"><div class="sect2" id="idm139806612394256">
+<h2>Binary Classification Metrics</h2>
+
+<p>Before<a data-type="indexterm" data-primary="metrics" data-secondary="for binary classification" id="idm139806612392560"/><a data-type="indexterm" data-primary="classification problems" data-secondary="metrics for evaluation of" id="idm139806612391488"/><a data-type="indexterm" data-primary="binary classification" data-secondary="prediction categories" id="idm139806612390528"/><a data-type="indexterm" data-primary="prediction categories" id="idm139806612389584"/> introducing metrics for binary classification models, we think you will find it useful to learn about some auxiliary quantities. When a binary classifier makes predictions on a set of datapoints, you can split all these predictions into one of four categories (<a data-type="xref" href="#ch5-table1">Table 5-1</a>).</p>
+<table id="ch5-table1">
+<caption><span class="label">Table 5-1. </span>Prediction categories</caption>
+<thead>
+<tr>
+<th>Category</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><p>True Positive (TP)</p></td>
+<td><p>Predicted true,  Label true</p></td>
+</tr>
+<tr>
+<td><p>False Positive (FP)</p></td>
+<td><p>Predicted true,  Label false</p></td>
+</tr>
+<tr>
+<td><p>True Negative (TN)</p></td>
+<td><p>Predicted false, Label false</p></td>
+</tr>
+<tr>
+<td><p>False Negative (FN)</p></td>
+<td><p>Predicted false, Label true</p></td>
+</tr>
+</tbody>
+</table>
+
+<p>We will also find it useful to introduce the notation shown in <a data-type="xref" href="#ch5-table2">Table 5-2</a>.</p>
+<table id="ch5-table2">
+<caption><span class="label">Table 5-2. </span>Positives and negatives</caption>
+<thead>
+<tr>
+<th>Category</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><p>P</p></td>
+<td><p>Number of positive labels</p></td>
+</tr>
+<tr>
+<td><p>N</p></td>
+<td><p>Number of negative labels</p></td>
+</tr>
+</tbody>
+</table>
+
+<p>In<a data-type="indexterm" data-primary="false positives/negatives, reducing number of" id="idm139806612369584"/><a data-type="indexterm" data-primary="binary classification" data-secondary="balancing false positives/negatives" id="idm139806612368816"/> general, minimizing the number of false positives and false negatives is highly desirable. However, for any given dataset, it is often not possible to minimize both false positives and false negatives due to limitations in the signal present. Consequently, there are a variety of metrics that provide various trade-offs between false positives and false negatives. These trade-offs can be quite important for applications. Suppose you are designing a medical diagnostic for breast cancer. Then a false positive would be to mark a healthy patient as having breast cancer. A false negative would be to mark a breast cancer sufferer as not having the disease. Neither of these outcomes is desirable, and designing the correct balance is a tricky question in bioethics.</p>
+
+<p>We will now show you a number of different metrics that balance false positives and false negatives in different ratios (<a data-type="xref" href="#ch5-table3">Table 5-3</a>). Each of these ratios optimizes for a different balance, and we will dig into some of these in more detail.</p>
+<table id="ch5-table3">
+<caption><span class="label">Table 5-3. </span>Binary metrics table</caption>
+<thead>
+<tr>
+<th>Metric</th>
+<th>Definition</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><p>Accuracy</p></td>
+<td><p>(TP + TN)/(P + N)</p></td>
+</tr>
+<tr>
+<td><p>Precision</p></td>
+<td><p>TP/(TP + FP)</p></td>
+</tr>
+<tr>
+<td><p>Recall</p></td>
+<td><p>TP/(TP + FN) = TP/P</p></td>
+</tr>
+<tr>
+<td><p>Specificity</p></td>
+<td><p>TN/(FP + TN) = TN/N</p></td>
+</tr>
+<tr>
+<td><p>False Positive Rate (FPR)</p></td>
+<td><p>FP/(FP + TN) = FP/N</p></td>
+</tr>
+<tr>
+<td><p>False Negative Rate (FNR)</p></td>
+<td><p>FN/(TP + FN) = FN/P</p></td>
+</tr>
+</tbody>
+</table>
+
+<p><em>Accuracy</em> is<a data-type="indexterm" data-primary="accuracy" id="idm139806612277296"/><a data-type="indexterm" data-primary="precision" id="idm139806612276560"/><a data-type="indexterm" data-primary="recall" id="idm139806612275888"/><a data-type="indexterm" data-primary="specificity" id="idm139806612275216"/> the simplest metric. It simply counts the fraction of predictions that were made correctly by the classifier. In straightforward applications, accuracy should be the first go-to metric for a practitioner. After accuracy, <em>precision</em> and <em>recall</em> are the most commonly measured metrics. Precision simply measures what fraction of the datapoints predicted positive were actually positive. Recall in its turn measures <span class="keep-together">the fraction</span> of positive labeled datapoints that the classifier labeled positive. <em>Specificity</em> measures the fraction of datapoints labeled negative that were correctly classified. The false positive rate measures the fraction of datapoints labeled negative that were misclassified as positive. False negative rate is the fraction of datapoints labeled positive that were falsely labeled as negatives.</p>
+
+<p>These metrics all emphasize different aspects of a classifier’s performance. They can also be useful in constructing some more sophisticated measurements of a binary classifier’s performance. For example, suppose that your binary classifier outputs class probabilities, and not just raw predictions. Then, there rises the question of choosing<a data-type="indexterm" data-primary="cutoffs, choosing" id="idm139806612271136"/> a <em>cutoff</em>. That is, at what probability of positive do you label the output as actually positive? The<a data-type="indexterm" data-primary="true positive rate (TPR)" id="idm139806612269904"/> most common answer is 0.5, but by choosing higher or lower cutoffs, it is often possible to manually vary the balance between precision, recall, FPR, and TPR. These trade-offs are often represented graphically.</p>
+
+<p>The receiver operator curve (ROC)<a data-type="indexterm" data-primary="receiver operator curve (ROC)" id="idm139806612268528"/> plots the trade-off between the true positive rate and the false positive rate as the cutoff probability is varied (see <a data-type="xref" href="#ch5-roc">Figure 5-1</a>).</p>
+
+<figure><div id="ch5-roc" class="figure">
+<img src="assets/tfdl_0501.png" alt="roc_intro3.png"/>
+<h6><span class="label">Figure 5-1. </span>The receiver operator curve (ROC).</h6>
+</div></figure>
+
+<p>The area under curve (AUC) for the receiver operator curve (ROC-AUC)<a data-type="indexterm" data-primary="ROC-AUC (area under curve for the receiver operator curve)" id="idm139806612264320"/> is a commonly measured metric. The ROC-AUC metric is useful since it provides a global picture of the binary classifier for all choices of cutoff. A perfect metric would have ROC-AUC 1.0 since the TPR would always be maximized. For comparison, a random classifier would have ROC-AUC 0.5. The ROC-AUC is often useful for imbalanced datasets, since the global view partially accounts for the imbalance in the dataset.</p>
+</div></section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<section data-type="sect2" data-pdf-bookmark="Multiclass Classification Metrics"><div class="sect2" id="idm139806612393632">
+<h2>Multiclass Classification Metrics</h2>
+
+<p>Many<a data-type="indexterm" data-primary="metrics" data-secondary="for multiclass classification" id="idm139806612261520"/><a data-type="indexterm" data-primary="multiclass classification" id="idm139806612260496"/> common machine learning tasks require models to output classification labels that aren’t just binary. The<a data-type="indexterm" data-primary="ImageNet Large Scale Visual Recognition Challenge (ILSVRC)" id="idm139806612259552"/> ImageNet challenge (ILSVRC) required entrants to build models that would recognize which of a thousand potential object classes were in provided images, for example. Or in a simpler example, perhaps you want to predict tomorrow’s weather, where provided classes are “sunny,” “rainy,” and “cloudy.” How do you measure the performance of such a model?</p>
+
+<p>The<a data-type="indexterm" data-primary="generalization of accuracy" id="idm139806612257936"/> simplest method is to use a straightforward generalization of accuracy that measures the fraction of datapoints correctly labeled (<a data-type="xref" href="#ch5-table4">Table 5-4</a>).</p>
+<table id="ch5-table4">
+<caption><span class="label">Table 5-4. </span>Multiclass classification metrics</caption>
+<thead>
+<tr>
+<th>Metric</th>
+<th>Definition</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><p>Accuracy</p></td>
+<td><p>Num Correctly Labeled/Num Datapoints</p></td>
+</tr>
+</tbody>
+</table>
+
+<p>We<a data-type="indexterm" data-primary="confusion matrix" id="idm139806612250608"/> note that there do exist multiclass generalizations of quantities like precision, recall, and ROC-AUC, and we encourage you to look into these definitions if interested. In practice, there’s a simpler visualization, the <em>confusion matrix</em>, which works well. For a multiclass problem with <em>k</em> classes, the confusion matrix is a <em>k</em> × <em>k</em> matrix. The (<em>i</em>, <em>j</em>)-th cell represents the number of datapoints labeled as class <em>i</em> with true label class <em>j</em>. <a data-type="xref" href="#ch5-confmat">Figure 5-2</a> illustrates a confusion matrix.</p>
+
+<figure><div id="ch5-confmat" class="figure">
+<img src="assets/tfdl_0502.png" alt="confusion_matrix.png"/>
+<h6><span class="label">Figure 5-2. </span>The confusion matrix for a 10-way classifier.</h6>
+</div></figure>
+
+<p>Don’t underestimate the power of the human eye to catch systematic failure patterns from simple visualizations! Looking at the confusion matrix can provide quick understanding that dozens of more complex multiclass metrics might miss.</p>
+</div></section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<section data-type="sect2" data-pdf-bookmark="Regression Metrics"><div class="sect2" id="idm139806612242128">
+<h2>Regression Metrics</h2>
+
+<p>You<a data-type="indexterm" data-primary="metrics" data-secondary="regression metrics" id="idm139806612240624"/><a data-type="indexterm" data-primary="regression problems" data-secondary="metrics for evaluation of" id="idm139806612239616"/><a data-type="indexterm" data-primary="squared Pearson correlation coefficient" id="idm139806612238704"/><a data-type="indexterm" data-primary="Pearson correlation coefficient" id="idm139806612238016"/><a data-type="indexterm" data-primary="RMSE (root-mean-squared error)" id="idm139806612237328"/> learned about regression metrics a few chapters ago. As a quick recap, the Pearson <em>R</em><sup>2</sup> and RMSE (root-mean-squared error) are good defaults.</p>
+
+<p>We only briefly covered the mathematical definition of <em>R</em><sup>2</sup> previously, but will delve into it more now. Let <math xmlns="http://www.w3.org/1998/Math/MathML" alttext="x Subscript i">
+  <msub><mi>x</mi> <mi>i</mi> </msub>
+</math> represent predictions and <math xmlns="http://www.w3.org/1998/Math/MathML" alttext="y Subscript i">
+  <msub><mi>y</mi> <mi>i</mi> </msub>
+</math> represent labels. Let <math xmlns="http://www.w3.org/1998/Math/MathML" alttext="x overbar">
+  <mover accent="true"><mi>x</mi> <mo>¯</mo></mover>
+</math> and <math xmlns="http://www.w3.org/1998/Math/MathML" alttext="y overbar">
+  <mover accent="true"><mi>y</mi> <mo>¯</mo></mover>
+</math> represent the mean of the predicted values and the labels, respectively. Then the Pearson <em>R</em> (note the lack of square) is</p>
+<div data-type="equation">
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
+  <mrow>
+    <mi>R</mi>
+    <mo>=</mo>
+    <mfrac><mrow><msubsup><mo>∑</mo> <mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow> <mi>N</mi> </msubsup><mrow><mo>(</mo><msub><mi>x</mi> <mi>i</mi> </msub><mo>-</mo><mover accent="true"><mi>x</mi> <mo>¯</mo></mover><mo>)</mo></mrow><mrow><mo>(</mo><msub><mi>y</mi> <mi>i</mi> </msub><mo>-</mo><mover accent="true"><mi>y</mi> <mo>¯</mo></mover><mo>)</mo></mrow></mrow> <mrow><msqrt><mrow><msubsup><mo>∑</mo> <mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow> <mi>N</mi> </msubsup><msup><mrow><mo>(</mo><msub><mi>x</mi> <mi>i</mi> </msub><mo>-</mo><mover accent="true"><mi>x</mi> <mo>¯</mo></mover><mo>)</mo></mrow> <mn>2</mn> </msup></mrow></msqrt><msqrt><mrow><msubsup><mo>∑</mo> <mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow> <mi>N</mi> </msubsup><msup><mrow><mo>(</mo><msub><mi>y</mi> <mi>i</mi> </msub><mo>-</mo><mover accent="true"><mi>y</mi> <mo>¯</mo></mover><mo>)</mo></mrow> <mn>2</mn> </msup></mrow></msqrt></mrow></mfrac>
+  </mrow>
+</math>
+</div>
+
+<p>This equation can be rewritten as</p>
+<div data-type="equation">
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
+  <mrow>
+    <mi>R</mi>
+    <mo>=</mo>
+    <mfrac><mrow><mi> cov </mi><mo>(</mo><mi>x</mi><mo>,</mo><mi>y</mi><mo>)</mo></mrow> <mrow><mi>σ</mi><mo>(</mo><mi>x</mi><mo>)</mo><mi>σ</mi><mo>(</mo><mi>y</mi><mo>)</mo></mrow></mfrac>
+  </mrow>
+</math>
+</div>
+
+<p>where cov represents the covariance and <math xmlns="http://www.w3.org/1998/Math/MathML" alttext="sigma">
+  <mi>σ</mi>
+</math> represents the standard deviation. Intuitively, the Pearson <em>R</em> measures the joint fluctuations of the predictions and labels from their means normalized by their respective ranges of fluctuations. If predictions and labels differ, these fluctuations will happen at different points and will tend to cancel, making <em>R</em><sup>2</sup> smaller. If predictions and labels tend to agree, the fluctuations will happen together and make <em>R</em><sup>2</sup> larger. We note that <em>R</em><sup>2</sup> is limited to a range between 0 and 1.</p>
+
+<p>The<a data-type="indexterm" data-primary="" data-startref="HOmetric05" id="idm139806612186976"/> RMSE measures the absolute quantity of the error between the predictions and the true quantities. It stands for root-mean-squared error, which is roughly analogous to the absolute value of the error between the true quantity and the predicted quantity. Mathematically, the RMSE is defined as follows (using the same notation as before):</p>
+<div data-type="equation">
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
+  <mrow>
+    <mi> RMSE </mi>
+    <mo>=</mo>
+    <msqrt>
+      <mfrac><mrow><msubsup><mo>∑</mo> <mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow> <mi>N</mi> </msubsup><msup><mrow><mo>(</mo><msub><mi>x</mi> <mi>i</mi> </msub><mo>-</mo><msub><mi>y</mi> <mi>i</mi> </msub><mo>)</mo></mrow> <mn>2</mn> </msup></mrow> <mi>N</mi></mfrac>
+    </msqrt>
+  </mrow>
+</math>
+</div>
+</div></section>
+
+
+
+
+
+</div></section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<section data-type="sect1" data-pdf-bookmark="Hyperparameter Optimization Algorithms"><div class="sect1" id="idm139806612175280">
+<h1>Hyperparameter Optimization Algorithms</h1>
+
+<p>As<a data-type="indexterm" data-primary="hyperparameter optimization" data-secondary="algorithms for" id="HOalg05"/><a data-type="indexterm" data-primary="algorithms" data-secondary="black-box" id="idm139806612172320"/> we mentioned earlier in the chapter, hyperparameter optimization methods are learning algorithms for finding values of the hyperparameters that optimize the chosen metric on the validation set. In general, this objective function cannot be differentiated, so any optimization method must by necessity be a black box. In<a data-type="indexterm" data-primary="black-box learning algorithms" id="idm139806612170880"/><a data-type="indexterm" data-primary="hyperparameter optimization" data-secondary="black-box learning algorithms" id="idm139806612170240"/> this <span class="keep-together">section</span>, we will show you some simple black-box learning algorithms for choosing hyperparameter values. We<a data-type="indexterm" data-primary="Tox21 dataset" id="idm139806612168336"/> will use the Tox21 dataset from <a data-type="xref" href="ch04.html#fully_connected_networks">Chapter 4</a> as a case study to demonstrate these black-box optimization methods. The Tox21 dataset is small enough to make experimentation easy, but complex enough that hyperparameter optimization isn’t trivial.</p>
+
+<p>We note before setting off that none of these black-box algorithms works perfectly. As you will soon see, in practice, much human input is required to optimize hyperparameters.</p>
+<div data-type="note" epub:type="note"><h1>Can’t Hyperparameter Optimization Be Automated?</h1>
+<p>One<a data-type="indexterm" data-primary="hyperparameter optimization" data-secondary="automating" id="idm139806612164640"/><a data-type="indexterm" data-primary="automatic model tuning" id="idm139806612163664"/> of the long-running dreams of machine learning has been to automate the process of selecting model hyperparameters. Projects<a data-type="indexterm" data-primary="automated statistician project" id="idm139806612162720"/> such as the “automated statistician” and others have sought to remove some of the drudgery from the hyperparameter selection process and make model construction more easily available to non-experts. However, in practice, there has typically been a steep cost in performance for the added convenience.</p>
+
+<p>In recent years, there has been a surge of work focused on improving the algorithmic foundations of model tuning. Gaussian processes, evolutionary algorithms, and reinforcement learning have all been used to learn model hyperparameters and architectures with very limited human input. Recent work has shown that with large amounts of computing power, these algorithms can exceed expert performance in model tuning! But the overhead is severe, with dozens to hundreds of times greater computational power required.</p>
+
+<p>For now, automatic model tuning is still not practical. All algorithms we cover in this section require significant manual tuning However, as hardware quality improves, we anticipate that hyperparameter learning will become increasingly automated. In the near term, we recommend strongly that all practitioners master the intricacies of hyperparameter tuning. A strong ability to hyperparameter tune is the skill that separates the expert from the <span class="keep-together">novice</span>.</p>
+</div>
+
+
+
+
+
+
+
+
+<section data-type="sect2" data-pdf-bookmark="Setting Up a Baseline"><div class="sect2" id="idm139806612158848">
+<h2>Setting Up a Baseline</h2>
+
+<p>The<a data-type="indexterm" data-primary="algorithms" data-secondary="finding baselines" id="idm139806612157152"/><a data-type="indexterm" data-primary="baselines" id="idm139806612156144"/> first step in hyperparameter tuning is finding a <em>baseline</em>. A baseline is performance achievable by a robust (non–deep learning usually) algorithm. In<a data-type="indexterm" data-primary="random forests method" id="idm139806612154784"/> general, random forests are a superb choice for setting baselines. As shown in <a data-type="xref" href="#ch5-rf">Figure 5-3</a>, random forests are an ensemble method that train many decision tree models on subsets of the input data and input features. These individual trees then vote on the outcome.</p>
+
+<figure><div id="ch5-rf" class="figure">
+<img src="assets/tfdl_0503.png" alt="random_forest_new2.png"/>
+<h6><span class="label">Figure 5-3. </span>An illustration of a random forest. Here v is the input feature vector.</h6>
+</div></figure>
+
+<p>Random forests tend to be quite robust models. They are noise tolerant, and don’t worry about the scale of their input features. (Although we don’t have to worry about this for Tox21 since all our features are binary, in general deep networks are quite sensitive to their input range. It’s healthy to normalize or otherwise scale the input range for good performance. We will return to this point in later chapters.) They<a data-type="indexterm" data-primary="generalization" id="idm139806612150080"/> also tend to have strong generalization and don’t require much hyperparameter tuning to boot. For certain datasets, beating the performance of a random forest with a deep network can require considerable sophistication.</p>
+
+<p>How can we create and train a random forest? Luckily<a data-type="indexterm" data-primary="scikit-learn library" id="idm139806612148560"/> for us, in Python, the scikit-learn library provides a high-quality implementation of a random forest. There are many tutorials and introductions to scikit-learn available, so we’ll just display the training and prediction code needed to build a Tox21 random forest model here (<a data-type="xref" href="#ch5-tox21rf">Example 5-1</a>).</p>
+<div id="ch5-tox21rf" data-type="example">
+<h5><span class="label">Example 5-1. </span>Defining and training a random forest on the Tox21 dataset</h5>
+
+<pre data-type="programlisting" data-code-language="python"><code class="kn">from</code> <code class="nn">sklearn.ensemble</code> <code class="kn">import</code> <code class="n">RandomForestClassifier</code>
+
+<code class="c1"># Generate tensorflow graph</code>
+<code class="n">sklearn_model</code> <code class="o">=</code> <code class="n">RandomForestClassifier</code><code class="p">(</code>
+    <code class="n">class_weight</code><code class="o">=</code><code class="s2">"balanced"</code><code class="p">,</code> <code class="n">n_estimators</code><code class="o">=</code><code class="mi">50</code><code class="p">)</code>
+<code class="k">print</code><code class="p">(</code><code class="s2">"About to fit model on training set."</code><code class="p">)</code>
+<code class="n">sklearn_model</code><code class="o">.</code><code class="n">fit</code><code class="p">(</code><code class="n">train_X</code><code class="p">,</code> <code class="n">train_y</code><code class="p">)</code>
+
+<code class="n">train_y_pred</code> <code class="o">=</code> <code class="n">sklearn_model</code><code class="o">.</code><code class="n">predict</code><code class="p">(</code><code class="n">train_X</code><code class="p">)</code>
+<code class="n">valid_y_pred</code> <code class="o">=</code> <code class="n">sklearn_model</code><code class="o">.</code><code class="n">predict</code><code class="p">(</code><code class="n">valid_X</code><code class="p">)</code>
+<code class="n">test_y_pred</code> <code class="o">=</code> <code class="n">sklearn_model</code><code class="o">.</code><code class="n">predict</code><code class="p">(</code><code class="n">test_X</code><code class="p">)</code>
+
+<code class="n">weighted_score</code> <code class="o">=</code> <code class="n">accuracy_score</code><code class="p">(</code><code class="n">train_y</code><code class="p">,</code> <code class="n">train_y_pred</code><code class="p">,</code> <code class="n">sample_weight</code><code class="o">=</code><code class="n">train_w</code><code class="p">)</code>
+<code class="k">print</code><code class="p">(</code><code class="s2">"Weighted train Classification Accuracy: </code><code class="si">%f</code><code class="s2">"</code> <code class="o">%</code> <code class="n">weighted_score</code><code class="p">)</code>
+<code class="n">weighted_score</code> <code class="o">=</code> <code class="n">accuracy_score</code><code class="p">(</code><code class="n">valid_y</code><code class="p">,</code> <code class="n">valid_y_pred</code><code class="p">,</code> <code class="n">sample_weight</code><code class="o">=</code><code class="n">valid_w</code><code class="p">)</code>
+<code class="k">print</code><code class="p">(</code><code class="s2">"Weighted valid Classification Accuracy: </code><code class="si">%f</code><code class="s2">"</code> <code class="o">%</code> <code class="n">weighted_score</code><code class="p">)</code>
+<code class="n">weighted_score</code> <code class="o">=</code> <code class="n">accuracy_score</code><code class="p">(</code><code class="n">test_y</code><code class="p">,</code> <code class="n">test_y_pred</code><code class="p">,</code> <code class="n">sample_weight</code><code class="o">=</code><code class="n">test_w</code><code class="p">)</code>
+<code class="k">print</code><code class="p">(</code><code class="s2">"Weighted test Classification Accuracy: </code><code class="si">%f</code><code class="s2">"</code> <code class="o">%</code> <code class="n">weighted_score</code><code class="p">)</code></pre></div>
+
+<p>Here <code>train_X</code>, <code>train_y</code>, and so on are the Tox21 datasets defined in the previous chapter. Recall that all these quantities are NumPy arrays. <code>n_estimators</code> refers to the number of decision trees<a data-type="indexterm" data-primary="decision trees" id="idm139806612060176"/> in our forest. Setting 50 or 100 trees often provides decent performance. Scikit-learn offers a simple object-oriented API with <code>fit(X, y)</code> and <code>predict(X)</code> methods. This model achieves the following accuracy with respect to our weighted accuracy metric:</p>
+
+<pre data-type="programlisting">Weighted train Classification Accuracy: 0.989845
+Weighted valid Classification Accuracy: 0.681413</pre>
+
+<p>Recall that the fully connected network from <a data-type="xref" href="ch04.html#fully_connected_networks">Chapter 4</a> achieved performance:</p>
+
+<pre data-type="programlisting">Train Weighted Classification Accuracy: 0.742045
+Valid Weighted Classification Accuracy: 0.648828</pre>
+
+<p>It looks like our baseline gets greater accuracy than our deep learning model! Time to roll up our sleeves and get to work.</p>
+</div></section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<section data-type="sect2" data-pdf-bookmark="Graduate Student Descent"><div class="sect2" id="idm139806612158192">
+<h2>Graduate Student Descent</h2>
+
+<p>The<a data-type="indexterm" data-primary="algorithms" data-secondary="graduate student descent" id="idm139806612053472"/><a data-type="indexterm" data-primary="graduate student descent" id="idm139806612052448"/> simplest method to try good hyperparameters is to simply try a number of different hyperparameter variants manually to see what works. This strategy can be surprisingly effective and educational. A deep learning practitioner needs to build up intuition about the structure of deep networks. Given the very weak state of theory, empirical work is the best way to learn how to build deep learning models. We highly recommend trying many variants of the fully connected model yourself. Be systematic; record your choices and results in a spreadsheet and systematically explore the space. Try to understand the effects of various hyperparameters. Which make network training proceed faster and which slower? What ranges of settings completely break learning? (These are quite easy to find, unfortunately.)</p>
+
+<p>There are a few software engineering tricks that can make this search easier. Make a function whose arguments are the hyperparameter you wish to explore and have it print out the accuracy. Then trying new hyperparameter combinations requires only a single function call. <a data-type="xref" href="#ch5-tox21fcnetfun">Example 5-2</a> shows what this function signature would look like for our fully connected network from the Tox21 case study.</p>
+<div id="ch5-tox21fcnetfun" data-type="example">
+<h5><span class="label">Example 5-2. </span>A function mapping hyperparameters to different Tox21 fully connected networks</h5>
+
+<pre data-type="programlisting" data-code-language="python"><code class="k">def</code> <code class="nf">eval_tox21_hyperparams</code><code class="p">(</code><code class="n">n_hidden</code><code class="o">=</code><code class="mi">50</code><code class="p">,</code> <code class="n">n_layers</code><code class="o">=</code><code class="mi">1</code><code class="p">,</code> <code class="n">learning_rate</code><code class="o">=.</code><code class="mo">001</code><code class="p">,</code>
+                           <code class="n">dropout_prob</code><code class="o">=</code><code class="mf">0.5</code><code class="p">,</code> <code class="n">n_epochs</code><code class="o">=</code><code class="mi">45</code><code class="p">,</code> <code class="n">batch_size</code><code class="o">=</code><code class="mi">100</code><code class="p">,</code>
+                           <code class="n">weight_positives</code><code class="o">=</code><code class="bp">True</code><code class="p">):</code></pre></div>
+
+<p>Let’s walk through each of these hyperparameters. <code>n_hidden</code> controls the number of neurons in each hidden layer of the network. <code>n_layers</code> controls the number of hidden layers. <code>learning_rate</code> controls the learning rate used in gradient descent, and <code>dropout_prob</code> is the probability neurons are not dropped during training steps. <code>n_epochs</code> controls the number of passes through the total data and <code>batch_size</code> controls the number of datapoints in each batch.</p>
+
+<p><code>weight_positives</code> is the only new hyperparameter here. For unbalanced datasets, it can often be helpful to weight examples of both classes to have equal weight. For the Tox21 dataset, DeepChem provides weights for us to use. We simply multiply the per-example cross-entropy terms by the weights to perform this weighting (<a data-type="xref" href="#ch5-tox21weight">Example 5-3</a>).</p>
+<div id="ch5-tox21weight" data-type="example">
+<h5><span class="label">Example 5-3. </span>Weighting positive samples for Tox21</h5>
+
+<pre data-type="programlisting" data-code-language="python"><code class="n">entropy</code> <code class="o">=</code> <code class="n">tf</code><code class="o">.</code><code class="n">nn</code><code class="o">.</code><code class="n">sigmoid_cross_entropy_with_logits</code><code class="p">(</code><code class="n">logits</code><code class="o">=</code><code class="n">y_logit</code><code class="p">,</code> <code class="n">labels</code><code class="o">=</code><code class="n">y_expand</code><code class="p">)</code>
+<code class="c1"># Multiply by weights</code>
+<code class="k">if</code> <code class="n">weight_positives</code><code class="p">:</code>
+  <code class="n">w_expand</code> <code class="o">=</code> <code class="n">tf</code><code class="o">.</code><code class="n">expand_dims</code><code class="p">(</code><code class="n">w</code><code class="p">,</code> <code class="mi">1</code><code class="p">)</code>
+  <code class="n">entropy</code> <code class="o">=</code> <code class="n">w_expand</code> <code class="o">*</code> <code class="n">entropy</code></pre></div>
+
+<p>Why is the method of picking hyperparameter values called graduate student descent? Machine learning, until recently, has been a primarily academic field. The tried-and-true method for designing a new machine learning algorithm has been describing the method desired to a new graduate student, and asking them to work out the details. This process is a bit of a rite of passage, and often requires the student to painfully try many design alternatives. On the whole, this is a very educational experience, since the only way to gain design aesthetic is to build up a memory of settings that work and don’t work.</p>
+</div></section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<section data-type="sect2" data-pdf-bookmark="Grid Search"><div class="sect2" id="idm139806611802304">
+<h2>Grid Search</h2>
+
+<p>After<a data-type="indexterm" data-primary="algorithms" data-secondary="grid search" id="idm139806611788496"/><a data-type="indexterm" data-primary="grid-search method" id="idm139806611787520"/><a data-type="indexterm" data-primary="for loops" id="idm139806611786848"/> having tried a few manual settings for hyperparameters, the process will begin to feel very tedious. Experienced programmers will be tempted to simply write a <code>for</code> loop that iterates over the choices of hyperparameters desired. This process is more or less the grid-search method. For each hyperparameter, pick a list of values that might be good hyperparameters. Write a nested <code>for</code> loop that tries all combinations of these values to find their validation accuracies, and keep track of the best <span class="keep-together">performers</span>.</p>
+
+<p>There is one subtlety in the process, however. Deep networks can be fairly sensitive to the choice of random seed used to initialize the network. For this reason, it’s worth repeating each choice of hyperparameter settings multiple times and averaging the results to damp the variance.</p>
+
+<p>The code to do this is straightforward, as <a data-type="xref" href="#ch5-tox21grid">Example 5-4</a> shows.</p>
+<div id="ch5-tox21grid" data-type="example">
+<h5><span class="label">Example 5-4. </span>Performing grid search on Tox21 fully connected network hyperparameters</h5>
+
+<pre data-type="programlisting" data-code-language="python"><code class="n">scores</code> <code class="o">=</code> <code class="p">{}</code>
+<code class="n">n_reps</code> <code class="o">=</code> <code class="mi">3</code>
+<code class="n">hidden_sizes</code> <code class="o">=</code> <code class="p">[</code><code class="mi">50</code><code class="p">]</code>
+<code class="n">epochs</code> <code class="o">=</code> <code class="p">[</code><code class="mi">10</code><code class="p">]</code>
+<code class="n">dropouts</code> <code class="o">=</code> <code class="p">[</code><code class="o">.</code><code class="mi">5</code><code class="p">,</code> <code class="mf">1.0</code><code class="p">]</code>
+<code class="n">num_layers</code> <code class="o">=</code> <code class="p">[</code><code class="mi">1</code><code class="p">,</code> <code class="mi">2</code><code class="p">]</code>
+
+<code class="k">for</code> <code class="n">rep</code> <code class="ow">in</code> <code class="nb">range</code><code class="p">(</code><code class="n">n_reps</code><code class="p">):</code>
+  <code class="k">for</code> <code class="n">n_epochs</code> <code class="ow">in</code> <code class="n">epochs</code><code class="p">:</code>
+    <code class="k">for</code> <code class="n">hidden_size</code> <code class="ow">in</code> <code class="n">hidden_sizes</code><code class="p">:</code>
+      <code class="k">for</code> <code class="n">dropout</code> <code class="ow">in</code> <code class="n">dropouts</code><code class="p">:</code>
+        <code class="k">for</code> <code class="n">n_layers</code> <code class="ow">in</code> <code class="n">num_layers</code><code class="p">:</code>
+          <code class="n">score</code> <code class="o">=</code> <code class="n">eval_tox21_hyperparams</code><code class="p">(</code><code class="n">n_hidden</code><code class="o">=</code><code class="n">hidden_size</code><code class="p">,</code> <code class="n">n_epochs</code><code class="o">=</code><code class="n">n_epochs</code><code class="p">,</code>
+                                         <code class="n">dropout_prob</code><code class="o">=</code><code class="n">dropout</code><code class="p">,</code> <code class="n">n_layers</code><code class="o">=</code><code class="n">n_layers</code><code class="p">)</code>
+          <code class="k">if</code> <code class="p">(</code><code class="n">hidden_size</code><code class="p">,</code> <code class="n">n_epochs</code><code class="p">,</code> <code class="n">dropout</code><code class="p">,</code> <code class="n">n_layers</code><code class="p">)</code> <code class="ow">not</code> <code class="ow">in</code> <code class="n">scores</code><code class="p">:</code>
+            <code class="n">scores</code><code class="p">[(</code><code class="n">hidden_size</code><code class="p">,</code> <code class="n">n_epochs</code><code class="p">,</code> <code class="n">dropout</code><code class="p">,</code> <code class="n">n_layers</code><code class="p">)]</code> <code class="o">=</code> <code class="p">[]</code>
+          <code class="n">scores</code><code class="p">[(</code><code class="n">hidden_size</code><code class="p">,</code> <code class="n">n_epochs</code><code class="p">,</code> <code class="n">dropout</code><code class="p">,</code> <code class="n">n_layers</code><code class="p">)]</code><code class="o">.</code><code class="n">append</code><code class="p">(</code><code class="n">score</code><code class="p">)</code>
+<code class="k">print</code><code class="p">(</code><code class="s2">"All Scores"</code><code class="p">)</code>
+<code class="k">print</code><code class="p">(</code><code class="n">scores</code><code class="p">)</code>
+
+<code class="n">avg_scores</code> <code class="o">=</code> <code class="p">{}</code>
+<code class="k">for</code> <code class="n">params</code><code class="p">,</code> <code class="n">param_scores</code> <code class="ow">in</code> <code class="n">scores</code><code class="o">.</code><code class="n">iteritems</code><code class="p">():</code>
+  <code class="n">avg_scores</code><code class="p">[</code><code class="n">params</code><code class="p">]</code> <code class="o">=</code> <code class="n">np</code><code class="o">.</code><code class="n">mean</code><code class="p">(</code><code class="n">np</code><code class="o">.</code><code class="n">array</code><code class="p">(</code><code class="n">param_scores</code><code class="p">))</code>
+<code class="k">print</code><code class="p">(</code><code class="s2">"Scores Averaged over </code><code class="si">%d</code><code class="s2"> repetitions"</code> <code class="o">%</code> <code class="n">n_reps</code><code class="p">)</code></pre></div>
+</div></section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<section data-type="sect2" data-pdf-bookmark="Random Hyperparameter Search"><div class="sect2" id="idm139806611778656">
+<h2>Random Hyperparameter Search</h2>
+
+<p>For<a data-type="indexterm" data-primary="algorithms" data-secondary="random hyperparameter search" id="idm139806611777408"/> experienced practitioners, it will often be very tempting to reuse magical hyperparameter settings or search grids that worked in previous applications. These settings can be valuable, but they can also lead us astray. Each machine learning problem is slightly different, and the optimal settings might lie in a region of parameter space we haven’t previously considered. For that reason, it’s often worthwhile to try random settings for hyperparameters (where the random values are chosen from a reasonable range).</p>
+
+<p>There’s also a deeper reason to try random searches. In higher-dimensional spaces, regular grids can miss a lot of information, especially if the spacing between grid points isn’t great. Selecting random choices for grid points can help us from falling into the trap of loose grids. <a data-type="xref" href="#ch5-tox21gridvsrandom">Figure 5-4</a> illustrates this fact.</p>
+
+<figure><div id="ch5-tox21gridvsrandom" class="figure">
+<img src="assets/tfdl_0504.png" alt="random_grid.png"/>
+<h6><span class="label">Figure 5-4. </span>An illustration of why random hyperparameter search can be superior to grid search.</h6>
+</div></figure>
+
+<p>How can we implement random hyperparameter search in software? A neat software trick is to sample the random values desired up front and store them in a list. Then, random hyperparameter search simply turns into grid search over these randomly sampled lists. Here’s an example. For learning rates, it’s often useful to try a wide range from .1 to .000001 or so. <a data-type="xref" href="#ch5-tox21randsamp">Example 5-5</a> uses NumPy to sample some random learning rates.</p>
+<div id="ch5-tox21randsamp" data-type="example">
+<h5><span class="label">Example 5-5. </span>Sampling random learning rates</h5>
+
+<pre data-type="programlisting" data-code-language="python"><code class="n">n_rates</code> <code class="o">=</code> <code class="mi">5</code>
+<code class="n">learning_rates</code> <code class="o">=</code> <code class="mi">10</code><code class="o">**</code><code class="p">(</code><code class="o">-</code><code class="n">np</code><code class="o">.</code><code class="n">random</code><code class="o">.</code><code class="n">uniform</code><code class="p">(</code><code class="n">low</code><code class="o">=</code><code class="mi">1</code><code class="p">,</code> <code class="n">high</code><code class="o">=</code><code class="mi">6</code><code class="p">,</code> <code class="n">size</code><code class="o">=</code><code class="n">n_rates</code><code class="p">))</code></pre></div>
+
+<p>We use a mathematical trick here. Note that  .1 = 10<sup>–1</sup> and .000001 = 10<sup>–6</sup>. Sampling real-valued numbers between ranges like 1 and 6 is easy with <code>np.random.uniform</code>. We can raise these sampled values to a power to recover our learning rates. Then <code>learning_rates</code> holds a list of values that we can feed into our grid search code from the previous section.<a data-type="indexterm" data-primary="" data-startref="HOalg05" id="idm139806611549264"/></p>
+</div></section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<section data-type="sect2" data-pdf-bookmark="Challenge for the Reader"><div class="sect2" id="idm139806611548192">
+<h2>Challenge for the Reader</h2>
+
+<p>In this chapter, we’ve only covered the basics of hyperparameter tuning, but the tools covered are quite powerful. As a challenge, try tuning the fully connected deep network to achieve validation performance higher than that of the random forest. This might require a bit of work, but it’s well worth the experience.</p>
+</div></section>
+
+
+
+
+
+</div></section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<section data-type="sect1" data-pdf-bookmark="Review"><div class="sect1" id="idm139806611546336">
+<h1>Review</h1>
+
+<p>In this chapter, we covered the basics of hyperparameter optimization, the process of selecting values for model parameters that can’t be learned automatically on the training data. In particular, we introduced random and grid hyperparameter search and demonstrated the use of such code for optimizing models on the Tox21 dataset introduced in the last chapter.</p>
+
+<p>In <a data-type="xref" href="ch06.html#convolutional_neural_networks">Chapter 6</a>, we will return to our survey of deep architectures and introduce you to convolutional neural networks, one of the fundamental building blocks of modern deep architectures.<a data-type="indexterm" data-primary="" data-startref="hyperop05" id="idm139806611543184"/></p>
+</div></section>
+
+
+
+
+
+
+
+</div></section></body></html>

@@ -1,0 +1,1806 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html><html xmlns:epub="http://www.idpf.org/2007/ops" xmlns="http://www.w3.org/1999/xhtml"><head><title>Linear and Logistic Regression with TensorFlow</title><link rel="stylesheet" type="text/css" href="epub.css"/></head><body data-type="book"><section data-type="chapter" epub:type="chapter" data-pdf-bookmark="Chapter 3. Linear and Logistic Regression with TensorFlow"><div class="chapter" id="linear_and_logistic_regression_with_tensorflow">
+<h1><span class="label">Chapter 3. </span>Linear and Logistic Regression <span class="keep-together">with TensorFlow</span></h1>
+
+
+<p>This<a data-type="indexterm" data-primary="regression problems" data-secondary="linear and logistic regression with TensorFlow" id="RPreg03"/> chapter will show you how to build simple, but nontrivial, examples of learning systems in TensorFlow. The first part of this chapter reviews the mathematical foundations for building learning systems and in particular will cover functions, continuity, and differentiability. We introduce the idea of loss functions, then discuss how machine learning boils down to the ability to find the minimal points of complicated loss functions. We then cover the notion of gradient descent, and explain how it can be used to minimize loss functions. We end the first section by briefly discussing the algorithmic idea of automatic differentiation. The second section focuses on introducing the TensorFlow concepts underpinned by these mathematical ideas. These concepts include placeholders, scopes, optimizers, and TensorBoard, and enable the practical construction and analysis of learning systems. The final section provides case studies of how to train linear and logistic regression models in TensorFlow.</p>
+
+<p>This chapter is long and introduces many new ideas. It’s OK if you don’t grasp all the subtleties of these ideas in a first reading. We recommend moving forward and coming back to refer to the concepts here as needed later. We will repeatedly use these fundamentals in the remainder of the book in order to let these ideas sink in <span class="keep-together">gradually</span>.</p>
+
+
+
+
+
+
+<section data-type="sect1" data-pdf-bookmark="Mathematical Review"><div class="sect1" id="idm139806616320032">
+<h1>Mathematical Review</h1>
+
+<p>This<a data-type="indexterm" data-primary="deep learning" data-secondary="mathematical review" id="DLmath"/><a data-type="indexterm" data-primary="machine learning" data-secondary="mathematical tools" id="MLmath03"/> first section reviews the mathematical tools needed to conceptually understand machine learning. We attempt to minimize the number of Greek symbols required, and focus instead on building conceptual understanding rather than technical manipulations.</p>
+
+
+
+
+
+
+
+
+<section data-type="sect2" data-pdf-bookmark="Functions and Differentiability"><div class="sect2" id="idm139806616315408">
+<h2>Functions and Differentiability</h2>
+
+<p>This<a data-type="indexterm" data-primary="mathematical tools" data-secondary="functions and differentiability" id="idm139806616313680"/><a data-type="indexterm" data-primary="functions" data-secondary="differentiability and" id="idm139806616312704"/><a data-type="indexterm" data-primary="continuous functions" id="idm139806616311760"/> section will provide you with a brief overview of the concepts of functions and differentiability. A function <em>f</em> is a rule that takes an input to an output. There are functions in all computer programming languages, and the mathematical definition of a function isn’t really much different. However, mathematical functions commonly used in physics and engineering have other important properties such as continuity and differentiability. A continuous function, loosely speaking, is one that can be drawn without lifting your pencil from the paper, as shown in <a data-type="xref" href="#ch3-cont">Figure 3-1</a>. (This is of course not the technical definition, but it captures the spirit of the continuity <span class="keep-together">condition</span>.)</p>
+
+<figure><div id="ch3-cont" class="figure">
+<img src="assets/tfdl_0301.png" alt="continuous_1.gif"/>
+<h6><span class="label">Figure 3-1. </span>Some continuous functions.</h6>
+</div></figure>
+
+<p>Differentiability<a data-type="indexterm" data-primary="differentiability" id="idm139806616306096"/> is a type of smoothness condition on functions. It says no sharp corners or turns are allowed in the function (<a data-type="xref" href="#ch3-diff">Figure 3-2</a>).</p>
+
+<figure><div id="ch3-diff" class="figure">
+<img src="assets/tfdl_0302.png" alt="Math_images_4.jpg"/>
+<h6><span class="label">Figure 3-2. </span>A differentiable function.</h6>
+</div></figure>
+
+<p>The<a data-type="indexterm" data-primary="functions" data-secondary="minima and derivative of" id="idm139806616301696"/> key advantage of differentiable functions is that we can use the slope of the function at a particular point as a guide to find places where the function is higher or lower than our current position. This<a data-type="indexterm" data-primary="minima" id="idm139806616300368"/> allows us to find the <em>minima</em> of the function. The <em>derivative</em> of<a data-type="indexterm" data-primary="derivatives" id="idm139806616298704"/> differentiable function <em>f</em>, denoted <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <msup><mi>f</mi> <mo>'</mo> </msup>
+</math>, is another function that provides the slope of the original function at all points. The conceptual idea is that the derivative of a function at a given point gives a signpost pointing to directions where the function is higher or lower than its current value. An optimization algorithm can follow this signpost to move closer to a minima of <em>f</em>. At the minima itself, the function will have derivative zero.</p>
+
+<p>The<a data-type="indexterm" data-primary="derivative-driven optimization" id="idm139806616294544"/> power of derivative-driven optimization isn’t apparent at first. Generations of calculus students have suffered through stultifying exercises minimizing tiny functions on paper. These exercises aren’t useful since finding the minima of a function with only a small number of input parameters is a trivial exercise best done graphically. The power of derivative-driven optimization only becomes evident when there are hundreds, thousands, millions, or billions of variables. At these scales, understanding the function analytically is nigh impossible, and all visualizations are fraught exercises that may well miss the key attributes of the function. At<a data-type="indexterm" data-primary="gradient" id="idm139806616293040"/><a data-type="indexterm" data-primary="functions" data-secondary="gradient of" id="idm139806616292368"/><a data-type="indexterm" data-primary="multivariate functions" id="idm139806616291424"/><a data-type="indexterm" data-primary="functions" data-secondary="multivariate functions" id="idm139806616290752"/> these scales, the <em>gradient</em> of the function <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mrow>
+    <mi>∇</mi>
+    <mi>f</mi>
+  </mrow>
+</math>, a generalization of <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <msup><mi>f</mi> <mo>'</mo> </msup>
+</math> to multivariate functions, is likely the most powerful mathematical tool to understand the function and its behavior. We will dig into gradients in more depth later in this chapter. (Conceptually that is; we won’t cover the technical details of gradients in this work.)</p>
+
+<p>At<a data-type="indexterm" data-primary="function minimization" id="idm139806616285216"/><a data-type="indexterm" data-primary="machine learning" data-secondary="function minimization and" id="idm139806616284480"/> a very high level, machine learning is simply the act of function minimization: learning algorithms are nothing more than minima finders for suitably defined functions. This definition has the advantage of mathematical simplicity. But, what are these special differentiable functions that encode useful solutions in their minima and how can we find them?</p>
+</div></section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<section data-type="sect2" data-pdf-bookmark="Loss Functions"><div class="sect2" id="idm139806616282896">
+<h2>Loss Functions</h2>
+
+<p>In<a data-type="indexterm" data-primary="mathematical tools" data-secondary="loss functions" id="MTlossf03"/><a data-type="indexterm" data-primary="functions" data-secondary="loss functions" id="Floss03"/><a data-type="indexterm" data-primary="loss functions" id="lossf03"/> order to solve a given machine learning problem, a data scientist must find a way of constructing a function whose minima encode solutions to the real-world problem at hand. Luckily for our hapless data scientist, the machine learning literature has built up a rich history of <em>loss functions</em> that perform such encodings. Practical machine learning boils down to understanding the different types of loss functions available and knowing which loss function should be applied to which problems. Put another way, the loss function is the mechanism by which a data science project is transmuted into mathematics. All of machine learning, and much of artificial intelligence, boils down to the creation of the right loss function to solve the problem at hand. We will give you a whirlwind tour of some common families of loss functions.</p>
+
+<p>We start by noting that a loss function <math xmlns="http://www.w3.org/1998/Math/MathML" alttext="script upper L">
+  <mi>ℒ</mi>
+</math> must satisfy some mathematical properties to be meaningful. First <math xmlns="http://www.w3.org/1998/Math/MathML" alttext="script upper L">
+  <mi>ℒ</mi>
+</math> must use both datapoints <em>x</em> and labels <em>y</em>. We denote this by writing the loss function as <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mrow>
+    <mi>ℒ</mi>
+    <mo>(</mo>
+    <mi>x</mi>
+    <mo>,</mo>
+    <mi>y</mi>
+    <mo>)</mo>
+  </mrow>
+</math>. Using our language from the previous chapter, both <em>x</em> and <em>y</em> are tensors, and <math xmlns="http://www.w3.org/1998/Math/MathML" alttext="script upper L">
+  <mi>ℒ</mi>
+</math> is a function from pairs of tensors to scalars. What should the functional form of the loss function be? A common assumption that people use is to make loss functions <em>additive</em>. Suppose that <math xmlns="http://www.w3.org/1998/Math/MathML" alttext="left-parenthesis x Subscript i Baseline comma y Subscript i Baseline right-parenthesis">
+  <mrow>
+    <mo>(</mo>
+    <msub><mi>x</mi> <mi>i</mi> </msub>
+    <mo>,</mo>
+    <msub><mi>y</mi> <mi>i</mi> </msub>
+    <mo>)</mo>
+  </mrow>
+</math> are the data available for example <em>i</em> and that there are <em>N</em> total examples. Then the loss function can be decomposed as</p>
+<div data-type="equation">
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
+  <mrow>
+    <mi>ℒ</mi>
+    <mrow>
+      <mo>(</mo>
+      <mi>x</mi>
+      <mo>,</mo>
+      <mi>y</mi>
+      <mo>)</mo>
+    </mrow>
+    <mo>=</mo>
+    <munderover><mo>∑</mo> <mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow> <mi>N</mi> </munderover>
+    <msub><mi>ℒ</mi> <mi>i</mi> </msub>
+    <mrow>
+      <mo>(</mo>
+      <msub><mi>x</mi> <mi>i</mi> </msub>
+      <mo>,</mo>
+      <msub><mi>y</mi> <mi>i</mi> </msub>
+      <mo>)</mo>
+    </mrow>
+  </mrow>
+</math>
+</div>
+
+<p>(In practice <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <msub><mi>ℒ</mi> <mi>i</mi> </msub>
+</math> is the same for every datapoint.) This additive decomposition allows for many useful advantages. The first is that derivatives factor through addition, so computing the gradient of the total loss simplifies as follows:</p>
+<div data-type="equation">
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
+  <mrow>
+    <mi>∇</mi>
+    <mi>ℒ</mi>
+    <mrow>
+      <mo>(</mo>
+      <mi>x</mi>
+      <mo>,</mo>
+      <mi>y</mi>
+      <mo>)</mo>
+    </mrow>
+    <mo>=</mo>
+    <munderover><mo>∑</mo> <mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow> <mi>N</mi> </munderover>
+    <mi>∇</mi>
+    <msub><mi>ℒ</mi> <mi>i</mi> </msub>
+    <mrow>
+      <mo>(</mo>
+      <msub><mi>x</mi> <mi>i</mi> </msub>
+      <mo>,</mo>
+      <msub><mi>y</mi> <mi>i</mi> </msub>
+      <mo>)</mo>
+    </mrow>
+  </mrow>
+</math>
+</div>
+
+<p>This mathematical trick means that so long as the smaller functions <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <msub><mi>ℒ</mi> <mi>i</mi> </msub>
+</math> are differentiable, so too will the total loss function be. It follows that the problem of designing loss functions resolves into the problem of designing smaller functions <math xmlns="http://www.w3.org/1998/Math/MathML" alttext="script upper L Subscript i Baseline left-parenthesis x Subscript i Baseline comma y Subscript i Baseline right-parenthesis">
+  <mrow>
+    <msub><mi>ℒ</mi> <mi>i</mi> </msub>
+    <mrow>
+      <mo>(</mo>
+      <msub><mi>x</mi> <mi>i</mi> </msub>
+      <mo>,</mo>
+      <msub><mi>y</mi> <mi>i</mi> </msub>
+      <mo>)</mo>
+    </mrow>
+  </mrow>
+</math>. Before we dive into designing the <math xmlns="http://www.w3.org/1998/Math/MathML" alttext="script upper L Subscript i">
+  <msub><mi>ℒ</mi> <mi>i</mi> </msub>
+</math>, it will be convenient to take a small detour that explains the difference between classification and regression problems.</p>
+
+
+
+
+
+
+
+
+
+
+<section data-type="sect3" data-pdf-bookmark="Classification and regression"><div class="sect3" id="idm139806616177104">
+<h3>Classification and regression</h3>
+
+<p>Machine learning algorithms can be broadly categorized as supervised or unsupervised problems. Supervised problems<a data-type="indexterm" data-primary="supervised problems" id="idm139806616175376"/> are those for which both datapoints <em>x</em> and labels <em>y</em> are available, while unsupervised problems have only datapoints <em>x</em> without labels <em>y</em>. In general,<a data-type="indexterm" data-primary="unsupervised problems" id="idm139806616173104"/> unsupervised machine learning is much harder and less well-defined (what does it mean to “understand” datapoints <em>x</em>?). We won’t delve into unsupervised loss functions at this point since, in practice, most unsupervised losses are cleverly repurposed supervised losses.</p>
+
+<p>Supervised<a data-type="indexterm" data-primary="machine learning" data-secondary="classification and regression" id="idm139806616171424"/><a data-type="indexterm" data-primary="classification problems" data-secondary="defined" id="idm139806616170464"/> machine learning can be broken up into the two subproblems of classification and regression. A classification problem is one in which you seek to design a machine learning system that assigns a discrete label, say 0/1 (or more generally <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mrow>
+    <mn>0</mn>
+    <mo>,</mo>
+    <mo>⋯</mo>
+    <mo>,</mo>
+    <mi>n</mi>
+  </mrow>
+</math>) to a given datapoint. Regression<a data-type="indexterm" data-primary="regression problems" data-secondary="defined" id="idm139806616165824"/> is the problem of designing a machine learning system that attaches a real valued label (in <math xmlns="http://www.w3.org/1998/Math/MathML" alttext="double-struck upper R">
+  <mi>ℝ</mi>
+</math>) to a given datapoint.</p>
+
+<p>At a high level, these problems may appear rather different. Discrete objects and continuous objects are typically treated differently by mathematics and common sense. However, part of the trickery used in machine learning is to use continuous, differentiable loss functions to encode both classification and regression problems. As we’ve mentioned previously, much of machine learning is simply the art of turning complicated real-world systems into suitably simple differentiable functions.</p>
+
+<p>In the following sections, we will introduce you to a pair of mathematical functions that will prove very useful for transforming classification and regression tasks into suitable loss functions.</p>
+</div></section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<section data-type="sect3" data-pdf-bookmark="L2 Loss"><div class="sect3" id="idm139806616161728">
+<h3>L<sup>2</sup> Loss</h3>
+
+<p>The <em>L</em><sup>2</sup> loss (pronounced <em>ell-two</em> loss) is commonly used for regression problems. The <em>L</em><sup>2</sup> loss (or <em>L</em><sup>2</sup>-norm as it’s commonly called elsewhere) provides for a measure of the magnitude of a vector:</p>
+<div data-type="equation">
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
+  <mrow>
+    <msub><mrow><mo>∥</mo><mi>a</mi><mo>∥</mo></mrow> <mn>2</mn> </msub>
+    <mo>=</mo>
+    <msqrt>
+      <mrow>
+        <msubsup><mo>∑</mo> <mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow> <mi>N</mi> </msubsup>
+        <msubsup><mi>a</mi> <mi>i</mi> <mn>2</mn> </msubsup>
+      </mrow>
+    </msqrt>
+  </mrow>
+</math>
+</div>
+
+<p>Here, <em>a</em> is assumed to be a vector of length <em>N</em>. The <em>L</em><sup>2</sup> norm is commonly used to define the distance between two vectors:</p>
+<div data-type="equation">
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
+  <mrow>
+    <msub><mrow><mo>∥</mo><mi>a</mi><mo>-</mo><mi>b</mi><mo>∥</mo></mrow> <mn>2</mn> </msub>
+    <mo>=</mo>
+    <msqrt>
+      <mrow>
+        <msubsup><mo>∑</mo> <mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow> <mi>N</mi> </msubsup>
+        <msup><mrow><mo>(</mo><msub><mi>a</mi> <mi>i</mi> </msub><mo>-</mo><msub><mi>b</mi> <mi>i</mi> </msub><mo>)</mo></mrow> <mn>2</mn> </msup>
+      </mrow>
+    </msqrt>
+  </mrow>
+</math>
+</div>
+
+<p>This idea of <em>L</em><sup>2</sup> as a distance measurement is very useful for solving regression problems in supervised machine learning. Suppose that <em>x</em> is a collection of data and <em>y</em> the associated labels. Let <em>f</em> be some differentiable function that encodes our machine learning model. Then to encourage <em>f</em> to predict <em>y</em>, we create the <em>L</em><sup>2</sup> loss function</p>
+<div data-type="equation">
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
+  <mrow>
+    <mi>ℒ</mi>
+    <mrow>
+      <mo>(</mo>
+      <mi>x</mi>
+      <mo>,</mo>
+      <mi>y</mi>
+      <mo>)</mo>
+    </mrow>
+    <mo>=</mo>
+    <msub><mrow><mo>∥</mo><mi>f</mi><mrow><mo>(</mo><mi>x</mi><mo>)</mo></mrow><mo>-</mo><mi>y</mi><mo>∥</mo></mrow> <mn>2</mn> </msub>
+  </mrow>
+</math>
+</div>
+
+<p>As a quick note, it’s common in practice to not use the <em>L</em><sup>2</sup> loss directly, but rather its square</p>
+<div data-type="equation">
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
+  <mrow>
+    <msubsup><mrow><mo>∥</mo><mi>a</mi><mo>-</mo><mi>b</mi><mo>∥</mo></mrow> <mn>2</mn> <mn>2</mn> </msubsup>
+    <mo>=</mo>
+    <munderover><mo>∑</mo> <mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow> <mi>N</mi> </munderover>
+    <msup><mrow><mo>(</mo><msub><mi>a</mi> <mi>i</mi> </msub><mo>-</mo><msub><mi>b</mi> <mi>i</mi> </msub><mo>)</mo></mrow> <mn>2</mn> </msup>
+  </mrow>
+</math>
+</div>
+
+<p>in order to avoid dealing with terms of the form <math xmlns="http://www.w3.org/1998/Math/MathML" alttext="1 slash StartRoot left-parenthesis EndRoot x right-parenthesis">
+  <mrow>
+    <mn>1</mn>
+    <mo>/</mo>
+    <msqrt>
+      <mo>(</mo>
+    </msqrt>
+    <mrow>
+      <mi>x</mi>
+      <mo>)</mo>
+    </mrow>
+  </mrow>
+</math> in the gradient. We will use the squared <em>L</em><sup>2</sup> loss repeatedly in the remainder of this chapter and book.</p>
+<aside data-type="sidebar" epub:type="sidebar" class="pagebreak-before less_space"><div class="sidebar" id="idm139806616101424">
+<h5>Failure Modes of L<sup>2</sup> Loss</h5>
+<p>The <em>L</em><sup>2</sup> sharply penalizes large-scale deviances from true
+labels, but doesn’t do a great job of rewarding exact matches for real-valued
+labels. We can understand this discrepancy mathematically, by studying the
+behavior of the functions <math xmlns="http://www.w3.org/1998/Math/MathML" alttext="x squared">
+  <msup><mi>x</mi> <mn>2</mn> </msup>
+</math> and <em>x</em> near the
+origin (<a data-type="xref" href="#ch3-square">Figure 3-3</a>).</p>
+
+<figure><div id="ch3-square" class="figure">
+<img src="assets/tfdl_0303.png" alt="x2_and_x.png"/>
+<h6><span class="label">Figure 3-3. </span>A comparison of the square and identity functions near the origin.</h6>
+</div></figure>
+
+<p>Notice how <math xmlns="http://www.w3.org/1998/Math/MathML" alttext="x squared">
+  <msup><mi>x</mi> <mn>2</mn> </msup>
+</math> dwindles rapidly to 0 for small values of <em>x</em>. As a result, small deviations aren’t penalized heavily by the <em>L</em><sup>2</sup> loss. In low-dimensional regression, this isn’t a major issue, but in high-dimensional regression, the <em>L</em><sup>2</sup> becomes a poor loss function since there may be many small deviations that together make the regression output poor. For example, in image prediction, <em>L</em><sup>2</sup> loss creates blurry images that are not visually appealing. Recent progress in machine learning has devised ways to learn loss functions. These learned loss functions, commonly styled Generative Adversarial Networks or GANs, are much more suitable for high-dimensional regression and are capable of generating nonblurry images.</p>
+</div></aside>
+</div></section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<section data-type="sect3" data-pdf-bookmark="Probability distributions"><div class="sect3" id="idm139806616161136">
+<h3>Probability distributions</h3>
+
+<p>Before<a data-type="indexterm" data-primary="probability distributions" id="idm139806616085552"/> introducing loss functions for classification problems, it will be useful to take a quick aside to introduce probability distributions. To start, what is a probability distribution and why should we care about it for the purposes of machine learning? Probability is a deep subject, so we will only delve far enough into it for you to gain the required minimal understanding. At a high level, probability distributions provide a mathematical trick that allows you to relax a discrete set of choices into a continuum. Suppose, for example, you need to design a machine learning system that predicts whether a coin will fall heads up or heads down. It doesn’t seem like heads up/down can be encoded as a continuous function, much less a differentiable one. How can you then use the machinery of calculus or TensorFlow to solve problems involving discrete choices?</p>
+
+<p>Enter the probability distribution. Instead of hard choices, make the classifier predict the chance of getting heads up or heads down. For example, the classifier may learn to predict that heads has probability 0.75 and tails has probability 0.25. Note that probabilities vary continuously! Consequently by working with the probabilities of discrete events rather than with the events themselves, you can neatly sidestep the issue that calculus doesn’t really work with discrete events.</p>
+
+<p>A probability distribution <em>p</em> is simply a listing of the probabilities for the possible discrete events at hand. In this case, <em>p</em> = (0.75, 0.25). Note, alternatively, you can view <math xmlns="http://www.w3.org/1998/Math/MathML" alttext="p colon StartSet 0 comma 1 EndSet right-arrow double-struck upper R">
+  <mrow>
+    <mi>p</mi>
+    <mo>:</mo>
+    <mo>{</mo>
+    <mn>0</mn>
+    <mo>,</mo>
+    <mn>1</mn>
+    <mo>}</mo>
+    <mo>→</mo>
+    <mi>ℝ</mi>
+  </mrow>
+</math> as a function from the set of two elements to the real numbers. This viewpoint will be useful notationally at times.</p>
+
+<p>We briefly note that the technical definition of a probability distribution is more involved. It is feasible to assign probability distributions to real-valued events. We will discuss such distributions later in the chapter.</p>
+</div></section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<section data-type="sect3" data-pdf-bookmark="Cross-entropy loss"><div class="sect3" id="idm139806616075168">
+<h3>Cross-entropy loss</h3>
+
+<p>Cross-entropy<a data-type="indexterm" data-primary="cross-entropy loss" id="idm139806616073504"/> is a mathematical method for gauging the distance between two probability distributions:</p>
+<div data-type="equation">
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
+  <mrow>
+    <mi>H</mi>
+    <mrow>
+      <mo>(</mo>
+      <mi>p</mi>
+      <mo>,</mo>
+      <mi>q</mi>
+      <mo>)</mo>
+    </mrow>
+    <mo>=</mo>
+    <mo>-</mo>
+    <munder><mo>∑</mo> <mi>x</mi> </munder>
+    <mi>p</mi>
+    <mrow>
+      <mo>(</mo>
+      <mi>x</mi>
+      <mo>)</mo>
+    </mrow>
+    <mo form="prefix">log</mo>
+    <mi>q</mi>
+    <mrow>
+      <mo>(</mo>
+      <mi>x</mi>
+      <mo>)</mo>
+    </mrow>
+  </mrow>
+</math>
+</div>
+
+<p>Here <em>p</em> and <em>q</em> are two probability distributions. The notation <em>p</em>(<em>x</em>) denotes the probability <em>p</em> accords to event <em>x</em>. This definition is worth discussing carefully. Like the <em>L</em><sup>2</sup> norm, <em>H</em> provides a notion of distance. Note that in the case where <em>p</em> = <em>q</em>,</p>
+<div data-type="equation">
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
+  <mrow>
+    <mi>H</mi>
+    <mrow>
+      <mo>(</mo>
+      <mi>p</mi>
+      <mo>,</mo>
+      <mi>p</mi>
+      <mo>)</mo>
+    </mrow>
+    <mo>=</mo>
+    <mo>-</mo>
+    <munder><mo>∑</mo> <mi>x</mi> </munder>
+    <mi>p</mi>
+    <mrow>
+      <mo>(</mo>
+      <mi>x</mi>
+      <mo>)</mo>
+    </mrow>
+    <mo form="prefix">log</mo>
+    <mi>p</mi>
+    <mrow>
+      <mo>(</mo>
+      <mi>x</mi>
+      <mo>)</mo>
+    </mrow>
+  </mrow>
+</math>
+</div>
+
+<p>This quantity is the entropy of <em>p</em> and is usually written simply <em>H</em>(<em>p</em>). It’s a measure of how disordered the distribution is; the entropy is maximized when all events are equally likely. <em>H</em>(<em>p</em>) is always less than or equal to <em>H</em>(<em>p</em>, <em>q</em>). In fact, the “further away” distribution <em>q</em> is from <em>p</em>, the larger the cross-entropy gets. We won’t dig deeply into the precise meanings of these statements, but the intuition of cross-entropy as a distance mechanism is worth remembering.</p>
+
+<p>As an aside, note that unlike <em>L</em><sup>2</sup> norm, <em>H</em> is asymmetric! That is, <math xmlns="http://www.w3.org/1998/Math/MathML" alttext="upper H left-parenthesis p comma q right-parenthesis not-equals upper H left-parenthesis q comma p right-parenthesis">
+  <mrow>
+    <mi>H</mi>
+    <mo>(</mo>
+    <mi>p</mi>
+    <mo>,</mo>
+    <mi>q</mi>
+    <mo>)</mo>
+    <mo>≠</mo>
+    <mi>H</mi>
+    <mo>(</mo>
+    <mi>q</mi>
+    <mo>,</mo>
+    <mi>p</mi>
+    <mo>)</mo>
+  </mrow>
+</math>. For this reason, reasoning with cross-entropy can be a little tricky and is best done with some caution.</p>
+
+<p>Returning to concrete matters, now suppose that <math xmlns="http://www.w3.org/1998/Math/MathML" alttext="p equals left-parenthesis y comma 1 minus y right-parenthesis">
+  <mrow>
+    <mi>p</mi>
+    <mo>=</mo>
+    <mo>(</mo>
+    <mi>y</mi>
+    <mo>,</mo>
+    <mn>1</mn>
+    <mo>-</mo>
+    <mi>y</mi>
+    <mo>)</mo>
+  </mrow>
+</math> is the true data distribution for a discrete system with two outcomes, and <math xmlns="http://www.w3.org/1998/Math/MathML" alttext="q equals left-parenthesis y Subscript pred Baseline comma 1 minus y Subscript pred Baseline right-parenthesis">
+  <mrow>
+    <mi>q</mi>
+    <mo>=</mo>
+    <mo>(</mo>
+    <msub><mi>y</mi> <mtext>pred</mtext> </msub>
+    <mo>,</mo>
+    <mn>1</mn>
+    <mo>-</mo>
+    <msub><mi>y</mi> <mtext>pred</mtext> </msub>
+    <mo>)</mo>
+  </mrow>
+</math> is that predicted by a machine learning system. Then the cross-entropy loss is</p>
+<div data-type="equation">
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
+  <mrow>
+    <mi>H</mi>
+    <mrow>
+      <mo>(</mo>
+      <mi>p</mi>
+      <mo>,</mo>
+      <mi>q</mi>
+      <mo>)</mo>
+    </mrow>
+    <mo>=</mo>
+    <mi>y</mi>
+    <mo form="prefix">log</mo>
+    <msub><mi>y</mi> <mtext>pred</mtext> </msub>
+    <mo>+</mo>
+    <mrow>
+      <mo>(</mo>
+      <mn>1</mn>
+      <mo>-</mo>
+      <mi>y</mi>
+      <mo>)</mo>
+    </mrow>
+    <mo form="prefix">log</mo>
+    <mrow>
+      <mo>(</mo>
+      <mn>1</mn>
+      <mo>-</mo>
+      <msub><mi>y</mi> <mtext>pred</mtext> </msub>
+      <mo>)</mo>
+    </mrow>
+  </mrow>
+</math>
+</div>
+
+<p>This form of the loss is used widely in machine learning systems to train classifiers. Empirically, minimizing <em>H</em>(<em>p</em>, <em>q</em>) seems to construct classifiers that reproduce provided training labels well.<a data-type="indexterm" data-primary="" data-startref="MTlossf03" id="idm139806615997744"/><a data-type="indexterm" data-primary="" data-startref="Floss03" id="idm139806615996768"/><a data-type="indexterm" data-primary="" data-startref="lossf03" id="idm139806615995824"/></p>
+</div></section>
+
+
+
+</div></section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<section data-type="sect2" data-pdf-bookmark="Gradient Descent"><div class="sect2" id="idm139806616282432">
+<h2>Gradient Descent</h2>
+
+<p>So<a data-type="indexterm" data-primary="mathematical tools" data-secondary="gradient descent" id="MTgrad03"/><a data-type="indexterm" data-primary="gradient descent" id="grad03"/> far in this chapter, you have learned about the notion of function minimization as a proxy for machine learning. As a short recap, minimizing a suitable function is often sufficient to learn to solve a desired task. In order to use this framework, you need to use suitable loss functions, such as the <em>L</em><sup>2</sup> or <em>H</em>(<em>p</em>, <em>q</em>) cross-entropy in order to transform classification and regression problems into suitable loss functions.</p>
+<div data-type="note" epub:type="note"><h1>Learnable Weights</h1>
+<p>So<a data-type="indexterm" data-primary="function minimization" id="idm139806615986976"/><a data-type="indexterm" data-primary="machine learning" data-secondary="function minimization and" id="idm139806615986272"/> far in this chapter, we’ve explained that machine learning is the act of minimizing suitably defined loss function <math xmlns="http://www.w3.org/1998/Math/MathML" alttext="script upper L left-parenthesis x comma y right-parenthesis">
+  <mrow>
+    <mi>ℒ</mi>
+    <mo>(</mo>
+    <mi>x</mi>
+    <mo>,</mo>
+    <mi>y</mi>
+    <mo>)</mo>
+  </mrow>
+</math>. That is, we attempt to find arguments to the loss function <math xmlns="http://www.w3.org/1998/Math/MathML" alttext="script upper L">
+  <mi>ℒ</mi>
+</math> that minimize it. However, careful readers will recall that (<em>x</em>,<em>y</em>) are fixed quantities that cannot be changed. What arguments to <math xmlns="http://www.w3.org/1998/Math/MathML" alttext="script upper L">
+  <mi>ℒ</mi>
+</math> are we changing during learning then?</p>
+
+<p>Enter<a data-type="indexterm" data-primary="learnable weights" id="idm139806615977520"/><a data-type="indexterm" data-primary="parameterization" id="idm139806615976448"/> learnable weights <em>W</em>. Suppose <em>f</em>(<em>x</em>) is a differentiable function we wish to fit with our machine learning model. We will dictate that <em>f</em> be <em>parameterized</em> by choice of <em>W</em>. That is, our function actually has two arguments <em>f</em>(<em>W</em>, <em>x</em>). Fixing the value of <em>W</em> results in a function that depends solely on datapoints <em>x</em>. These learnable weights are the quantities actually selected by minimization of the loss function. We<a data-type="indexterm" data-primary="tf.Variable()" id="idm139806615970448"/> will see later in the chapter how TensorFlow can be used to encode learnable weights using <code>tf.Variable</code>.</p>
+</div>
+
+<p class="pagebreak-before">But now, suppose that we have encoded our learning problem with a suitable loss function? How can we actually find minima of this loss function in practice? The key trick we will use is minimization by gradient descent. Suppose that <em>f</em> is a function that depends on some weights <em>W</em>. Then <math xmlns="http://www.w3.org/1998/Math/MathML" alttext="normal nabla upper W">
+  <mrow>
+    <mi>∇</mi>
+    <mi>W</mi>
+  </mrow>
+</math> denotes the direction change in <em>W</em> that would maximally increase <em>f</em>. It follows that taking a step in the opposite direction would get us closer to the minima of <em>f</em>.</p>
+<div data-type="note" epub:type="note"><h1>Notation for Gradients</h1>
+<p>We<a data-type="indexterm" data-primary="gradient" id="idm139806615962544"/> have written the gradient for learnable weight <em>W</em> as <math xmlns="http://www.w3.org/1998/Math/MathML" alttext="normal nabla upper W">
+  <mrow>
+    <mi>∇</mi>
+    <mi>W</mi>
+  </mrow>
+</math>. At times, it will be convenient to use the following alternative notation for the gradient:</p>
+<div data-type="equation">
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
+  <mrow>
+    <mi>∇</mi>
+    <mi>W</mi>
+    <mo>=</mo>
+    <mfrac><mrow><mi>∂</mi><mi>ℒ</mi></mrow> <mrow><mi>∂</mi><mi>W</mi></mrow></mfrac>
+  </mrow>
+</math>
+</div>
+
+<p>Read this equation as saying that gradient <math xmlns="http://www.w3.org/1998/Math/MathML" alttext="normal nabla upper W">
+  <mrow>
+    <mi>∇</mi>
+    <mi>W</mi>
+  </mrow>
+</math> encodes the direction that maximally changes the loss <math xmlns="http://www.w3.org/1998/Math/MathML" alttext="script upper L">
+  <mi>ℒ</mi>
+</math>.</p>
+</div>
+
+<p>TheI<a data-type="indexterm" data-primary="minima" id="idm139806615949136"/><a data-type="indexterm" data-primary="functions" data-secondary="minima and derivative of" id="idm139806615948400"/> idea of gradient descent is to find the minima of functions by repeatedly following the negative gradient. Algorithmically, this update rule can be expressed as</p>
+<div data-type="equation">
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
+  <mrow>
+    <mi>W</mi>
+    <mo>=</mo>
+    <mi>W</mi>
+    <mo>-</mo>
+    <mi>α</mi>
+    <mi>∇</mi>
+    <mi>W</mi>
+  </mrow>
+</math>
+</div>
+
+<p>where <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>α</mi>
+</math> is the <em>step-size</em> and dictates how much weight is given to new gradient <math xmlns="http://www.w3.org/1998/Math/MathML" alttext="normal nabla upper W">
+  <mrow>
+    <mi>∇</mi>
+    <mi>W</mi>
+  </mrow>
+</math>. The idea is to take many little steps each in the direction of <math xmlns="http://www.w3.org/1998/Math/MathML" alttext="normal nabla upper W">
+  <mrow>
+    <mi>∇</mi>
+    <mi>W</mi>
+  </mrow>
+</math>. Note that <math xmlns="http://www.w3.org/1998/Math/MathML" alttext="normal nabla upper W">
+  <mrow>
+    <mi>∇</mi>
+    <mi>W</mi>
+  </mrow>
+</math> is itself a function of <em>W</em>, so the actual step changes at each iteration. Each step performs a little update to the weight matrix <em>W</em>. The iterative process of performing updates is typically called <em>learning</em> the weight matrix <em>W</em>.</p>
+<div data-type="note" epub:type="note"><h1>Computing Gradients Efficiently with Minibatches</h1>
+<p>One<a data-type="indexterm" data-primary="minibatches" id="idm139806615930416"/><a data-type="indexterm" data-primary="hyperparameters, defined" id="idm139806615929296"/> issue is that computing <math xmlns="http://www.w3.org/1998/Math/MathML" alttext="normal nabla upper W">
+  <mrow>
+    <mi>∇</mi>
+    <mi>W</mi>
+  </mrow>
+</math> can be very slow. Implicitly, <math xmlns="http://www.w3.org/1998/Math/MathML" alttext="normal nabla upper W">
+  <mrow>
+    <mi>∇</mi>
+    <mi>W</mi>
+  </mrow>
+</math> depends on the loss function <math xmlns="http://www.w3.org/1998/Math/MathML" alttext="script upper L">
+  <mi>ℒ</mi>
+</math>. Since <math xmlns="http://www.w3.org/1998/Math/MathML" alttext="script upper L">
+  <mi>ℒ</mi>
+</math> depends on the entire dataset, computing <math xmlns="http://www.w3.org/1998/Math/MathML" alttext="normal nabla upper W">
+  <mrow>
+    <mi>∇</mi>
+    <mi>W</mi>
+  </mrow>
+</math> can become very slow for large datasets. In practice, people usually estimate <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mrow>
+    <mi>∇</mi>
+    <mi>W</mi>
+  </mrow>
+</math> on a fraction of the dataset called a <em>minibatch</em>. Each minibatch is of size typically 50–100. The size of the minibatch is a <em>hyperparameter</em> in a deep learning algorithm. The step-size for each step <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>α</mi>
+</math> is another hyperparameter. Deep learning algorithms typically have clusters of hyperparameters, which are not themselves learned via the stochastic gradient descent.</p>
+
+<p>This<a data-type="indexterm" data-primary="learnable parameters" id="idm139806615915424"/> tension between learnable parameters and hyperparameters is one of the weaknesses and strengths of deep architectures. The presence of hyperparameters provides much room for utilizing the expert’s strong intuition, while the learnable parameters allow the data to speak for itself. However, this flexibility itself quickly becomes a weakness, with understanding of the behavior of hyperparameters something of a black art that blocks beginners from widely deploying deep learning. We will spend significant effort discussing hyperparameter optimization later in this book.</p>
+</div>
+
+<p>We<a data-type="indexterm" data-primary="epochs" id="idm139806615913456"/> end this section by introducing the notion of an <em>epoch</em>. An epoch is a full pass of the gradient descent algorithm over the data <em>x</em>. More particularly, an epoch consists of however many gradient descent steps are required to view all the data at a given minibatch size. For example, suppose that a dataset has 1,000 datapoints and training uses a minibatch of size 50. Then an epoch will consist of 20 gradient descent updates. Each epoch of training increases the amount of useful knowledge the model has gained. Mathematically, this will correspond to reductions in the value of the loss function on the training set.</p>
+
+<p>Early<a data-type="indexterm" data-primary="learning the prior" id="idm139806615910800"/> epochs will cause dramatic drops in the loss function. This process is often referred to as <em>learning the prior</em> on that dataset. While it appears that the model is learning rapidly, it is in fact only adjusting itself to reside in the portion of parameter space that is pertinent to the problem at hand. Later epochs will correspond to much smaller drops in the loss function, but it is often in these later epochs that meaningful learning will happen. A few epochs is usually too little time for a nontrivial model to learn anything useful; models are usually trained from 10–1,000 epochs or until convergence. While this appears large, it’s important to note that the number of epochs required usually doesn’t scale with the size of the dataset at hand. Consequently, gradient descent scales linearly with the size of data and not quadratically! This is one of the greatest strengths of the stochastic gradient descent method versus other learning algorithms. More complicated learning algorithms may only require a single pass over a dataset, but may use total compute that scales quadratically with the number of datapoints. In this era of big datasets, quadratic runtimes are a fatal weakness.</p>
+
+<p>Tracking the drop in the loss function as a function of the number of epochs can be an extremely useful visual shorthand for understanding the learning process. These plots are often referred to as loss curves (see <a data-type="xref" href="#ch3-smoothloss">Figure 3-4</a>). With time, an experienced practitioner can diagnose common failures in learning with just a quick glance at the loss curve. We will pay significant attention to the loss curves for various deep learning models over the course of this book. In particular, later in this chapter, we will introduce TensorBoard, a powerful visualization suite that TensorFlow provides for tracking quantities such as loss functions.<a data-type="indexterm" data-primary="" data-startref="MTgrad03" id="idm139806615906560"/><a data-type="indexterm" data-primary="" data-startref="grad03" id="idm139806615905712"/></p>
+
+<figure><div id="ch3-smoothloss" class="figure">
+<img src="assets/tfdl_0304.png" alt="smooth_loss.png"/>
+<h6><span class="label">Figure 3-4. </span>An example of a loss curve for a model. Note that this loss curve is from a model trained with the true gradient (that is, not a minibatch estimate) and is consequently smoother than other loss curves you will encounter later in this book.</h6>
+</div></figure>
+</div></section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<section data-type="sect2" data-pdf-bookmark="Automatic Differentiation Systems"><div class="sect2" id="idm139806615994288">
+<h2>Automatic Differentiation Systems</h2>
+
+<p>Machine<a data-type="indexterm" data-primary="mathematical tools" data-secondary="automatic differentiation systems" id="idm139806615900944"/><a data-type="indexterm" data-primary="automatic differentiation systems" id="idm139806615899920"/><a data-type="indexterm" data-primary="differentiability" id="idm139806615899232"/> learning is the art of defining loss functions suited to datasets and then minimizing them. In order to minimize loss functions, we need to compute their gradients and use the gradient descent algorithm to iteratively reduce the loss. However, we still need to discuss how gradients are actually computed. Until recently, the answer was “by hand.” Machine learning experts would break out pen and paper and compute matrix derivatives by hand to compute the analytical formulas for all gradients in a learning system. These formulas would then be manually coded to implement the learning algorithm. This process was notoriously buggy, and more than one machine learning expert has stories of accidental gradient errors in published papers and production systems going undiscovered for years.</p>
+
+<p>This state of affairs has changed significantly with the widespread availability of automatic differentiation engines. Systems like TensorFlow are capable of automatically computing gradients for almost all loss functions. This automatic differentiation is one of the greatest advantages of TensorFlow and similar systems, since machine learning practitioners no longer need to be experts at matrix calculus. However, it’s still worth understanding at a high level how TensorFlow can automatically take derivatives of complex functions. For those readers who suffered through an introductory class in calculus, you might remember that taking derivatives of functions is surprisingly mechanical. There are a series of simple rules that can be applied to take derivatives of most functions. For example:</p>
+<div data-type="equation">
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
+  <mrow>
+    <mfrac><mi>d</mi> <mrow><mi>d</mi><mi>x</mi></mrow></mfrac>
+    <msup><mi>x</mi> <mi>n</mi> </msup>
+    <mo>=</mo>
+    <mi>n</mi>
+    <msup><mi>x</mi> <mrow><mi>n</mi><mo>-</mo><mn>1</mn></mrow> </msup>
+  </mrow>
+</math>
+</div>
+<div data-type="equation">
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
+  <mrow>
+    <mfrac><mi>d</mi> <mrow><mi>d</mi><mi>x</mi></mrow></mfrac>
+    <msup><mi>e</mi> <mi>x</mi> </msup>
+    <mo>=</mo>
+    <msup><mi>e</mi> <mi>x</mi> </msup>
+  </mrow>
+</math>
+</div>
+
+<p>These rules can be combined through the power of the chain rule:</p>
+<div data-type="equation">
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
+  <mrow>
+    <mfrac><mi>d</mi> <mrow><mi>d</mi><mi>x</mi></mrow></mfrac>
+    <mi>f</mi>
+    <mrow>
+      <mo>(</mo>
+      <mi>g</mi>
+      <mrow>
+        <mo>(</mo>
+        <mi>x</mi>
+        <mo>)</mo>
+      </mrow>
+      <mo>)</mo>
+    </mrow>
+    <mo>=</mo>
+    <msup><mi>f</mi> <mo>'</mo> </msup>
+    <mrow>
+      <mo>(</mo>
+      <mi>g</mi>
+      <mrow>
+        <mo>(</mo>
+        <mi>x</mi>
+        <mo>)</mo>
+      </mrow>
+      <mo>)</mo>
+    </mrow>
+    <msup><mi>g</mi> <mo>'</mo> </msup>
+    <mrow>
+      <mo>(</mo>
+      <mi>x</mi>
+      <mo>)</mo>
+    </mrow>
+  </mrow>
+</math>
+</div>
+
+<p>where <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <msup><mi>f</mi> <mo>'</mo> </msup>
+</math> is used to denote the derivative of <em>f</em> and <math xmlns="http://www.w3.org/1998/Math/MathML" alttext="g prime">
+  <msup><mi>g</mi> <mo>'</mo> </msup>
+</math> that of <em>g</em>. With these rules, it’s straightforward to envision how one might program an automatic differentiation engine for one-dimensional calculus. Indeed, the creation of such a differentiation engine is often a first-year programming exercise in Lisp-based classes. (It turns out that correctly parsing functions is a much trickier problem than taking derivatives. Lisp makes it trivial to parse formulas using its syntax, while in other languages, waiting to do this exercise until you take a course on compilers is often easier).</p>
+
+<p>How might these rules be extended to calculus of higher dimensions? Getting the math right is trickier, since there are many more numbers to consider. For example, given <em>X</em> = <em>AB</em> where <em>X</em>, <em>A</em>, <em>B</em> are all matrices, the formula comes out to be</p>
+<div data-type="equation">
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
+  <mrow>
+    <mi>∇</mi>
+    <mi>A</mi>
+    <mo>=</mo>
+    <mfrac><mrow><mi>∂</mi><mi>L</mi></mrow> <mrow><mi>∂</mi><mi>A</mi></mrow></mfrac>
+    <mo>=</mo>
+    <mfrac><mrow><mi>∂</mi><mi>L</mi></mrow> <mrow><mi>∂</mi><mi>X</mi></mrow></mfrac>
+    <msup><mi>B</mi> <mi>T</mi> </msup>
+    <mo>=</mo>
+    <mrow>
+      <mo>(</mo>
+      <mi>∇</mi>
+      <mi>X</mi>
+      <mo>)</mo>
+    </mrow>
+    <msup><mi>B</mi> <mi>T</mi> </msup>
+  </mrow>
+</math>
+</div>
+
+<p>Formulas like this can be combined to provide a symbolic differentiation system for vectorial and tensorial calculus.<a data-type="indexterm" data-primary="" data-startref="DLmath" id="idm139806615844480"/><a data-type="indexterm" data-primary="" data-startref="MLmath03" id="idm139806615843568"/></p>
+</div></section>
+
+
+
+
+
+</div></section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<section data-type="sect1" data-pdf-bookmark="Learning with TensorFlow"><div class="sect1" id="idm139806615901952">
+<h1>Learning with TensorFlow</h1>
+
+<p>In<a data-type="indexterm" data-primary="TensorFlow" data-secondary="basic machine learning concepts" id="TFbasic03"/> the rest of this chapter, we will cover the concepts that you need to learn basic machine learning models with TensorFlow. We will start by introducing the concept of toy datasets, and will explain how to create meaningful toy datasets using common Python libraries. Next, we will discuss new TensorFlow ideas such as placeholders, feed dictionaries, name scopes, optimizers, and gradients. The next section will show you how to use these concepts to train simple regression and classification models.</p>
+
+
+
+
+
+
+
+
+<section data-type="sect2" data-pdf-bookmark="Creating Toy Datasets"><div class="sect2" id="idm139806615839728">
+<h2>Creating Toy Datasets</h2>
+
+<p>In<a data-type="indexterm" data-primary="machine learning" data-secondary="toy datasets" id="MLtoy03"/><a data-type="indexterm" data-primary="toy datasets" id="toy03"/><a data-type="indexterm" data-primary="synthetic datasets" id="synt03"/> this section, we will discuss how to create simple but meaningful synthetic datasets, or toy datasets, that we will use to train simple supervised classification and regression models.</p>
+
+
+
+
+
+
+
+
+
+
+<section data-type="sect3" data-pdf-bookmark="An (extremely) brief introduction to NumPy"><div class="sect3" id="idm139806615834624">
+<h3>An (extremely) brief introduction to NumPy</h3>
+
+<p>We<a data-type="indexterm" data-primary="NumPy" id="idm139806615833200"/> will make heavy use of NumPy in order to define useful toy datasets. NumPy is a Python package that allows for manipulation of tensors (called <code>ndarray</code>s in NumPy). <a data-type="xref" href="#ch3-numpy">Example 3-1</a> shows some basics.</p>
+<div id="ch3-numpy" data-type="example">
+<h5><span class="label">Example 3-1. </span>Some examples of basic NumPy usage</h5>
+
+<pre data-type="programlisting" data-code-language="python"><code class="o">&gt;&gt;&gt;</code> <code class="kn">import</code> <code class="nn">numpy</code> <code class="kn">as</code> <code class="nn">np</code>
+<code class="o">&gt;&gt;&gt;</code> <code class="n">np</code><code class="o">.</code><code class="n">zeros</code><code class="p">((</code><code class="mi">2</code><code class="p">,</code><code class="mi">2</code><code class="p">))</code>
+<code class="n">array</code><code class="p">([[</code> <code class="mf">0.</code><code class="p">,</code>  <code class="mf">0.</code><code class="p">],</code>
+       <code class="p">[</code> <code class="mf">0.</code><code class="p">,</code>  <code class="mf">0.</code><code class="p">]])</code>
+<code class="o">&gt;&gt;&gt;</code> <code class="n">np</code><code class="o">.</code><code class="n">eye</code><code class="p">(</code><code class="mi">3</code><code class="p">)</code>
+<code class="n">array</code><code class="p">([[</code> <code class="mf">1.</code><code class="p">,</code>  <code class="mf">0.</code><code class="p">,</code>  <code class="mf">0.</code><code class="p">],</code>
+       <code class="p">[</code> <code class="mf">0.</code><code class="p">,</code>  <code class="mf">1.</code><code class="p">,</code>  <code class="mf">0.</code><code class="p">],</code>
+       <code class="p">[</code> <code class="mf">0.</code><code class="p">,</code>  <code class="mf">0.</code><code class="p">,</code>  <code class="mf">1.</code><code class="p">]])</code></pre></div>
+
+<p>You<a data-type="indexterm" data-primary="ndarray" id="idm139806615827248"/> may notice that NumPy <code>ndarray</code> manipulation looks remarkably similar to TensorFlow tensor manipulation. This similarity was purposefully designed by TensorFlow’s architects. Many key TensorFlow utility functions have similar arguments and forms to analogous functions in NumPy. For this purpose, we will not attempt to introduce NumPy in great depth, and will trust readers to use experimentation to work out NumPy usage. There are numerous online resources that provide tutorial introductions to NumPy.</p>
+</div></section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<section data-type="sect3" data-pdf-bookmark="Why are toy datasets important?"><div class="sect3" id="idm139806615771792">
+<h3>Why are toy datasets important?</h3>
+
+<p>In machine learning, it is often critical to learn to properly use toy datasets. Learning is challenging, and one of the most common mistakes beginners make is
+trying to learn nontrivial models on complex data too soon. These attempts often
+end in abject failure, and the would-be machine learner walks away dejected and convinced machine learning isn’t for them.</p>
+
+<p>The real culprit here of course isn’t the student, but rather the fact that real-world datasets have many idiosyncrasies. Seasoned data scientists have learned that
+real-world datasets often require many clean-up and preprocessing transformations before becoming amenable to learning. Deep learning exacerbates this problem, since most deep learning models are notoriously sensitive to infelicities in data. Issues like a wide range of regression labels, or underlying strong noise patterns can throw off gradient-descent–based methods, even when other machine learning algorithms (such as random forests) would have no issues.</p>
+
+<p>Luckily, it’s almost always possible to deal with these issues, but doing so can require considerable sophistication on the part of the data scientist. These sensitivity issues are perhaps the biggest roadblock to the commoditization of machine learning as a technology. We will go into depth on data clean-up strategies, but for the time being, we recommend a much simpler alternative: use toy datasets!</p>
+
+<p>Toy datasets are critical for understanding learning algorithms. Given very simple synthetic datasets, it is trivial to gauge whether the algorithm has learned the correct rule. On more complex datasets, this judgment can be highly challenging. Consequently, for the remainder of this chapter, we will only use toy datasets as we cover the fundamentals of gradient-descent–based learning with TensorFlow. We will dive deep into case studies with real-world data in the following chapters.</p>
+</div></section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<section data-type="sect3" data-pdf-bookmark="Adding noise with Gaussians"><div class="sect3" id="idm139806615766992">
+<h3>Adding noise with Gaussians</h3>
+
+<p>Earlier, we<a data-type="indexterm" data-primary="discrete probability distributions" id="idm139806615765616"/><a data-type="indexterm" data-primary="Gaussian probability distributions" id="idm139806615764912"/> discussed discrete probability distributions as a tool for
+turning discrete choices into continuous values. We also alluded to the
+idea of a continuous probability distribution but didn’t dive into it.</p>
+
+<p>Continuous probability distributions<a data-type="indexterm" data-primary="continuous probability distributions" id="idm139806615763488"/><a data-type="indexterm" data-primary="probability density functions" id="idm139806615762720"/> (more accurately known as probability density functions) are a useful mathematical tool for modeling random events that may have a range of outcomes. For our purposes, it is enough to think of probability density functions as a useful tool for modeling some measurement error in gathering data. The Gaussian distribution is widely used for noise modeling.</p>
+
+<p>As <a data-type="xref" href="#ch3-gaussian">Figure 3-5</a> shows, note<a data-type="indexterm" data-primary="mean" id="idm139806615760064"/><a data-type="indexterm" data-primary="standard deviation" id="idm139806615759360"/> that Gaussians can have different <em>means</em> <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>μ</mi>
+</math> and <em>standard deviations</em> <math xmlns="http://www.w3.org/1998/Math/MathML" alttext="sigma">
+  <mi>σ</mi>
+</math>. The mean of a Gaussian is the average value it takes, while the standard deviation is a measure of the spread around this average value. In general, adding a Gaussian random variable onto some quantity provides a structured way to fuzz the quantity by making it vary slighty. This is a very useful trick for coming up with nontrivial synthetic datasets.</p>
+
+<figure><div id="ch3-gaussian" class="figure">
+<img src="assets/tfdl_0305.png" alt="gaussian.png"/>
+<h6><span class="label">Figure 3-5. </span>Illustrations of various Gaussian probability distributions with different means and standard deviations.</h6>
+</div></figure>
+
+<p>We quickly note that the Gaussian distribution is also called the Normal distribution. A Gaussian with mean <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>μ</mi>
+</math> and standard deviation <math xmlns="http://www.w3.org/1998/Math/MathML" alttext="sigma">
+  <mi>σ</mi>
+</math> is written <math xmlns="http://www.w3.org/1998/Math/MathML" alttext="upper N left-parenthesis mu comma sigma right-parenthesis">
+  <mrow>
+    <mi>N</mi>
+    <mo>(</mo>
+    <mi>μ</mi>
+    <mo>,</mo>
+    <mi>σ</mi>
+    <mo>)</mo>
+  </mrow>
+</math>. This shorthand notation is convenient, and we will use it many times in the coming chapters.</p>
+</div></section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<section data-type="sect3" data-pdf-bookmark="Toy regression datasets"><div class="sect3" id="idm139806615746112">
+<h3>Toy regression datasets</h3>
+
+<p>The<a data-type="indexterm" data-primary="linear regression" data-secondary="toy regression datasets" id="idm139806615744384"/><a data-type="indexterm" data-primary="toy datasets" data-secondary="toy regression datasets" id="idm139806615743376"/><a data-type="indexterm" data-primary="regression problems" data-secondary="toy regression datasets" id="idm139806615742432"/> simplest form of linear regression is learning the parameters for a one-dimensional line. Suppose that our datapoints <em>x</em> are one-dimensional. Then suppose that real-valued labels <em>y</em> are generated by a linear rule</p>
+<div data-type="equation">
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
+  <mrow>
+    <mi>y</mi>
+    <mo>=</mo>
+    <mi>w</mi>
+    <mi>x</mi>
+    <mo>+</mo>
+    <mi>b</mi>
+  </mrow>
+</math>
+</div>
+
+<p>Here, <em>w</em>, <em>b</em> are the learnable parameters that must be estimated from data by gradient descent. In order to test that we can learn these parameters with TensorFlow, we will generate an artificial dataset consisting of points upon a straight line. To make the learning challenge a little more difficult, we will add a small amount of Gaussian noise to the dataset.</p>
+
+<p>Let’s write down the equation for our line perturbed by a small amount of Gaussian noise:</p>
+<div data-type="equation">
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
+  <mrow>
+    <mi>y</mi>
+    <mo>=</mo>
+    <mi>w</mi>
+    <mi>x</mi>
+    <mo>+</mo>
+    <mi>b</mi>
+    <mo>+</mo>
+    <mi>N</mi>
+    <mo>(</mo>
+    <mn>0</mn>
+    <mo>,</mo>
+    <mi>ϵ</mi>
+    <mo>)</mo>
+  </mrow>
+</math>
+</div>
+
+<p>Here <math xmlns="http://www.w3.org/1998/Math/MathML" alttext="epsilon">
+  <mi>ϵ</mi>
+</math> is the standard deviation of the noise term. We can then use NumPy to generate an artificial dataset drawn from this distribution, as shown in <a data-type="xref" href="#ch3-numpy-sample">Example 3-2</a>.</p>
+<div id="ch3-numpy-sample" data-type="example">
+<h5><span class="label">Example 3-2. </span>Using NumPy to sample an artificial dataset</h5>
+
+<pre data-type="programlisting" data-code-language="python"><code class="c1"># Generate synthetic data</code>
+<code class="n">N</code> <code class="o">=</code> <code class="mi">100</code>
+<code class="n">w_true</code> <code class="o">=</code> <code class="mi">5</code>
+<code class="n">b_true</code> <code class="o">=</code> <code class="mi">2</code>
+<code class="n">noise_scale</code> <code class="o">=</code> <code class="o">.</code><code class="mi">1</code>
+<code class="n">x_np</code> <code class="o">=</code> <code class="n">np</code><code class="o">.</code><code class="n">random</code><code class="o">.</code><code class="n">rand</code><code class="p">(</code><code class="n">N</code><code class="p">,</code> <code class="mi">1</code><code class="p">)</code>
+<code class="n">noise</code> <code class="o">=</code> <code class="n">np</code><code class="o">.</code><code class="n">random</code><code class="o">.</code><code class="n">normal</code><code class="p">(</code><code class="n">scale</code><code class="o">=</code><code class="n">noise_scale</code><code class="p">,</code> <code class="n">size</code><code class="o">=</code><code class="p">(</code><code class="n">N</code><code class="p">,</code> <code class="mi">1</code><code class="p">))</code>
+<code class="c1"># Convert shape of y_np to (N,)</code>
+<code class="n">y_np</code> <code class="o">=</code> <code class="n">np</code><code class="o">.</code><code class="n">reshape</code><code class="p">(</code><code class="n">w_true</code> <code class="o">*</code> <code class="n">x_np</code> <code class="o">+</code> <code class="n">b_true</code> <code class="o">+</code> <code class="n">noise</code><code class="p">,</code> <code class="p">(</code><code class="o">-</code><code class="mi">1</code><code class="p">))</code></pre></div>
+
+<p>We plot this dataset using Matplotlib in <a data-type="xref" href="#ch3-toyregplot">Figure 3-6</a>. (you can find the code in <a href="https://github.com/matroid/dlwithtf">the GitHub repo</a> associated with this book to see the exact plotting code) to verify that synthetic data looks reasonable. As expected, the data distribution is a straight line, with a small amount of measurement error.</p>
+
+<figure><div id="ch3-toyregplot" class="figure">
+<img src="assets/tfdl_0306.png" alt="lr_data.png"/>
+<h6><span class="label">Figure 3-6. </span>Plot of the toy regression data distribution.</h6>
+</div></figure>
+</div></section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<section data-type="sect3" data-pdf-bookmark="Toy classification datasets"><div class="sect3" id="idm139806615745488">
+<h3>Toy classification datasets</h3>
+
+<p>It’s<a data-type="indexterm" data-primary="toy datasets" data-secondary="toy classification datasets" id="idm139806615606624"/><a data-type="indexterm" data-primary="classification problems" data-secondary="toy classification datasets" id="idm139806615605648"/> a little trickier to create a synthetic classification dataset. Logically, we want two distinct classes of points, which are easily separated. Suppose that the dataset consists of only two types of points, (–1, –1) and (1, 1). Then a learning algorithm would have to learn a rule that separates these two data values.</p>
+<ul class="simplelist">
+  <li><em>y</em><sub>0</sub> = (–1, –1)</li>
+  <li><em>y</em><sub>1</sub> = (1, 1)</li>
+  </ul>
+
+<p>As before, let’s make the challenge a little more difficult by adding some Gaussian noise to both types of points:</p>
+<ul class="simplelist">
+  <li><em>y</em><sub>0</sub> = (–1, –1) + <em>N</em>(0, ϵ)</li>
+  <li><em>y</em><sub>1</sub> = (1, 1) + <em>N</em>(0, ϵ)</li>
+  </ul>
+
+<p>However, there’s a slight bit of trickiness here. Our points are two-dimensional, while the Gaussian noise we introduced previously is one-dimensional. Luckily, there exists a multivariate extension of the Gaussian. We won’t discuss the intricacies of the multivariate Gaussian here, but you do not need to understand the intricacies to follow our discussion.</p>
+
+<p>The NumPy code to generate the synthetic dataset in <a data-type="xref" href="#ch3-synth-2d">Example 3-3</a> is slightly trickier than that for the linear regression problem since we have to use the stacking function <code>np.vstack</code> to combine the two different types of datapoints and associate them with different labels. (We use the related function <code>np.concatenate</code> to combine the one-dimensional labels.)</p>
+<div id="ch3-synth-2d" data-type="example">
+<h5><span class="label">Example 3-3. </span>Sample a toy classification dataset with NumPy</h5>
+
+<pre data-type="programlisting" data-code-language="python"><code class="c1"># Generate synthetic data</code>
+<code class="n">N</code> <code class="o">=</code> <code class="mi">100</code>
+<code class="c1"># Zeros form a Gaussian centered at (-1, -1)</code>
+<code class="c1"># epsilon is .1</code>
+<code class="n">x_zeros</code> <code class="o">=</code> <code class="n">np</code><code class="o">.</code><code class="n">random</code><code class="o">.</code><code class="n">multivariate_normal</code><code class="p">(</code>
+    <code class="n">mean</code><code class="o">=</code><code class="n">np</code><code class="o">.</code><code class="n">array</code><code class="p">((</code><code class="o">-</code><code class="mi">1</code><code class="p">,</code> <code class="o">-</code><code class="mi">1</code><code class="p">)),</code> <code class="n">cov</code><code class="o">=.</code><code class="mi">1</code><code class="o">*</code><code class="n">np</code><code class="o">.</code><code class="n">eye</code><code class="p">(</code><code class="mi">2</code><code class="p">),</code> <code class="n">size</code><code class="o">=</code><code class="p">(</code><code class="n">N</code><code class="o">/</code><code class="mi">2</code><code class="p">,))</code>
+<code class="n">y_zeros</code> <code class="o">=</code> <code class="n">np</code><code class="o">.</code><code class="n">zeros</code><code class="p">((</code><code class="n">N</code><code class="o">/</code><code class="mi">2</code><code class="p">,))</code>
+<code class="c1"># Ones form a Gaussian centered at (1, 1)</code>
+<code class="c1"># epsilon is .1</code>
+<code class="n">x_ones</code> <code class="o">=</code> <code class="n">np</code><code class="o">.</code><code class="n">random</code><code class="o">.</code><code class="n">multivariate_normal</code><code class="p">(</code>
+    <code class="n">mean</code><code class="o">=</code><code class="n">np</code><code class="o">.</code><code class="n">array</code><code class="p">((</code><code class="mi">1</code><code class="p">,</code> <code class="mi">1</code><code class="p">)),</code> <code class="n">cov</code><code class="o">=.</code><code class="mi">1</code><code class="o">*</code><code class="n">np</code><code class="o">.</code><code class="n">eye</code><code class="p">(</code><code class="mi">2</code><code class="p">),</code> <code class="n">size</code><code class="o">=</code><code class="p">(</code><code class="n">N</code><code class="o">/</code><code class="mi">2</code><code class="p">,))</code>
+<code class="n">y_ones</code> <code class="o">=</code> <code class="n">np</code><code class="o">.</code><code class="n">ones</code><code class="p">((</code><code class="n">N</code><code class="o">/</code><code class="mi">2</code><code class="p">,))</code>
+
+<code class="n">x_np</code> <code class="o">=</code> <code class="n">np</code><code class="o">.</code><code class="n">vstack</code><code class="p">([</code><code class="n">x_zeros</code><code class="p">,</code> <code class="n">x_ones</code><code class="p">])</code>
+<code class="n">y_np</code> <code class="o">=</code> <code class="n">np</code><code class="o">.</code><code class="n">concatenate</code><code class="p">([</code><code class="n">y_zeros</code><code class="p">,</code> <code class="n">y_ones</code><code class="p">])</code></pre></div>
+
+<p><a data-type="xref" href="#ch3-toyclassplot">Figure 3-7</a> plots the data generated by this code with Matplotlib to verify that the distribution is as expected. We see that the data resides in two classes that are neatly separated.<a data-type="indexterm" data-primary="" data-startref="MLtoy03" id="idm139806615589968"/><a data-type="indexterm" data-primary="" data-startref="toy03" id="idm139806615450608"/><a data-type="indexterm" data-primary="" data-startref="synt03" id="idm139806615449664"/><a data-type="indexterm" data-primary="" data-startref="TFbasic03" id="idm139806615448720"/></p>
+
+<figure><div id="ch3-toyclassplot" class="figure">
+<img src="assets/tfdl_0307.png" alt="logistic_data.png"/>
+<h6><span class="label">Figure 3-7. </span>Plot of the toy classification data distribution.</h6>
+</div></figure>
+</div></section>
+
+
+
+</div></section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<section data-type="sect2" data-pdf-bookmark="New TensorFlow Concepts"><div class="sect2" id="idm139806615607408">
+<h2>New TensorFlow Concepts</h2>
+
+<p>Creating<a data-type="indexterm" data-primary="TensorFlow" data-secondary="new TensorFlow concepts" id="TFnew03"/> simple machine learning systems in TensorFlow will require that you learn some new TensorFlow concepts.</p>
+
+
+
+
+
+
+
+
+
+
+<section data-type="sect3" data-pdf-bookmark="Placeholders"><div class="sect3" id="idm139806615442576">
+<h3>Placeholders</h3>
+
+<p>A placeholder<a data-type="indexterm" data-primary="placeholders" id="idm139806615441280"/><a data-type="indexterm" data-primary="computation graphs" data-secondary="placeholders" id="idm139806615440544"/><a data-type="indexterm" data-primary="TensorFlow" data-secondary="graphs" id="idm139806615439600"/><a data-type="indexterm" data-primary="tf.placeholder" id="idm139806615438656"/> is a way to input information into a TensorFlow computation graph. Think of placeholders as the input nodes through which information enters TensorFlow. The key function used to create placeholders is <code>tf.placeholder</code> (<a data-type="xref" href="#ch3-place">Example 3-4</a>).</p>
+<div id="ch3-place" data-type="example">
+<h5><span class="label">Example 3-4. </span>Create a TensorFlow placeholder</h5>
+
+<pre data-type="programlisting" data-code-language="python"><code class="o">&gt;&gt;&gt;</code> <code class="n">tf</code><code class="o">.</code><code class="n">placeholder</code><code class="p">(</code><code class="n">tf</code><code class="o">.</code><code class="n">float32</code><code class="p">,</code> <code class="n">shape</code><code class="o">=</code><code class="p">(</code><code class="mi">2</code><code class="p">,</code><code class="mi">2</code><code class="p">))</code>
+<code class="o">&lt;</code><code class="n">tf</code><code class="o">.</code><code class="n">Tensor</code> <code class="s1">'Placeholder:0'</code> <code class="n">shape</code><code class="o">=</code><code class="p">(</code><code class="mi">2</code><code class="p">,</code> <code class="mi">2</code><code class="p">)</code> <code class="n">dtype</code><code class="o">=</code><code class="n">float32</code><code class="o">&gt;</code></pre></div>
+
+<p>We will use placeholders to feed datapoints <em>x</em> and labels <em>y</em> to our regression and classification algorithms.</p>
+</div></section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<section data-type="sect3" data-pdf-bookmark="Feed dictionaries and Fetches"><div class="sect3" id="idm139806615412416">
+<h3>Feed dictionaries and Fetches</h3>
+
+<p>Recall<a data-type="indexterm" data-primary="sess.run(var)" id="idm139806615410992"/><a data-type="indexterm" data-primary="feed dictionaries" id="idm139806615410256"/><a data-type="indexterm" data-primary="computation graphs" data-secondary="feed dictionaries" id="idm139806615409584"/> that we can evaluate tensors in TensorFlow by using <code>sess.run(var)</code>. How do we feed in values for placeholders in our TensorFlow computations then? The answer is to construct <em>feed dictionaries</em>. Feed<a data-type="indexterm" data-primary="np.ndarray" id="idm139806615407520"/> dictionaries are Python dictionaries that map TensorFlow tensors to <code>np.ndarray</code> objects that contain the concrete values for these placeholders. A feed dictionary is best viewed as an input to a TensorFlow computation graph. What<a data-type="indexterm" data-primary="fetches" id="idm139806615402304"/> then is an output? TensorFlow calls these outputs <em>fetches</em>. You have seen fetches already. We used them extensively in the previous chapter without calling them as such; the fetch is a tensor (or tensors) whose value is retrieved from the computation graph after the computation (using placeholder values from the feed dictionary) is run to completion (<a data-type="xref" href="#ch3-fetch">Example 3-5</a>).</p>
+<div id="ch3-fetch" data-type="example">
+<h5><span class="label">Example 3-5. </span>Using fetches</h5>
+
+<pre data-type="programlisting" data-code-language="python"><code class="o">&gt;&gt;&gt;</code> <code class="n">a</code> <code class="o">=</code> <code class="n">tf</code><code class="o">.</code><code class="n">placeholder</code><code class="p">(</code><code class="n">tf</code><code class="o">.</code><code class="n">float32</code><code class="p">,</code> <code class="n">shape</code><code class="o">=</code><code class="p">(</code><code class="mi">1</code><code class="p">,))</code>
+<code class="o">&gt;&gt;&gt;</code> <code class="n">b</code> <code class="o">=</code> <code class="n">tf</code><code class="o">.</code><code class="n">placeholder</code><code class="p">(</code><code class="n">tf</code><code class="o">.</code><code class="n">float32</code><code class="p">,</code> <code class="n">shape</code><code class="o">=</code><code class="p">(</code><code class="mi">1</code><code class="p">,))</code>
+<code class="o">&gt;&gt;&gt;</code> <code class="n">c</code> <code class="o">=</code> <code class="n">a</code> <code class="o">+</code> <code class="n">b</code>
+<code class="o">&gt;&gt;&gt;</code> <code class="k">with</code> <code class="n">tf</code><code class="o">.</code><code class="n">Session</code><code class="p">()</code> <code class="k">as</code> <code class="n">sess</code><code class="p">:</code>
+        <code class="n">c_eval</code> <code class="o">=</code> <code class="n">sess</code><code class="o">.</code><code class="n">run</code><code class="p">(</code><code class="n">c</code><code class="p">,</code> <code class="p">{</code><code class="n">a</code><code class="p">:</code> <code class="p">[</code><code class="mf">1.</code><code class="p">],</code> <code class="n">b</code><code class="p">:</code> <code class="p">[</code><code class="mf">2.</code><code class="p">]})</code>
+        <code class="k">print</code><code class="p">(</code><code class="n">c_eval</code><code class="p">)</code>
+<code class="p">[</code> <code class="mf">3.</code><code class="p">]</code></pre></div>
+</div></section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<section data-type="sect3" data-pdf-bookmark="Name scopes"><div class="sect3" id="idm139806615397296">
+<h3>Name scopes</h3>
+
+<p>In<a data-type="indexterm" data-primary="scopes" id="idm139806615396160"/><a data-type="indexterm" data-primary="name scopes" id="idm139806615214016"/><a data-type="indexterm" data-primary="tf.name_scope(name)" id="idm139806615213344"/> complicated TensorFlow programs, there will be many tensors, variables, and <span class="keep-together">placeholders</span> defined throughout the program. <code>tf.name_scope(name)</code> provides a simple scoping mechanism for managing these collections of variables (<a data-type="xref" href="#ch3-namescope">Example 3-6</a>). All computational graph elements created within the scope of a <code>tf.name_scope(name)</code> call will have <code>name</code> prepended to their names.</p>
+
+<p>This<a data-type="indexterm" data-primary="TensorBoard" data-secondary="name scopes and" id="idm139806615209520"/> organizational tool is most useful when combined with TensorBoard, since it aids the visualization system in automatically grouping graph elements within the same name scope. You will learn more about TensorBoard further in the next section.</p>
+<div id="ch3-namescope" data-type="example">
+<h5><span class="label">Example 3-6. </span>Using namescopes to organize placeholders</h5>
+
+<pre data-type="programlisting" data-code-language="python"><code class="o">&gt;&gt;&gt;</code> <code class="n">N</code> <code class="o">=</code> <code class="mi">5</code>
+<code class="o">&gt;&gt;&gt;</code> <code class="k">with</code> <code class="n">tf</code><code class="o">.</code><code class="n">name_scope</code><code class="p">(</code><code class="s2">"placeholders"</code><code class="p">):</code>
+      <code class="n">x</code> <code class="o">=</code> <code class="n">tf</code><code class="o">.</code><code class="n">placeholder</code><code class="p">(</code><code class="n">tf</code><code class="o">.</code><code class="n">float32</code><code class="p">,</code> <code class="p">(</code><code class="n">N</code><code class="p">,</code> <code class="mi">1</code><code class="p">))</code>
+      <code class="n">y</code> <code class="o">=</code> <code class="n">tf</code><code class="o">.</code><code class="n">placeholder</code><code class="p">(</code><code class="n">tf</code><code class="o">.</code><code class="n">float32</code><code class="p">,</code> <code class="p">(</code><code class="n">N</code><code class="p">,))</code>
+<code class="o">&gt;&gt;&gt;</code> <code class="n">x</code>
+<code class="o">&lt;</code><code class="n">tf</code><code class="o">.</code><code class="n">Tensor</code> <code class="s1">'placeholders/Placeholder:0'</code> <code class="n">shape</code><code class="o">=</code><code class="p">(</code><code class="mi">5</code><code class="p">,</code> <code class="mi">1</code><code class="p">)</code> <code class="n">dtype</code><code class="o">=</code><code class="n">float32</code><code class="o">&gt;</code></pre></div>
+</div></section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<section data-type="sect3" data-pdf-bookmark="Optimizers"><div class="sect3" id="idm139806615185616">
+<h3>Optimizers</h3>
+
+<p>The<a data-type="indexterm" data-primary="optimization algorithms" id="idm139806615048256"/> primitives introduced in the last two sections already hint at how machine learning is done in TensorFlow. You have learned how to add placeholders for datapoints and labels and how to use tensorial operations to define the loss function. The <span class="keep-together">missing</span> piece is that you still don’t know how to perform gradient descent using <span class="keep-together">TensorFlow</span>.</p>
+
+<p>While<a data-type="indexterm" data-primary="tf.train" id="idm139806615045376"/> it is in fact possible to define optimization algorithms such as gradient descent directly in Python using TensorFlow primitives, TensorFlow provides a collection of optimization algorithms in the <code>tf.train</code> module. These algorithms can be added as nodes to the TensorFlow computation graph.</p>
+<div data-type="note" epub:type="note"><h1>Which optimizer should I use?</h1>
+<p>There are many possible optimizers available in <code>tf.train</code>. For a short preview, this list includes <code>tf.train.GradientDescentOptimizer</code>, <code>tf.train.MomentumOptimizer</code>, <code>tf.train.AdagradOptimizer</code>, <code>tf.train.AdamOptimizer</code>, and many more. What’s the difference between these various optimizers?</p>
+
+<p>Almost all of these optimizers are based on the idea of gradient descent. Recall the simple gradient descent rule we previously introduced:</p>
+<div data-type="equation">
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
+  <mrow>
+    <mi>W</mi>
+    <mo>=</mo>
+    <mi>W</mi>
+    <mo>-</mo>
+    <mi>α</mi>
+    <mi>∇</mi>
+    <mi>W</mi>
+  </mrow>
+</math>
+</div>
+
+<p>Mathematically, this update rule is primitive. There are a variety of mathematical tricks that researchers have discovered that enable faster optimization without using too much extra computation. In<a data-type="indexterm" data-primary="tf.train.AdamOptimizer" id="idm139806615033856"/> general, <code>tf.train.AdamOptimizer</code> is a good default that is relatively robust. (Many optimizer methods are very sensitive to hyperparameter choice. It’s better for beginners to avoid trickier methods until they have a good grasp of the behavior of different optimization algorithms.)</p>
+</div>
+
+<p><a data-type="xref" href="#ch3-optim">Example 3-7</a> is a short bit of code that adds an optimizer to the computation graph that minimizes a predefined loss <code>l</code>.</p>
+<div id="ch3-optim" data-type="example">
+<h5><span class="label">Example 3-7. </span>Adding an Adam optimizer to TensorFlow computation graph</h5>
+
+<pre data-type="programlisting" data-code-language="python"><code class="n">learning_rate</code> <code class="o">=</code> <code class="o">.</code><code class="mo">001</code>
+<code class="k">with</code> <code class="n">tf</code><code class="o">.</code><code class="n">name_scope</code><code class="p">(</code><code class="s2">"optim"</code><code class="p">):</code>
+  <code class="n">train_op</code> <code class="o">=</code> <code class="n">tf</code><code class="o">.</code><code class="n">train</code><code class="o">.</code><code class="n">AdamOptimizer</code><code class="p">(</code><code class="n">learning_rate</code><code class="p">)</code><code class="o">.</code><code class="n">minimize</code><code class="p">(</code><code class="n">l</code><code class="p">)</code></pre></div>
+</div></section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<section data-type="sect3" data-pdf-bookmark="Taking gradients with TensorFlow"><div class="sect3" id="idm139806615017520">
+<h3>Taking gradients with TensorFlow</h3>
+
+<p>We<a data-type="indexterm" data-primary="tf.gradients" id="idm139806614977584"/><a data-type="indexterm" data-primary="gradient" id="idm139806614976912"/> mentioned previously that it is possible to directly implement gradient descent algorithms in TensorFlow. While most use cases don’t need to reimplement the contents of <code>tf.train</code>, it can be useful to look at gradient values directly for debugging purposes. <code>tf.gradients</code> provides a useful tool for doing so (<a data-type="xref" href="#ch3-grad">Example 3-8</a>).</p>
+<div id="ch3-grad" data-type="example">
+<h5><span class="label">Example 3-8. </span>Taking gradients directly</h5>
+
+<pre data-type="programlisting" data-code-language="python"><code class="o">&gt;&gt;&gt;</code> <code class="n">W</code> <code class="o">=</code> <code class="n">tf</code><code class="o">.</code><code class="n">Variable</code><code class="p">((</code><code class="mi">3</code><code class="p">,))</code>
+<code class="o">&gt;&gt;&gt;</code> <code class="n">l</code> <code class="o">=</code> <code class="n">tf</code><code class="o">.</code><code class="n">reduce_sum</code><code class="p">(</code><code class="n">W</code><code class="p">)</code>
+<code class="o">&gt;&gt;&gt;</code> <code class="n">gradW</code> <code class="o">=</code> <code class="n">tf</code><code class="o">.</code><code class="n">gradients</code><code class="p">(</code><code class="n">l</code><code class="p">,</code> <code class="n">W</code><code class="p">)</code>
+<code class="o">&gt;&gt;&gt;</code> <code class="n">gradW</code>
+<code class="p">[</code><code class="o">&lt;</code><code class="n">tf</code><code class="o">.</code><code class="n">Tensor</code> <code class="s1">'gradients/Sum_grad/Tile:0'</code> <code class="n">shape</code><code class="o">=</code><code class="p">(</code><code class="mi">1</code><code class="p">,)</code> <code class="n">dtype</code><code class="o">=</code><code class="n">int32</code><code class="o">&gt;</code><code class="p">]</code></pre></div>
+
+<p>This code snippet symbolically pulls down the gradients of loss <code>l</code> with respect to learnable parameter (<code>tf.Variable</code>) <code>W</code>. <code>tf.gradients</code> returns a list of the desired gradients. Note that the gradients are themselves tensors! TensorFlow performs symbolic differentiation, which means that gradients themselves are parts of the computational graph. One neat side effect of TensorFlow’s symbolic gradients is that it’s possible to stack derivatives in TensorFlow. This can sometimes be useful for more advanced algorithms.</p>
+</div></section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<section data-type="sect3" data-pdf-bookmark="Summaries and file writers for TensorBoard"><div class="sect3" id="idm139806615143056">
+<h3>Summaries and file writers for TensorBoard</h3>
+
+<p>Gaining<a data-type="indexterm" data-primary="TensorBoard" data-secondary="summaries and file writers for" id="idm139806615141872"/><a data-type="indexterm" data-primary="summaries (TensorBoard)" id="idm139806615140512"/><a data-type="indexterm" data-primary="filewriters (TensorBoard)" id="idm139806615139840"/> a visual understanding of the structure of a tensorial program can be very useful. The TensorFlow team provides the TensorBoard package for this purpose. TensorBoard starts a web server (on localhost by default) that displays various useful visualizations of a TensorFlow program. However,<a data-type="indexterm" data-primary="logging statements" id="idm139806615138768"/><a data-type="indexterm" data-primary="tf.train.FileWriter()" id="idm139806615138096"/> in order for TensorFlow programs to be inspected with TensorBoard, programmers must manually write logging statements. <code>tf.train.FileWriter()</code> specifies the logging directory for a TensorBoard program and <code>tf.summary</code> writes<a data-type="indexterm" data-primary="tf.summary" id="idm139806615136352"/> summaries of various TensorFlow variables to the specified logging directory. In<a data-type="indexterm" data-primary="tf.summary.scalar" id="idm139806615135488"/> this chapter, we will only use <code>tf.summary.scalar</code>, which summarizes a scalar quantity, to track the value of the loss function. <code>tf.summary.merge_all()</code> is<a data-type="indexterm" data-primary="tf.summary.merge_all()" id="idm139806615133888"/> a useful logging aid that merges multiple summaries into a single summary for convenience.</p>
+
+<p>The code snippet in <a data-type="xref" href="#ch3-logging">Example 3-9</a> adds a summary for the loss and specifies a logging directory.</p>
+<div id="ch3-logging" data-type="example">
+<h5><span class="label">Example 3-9. </span>Adding a summary for the loss</h5>
+
+<pre data-type="programlisting" data-code-language="python"><code class="k">with</code> <code class="n">tf</code><code class="o">.</code><code class="n">name_scope</code><code class="p">(</code><code class="s2">"summaries"</code><code class="p">):</code>
+  <code class="n">tf</code><code class="o">.</code><code class="n">summary</code><code class="o">.</code><code class="n">scalar</code><code class="p">(</code><code class="s2">"loss"</code><code class="p">,</code> <code class="n">l</code><code class="p">)</code>
+  <code class="n">merged</code> <code class="o">=</code> <code class="n">tf</code><code class="o">.</code><code class="n">summary</code><code class="o">.</code><code class="n">merge_all</code><code class="p">()</code>
+
+<code class="n">train_writer</code> <code class="o">=</code> <code class="n">tf</code><code class="o">.</code><code class="n">summary</code><code class="o">.</code><code class="n">FileWriter</code><code class="p">(</code><code class="s1">'/tmp/lr-train'</code><code class="p">,</code> <code class="n">tf</code><code class="o">.</code><code class="n">get_default_graph</code><code class="p">())</code></pre></div>
+</div></section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<section data-type="sect3" data-pdf-bookmark="Training models with TensorFlow"><div class="sect3" id="idm139806615129712">
+<h3>Training models with TensorFlow</h3>
+
+<p>Suppose<a data-type="indexterm" data-primary="train_op" id="idm139806614907104"/><a data-type="indexterm" data-primary="TensorFlow" data-secondary="training models with" id="idm139806614906432"/> now that we have specified placeholders for datapoints and labels, and have defined a loss with tensorial operations. We have added an optimizer node <code>train_op</code> to the computational graph, which we can use to perform gradient descent steps (while we may actually use a different optimizer, we will refer to updates as gradient descent for convenience). How can we iteratively perform gradient descent to learn on this dataset?</p>
+
+<p>The<a data-type="indexterm" data-primary="for loops" id="idm139806614903888"/><a data-type="indexterm" data-primary="sess.run()" id="idm139806614903152"/> simple answer is that we use a Python <code>for</code>-loop. In each iteration, we use <code>sess.run()</code> to fetch the <code>train_op</code> along with the merged summary op <code>merged</code> and the loss <code>l</code> from the graph. We feed all datapoints and labels into <code>sess.run()</code> using a feed dictionary.</p>
+
+<p>The code snippet in <a data-type="xref" href="#ch3-simplelearn">Example 3-10</a> demonstrates this simple learning method. Note that we don’t make use of minibatches for pedagogical simplicity. Code in following chapters will use minibatches when training on larger datasets.<a data-type="indexterm" data-primary="" data-startref="TFnew03" id="idm139806614896656"/></p>
+<div id="ch3-simplelearn" data-type="example">
+<h5><span class="label">Example 3-10. </span>A simple example of training a model</h5>
+
+<pre data-type="programlisting" data-code-language="python"><code class="n">n_steps</code> <code class="o">=</code> <code class="mi">1000</code>
+<code class="k">with</code> <code class="n">tf</code><code class="o">.</code><code class="n">Session</code><code class="p">()</code> <code class="k">as</code> <code class="n">sess</code><code class="p">:</code>
+  <code class="n">sess</code><code class="o">.</code><code class="n">run</code><code class="p">(</code><code class="n">tf</code><code class="o">.</code><code class="n">global_variables_initializer</code><code class="p">())</code>
+  <code class="c1"># Train model</code>
+  <code class="k">for</code> <code class="n">i</code> <code class="ow">in</code> <code class="nb">range</code><code class="p">(</code><code class="n">n_steps</code><code class="p">):</code>
+    <code class="n">feed_dict</code> <code class="o">=</code> <code class="p">{</code><code class="n">x</code><code class="p">:</code> <code class="n">x_np</code><code class="p">,</code> <code class="n">y</code><code class="p">:</code> <code class="n">y_np</code><code class="p">}</code>
+    <code class="n">_</code><code class="p">,</code> <code class="n">summary</code><code class="p">,</code> <code class="n">loss</code> <code class="o">=</code> <code class="n">sess</code><code class="o">.</code><code class="n">run</code><code class="p">([</code><code class="n">train_op</code><code class="p">,</code> <code class="n">merged</code><code class="p">,</code> <code class="n">l</code><code class="p">],</code> <code class="n">feed_dict</code><code class="o">=</code><code class="n">feed_dict</code><code class="p">)</code>
+    <code class="k">print</code><code class="p">(</code><code class="s2">"step </code><code class="si">%d</code><code class="s2">, loss: </code><code class="si">%f</code><code class="s2">"</code> <code class="o">%</code> <code class="p">(</code><code class="n">i</code><code class="p">,</code> <code class="n">loss</code><code class="p">))</code>
+    <code class="n">train_writer</code><code class="o">.</code><code class="n">add_summary</code><code class="p">(</code><code class="n">summary</code><code class="p">,</code> <code class="n">i</code><code class="p">)</code></pre></div>
+</div></section>
+
+
+
+</div></section>
+
+
+
+
+
+</div></section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<section data-type="sect1" data-pdf-bookmark="Training Linear and Logistic Models in TensorFlow"><div class="sect1" id="idm139806614892656">
+<h1>Training Linear and Logistic Models in TensorFlow</h1>
+
+<p>This<a data-type="indexterm" data-primary="TensorFlow" data-secondary="training linear and logistic models in" id="TLlinmod03"/> section ties together all the TensorFlow concepts introduced in the previous section to train linear and logistic regression models upon the toy datasets we introduced previously in the chapter.</p>
+
+
+
+
+
+
+
+
+<section data-type="sect2" data-pdf-bookmark="Linear Regression in TensorFlow"><div class="sect2" id="idm139806614775744">
+<h2>Linear Regression in TensorFlow</h2>
+
+<p>In<a data-type="indexterm" data-primary="linear regression" data-secondary="model case study" id="LRmodel03"/> this section, we will provide code to define a linear regression model in TensorFlow and learn its weights. This task is straightforward and you can do it without TensorFlow easily. Nevertheless, it’s a good exercise to do in TensorFlow since it will bring together the new concepts that we have introduced throughout the chapter.</p>
+
+
+
+
+
+
+
+
+
+
+<section data-type="sect3" data-pdf-bookmark="Defining and training linear regression in TensorFlow"><div class="sect3" id="idm139806614772352">
+<h3>Defining and training linear regression in TensorFlow</h3>
+
+<p>The model for a linear regression is straightforward:</p>
+<div data-type="equation">
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
+  <mrow>
+    <mi>y</mi>
+    <mo>=</mo>
+    <mi>w</mi>
+    <mi>x</mi>
+    <mo>+</mo>
+    <mi>b</mi>
+  </mrow>
+</math>
+</div>
+
+<p>Here <em>w</em> and <em>b</em> are the weights we wish to learn. We transform these weights into <code>tf.Variable</code> objects. We then use tensorial operations to construct the <em>L</em><sup>2</sup> loss:</p>
+<div data-type="equation">
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
+  <mrow>
+    <mi>ℒ</mi>
+    <mrow>
+      <mo>(</mo>
+      <mi>x</mi>
+      <mo>,</mo>
+      <mi>y</mi>
+      <mo>)</mo>
+    </mrow>
+    <mo>=</mo>
+    <msup><mrow><mo>(</mo><mi>y</mi><mo>-</mo><mi>w</mi><mi>x</mi><mo>-</mo><mi>b</mi><mo>)</mo></mrow> <mn>2</mn> </msup>
+  </mrow>
+</math>
+</div>
+
+<p>The code in <a data-type="xref" href="#ch3-linmod">Example 3-11</a> implements these mathematical operations in TensorFlow. It also uses <code>tf.name_scope</code> to group various operations, and adds a <code>tf.train.AdamOptimizer</code> for learning and <code>tf.summary</code> operations for TensorBoard usage.</p>
+<div id="ch3-linmod" data-type="example">
+<h5><span class="label">Example 3-11. </span>Defining a linear regression model</h5>
+
+<pre data-type="programlisting" data-code-language="python"><code class="c1"># Generate tensorflow graph</code>
+<code class="k">with</code> <code class="n">tf</code><code class="o">.</code><code class="n">name_scope</code><code class="p">(</code><code class="s2">"placeholders"</code><code class="p">):</code>
+  <code class="n">x</code> <code class="o">=</code> <code class="n">tf</code><code class="o">.</code><code class="n">placeholder</code><code class="p">(</code><code class="n">tf</code><code class="o">.</code><code class="n">float32</code><code class="p">,</code> <code class="p">(</code><code class="n">N</code><code class="p">,</code> <code class="mi">1</code><code class="p">))</code>
+  <code class="n">y</code> <code class="o">=</code> <code class="n">tf</code><code class="o">.</code><code class="n">placeholder</code><code class="p">(</code><code class="n">tf</code><code class="o">.</code><code class="n">float32</code><code class="p">,</code> <code class="p">(</code><code class="n">N</code><code class="p">,))</code>
+<code class="k">with</code> <code class="n">tf</code><code class="o">.</code><code class="n">name_scope</code><code class="p">(</code><code class="s2">"weights"</code><code class="p">):</code>
+  <code class="c1"># Note that x is a scalar, so W is a single learnable weight.</code>
+  <code class="n">W</code> <code class="o">=</code> <code class="n">tf</code><code class="o">.</code><code class="n">Variable</code><code class="p">(</code><code class="n">tf</code><code class="o">.</code><code class="n">random_normal</code><code class="p">((</code><code class="mi">1</code><code class="p">,</code> <code class="mi">1</code><code class="p">)))</code>
+  <code class="n">b</code> <code class="o">=</code> <code class="n">tf</code><code class="o">.</code><code class="n">Variable</code><code class="p">(</code><code class="n">tf</code><code class="o">.</code><code class="n">random_normal</code><code class="p">((</code><code class="mi">1</code><code class="p">,)))</code>
+<code class="k">with</code> <code class="n">tf</code><code class="o">.</code><code class="n">name_scope</code><code class="p">(</code><code class="s2">"prediction"</code><code class="p">):</code>
+  <code class="n">y_pred</code> <code class="o">=</code> <code class="n">tf</code><code class="o">.</code><code class="n">matmul</code><code class="p">(</code><code class="n">x</code><code class="p">,</code> <code class="n">W</code><code class="p">)</code> <code class="o">+</code> <code class="n">b</code>
+<code class="k">with</code> <code class="n">tf</code><code class="o">.</code><code class="n">name_scope</code><code class="p">(</code><code class="s2">"loss"</code><code class="p">):</code>
+  <code class="n">l</code> <code class="o">=</code> <code class="n">tf</code><code class="o">.</code><code class="n">reduce_sum</code><code class="p">((</code><code class="n">y</code> <code class="o">-</code> <code class="n">y_pred</code><code class="p">)</code><code class="o">**</code><code class="mi">2</code><code class="p">)</code>
+<code class="c1"># Add training op</code>
+<code class="k">with</code> <code class="n">tf</code><code class="o">.</code><code class="n">name_scope</code><code class="p">(</code><code class="s2">"optim"</code><code class="p">):</code>
+  <code class="c1"># Set learning rate to .001 as recommended above.</code>
+  <code class="n">train_op</code> <code class="o">=</code> <code class="n">tf</code><code class="o">.</code><code class="n">train</code><code class="o">.</code><code class="n">AdamOptimizer</code><code class="p">(</code><code class="o">.</code><code class="mo">001</code><code class="p">)</code><code class="o">.</code><code class="n">minimize</code><code class="p">(</code><code class="n">l</code><code class="p">)</code>
+<code class="k">with</code> <code class="n">tf</code><code class="o">.</code><code class="n">name_scope</code><code class="p">(</code><code class="s2">"summaries"</code><code class="p">):</code>
+  <code class="n">tf</code><code class="o">.</code><code class="n">summary</code><code class="o">.</code><code class="n">scalar</code><code class="p">(</code><code class="s2">"loss"</code><code class="p">,</code> <code class="n">l</code><code class="p">)</code>
+  <code class="n">merged</code> <code class="o">=</code> <code class="n">tf</code><code class="o">.</code><code class="n">summary</code><code class="o">.</code><code class="n">merge_all</code><code class="p">()</code>
+
+<code class="n">train_writer</code> <code class="o">=</code> <code class="n">tf</code><code class="o">.</code><code class="n">summary</code><code class="o">.</code><code class="n">FileWriter</code><code class="p">(</code><code class="s1">'/tmp/lr-train'</code><code class="p">,</code> <code class="n">tf</code><code class="o">.</code><code class="n">get_default_graph</code><code class="p">())</code></pre></div>
+
+<p><a data-type="xref" href="#ch3-lintrain">Example 3-12</a> then trains this model as discussed previously (without using minibatches).</p>
+<div id="ch3-lintrain" data-type="example">
+<h5><span class="label">Example 3-12. </span>Training the linear regression model</h5>
+
+<pre data-type="programlisting" data-code-language="python"><code class="n">n_steps</code> <code class="o">=</code> <code class="mi">1000</code>
+<code class="k">with</code> <code class="n">tf</code><code class="o">.</code><code class="n">Session</code><code class="p">()</code> <code class="k">as</code> <code class="n">sess</code><code class="p">:</code>
+  <code class="n">sess</code><code class="o">.</code><code class="n">run</code><code class="p">(</code><code class="n">tf</code><code class="o">.</code><code class="n">global_variables_initializer</code><code class="p">())</code>
+  <code class="c1"># Train model</code>
+  <code class="k">for</code> <code class="n">i</code> <code class="ow">in</code> <code class="nb">range</code><code class="p">(</code><code class="n">n_steps</code><code class="p">):</code>
+    <code class="n">feed_dict</code> <code class="o">=</code> <code class="p">{</code><code class="n">x</code><code class="p">:</code> <code class="n">x_np</code><code class="p">,</code> <code class="n">y</code><code class="p">:</code> <code class="n">y_np</code><code class="p">}</code>
+    <code class="n">_</code><code class="p">,</code> <code class="n">summary</code><code class="p">,</code> <code class="n">loss</code> <code class="o">=</code> <code class="n">sess</code><code class="o">.</code><code class="n">run</code><code class="p">([</code><code class="n">train_op</code><code class="p">,</code> <code class="n">merged</code><code class="p">,</code> <code class="n">l</code><code class="p">],</code> <code class="n">feed_dict</code><code class="o">=</code><code class="n">feed_dict</code><code class="p">)</code>
+    <code class="k">print</code><code class="p">(</code><code class="s2">"step </code><code class="si">%d</code><code class="s2">, loss: </code><code class="si">%f</code><code class="s2">"</code> <code class="o">%</code> <code class="p">(</code><code class="n">i</code><code class="p">,</code> <code class="n">loss</code><code class="p">))</code>
+    <code class="n">train_writer</code><code class="o">.</code><code class="n">add_summary</code><code class="p">(</code><code class="n">summary</code><code class="p">,</code> <code class="n">i</code><code class="p">)</code></pre></div>
+
+<p>All code for this example is provided in the <a href="https://github.com/matroid/dlwithtf">GitHub repository</a> associated with this book. We encourage all readers to run the full script for the linear regression example to gain a firsthand sense for how the learning algorithm functions. The example is small enough that readers will not need access to any special-purpose computing hardware to run.</p>
+<div data-type="note" epub:type="note"><h1>Taking Gradients for Linear Regression</h1>
+<p>The equation for the linear system we’re modeling is <em>y</em> = <em>wx</em> + <em>b</em> where <em>w</em>, <em>b</em> are the learnable weights. As we mentioned previously, the loss for this system is <math xmlns="http://www.w3.org/1998/Math/MathML" alttext="script upper L equals left-parenthesis y minus w x minus b right-parenthesis squared">
+  <mrow>
+    <mi>ℒ</mi>
+    <mo>=</mo>
+    <msup><mrow><mo>(</mo><mi>y</mi><mo>-</mo><mi>w</mi><mi>x</mi><mo>-</mo><mi>b</mi><mo>)</mo></mrow> <mn>2</mn> </msup>
+  </mrow>
+</math>. Some matrix calculus can be used to compute the gradients of the learnable parameters directly for <em>w</em>:</p>
+<div data-type="equation">
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
+  <mrow>
+    <mi>∇</mi>
+    <mi>w</mi>
+    <mo>=</mo>
+    <mfrac><mrow><mi>∂</mi><mi>ℒ</mi></mrow> <mrow><mi>∂</mi><mi>w</mi></mrow></mfrac>
+    <mo>=</mo>
+    <mo>-</mo>
+    <mn>2</mn>
+    <mrow>
+      <mo>(</mo>
+      <mi>y</mi>
+      <mo>-</mo>
+      <mi>w</mi>
+      <mi>x</mi>
+      <mo>-</mo>
+      <mi>b</mi>
+      <mo>)</mo>
+    </mrow>
+    <msup><mi>x</mi> <mi>T</mi> </msup>
+  </mrow>
+</math>
+</div>
+
+<p>and for <em>b</em></p>
+<div data-type="equation">
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
+  <mrow>
+    <mi>∇</mi>
+    <mi>b</mi>
+    <mo>=</mo>
+    <mfrac><mrow><mi>∂</mi><mi>ℒ</mi></mrow> <mrow><mi>∂</mi><mi>b</mi></mrow></mfrac>
+    <mo>=</mo>
+    <mo>-</mo>
+    <mn>2</mn>
+    <mrow>
+      <mo>(</mo>
+      <mi>y</mi>
+      <mo>-</mo>
+      <mi>w</mi>
+      <mi>x</mi>
+      <mo>-</mo>
+      <mi>b</mi>
+      <mo>)</mo>
+    </mrow>
+  </mrow>
+</math>
+</div>
+
+<p>We place these equations here only for reference for curious readers. We will not attempt to systematically teach how to take the derivatives of the loss functions we encounter in this book. However, we will note that for complicated systems, taking the derivative of the loss function by hand helps build up an intuition for how the deep network learns. This intuition can serve as a powerful guide for the designer, so we encourage advanced readers to pursue this topic on their own.</p>
+</div>
+</div></section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<section data-type="sect3" data-pdf-bookmark="Visualizing linear regression models with TensorBoard"><div class="sect3" id="idm139806614771760">
+<h3>Visualizing linear regression models with TensorBoard</h3>
+
+<p>The<a data-type="indexterm" data-primary="TensorBoard" data-secondary="visualizing linear regression models with" id="idm139806614484416"/><a data-type="indexterm" data-primary="tf.summary.FileWriter" id="idm139806614483312"/><a data-type="indexterm" data-primary="logging statements" id="idm139806614482640"/> model defined in the previous section uses <code>tf.summary.FileWriter</code> to write logs to a logging directory <em>/tmp/lr-train</em>. We can invoke TensorBoard on this logging directory with the command in <a data-type="xref" href="#ch3-tensorboard">Example 3-13</a> (TensorBoard is installed by default with TensorFlow).</p>
+<div id="ch3-tensorboard" data-type="example">
+<h5><span class="label">Example 3-13. </span>Invoking TensorBoard</h5>
+
+<pre data-type="programlisting" data-code-language="python"><code class="n">tensorboard</code> <code class="o">--</code><code class="n">logdir</code><code class="o">=/</code><code class="n">tmp</code><code class="o">/</code><code class="n">lr</code><code class="o">-</code><code class="n">train</code></pre></div>
+
+<p>This command will start TensorBoard on a port attached to localhost. Use your browser to open this port. The TensorBoard screen will look something like <a data-type="xref" href="#ch3-tensorboardscreen">Figure 3-8</a>. (The precise appearance may vary depending on your version of TensorBoard.)</p>
+
+<figure><div id="ch3-tensorboardscreen" class="figure">
+<img src="assets/tfdl_0308.png" alt="tensorboard_lr_raw.png"/>
+<h6><span class="label">Figure 3-8. </span>Screenshot of TensorBoard panel.</h6>
+</div></figure>
+
+<p>Navigate to the Graphs tab, and you will see a visualization of the TensorFlow architecture we have defined as illustrated in <a data-type="xref" href="#ch3-tensorboardarch">Figure 3-9</a>.</p>
+
+<figure><div id="ch3-tensorboardarch" class="figure">
+<img src="assets/tfdl_0309.png" alt="lr_graph.png"/>
+<h6><span class="label">Figure 3-9. </span>Visualization of linear regression architecture in TensorBoard.</h6>
+</div></figure>
+
+<p>Note<a data-type="indexterm" data-primary="tf.name_scopes" id="idm139806614469152"/> that this visualization has grouped all computational graph elements belonging to various <code>tf.name_scopes</code>. Different groups are connected according to their dependencies in the computational graph. You can expand all of the grouped elements to view their contents. <a data-type="xref" href="#ch3-tensorboardarchexp">Figure 3-10</a> illustrates the expanded architecture.</p>
+
+<p>As you can see, there are many hidden nodes that suddenly become visible! TensorFlow<a data-type="indexterm" data-primary="tf.train.AdamOptimizer" id="idm139806614461776"/> functions like <code>tf.train.AdamOptimizer</code> often hide many internal variables under a <code>tf.name_scope</code> of their own. Expanding in TensorBoard provides an easy way to peer underneath the hood to see what the system is actually creating. Although the visualization looks quite complex, most of these details are under the hood and not anything you need to worry about just yet.</p>
+
+<figure><div id="ch3-tensorboardarchexp" class="figure">
+<img src="assets/tfdl_0310.png" alt="lr_expanded.png"/>
+<h6><span class="label">Figure 3-10. </span>Expanded visualization of architecture.</h6>
+</div></figure>
+
+<p>Navigate back to the Home tab and open the Summaries section. You should now see a loss curve that looks something like <a data-type="xref" href="#ch3-tensorboardloss">Figure 3-11</a>. Note the smooth falling shape. The loss falls rapidly at the beginning as the prior is learned, then tapers off and settles.</p>
+
+<figure><div id="ch3-tensorboardloss" class="figure">
+<img src="assets/tfdl_0311.png" alt="lr_loss_tensorboard.png"/>
+<h6><span class="label">Figure 3-11. </span>Viewing the loss curve in TensorBoard.</h6>
+</div></figure>
+<div data-type="note" epub:type="note"><h1>Visual and Nonvisual Debugging Styles</h1>
+<p>Is<a data-type="indexterm" data-primary="debugging, visual vs. nonvisual styles" id="idm139806614453072"/> using a tool like TensorBoard necessary to get good use out of a system like
+TensorFlow? It depends. Is using a GUI or an interactive debugger necessary to
+be a professional programmer?</p>
+
+<p>Different programmers have different styles. Some will find that the visualization
+capabilities of TensorBoard come to form a critical part of their tensorial programming workflows. Others will find that TensorBoard isn’t terribly useful and will make greater use of print-statement debugging. Both styles of tensorial programming and debugging are valid, just as there are great programmers who swear by debuggers and others who loathe them.</p>
+
+<p>In general, TensorBoard is quite useful for debugging and for building basic intuition about the dataset at hand. We recommend that you follow the style that works best for you.</p>
+</div>
+</div></section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<section data-type="sect3" data-pdf-bookmark="Metrics for evaluating regression models"><div class="sect3" id="idm139806614485408">
+<h3>Metrics for evaluating regression models</h3>
+
+<p>So<a data-type="indexterm" data-primary="regression problems" data-secondary="metrics for evaluation of" id="idm139806614448816"/><a data-type="indexterm" data-primary="metrics" data-secondary="for evaluating regression models" id="idm139806614447840"/> far, we haven’t discussed how to evaluate whether a trained model has actually learned anything. The first tool for evaluating whether a model has trained is by looking at the loss curve to ensure it has a reasonable shape. You learned how to do this in the previous section. What’s the next thing to try?</p>
+
+<p>We now want you to look at <em>metrics</em> associated with the model. A metric is a tool for comparing predicted labels to true labels. For regression problems, there are two common metrics: <em>R</em><sup>2</sup> and<a data-type="indexterm" data-primary="RMSE (root-mean-squared error)" id="idm139806614444592"/> RMSE (root-mean-squared error). The <em>R</em><sup>2</sup> is a measure of the correlation between two variables that takes values between +1 and 0. +1 indicates perfect correlation, while 0 indicates no correlation. Mathematically, the <em>R</em><sup>2</sup> for two datasets <em>X</em> and <em>Y</em> is defined as</p>
+<div data-type="equation">
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
+  <mrow>
+    <msup><mi>R</mi> <mn>2</mn> </msup>
+    <mo>=</mo>
+    <mfrac><mrow><mtext>cov</mtext><msup><mrow><mo>(</mo><mi>X</mi><mo>,</mo><mi>Y</mi><mo>)</mo></mrow> <mn>2</mn> </msup></mrow> <mrow><msubsup><mi>σ</mi> <mi>X</mi> <mn>2</mn> </msubsup><msubsup><mi>σ</mi> <mi>Y</mi> <mn>2</mn> </msubsup></mrow></mfrac>
+  </mrow>
+</math>
+</div>
+
+<p>Where cov(<em>X</em>, <em>Y</em>) is the covariance of <em>X</em> and <em>Y</em>, a measure of how the two datasets jointly vary, while <math xmlns="http://www.w3.org/1998/Math/MathML" alttext="sigma Subscript upper X">
+  <msub><mi>σ</mi> <mi>X</mi> </msub>
+</math> and <math xmlns="http://www.w3.org/1998/Math/MathML" alttext="sigma Subscript upper Y">
+  <msub><mi>σ</mi> <mi>Y</mi> </msub>
+</math> are standard deviations, measures of how much each set individually varies. Intuitively, the <em>R</em><sup>2</sup> measures how much of the independent variation in each set can be explained by their joint variation.</p>
+<div data-type="warning" epub:type="warning"><h1>Multiple Types of R<sup>2</sup>!</h1>
+<p>Note that there are two common definitions of <em>R</em><sup>2</sup> used in practice. A common beginner (and expert) mistake is to confuse the two definitions. In this book, we will always use the<a data-type="indexterm" data-primary="squared Pearson correlation coefficient" id="idm139806614421360"/><a data-type="indexterm" data-primary="Pearson correlation coefficient" id="idm139806614420688"/> squared Pearson correlation coefficient (<a data-type="xref" href="#ch3-corr">Figure 3-12</a>). The other definition is called the<a data-type="indexterm" data-primary="coefficient of determination" id="idm139806614419008"/> coefficient of determination. This other <em>R</em><sup>2</sup> is often much more confusing to deal with since it doesn’t have a lower bound of 0 like the squared Pearson correlation does.</p>
+</div>
+
+<p>In <a data-type="xref" href="#ch3-corr">Figure 3-12</a>, predicted and true values are highly correlated with an <em>R</em><sup>2</sup> of nearly 1. It looks like learning has done a wonderful job on this system and succeeded in learning the true rule. <em>Not so fast</em>. You will note that the scale on the two axes in the figure isn’t the same! It turns out that <em>R</em><sup>2</sup> doesn’t penalize for differences in scale. In order to understand what’s happened on this system, we need to consider an alternate metric in <a data-type="xref" href="#ch3-rms">Figure 3-13</a>.</p>
+
+<figure><div id="ch3-corr" class="figure">
+<img src="assets/tfdl_0312.png" alt="lr_pred.png"/>
+<h6><span class="label">Figure 3-12. </span>Plotting the Pearson correlation coefficient.</h6>
+</div></figure>
+
+<figure><div id="ch3-rms" class="figure">
+<img src="assets/tfdl_0313.png" alt="lr_learned.png"/>
+<h6><span class="label">Figure 3-13. </span>Plotting the root-mean-squared error (RMSE).</h6>
+</div></figure>
+
+<p>The RMSE is a measure of the average difference between predicted values and true values. In <a data-type="xref" href="#ch3-rms">Figure 3-13</a> we plot predicted values and true labels as two separate functions using datapoints <em>x</em> as our x-axis. Note that the line learned isn’t the true function! The RMSE is relatively high and diagnoses the error, unlike the <em>R</em><sup>2</sup>, which didn’t pick up on this error.</p>
+
+<p>What happened on this system? Why didn’t TensorFlow learn the correct function despite being trained to convergence? This example provides a good illustration of one of the weaknesses of gradient descent algorithms. There is no guarantee of finding the true solution! The gradient descent algorithm can get trapped in <em>local minima</em>. That is, it can find solutions that look good, but are not in fact the lowest minima of the loss function <math xmlns="http://www.w3.org/1998/Math/MathML" alttext="script upper L">
+  <mi>ℒ</mi>
+</math>.</p>
+
+<p>Why use gradient descent at all then? For simple systems, it is indeed often better to avoid gradient descent and use other algorithms that have stronger performance guarantees. However, on complicated systems, such as those we will show you in later chapters, there do not yet exist alternative algorithms that perform better than gradient descent. We encourage you to remember this fact as we proceed further into deep learning.<a data-type="indexterm" data-primary="" data-startref="LRmodel03" id="idm139806614402736"/></p>
+</div></section>
+
+
+
+</div></section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<section data-type="sect2" data-pdf-bookmark="Logistic Regression in TensorFlow"><div class="sect2" id="idm139806614449760">
+<h2>Logistic Regression in TensorFlow</h2>
+
+<p>In<a data-type="indexterm" data-primary="logistic regression, model case study" id="LGRmod03"/><a data-type="indexterm" data-primary="sigmoid function" id="idm139806614399024"/> this section, we will define a simple classifier using TensorFlow. It’s worth first considering what the equation is for a classifier. The mathematical trick that is commonly used is exploiting the sigmoid function. The sigmoid, plotted in <a data-type="xref" href="#ch3-sigmoid">Figure 3-14</a>, commonly denoted by <math xmlns="http://www.w3.org/1998/Math/MathML" alttext="sigma">
+  <mi>σ</mi>
+</math>, is a function from the real numbers <math xmlns="http://www.w3.org/1998/Math/MathML" alttext="double-struck upper R">
+  <mi>ℝ</mi>
+</math> to (0, 1). This property is convenient since we can interpret the output of a sigmoid as probability of an event happening. (The trick of converting discrete events into continuous values is a recurring theme in machine learning.)</p>
+
+<figure><div id="ch3-sigmoid" class="figure">
+<img src="assets/tfdl_0314.png" alt="logistic.gif"/>
+<h6><span class="label">Figure 3-14. </span>Plotting the sigmoid function.</h6>
+</div></figure>
+
+<p>The equations for predicting the probabilities of a discrete 0/1 variable follow. These equations define a simple logistic regression model:</p>
+<div data-type="equation">
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
+  <mrow>
+    <msub><mi>y</mi> <mn>0</mn> </msub>
+    <mo>=</mo>
+    <mi>σ</mi>
+    <mrow>
+      <mo>(</mo>
+      <mi>w</mi>
+      <mi>x</mi>
+      <mo>+</mo>
+      <mi>b</mi>
+      <mo>)</mo>
+    </mrow>
+  </mrow>
+</math>
+</div>
+<div data-type="equation">
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
+  <mrow>
+    <msub><mi>y</mi> <mn>1</mn> </msub>
+    <mo>=</mo>
+    <mn>1</mn>
+    <mo>-</mo>
+    <mi>σ</mi>
+    <mrow>
+      <mo>(</mo>
+      <mi>w</mi>
+      <mi>x</mi>
+      <mo>+</mo>
+      <mi>b</mi>
+      <mo>)</mo>
+    </mrow>
+  </mrow>
+</math>
+</div>
+
+<p>TensorFlow<a data-type="indexterm" data-primary="cross-entropy loss" id="idm139806614168192"/> provides utility functions to compute the cross-entropy loss for sigmoidal values. The simplest of these functions is <code>tf.nn.sigmoid_cross_​entropy_with_logits</code>. (A logit is the inverse of the sigmoid. In practice, this simply means passing the argument to the sigmoid, <em>wx</em> + <em>b</em>, directly to TensorFlow instead of the sigmoidal value <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mrow>
+    <mi>σ</mi>
+    <mo>(</mo>
+    <mi>w</mi>
+    <mi>x</mi>
+    <mo>+</mo>
+    <mi>b</mi>
+    <mo>)</mo>
+  </mrow>
+</math> itself). We recommend using TensorFlow’s implementation instead of manually defining the cross-entropy, since there are tricky numerical issues that arise when computing the cross-entropy loss.</p>
+
+<p><a data-type="xref" href="#ch3-logistic">Example 3-14</a> defines a simple logistic regression model in TensorFlow.</p>
+<div id="ch3-logistic" data-type="example">
+<h5><span class="label">Example 3-14. </span>Defining a simple logistic regression model</h5>
+
+<pre data-type="programlisting" data-code-language="python"><code class="c1"># Generate tensorflow graph</code>
+<code class="k">with</code> <code class="n">tf</code><code class="o">.</code><code class="n">name_scope</code><code class="p">(</code><code class="s2">"placeholders"</code><code class="p">):</code>
+  <code class="c1"># Note that our datapoints x are 2-dimensional.</code>
+  <code class="n">x</code> <code class="o">=</code> <code class="n">tf</code><code class="o">.</code><code class="n">placeholder</code><code class="p">(</code><code class="n">tf</code><code class="o">.</code><code class="n">float32</code><code class="p">,</code> <code class="p">(</code><code class="n">N</code><code class="p">,</code> <code class="mi">2</code><code class="p">))</code>
+  <code class="n">y</code> <code class="o">=</code> <code class="n">tf</code><code class="o">.</code><code class="n">placeholder</code><code class="p">(</code><code class="n">tf</code><code class="o">.</code><code class="n">float32</code><code class="p">,</code> <code class="p">(</code><code class="n">N</code><code class="p">,))</code>
+<code class="k">with</code> <code class="n">tf</code><code class="o">.</code><code class="n">name_scope</code><code class="p">(</code><code class="s2">"weights"</code><code class="p">):</code>
+  <code class="n">W</code> <code class="o">=</code> <code class="n">tf</code><code class="o">.</code><code class="n">Variable</code><code class="p">(</code><code class="n">tf</code><code class="o">.</code><code class="n">random_normal</code><code class="p">((</code><code class="mi">2</code><code class="p">,</code> <code class="mi">1</code><code class="p">)))</code>
+  <code class="n">b</code> <code class="o">=</code> <code class="n">tf</code><code class="o">.</code><code class="n">Variable</code><code class="p">(</code><code class="n">tf</code><code class="o">.</code><code class="n">random_normal</code><code class="p">((</code><code class="mi">1</code><code class="p">,)))</code>
+<code class="k">with</code> <code class="n">tf</code><code class="o">.</code><code class="n">name_scope</code><code class="p">(</code><code class="s2">"prediction"</code><code class="p">):</code>
+  <code class="n">y_logit</code> <code class="o">=</code> <code class="n">tf</code><code class="o">.</code><code class="n">squeeze</code><code class="p">(</code><code class="n">tf</code><code class="o">.</code><code class="n">matmul</code><code class="p">(</code><code class="n">x</code><code class="p">,</code> <code class="n">W</code><code class="p">)</code> <code class="o">+</code> <code class="n">b</code><code class="p">)</code>
+  <code class="c1"># the sigmoid gives the class probability of 1</code>
+  <code class="n">y_one_prob</code> <code class="o">=</code> <code class="n">tf</code><code class="o">.</code><code class="n">sigmoid</code><code class="p">(</code><code class="n">y_logit</code><code class="p">)</code>
+  <code class="c1"># Rounding P(y=1) will give the correct prediction.</code>
+  <code class="n">y_pred</code> <code class="o">=</code> <code class="n">tf</code><code class="o">.</code><code class="n">round</code><code class="p">(</code><code class="n">y_one_prob</code><code class="p">)</code>
+
+<code class="k">with</code> <code class="n">tf</code><code class="o">.</code><code class="n">name_scope</code><code class="p">(</code><code class="s2">"loss"</code><code class="p">):</code>
+  <code class="c1"># Compute the cross-entropy term for each datapoint</code>
+  <code class="n">entropy</code> <code class="o">=</code> <code class="n">tf</code><code class="o">.</code><code class="n">nn</code><code class="o">.</code><code class="n">sigmoid_cross_entropy_with_logits</code><code class="p">(</code><code class="n">logits</code><code class="o">=</code><code class="n">y_logit</code><code class="p">,</code> <code class="n">labels</code><code class="o">=</code><code class="n">y</code><code class="p">)</code>
+  <code class="c1"># Sum all contributions</code>
+  <code class="n">l</code> <code class="o">=</code> <code class="n">tf</code><code class="o">.</code><code class="n">reduce_sum</code><code class="p">(</code><code class="n">entropy</code><code class="p">)</code>
+<code class="k">with</code> <code class="n">tf</code><code class="o">.</code><code class="n">name_scope</code><code class="p">(</code><code class="s2">"optim"</code><code class="p">):</code>
+  <code class="n">train_op</code> <code class="o">=</code> <code class="n">tf</code><code class="o">.</code><code class="n">train</code><code class="o">.</code><code class="n">AdamOptimizer</code><code class="p">(</code><code class="o">.</code><code class="mo">01</code><code class="p">)</code><code class="o">.</code><code class="n">minimize</code><code class="p">(</code><code class="n">l</code><code class="p">)</code>
+
+  <code class="n">train_writer</code> <code class="o">=</code> <code class="n">tf</code><code class="o">.</code><code class="n">summary</code><code class="o">.</code><code class="n">FileWriter</code><code class="p">(</code><code class="s1">'/tmp/logistic-train'</code><code class="p">,</code> <code class="n">tf</code><code class="o">.</code><code class="n">get_default_graph</code><code class="p">())</code></pre></div>
+
+<p>The training code for this model in <a data-type="xref" href="#ch3-logistic-train">Example 3-15</a> is identical to that for the linear regression model.</p>
+<div id="ch3-logistic-train" data-type="example">
+<h5><span class="label">Example 3-15. </span>Training a logistic regression model</h5>
+
+<pre data-type="programlisting" data-code-language="python"><code class="n">n_steps</code> <code class="o">=</code> <code class="mi">1000</code>
+<code class="k">with</code> <code class="n">tf</code><code class="o">.</code><code class="n">Session</code><code class="p">()</code> <code class="k">as</code> <code class="n">sess</code><code class="p">:</code>
+  <code class="n">sess</code><code class="o">.</code><code class="n">run</code><code class="p">(</code><code class="n">tf</code><code class="o">.</code><code class="n">global_variables_initializer</code><code class="p">())</code>
+  <code class="c1"># Train model</code>
+  <code class="k">for</code> <code class="n">i</code> <code class="ow">in</code> <code class="nb">range</code><code class="p">(</code><code class="n">n_steps</code><code class="p">):</code>
+    <code class="n">feed_dict</code> <code class="o">=</code> <code class="p">{</code><code class="n">x</code><code class="p">:</code> <code class="n">x_np</code><code class="p">,</code> <code class="n">y</code><code class="p">:</code> <code class="n">y_np</code><code class="p">}</code>
+    <code class="n">_</code><code class="p">,</code> <code class="n">summary</code><code class="p">,</code> <code class="n">loss</code> <code class="o">=</code> <code class="n">sess</code><code class="o">.</code><code class="n">run</code><code class="p">([</code><code class="n">train_op</code><code class="p">,</code> <code class="n">merged</code><code class="p">,</code> <code class="n">l</code><code class="p">],</code> <code class="n">feed_dict</code><code class="o">=</code><code class="n">feed_dict</code><code class="p">)</code>
+    <code class="k">print</code><code class="p">(</code><code class="s2">"loss: </code><code class="si">%f</code><code class="s2">"</code> <code class="o">%</code> <code class="n">loss</code><code class="p">)</code>
+    <code class="n">train_writer</code><code class="o">.</code><code class="n">add_summary</code><code class="p">(</code><code class="n">summary</code><code class="p">,</code> <code class="n">i</code><code class="p">)</code></pre></div>
+
+
+
+
+
+
+
+
+
+
+<section data-type="sect3" data-pdf-bookmark="Visualizing logistic regression models with TensorBoard"><div class="sect3" id="idm139806614017840">
+<h3>Visualizing logistic regression models with TensorBoard</h3>
+
+<p>As<a data-type="indexterm" data-primary="TensorBoard" data-secondary="visualizing logistic regression models with" id="idm139806613943264"/> before, you can use TensorBoard to visualize the model. Start by visualizing the loss function as shown in <a data-type="xref" href="#ch3-tensorboardlogistic">Figure 3-15</a>. Note that as before, the loss function follows a neat pattern. There is a steep drop in the loss followed by a gradual smoothening.</p>
+
+<figure><div id="ch3-tensorboardlogistic" class="figure">
+<img src="assets/tfdl_0315.png" alt="logistic_loss_tensorboard.png"/>
+<h6><span class="label">Figure 3-15. </span>Visualizing the logistic regression loss function.</h6>
+</div></figure>
+
+<p>You can also view the TensorFlow graph in TensorBoard. Since the scoping structure was similar to that used for linear regression, the simplified graph doesn’t display much differently, as shown in <a data-type="xref" href="#ch3-tensorboardlogisticgraph">Figure 3-16</a>.</p>
+
+<figure><div id="ch3-tensorboardlogisticgraph" class="figure">
+<img src="assets/tfdl_0316.png" alt="logistic_graph.png"/>
+<h6><span class="label">Figure 3-16. </span>Visualizing the computation graph for logistic regression.</h6>
+</div></figure>
+
+<p>However, if you expand the nodes in this grouped graph, as in <a data-type="xref" href="#ch3-tensorboardlogisticgraphexp">Figure 3-17</a>, you will find that the underlying computational graph is different. In particular, the loss function is quite different from that used for linear regression (as it should be).</p>
+
+<figure><div id="ch3-tensorboardlogisticgraphexp" class="figure">
+<img src="assets/tfdl_0317.png" alt="logistic_expanded.png"/>
+<h6><span class="label">Figure 3-17. </span>The expanded computation graph for logistic regression.</h6>
+</div></figure>
+</div></section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<section data-type="sect3" data-pdf-bookmark="Metrics for evaluating classification models"><div class="sect3" id="idm139806613932192">
+<h3>Metrics for evaluating classification models</h3>
+
+<p>Now<a data-type="indexterm" data-primary="classification problems" data-secondary="metrics for evaluation of" id="idm139806613930832"/><a data-type="indexterm" data-primary="metrics" data-secondary="for evaluating classification models" id="idm139806613929856"/> that you have trained a classification model for logistic regression, you need to learn about metrics suitable for evaluating classification models. Although the equations for logistic regression are more complicated than they are for linear regression, the basic evaluation metrics are simpler. The classification accuracy simply checks for the fraction of datapoints that are classified correctly by the learned model. In<a data-type="indexterm" data-primary="separating line" id="idm139806613928320"/> fact, with a little more effort, it is possible to back out the <em>separating line</em> learned by the logistic regression model. This line displays the cutoff boundary the model has learned to separate positive and negative examples. (We leave the derivation of this line from the logistic regression equations as an exercise for the interested reader. The solution is in the code for this section.)</p>
+
+<p>We<a data-type="indexterm" data-primary="learned classes" id="idm139806613926384"/> display the learned classes and the separating line in <a data-type="xref" href="#ch3-loglearnedclasses">Figure 3-18</a>. Note that the line neatly separates the positive and negative examples and has perfect accuracy (1.0). This result raises an interesting point. Regression is often a harder problem to solve than classification. There are many possible lines that would neatly separate the datapoints in <a data-type="xref" href="#ch3-loglearnedclasses">Figure 3-18</a>, but only one that would have perfectly matched the data for the linear regression.<a data-type="indexterm" data-primary="" data-startref="LGRmod03" id="idm139806613923616"/><a data-type="indexterm" data-primary="" data-startref="TLlinmod03" id="idm139806613922672"/></p>
+
+<figure><div id="ch3-loglearnedclasses" class="figure">
+<img src="assets/tfdl_0318.png" alt="logistic_pred.png"/>
+<h6><span class="label">Figure 3-18. </span>Viewing the learned classes and separating line for logistic regression.</h6>
+</div></figure>
+</div></section>
+
+
+
+</div></section>
+
+
+
+
+
+</div></section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<section data-type="sect1" data-pdf-bookmark="Review"><div class="sect1" id="idm139806613919536">
+<h1>Review</h1>
+
+<p>In this chapter, we’ve shown you how to build and train some simple learning systems in TensorFlow. We started by reviewing some foundational mathematical concepts including loss functions and gradient descent. We then introduced you to some new TensorFlow concepts such as placeholders, scopes, and TensorBoard. We ended the chapter with case studies that trained linear and logistic regression systems on toy datasets. We covered a lot of material in this chapter, and it’s OK if you haven’t yet internalized everything. The foundational material introduced here will be used throughout the remainder of this book.</p>
+
+<p>In <a data-type="xref" href="ch04.html#fully_connected_networks">Chapter 4</a>, we will introduce you to your first deep learning model and to fully connected networks, and will show you how to define and train fully connected networks in TensorFlow. In following chapters, we will explore more complicated deep networks, but all of these architectures will use the same fundamental learning principles introduced in this chapter.<a data-type="indexterm" data-primary="" data-startref="RPreg03" id="idm139806613915904"/></p>
+</div></section>
+
+
+
+
+
+
+
+</div></section></body></html>
