@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xmlns:m="http://www.w3.org/1998/Math/MathML" xmlns:pls="http://www.w3.org/2005/01/pronunciation-lexicon" xmlns:ssml="http://www.w3.org/2001/10/synthesis" xmlns:svg="http://www.w3.org/2000/svg">
+<head>
+  <meta charset="UTF-8" />
+  <title>Creating the VGG model</title>
+  <link type="text/css" rel="stylesheet" media="all" href="style.css" />
+  <link type="text/css" rel="stylesheet" media="all" href="core.css" />
+</head>
+<body>
+  <div id="sbo-rt-content"><section>
+
+                            <header>
+                    <h1 class="header-title">Creating the VGG model</h1>
+                </header>
+            
+            <article>
+                
+<p>We will load a pretrained model from <kbd>torchvisions.models</kbd>. We will be using this model only for extracting features, and the PyTorch VGG model is defined in such a way that all the convolutional blocks will be in the <kbd>features</kbd> module and the fully connected, or linear, layers are in the <kbd>classifier</kbd> module. Since we will not be training any of the weights or parameters in the VGG model, we will also freeze the model. The following code demonstrates the same:</p>
+<pre>#Creating a pretrained VGG model<br/>vgg = vgg19(pretrained=True).features<br/><br/>#Freezing the layers as we will not use it for training.<br/>for param in vgg.parameters():<br/>    param.requires_grad = False</pre>
+<p>In this code, we created a VGG model, used only its convolution blocks and froze all the parameters of the model, as we will be using it only for extracting features.</p>
+
+
+            </article>
+
+            
+        </section>
+    </div>
+</body>
+</html>

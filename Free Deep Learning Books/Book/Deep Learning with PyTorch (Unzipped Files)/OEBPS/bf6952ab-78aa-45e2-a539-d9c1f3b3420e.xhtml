@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xmlns:m="http://www.w3.org/1998/Math/MathML" xmlns:pls="http://www.w3.org/2005/01/pronunciation-lexicon" xmlns:ssml="http://www.w3.org/2001/10/synthesis" xmlns:svg="http://www.w3.org/2000/svg">
+<head>
+  <meta charset="UTF-8" />
+  <title>Creating a fully connected model and train</title>
+  <link type="text/css" rel="stylesheet" media="all" href="style.css" />
+  <link type="text/css" rel="stylesheet" media="all" href="core.css" />
+</head>
+<body>
+  <div id="sbo-rt-content"><section>
+
+                            <header>
+                    <h1 class="header-title">Creating a fully connected model and train</h1>
+                </header>
+            
+            <article>
+                
+<p>We will use a simple linear model, similar to what we used in ResNet and Inception. The following code shows the network architecture which we will be using to train the model: </p>
+<pre>class FullyConnectedModel(nn.Module):<br/>    <br/>    def __init__(self,in_size,out_size):<br/>        super().__init__()<br/>        self.fc = nn.Linear(in_size,out_size)<br/><br/>    def forward(self,inp):<br/>        out = self.fc(inp)<br/>        return out<br/><br/>fc = FullyConnectedModel(fc_in_size,classes)<br/>if is_cuda:<br/>    fc = fc.cuda()</pre>
+<p>We will use the same <kbd>fit</kbd> method to train the preceding model. The following code snippet shows the training code, along with the results:</p>
+<pre>train_losses , train_accuracy = [],[]<br/>val_losses , val_accuracy = [],[]<br/>for epoch in range(1,10):<br/>    epoch_loss, epoch_accuracy = fit(epoch,fc,trn_feat_loader,phase='training')<br/>    val_epoch_loss , val_epoch_accuracy = fit(epoch,fc,val_feat_loader,phase='validation')<br/>    train_losses.append(epoch_loss)<br/>    train_accuracy.append(epoch_accuracy)<br/>    val_losses.append(val_epoch_loss)<br/>    val_accuracy.append(val_epoch_accuracy)<br/>    </pre>
+<p>The result of the preceding code is:</p>
+<pre># Results<br/><br/>training loss is 0.057 and training accuracy is 22506/23000 97.85<br/>validation loss is 0.034 and validation accuracy is 1978/2000 98.9<br/>training loss is 0.0059 and training accuracy is 22953/23000 99.8<br/>validation loss is 0.028 and validation accuracy is 1981/2000 99.05<br/>training loss is 0.0016 and training accuracy is 22974/23000 99.89<br/>validation loss is 0.022 and validation accuracy is 1983/2000 99.15<br/>training loss is 0.00064 and training accuracy is 22976/23000 99.9<br/>validation loss is 0.023 and validation accuracy is 1983/2000 99.15<br/>training loss is 0.00043 and training accuracy is 22976/23000 99.9<br/>validation loss is 0.024 and validation accuracy is 1983/2000 99.15<br/>training loss is 0.00033 and training accuracy is 22976/23000 99.9<br/>validation loss is 0.024 and validation accuracy is 1984/2000 99.2<br/>training loss is 0.00025 and training accuracy is 22976/23000 99.9<br/>validation loss is 0.024 and validation accuracy is 1984/2000 99.2<br/>training loss is 0.0002 and training accuracy is 22976/23000 99.9<br/>validation loss is 0.025 and validation accuracy is 1985/2000 99.25<br/>training loss is 0.00016 and training accuracy is 22976/23000 99.9<br/>validation loss is 0.024 and validation accuracy is 1986/2000 99.3</pre>
+<p>The preceding algorithm was able to achieve a maximum training accuracy of 99%, and 99% validation accuracy. Your results could change as the <kbd>validation</kbd> dataset you create may have different images. </p>
+<p>Some of the advantages of DenseNet are:</p>
+<ul>
+<li>It substantially reduces the number of parameters required</li>
+<li>It alleviates the vanishing gradient problem</li>
+<li>It encourages feature reuse</li>
+</ul>
+<p>In this next section, we will explore how we can build a model that combines the advantage of the convoluted features computed, using the different models of ResNet, Inception, and DenseNet.</p>
+
+
+            </article>
+
+            
+        </section>
+    </div>
+</body>
+</html>

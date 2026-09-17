@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xmlns:m="http://www.w3.org/1998/Math/MathML" xmlns:pls="http://www.w3.org/2005/01/pronunciation-lexicon" xmlns:ssml="http://www.w3.org/2001/10/synthesis" xmlns:svg="http://www.w3.org/2000/svg">
+<head>
+  <meta charset="UTF-8" />
+  <title>Training the model</title>
+  <link type="text/css" rel="stylesheet" media="all" href="style.css" />
+  <link type="text/css" rel="stylesheet" media="all" href="core.css" />
+</head>
+<body>
+  <div id="sbo-rt-content"><section>
+
+                            <header>
+                    <h1 class="header-title">Training the model</h1>
+                </header>
+            
+            <article>
+                
+<p>We train the model for multiple epochs and validate it using the following code:</p>
+<pre># Loop over epochs.<br/>best_val_loss = None<br/>epochs = 40<br/><br/>for epoch in range(1, epochs+1):<br/>    epoch_start_time = time.time()<br/>    trainf()<br/>    val_loss = evaluate(valid_iter)<br/>    print('-' * 89)<br/>    print('| end of epoch {:3d} | time: {:5.2f}s | valid loss {:5.2f} | '<br/>        'valid ppl {:8.2f}'.format(epoch, (time.time() - epoch_start_time),<br/>                                   val_loss, math.exp(val_loss)))<br/>    print('-' * 89)<br/>    if not best_val_loss or val_loss &lt; best_val_loss:<br/>        best_val_loss = val_loss<br/>    else:<br/>        # Anneal the learning rate if no improvement has been seen in the validation dataset.<br/>        lr /= 4.0</pre>
+<p>The previous code is training the model for <kbd>40</kbd> epochs, and we start with a high-learning rate of 20 and reduce it further when the validation loss saturates. Running the model for 40 epochs gives a <kbd>ppl</kbd> score of <span>approximately</span><span> </span><span><kbd>108.45</kbd>. The following code block contains the logs when the model was last run:</span></p>
+<pre>-----------------------------------------------------------------------------------------
+| end of epoch  39 | time: 34.16s | valid loss  4.70 | valid ppl   110.01
+-----------------------------------------------------------------------------------------
+| epoch  40 |   200/ 3481 batches | lr 0.31 | ms/batch 11.47 | loss  4.77 | ppl   117.40
+| epoch  40 |   400/ 3481 batches | lr 0.31 | ms/batch  9.56 | loss  4.81 | ppl   122.19
+| epoch  40 |   600/ 3481 batches | lr 0.31 | ms/batch  9.43 | loss  4.73 | ppl   113.08
+| epoch  40 |   800/ 3481 batches | lr 0.31 | ms/batch  9.48 | loss  4.65 | ppl   104.77
+| epoch  40 |  1000/ 3481 batches | lr 0.31 | ms/batch  9.42 | loss  4.76 | ppl   116.42
+| epoch  40 |  1200/ 3481 batches | lr 0.31 | ms/batch  9.55 | loss  4.70 | ppl   109.77
+| epoch  40 |  1400/ 3481 batches | lr 0.31 | ms/batch  9.41 | loss  4.74 | ppl   114.61
+| epoch  40 |  1600/ 3481 batches | lr 0.31 | ms/batch  9.47 | loss  4.77 | ppl   117.65
+| epoch  40 |  1800/ 3481 batches | lr 0.31 | ms/batch  9.46 | loss  4.77 | ppl   118.42
+| epoch  40 |  2000/ 3481 batches | lr 0.31 | ms/batch  9.44 | loss  4.76 | ppl   116.31
+| epoch  40 |  2200/ 3481 batches | lr 0.31 | ms/batch  9.46 | loss  4.77 | ppl   117.52
+| epoch  40 |  2400/ 3481 batches | lr 0.31 | ms/batch  9.43 | loss  4.74 | ppl   114.06
+| epoch  40 |  2600/ 3481 batches | lr 0.31 | ms/batch  9.44 | loss  4.62 | ppl   101.72
+| epoch  40 |  2800/ 3481 batches | lr 0.31 | ms/batch  9.44 | loss  4.69 | ppl   109.30
+| epoch  40 |  3000/ 3481 batches | lr 0.31 | ms/batch  9.47 | loss  4.71 | ppl   111.51
+| epoch  40 |  3200/ 3481 batches | lr 0.31 | ms/batch  9.43 | loss  4.70 | ppl   109.65
+| epoch  40 |  3400/ 3481 batches | lr 0.31 | ms/batch  9.51 | loss  4.63 | ppl   102.43
+val loss 4.686332647950745
+-----------------------------------------------------------------------------------------
+| end of epoch  40 | time: 34.50s | valid loss  4.69 | valid ppl   108.45
+-----------------------------------------------------------------------------------------</pre>
+<p>In the last few months, researchers started exploring the previous approach to create a language model for creating pretrained embeddings. If you are more interested in this approach, I would strongly recommend you read the paper <em>Fine-tuned Language Models for Text Classification </em><a href="https://arxiv.org/abs/1801.06146" target="_blank">(https://arxiv.org/abs/1801.06146</a>) by Jeremy Howard and Sebastian Ruder, where they go into a lot of detail on how language modeling techniques can be used to prepare domain-specific word embeddings, which can later be used for different NLP tasks, such as text classification problems.</p>
+
+
+            </article>
+
+            
+        </section>
+    </div>
+</body>
+</html>

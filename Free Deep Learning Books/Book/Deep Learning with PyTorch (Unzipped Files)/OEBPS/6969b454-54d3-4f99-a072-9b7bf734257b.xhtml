@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xmlns:m="http://www.w3.org/1998/Math/MathML" xmlns:pls="http://www.w3.org/2005/01/pronunciation-lexicon" xmlns:ssml="http://www.w3.org/2001/10/synthesis" xmlns:svg="http://www.w3.org/2000/svg">
+<head>
+  <meta charset="UTF-8" />
+  <title>Defining a model based on LSTM</title>
+  <link type="text/css" rel="stylesheet" media="all" href="style.css" />
+  <link type="text/css" rel="stylesheet" media="all" href="core.css" />
+</head>
+<body>
+  <div id="sbo-rt-content"><section>
+
+                            <header>
+                    <h1 class="header-title">Defining a model based on LSTM</h1>
+                </header>
+            
+            <article>
+                
+<p>We defined a model that is a bit similar to the networks that we saw in <a href="64a06d7f-a912-46cd-a059-e0e8e1092b63.xhtml" target="_blank">Chapter 6</a>, <em>Deep Learning with Sequence Data and Text,</em> but it has some key differences. The high-level architecture of the network looks like the following image:</p>
+<div class="CDPAlignCenter CDPAlign"> <img height="250" width="461" class="alignnone size-full wp-image-389 image-border" src="images/e8dd59aa-8d2c-4a98-87d7-23641c1d5387.png" /></div>
+<p> As usual, let's take a look at the code and then walk through the key parts of it:</p>
+<pre>class RNNModel(nn.Module):<br/>    def __init__(self,ntoken,ninp,nhid,nlayers,dropout=0.5,tie_weights=False):<br/>        #ntoken represents the number of words in vocabulary.<br/>        #ninp Embedding dimension for each word ,which is the input for the LSTM.<br/>        #nlayer Number of layers required to be used in the LSTM .<br/>        #Dropout to avoid overfitting.<br/>        #tie_weights - use the same weights for both encoder and decoder. <br/>        super().__init__()<br/>        self.drop = nn.Dropout()<br/>        self.encoder = nn.Embedding(ntoken,ninp)<br/>        self.rnn = nn.LSTM(ninp,nhid,nlayers,dropout=dropout)<br/>        self.decoder = nn.Linear(nhid,ntoken)<br/>        if tie_weights:<br/>            self.decoder.weight = self.encoder.weight<br/>        <br/>        self.init_weights()<br/>        self.nhid = nhid<br/>        self.nlayers = nlayers<br/>        <br/>    def init_weights(self):<br/>        initrange = 0.1<br/>        self.encoder.weight.data.uniform_(-initrange,initrange)<br/>        self.decoder.bias.data.fill_(0)<br/>        self.decoder.weight.data.uniform_(-initrange,initrange)<br/>        <br/>    def forward(self,input,hidden):<br/>        emb = self.drop(self.encoder(input))<br/>        output,hidden = self.rnn(emb,hidden)<br/>        output = self.drop(output)<br/>        s = output.size()<br/>        decoded = self.decoder(output.view(s[0]*s[1],s[2]))<br/>        return decoded.view(s[0],s[1],decoded.size(1)),hidden<br/>    <br/>    def init_hidden(self,bsz):<br/>        weight = next(self.parameters()).data<br/><br/>        return (Variable(weight.new(self.nlayers,bsz,self.nhid).zero_()),Variable(weight.new(self.nlayers,bsz,self.nhid).zero_()))<br/>    </pre>
+<p>In the <kbd>__init__</kbd> method, we create all the layers such as embedding, dropout, RNN, and decoder. In earlier language models, embeddings were not generally used in the last layer. The use of embeddings, and tying the initial embedding along with the embeddings of the final output layer, improves the accuracy of the language model. This concept was introduced in the papers <em>Using the Output Embedding to Improve Language Models</em> (<a href="https://arxiv.org/abs/1608.05859" target="_blank">https://arxiv.org/abs/1608.05859</a>) by Press and Wolf in 2016, and <em>Tying Word Vectors and Word Classifiers: A Loss Framework for Language Modeling</em> (<a href="https://arxiv.org/abs/1611.01462" target="_blank">https://arxiv.org/abs/1611.01462</a>) by Inan and his co-authors in 2016. Once we have made the weights of encoder and decoder tied, we call the <kbd>init_weights</kbd> method to initialize the weights of the layer. </p>
+<p>The <kbd>forward</kbd> function stitches all the layers together. The last linear layers map all the output activations from the LSTM layer to the embeddings that are of the size of the vocabulary. The flow of the <kbd>forward</kbd> function input is passed through the embedding layer and then passed on to an RNN (in this case, an LSTM), and then to the decoder, another linear layer. </p>
+
+
+            </article>
+
+            
+        </section>
+    </div>
+</body>
+</html>

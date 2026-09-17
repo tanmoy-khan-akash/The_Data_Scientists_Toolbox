@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xmlns:m="http://www.w3.org/1998/Math/MathML" xmlns:pls="http://www.w3.org/2005/01/pronunciation-lexicon" xmlns:ssml="http://www.w3.org/2001/10/synthesis" xmlns:svg="http://www.w3.org/2000/svg">
+<head>
+  <meta charset="UTF-8" />
+  <title>Backpropagation through time</title>
+  <link type="text/css" rel="stylesheet" media="all" href="style.css" />
+  <link type="text/css" rel="stylesheet" media="all" href="core.css" />
+</head>
+<body>
+  <div id="sbo-rt-content"><section>
+
+                            <header>
+                    <h1 class="header-title">Backpropagation through time</h1>
+                </header>
+            
+            <article>
+                
+<p>The other important variable that we see go through the iterator is <strong>backpropagation through time</strong> (<strong>BPTT</strong>). What it actually means is, the sequence length the model needs to remember. The higher the number, the better—but the complexity of the model and the GPU memory required for the model also increase. </p>
+<p>To understand it better, let's look at how we can split the previous batched alphabet data into sequences of length two:</p>
+<p><em>a    g    m    s</em></p>
+<p><em>b    h    n    t</em></p>
+<p>The previous example will be passed to the model as input, and the output will be from the sequence but containing the next values:</p>
+<p><em>b    h    n    t</em></p>
+<p><em>c    I      o    u</em></p>
+<p>For the <span>example</span> <kbd>WikiText2</kbd>, when we split the batched data, we get data of size 30, 20 for each batch where <em>30</em> is the sequence length. </p>
+
+
+            </article>
+
+            
+        </section>
+    </div>
+</body>
+</html>

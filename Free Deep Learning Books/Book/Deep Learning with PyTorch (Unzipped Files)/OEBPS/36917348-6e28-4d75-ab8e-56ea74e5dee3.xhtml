@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xmlns:m="http://www.w3.org/1998/Math/MathML" xmlns:pls="http://www.w3.org/2005/01/pronunciation-lexicon" xmlns:ssml="http://www.w3.org/2001/10/synthesis" xmlns:svg="http://www.w3.org/2000/svg">
+<head>
+  <meta charset="UTF-8" />
+  <title>ReLU</title>
+  <link type="text/css" rel="stylesheet" media="all" href="style.css" />
+  <link type="text/css" rel="stylesheet" media="all" href="core.css" />
+</head>
+<body>
+  <div id="sbo-rt-content"><section>
+
+                            <header>
+                    <h1 class="header-title">ReLU</h1>
+                </header>
+            
+            <article>
+                
+<p>ReLU has become more popular in the recent years; we can find either its usage or one of its variants' usages in almost any modern architecture. It has a simple mathematical formulation:</p>
+<p style="padding-left: 210px"><em><span class="mi">f</span><span class="mo">(</span><span class="mi">x</span><span class="mo">)</span><span class="mo">=</span><span class="mo">max</span><span class="mo">(</span><span class="mn">0</span><span class="mo">,</span><span class="mi">x</span><span class="mo">)</span></em></p>
+<p>In simple words, ReLU squashes any input that is negative to zero and leaves positive numbers as they are. We can visualize the ReLU function as follows:</p>
+<div class="CDPAlignCenter CDPAlign"><img height="262" width="385" class="alignnone size-full wp-image-339 image-border" src="images/dd8dabd2-67a6-41f6-85bd-99575eadf301.png" /></div>
+<div class="packt_figref CDPAlignCenter CDPAlign">Image source: http://datareview.info/article/eto-nuzhno-znat-klyuchevyie-rekomendatsii-po-glubokomu-obucheniyu-chast-2/</div>
+<p>Some of the pros and cons of using ReLU are as follows:</p>
+<ul>
+<li>It helps the optimizer in finding the right set of weights sooner. More technically it makes the convergence of stochastic gradient descent faster.</li>
+<li>It is computationally inexpensive, as we are just thresholding and not calculating anything like we did for the sigmoid and tangent functions.</li>
+<li>ReLU has one disadvantage; when a large gradient passes through it during the backward propagation, they often become non-responsive; these are called <strong>dead neutrons</strong>, which can be controlled by carefully choosing the learning rate. We will discuss how to choose learning rates when we discuss the different ways to adjust the learning rate in <a href="821004b7-d246-4aac-b883-9ab634ae0aea.xhtml" target="_blank">Chapter 4</a>, <em>Fundamentals of Machine Learning</em>.</li>
+</ul>
+
+
+            </article>
+
+            
+        </section>
+    </div>
+</body>
+</html>

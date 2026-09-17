@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xmlns:m="http://www.w3.org/1998/Math/MathML" xmlns:pls="http://www.w3.org/2005/01/pronunciation-lexicon" xmlns:ssml="http://www.w3.org/2001/10/synthesis" xmlns:svg="http://www.w3.org/2000/svg">
+<head>
+  <meta charset="UTF-8" />
+  <title>Image classification using deep learning</title>
+  <link type="text/css" rel="stylesheet" media="all" href="style.css" />
+  <link type="text/css" rel="stylesheet" media="all" href="core.css" />
+</head>
+<body>
+  <div id="sbo-rt-content"><section>
+
+                            <header>
+                    <h1 class="header-title">Image classification using deep learning</h1>
+                </header>
+            
+            <article>
+                
+<p>The most important step in solving any real-world problem is to get the data. Kaggle provides a huge number of competitions on different data science problems. We will pick one of the problems that arose in 2014, which we will use to test our deep learning algorithms in this chapter and improve it in <a href="3cce1bbe-6d1c-4164-b1ef-8b0688126519.xhtml" target="_blank">Chapter 5</a>, <em>Deep Learning for Computer Vision</em>, which will be on <strong>Convolution Neural Networks</strong> (<strong>CNNs</strong>) and some of the advanced techniques that we can use to improve the performance of our image recognition models. You can download the data from <a href="https://www.kaggle.com/c/dogs-vs-cats/data" target="_blank">https://www.kaggle.com/c/dogs-vs-cats/data</a>. The dataset contains 25,000 images of dogs and cats. Preprocessing of data and the creation of train, validation, and test splits are some of the important steps that need to be performed before we can implement an algorithm. Once the data is downloaded, taking a look at it, it shows that the folder contains images in the following format:</p>
+<div class="CDPAlignCenter CDPAlign"><img height="164" width="186" class="alignnone size-full wp-image-341 image-border" src="images/c746e70e-bf9a-40be-8f68-7493de1eb7ac.png" /></div>
+<p>Most of the frameworks make it easier to read the images and tag them to their labels when provided in the following format. That means that e<span>ach class should have a separate folder of its images. Here, all cat images should be in the <kbd>cat</kbd> folder and dog images in the <kbd>dog</kbd> folder:</span></p>
+<div class="CDPAlignCenter CDPAlign"><img height="339" width="202" class="alignnone size-full wp-image-342 image-border" src="images/bf800adb-ed3e-4f0e-b644-de91d3789ce5.png" /></div>
+<p>Python makes it easy to put the data into the right format. Let's quickly take a look at the code and, then, we will go through the important parts of it:</p>
+<pre>path = '../chapter3/dogsandcats/'<br/><br/>#Read all the files inside our folder.<br/>files = glob(os.path.join(path,'*/*.jpg'))<br/><br/>print(f'Total no of images {len(files)}')<br/><br/>no_of_images = len(files)<br/><br/>#Create a shuffled index which can be used to create a validation data set<br/>shuffle = np.random.permutation(no_of_images)<br/><br/>#Create a validation directory for holding validation images.<br/>os.mkdir(os.path.join(path,'valid'))<br/><br/>#Create directories with label names <br/>for t in ['train','valid']:<br/>     for folder in ['dog/','cat/']:<br/>          os.mkdir(os.path.join(path,t,folder)) <br/><br/>#Copy a small subset of images into the validation folder.<br/>for i in shuffle[:2000]:<br/>     folder = files[i].split('/')[-1].split('.')[0]<br/>     image = files[i].split('/')[-1]<br/>     os.rename(files[i],os.path.join(path,'valid',folder,image))<br/><br/>#Copy a small subset of images into the training folder.<br/>for i in shuffle[2000:]:<br/>     folder = files[i].split('/')[-1].split('.')[0]<br/>     image = files[i].split('/')[-1]<br/>     os.rename(files[i],os.path.join(path,'train',folder,image))</pre>
+<p>All the preceding code does is retrieve all the files and pick 2,000 images for creating a validation set. It segregates all the images into the two categories of cats and dogs. It is a common and important practice to create a separate validation set, as it is not fair to test our algorithms on the same data it is trained on. To create a <kbd>validation</kbd> dataset, we create a list of numbers that are in the range of the length of the images in a shuffled order. The shuffled numbers act as an index for us to pick a bunch of images for creating our <kbd>validation</kbd> dataset. Let's go through each section of the code in detail.</p>
+<p>We create a file using the following code:</p>
+<pre>files = glob(os.path.join(path,'*/*.jpg'))</pre>
+<p>The <kbd>glob</kbd> method returns all the files in the particular path. When there are a huge number of images, we can also use <kbd>iglob</kbd>, which returns an iterator, instead of loading the names into memory. In our case, we have only 25,000 filenames, which can easily fit into memory.</p>
+<p>We can shuffle our files using the following code:</p>
+<pre>shuffle = np.random.permutation(no_of_images)</pre>
+<p>The preceding code returns 25,000 numbers in the range from zero to 25,000 in a shuffled order, which we will use as an index for selecting a subset of images to create a <kbd>validation</kbd> dataset.</p>
+<p>We can create a validation code, as follows:</p>
+<pre>os.mkdir(os.path.join(path,'valid'))<br/>for t in ['train','valid']:<br/>     for folder in ['dog/','cat/']:<br/>          os.mkdir(os.path.join(path,t,folder)) </pre>
+<p>The preceding code creates a <kbd>validation</kbd> folder and creates folders based on categories (cats and dogs) inside <kbd>train</kbd> and <kbd>valid</kbd> directories.</p>
+<p>We can shuffle an index with the following code:</p>
+<pre>for i in shuffle[:2000]:<br/>     folder = files[i].split('/')[-1].split('.')[0]<br/>     image = files[i].split('/')[-1]<br/>     os.rename(files[i],os.path.join(path,'valid',folder,image))</pre>
+<p>In the preceding code, we use our shuffled index to randomly pick <kbd>2000</kbd> different images for our validation set. We do something similar for the training data to segregate the images in the <kbd>train</kbd> directory.</p>
+<p>As we have the data in the format we need, let's quickly look at how to load the images as PyTorch tensors.</p>
+
+
+            </article>
+
+            
+        </section>
+    </div>
+</body>
+</html>

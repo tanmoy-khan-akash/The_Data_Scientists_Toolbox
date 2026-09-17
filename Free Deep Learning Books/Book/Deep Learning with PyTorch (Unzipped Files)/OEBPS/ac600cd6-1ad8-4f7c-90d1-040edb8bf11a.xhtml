@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xmlns:m="http://www.w3.org/1998/Math/MathML" xmlns:pls="http://www.w3.org/2005/01/pronunciation-lexicon" xmlns:ssml="http://www.w3.org/2001/10/synthesis" xmlns:svg="http://www.w3.org/2000/svg">
+<head>
+  <meta charset="UTF-8" />
+  <title>Deep dive into the building blocks of neural networks</title>
+  <link type="text/css" rel="stylesheet" media="all" href="style.css" />
+  <link type="text/css" rel="stylesheet" media="all" href="core.css" />
+</head>
+<body>
+  <div id="sbo-rt-content"><section>
+
+                            <header>
+                    <h1 class="header-title">Deep dive into the building blocks of neural networks</h1>
+                </header>
+            
+            <article>
+                
+<p>As we learned in the previous chapter, training a deep learning algorithm requires the following steps:</p>
+<ol>
+<li>Building a data pipeline</li>
+</ol>
+<p> </p>
+<ol start="2">
+<li>Building a network architecture</li>
+<li>Evaluating the architecture using a loss function</li>
+<li>Optimizing the network architecture weights using an optimization algorithm</li>
+</ol>
+<p>In the previous chapter, the network was composed of a simple linear model built using PyTorch numerical operations. Though building a neural architecture for a toy problem using numerical operations is easier, it quickly becomes complicated when we try to build architectures required to solve complex problems in different areas, such as computer vision and <strong>natural language processing</strong> (<strong>NLP</strong>). Most of the deep learning frameworks, such as PyTorch, TensorFlow, and Apache MXNet, provide higher-level functionalities that abstract a lot of this complexity. These higher-level functionalities are called <strong>layers</strong> across the deep learning frameworks. They accept input data, apply transformations like the ones we have seen in the previous chapter, and output the data. To solve real-world problems, deep learning architectures constitute of a number of layers ranging from 1 to 150, or sometimes more than that. Abstracting the low-level operations and training deep learning algorithms would look like the following diagram:</p>
+<div class="CDPAlignCenter CDPAlign"> <img height="372" width="509" class="alignnone size-full wp-image-336 image-border" src="images/14187b0e-8fa2-415e-a890-6695d3bcae31.png" /></div>
+<p>Summarizing the previous diagram, any deep learning training involves getting data, building an architecture that in general is getting a bunch of layers together, evaluating the accuracy of the model using a loss function, and then optimizing the algorithm by optimizing the weights of our network. Before looking at solving some of the real-world problems, we will come to understand higher-level abstractions provided by PyTorch for building layers, loss functions, and optimizers.</p>
+
+
+            </article>
+
+            
+        </section>
+    </div>
+</body>
+</html>

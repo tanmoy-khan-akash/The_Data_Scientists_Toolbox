@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xmlns:m="http://www.w3.org/1998/Math/MathML" xmlns:pls="http://www.w3.org/2005/01/pronunciation-lexicon" xmlns:ssml="http://www.w3.org/2001/10/synthesis" xmlns:svg="http://www.w3.org/2000/svg">
+<head>
+  <meta charset="UTF-8" />
+  <title>Working with text data</title>
+  <link type="text/css" rel="stylesheet" media="all" href="style.css" />
+  <link type="text/css" rel="stylesheet" media="all" href="core.css" />
+</head>
+<body>
+  <div id="sbo-rt-content"><section>
+
+                            <header>
+                    <h1 class="header-title">Working with text data</h1>
+                </header>
+            
+            <article>
+                
+<p>Text is one of the commonly used sequential data types. Text data can be seen as <span>either a </span>sequence of characters or a sequence of words. It is common to see text as a sequence of words for most problems. Deep learning sequential models such as RNN and its variants are able to learn important patterns from text data that can solve problems in areas such as: </p>
+<ul>
+<li>Natural language understanding</li>
+<li>Document classification</li>
+<li>Sentiment classification</li>
+</ul>
+<p>These sequential models also act as important building blocks for various systems, such as <strong>question and answering</strong> (<strong>QA</strong>) systems. </p>
+<p>Though these models are highly useful in building these applications, they do not have an understanding of human language, due to its inherent complexities. These sequential models are able to successfully find useful patterns that are then used for performing different tasks. Applying deep learning to text is a fast-growing field, and a lot of new techniques arrive every month. We will cover the fundamental components that power most of the modern-day deep learning applications. </p>
+<p>Deep learning models, like any other machine learning model, do not understand text, so we need to convert text into numerical representation. The process of converting text into numerical representation is called <strong>vectorization</strong> and can be done in different ways, as outlined here:</p>
+<ul>
+<li>Convert text into words and represent each word as a vector</li>
+<li>Convert text into characters and represent each character as a vector</li>
+<li>Create <em>n</em>-gram of words and represent them as vectors</li>
+</ul>
+<p>Text data can be broken down into one of these representations. Each smaller unit of text is called a <strong>token</strong>, and the process of breaking text into tokens is called <strong>tokenization</strong>. There are a lot of powerful libraries available in Python that can help us in tokenization. Once we convert the text data into tokens, we then need to map each token to a vector. One-hot encoding and word embedding are the two most popular approaches for mapping tokens to vectors. The following diagram summarizes the steps for converting text into their vector representations:</p>
+<div class="CDPAlignCenter CDPAlign"><img height="401" width="741" class="alignnone size-full wp-image-447 image-border" src="images/aff887f1-cdb3-42fc-8d15-62760bd50005.png" /></div>
+<p>Let's look in more detail at tokenization, <em>n</em>-gram representation, and vectorization. </p>
+
+
+            </article>
+
+            
+        </section>
+    </div>
+</body>
+</html>

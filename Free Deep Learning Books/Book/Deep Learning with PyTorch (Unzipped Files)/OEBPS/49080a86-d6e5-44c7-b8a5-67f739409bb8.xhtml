@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xmlns:m="http://www.w3.org/1998/Math/MathML" xmlns:pls="http://www.w3.org/2005/01/pronunciation-lexicon" xmlns:ssml="http://www.w3.org/2001/10/synthesis" xmlns:svg="http://www.w3.org/2000/svg">
+<head>
+  <meta charset="UTF-8" />
+  <title>Conv2d</title>
+  <link type="text/css" rel="stylesheet" media="all" href="style.css" />
+  <link type="text/css" rel="stylesheet" media="all" href="core.css" />
+</head>
+<body>
+  <div id="sbo-rt-content"><section>
+
+                            <header>
+                    <h1 class="header-title">Conv2d</h1>
+                </header>
+            
+            <article>
+                
+<p><kbd>Conv2d</kbd> takes care of applying a convolutional filter on our MNIST images. Let's try to understand how convolution is applied on a one-dimensional array, and then move to how a two-dimensional convolution is applied to an image. We will look at the following image, to which we will apply a <kbd>Conv1d</kbd> of a filter (or kernel) size <kbd>3</kbd> to a tensor of length <kbd>7</kbd>:</p>
+<div class="CDPAlignCenter CDPAlign">      <img height="348" width="701" class="alignnone size-full wp-image-475 image-border" src="images/e4495ddb-9bab-465e-ae9b-0d95e1834f13.png" /></div>
+<p>The bottom boxes represent our input tensor of seven values, and the connected boxes represent the output after we apply our convolution filter of size three. At the top-right corner of the image, the three boxes represent the weights and parameters of the <kbd>Conv1d</kbd> layer. The convolution filter is applied like a window and it moves to the next values by skipping one value. The number of values to be skipped is called the <strong>stride,</strong> and is set to <kbd>1</kbd> by default. Let's understand how the output values are being calculated by writing down the calculation for the first and last outputs:</p>
+<p>Output 1 –&gt; (<em>-0.5209 x 0.2286</em>) + (<em>-0.0147 x 2.4488</em>) + (<em>-0.4281 x -0.9498</em>)</p>
+<p>Output 5 –&gt; (<em>-0.5209 x -0.6791</em>) + (<em>-0.0147 x -0.6535</em>) + (<em>-0.4281 x 0.6437</em>)</p>
+<p>So, by now, it should be clear what a convolution does. It applies a filter (or kernel), which is a bunch of weights, on the input by moving it based on the value of the stride. In the previous  example, we are moving our filter one at a time. If the stride value is <kbd>2</kbd>, then we would move two points at a time. Let's look at a PyTorch implementation to understand how it works:</p>
+<pre>conv = nn.Conv1d(1,1,3,bias=False)<br/>sample = torch.randn(1,1,7)<br/>conv(Variable(sample))<br/><br/>#Check the weights of our convolution filter by <br/>conv.weight</pre>
+<p>There is another important parameter, called <strong>padding,</strong> which is often used with convolutions. If we keenly observe the previous example, we may realize that if the filter is not applied until the end of the data, when there are not enough elements for the data to stride, it stops. Padding prevents this by adding zeros to both ends of a tensor. Let's again look at a one-dimensional example of how padding works:</p>
+<div class="CDPAlignCenter CDPAlign"><img height="348" width="1111" class="alignnone size-full wp-image-476 image-border" src="images/17c7f3b3-c505-4b6d-ad7f-2f0981453a3e.png" /></div>
+<p>In the preceding image, we applied a <kbd>Conv1d</kbd> layer with padding <kbd>2</kbd> and stride <kbd>1</kbd>. </p>
+<p>Let's look at how Conv2d works on an image:</p>
+<p>Before we understand how Conv2d works, I would strongly recommend you to check the amazing blog (<a href="http://setosa.io/ev/image-kernels/">http://setosa.io/ev/image-kernels/</a>) where it contains a live demo of how a convolution works. After you have spent few minutes playing with the demo, read the next section.</p>
+<p>Let's understand what happened in the demo. In the center box of the image, we have two different sets of numbers; one represented in the boxes and the other beneath the boxes. The ones represented in the boxes are pixel values, as highlighted by the white box on the left-hand photo. The numbers denoted beneath the boxes are the filter (or kernel) values that are being used to sharpen the image. The numbers are handpicked to do a particular job. In this case, it is sharpening the image. Just like in our previous example, we are doing an element-to-element multiplication and summing up all the values to generate the value of the pixel in the right-hand image. The generated value is highlighted by the white box on the right-hand side of the image.</p>
+<p>Though the values in the kernel are handpicked in this example, in CNNs we do not handpick the values, but rather we initialize them randomly and let the gradient descent and backpropagation tune the values of the kernels. The learned kernels will be responsible for identifying different features such as lines, curves, and eyes. Let's look at another image where we look at it as a matrix of numbers and see how convolution works:</p>
+<div class="CDPAlignCenter CDPAlign"><img height="422" width="1304" class="alignnone size-full wp-image-478 image-border" src="images/e96abcad-3542-4a9e-9d85-92ae5770157a.png" /></div>
+<p>In the preceding screenshot, we assume that the 6 x 6 matrix represents an image and we apply the convolution filter of size 3 x 3, then we show how the output is generated. To keep it simple, we are just calculating for the highlighted portion of the matrix. The output is generated by doing the following calculation:</p>
+<p>Output –&gt; <em>0.86 x 0 + -0.92 x 0 + -0.61 x 1 + -0.32 x -1 + -1.69 x -1 + ........</em></p>
+<p>The other important parameter used in the <kbd>Conv2d</kbd> function is <kbd>kernel_size</kbd>, which decides the size of the kernel. Some of the commonly used kernel sizes are <em>1</em>, <em>3</em>, <em>5</em>, and <em>7</em>. The larger the kernel size, the larger the area that a filter can cover becomes huge, so it is common to observe filters of <em>7</em> or <em>9</em> being applied to the input data in the early layers.</p>
+
+
+            </article>
+
+            
+        </section>
+    </div>
+</body>
+</html>

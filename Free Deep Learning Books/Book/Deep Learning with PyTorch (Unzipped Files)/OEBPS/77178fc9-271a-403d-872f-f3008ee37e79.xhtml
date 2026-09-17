@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xmlns:m="http://www.w3.org/1998/Math/MathML" xmlns:pls="http://www.w3.org/2005/01/pronunciation-lexicon" xmlns:ssml="http://www.w3.org/2001/10/synthesis" xmlns:svg="http://www.w3.org/2000/svg">
+<head>
+  <meta charset="UTF-8" />
+  <title>Reducing the size of the network</title>
+  <link type="text/css" rel="stylesheet" media="all" href="style.css" />
+  <link type="text/css" rel="stylesheet" media="all" href="core.css" />
+</head>
+<body>
+  <div id="sbo-rt-content"><section>
+
+                            <header>
+                    <h1 class="header-title">Reducing the size of the network</h1>
+                </header>
+            
+            <article>
+                
+<p>The size of the network in general refers to the number of layers or the number of weight parameters used in a network. In the example of image classification that we saw in the last chapter, we used a ResNet model that has 18 blocks consisting of different layers inside it. The torchvision library in PyTorch comes with ResNet models of different sizes starting from 18 blocks and going up to 152 blocks. Say, for example, if we are using a ResNet block with 152 blocks and the model is overfitting, then we can try using a ResNet with 101 blocks or 50 blocks. In the custom architectures we build, we can simply remove some intermediate linear layers, thus preventing our PyTorch models from memorizing the training dataset. Let's look at an example code snippet that demonstrates what it means exactly to reduce the network size:</p>
+<pre>class Architecture1(nn.Module):<br/>    def __init__(self, input_size, hidden_size, num_classes):<br/>        super(Architecture1, self).__init__()<br/>        self.fc1 = nn.Linear(input_size, hidden_size) <br/>        self.relu = nn.ReLU()<br/>        self.fc2 = nn.Linear(hidden_size, num_classes)<br/>        self.relu = nn.ReLU()<br/>        self.fc3 = nn.Linear(hidden_size, num_classes)      <br/>    <br/>    def forward(self, x):<br/>        out = self.fc1(x)<br/>        out = self.relu(out)<br/>        out = self.fc2(out)<br/>        out = self.relu(out)<br/>        out = self.fc3(out)<br/>        return out</pre>
+<p>The preceding architecture has three linear layers, and let's say it overfits our training data. So, let's recreate the architecture with reduced capacity:</p>
+<pre>class Architecture2(nn.Module):<br/>    def __init__(self, input_size, hidden_size, num_classes):<br/>        super(Architecture2, self).__init__()<br/>        self.fc1 = nn.Linear(input_size, hidden_size) <br/>        self.relu = nn.ReLU()<br/>        self.fc2 = nn.Linear(hidden_size, num_classes)  <br/>    <br/>    def forward(self, x):<br/>        out = self.fc1(x)<br/>        out = self.relu(out)<br/>        out = self.fc2(out)<br/>        return out</pre>
+<p>The preceding architecture has only two linear layers, thus reducing the capacity and, in turn, potentially avoiding overfitting the training dataset.</p>
+
+
+            </article>
+
+            
+        </section>
+    </div>
+</body>
+</html>

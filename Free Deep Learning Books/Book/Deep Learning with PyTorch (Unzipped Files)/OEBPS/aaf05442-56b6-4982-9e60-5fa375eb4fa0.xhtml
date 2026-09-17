@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xmlns:m="http://www.w3.org/1998/Math/MathML" xmlns:pls="http://www.w3.org/2005/01/pronunciation-lexicon" xmlns:ssml="http://www.w3.org/2001/10/synthesis" xmlns:svg="http://www.w3.org/2000/svg">
+<head>
+  <meta charset="UTF-8" />
+  <title>Layers &#x2013; fundamental blocks of neural networks</title>
+  <link type="text/css" rel="stylesheet" media="all" href="style.css" />
+  <link type="text/css" rel="stylesheet" media="all" href="core.css" />
+</head>
+<body>
+  <div id="sbo-rt-content"><section>
+
+                            <header>
+                    <h1 class="header-title">Layers – fundamental blocks of neural networks</h1>
+                </header>
+            
+            <article>
+                
+<p>Throughout the rest of the chapter, we will come across different types of layers. To begin, let's try to understand one of the most important layers, the linear layer, which does exactly what our previous network architecture does. The linear layer applies a linear transformation:</p>
+<p style="padding-left: 180px"> <img height="17" width="100" class="fm-editor-equation" src="images/e6333f93-736c-4658-957a-180b30f69600.png" /></p>
+<p>What makes it powerful is that fact that the entire function that we wrote in the previous chapter can be written in a single line of code, as follows:</p>
+<pre>from torch.nn import Linear<br/>myLayer = Linear(in_features=10,out_features=5,bias=True)</pre>
+<p>The <kbd>myLayer</kbd> in the preceding code will accept a tensor of size <kbd>10</kbd> and outputs a tensor of size <kbd>5</kbd> after applying linear transformation. Let's look at a simple example of how to do that:</p>
+<pre>inp = Variable(torch.randn(1,10))<br/>myLayer = Linear(in_features=10,out_features=5,bias=True)<br/>myLayer(inp)</pre>
+<p>We can access the trainable parameters of the layer using the <kbd>weights</kbd> and <kbd>bias</kbd> attributes:</p>
+<pre class="mce-root">myLayer.weight<br/><br/><strong>Output</strong> :<br/>Parameter containing:<br/>-0.2386 0.0828 0.2904 0.3133 0.2037 0.1858 -0.2642 0.2862 0.2874 0.1141<br/> 0.0512 -0.2286 -0.1717 0.0554 0.1766 -0.0517 0.3112 0.0980 -0.2364 -0.0442<br/> 0.0776 -0.2169 0.0183 -0.0384 0.0606 0.2890 -0.0068 0.2344 0.2711 -0.3039<br/> 0.1055 0.0224 0.2044 0.0782 0.0790 0.2744 -0.1785 -0.1681 -0.0681 0.3141<br/> 0.2715 0.2606 -0.0362 0.0113 0.1299 -0.1112 -0.1652 0.2276 0.3082 -0.2745<br/>[torch.FloatTensor of size 5x10]<br/><br/>myLayer.bias<br/><strong><br/>Output :<br/></strong>Parameter containing:<strong><br/></strong>-0.2646<strong><br/></strong>-0.2232<strong><br/></strong> 0.2444<strong><br/></strong> 0.2177<strong><br/></strong> 0.0897<strong><br/></strong>[torch.FloatTensor of size 5</pre>
+<p>Linear layers are called by different names, such as <strong>dense</strong> or <strong>fully connected layers</strong> across different frameworks. Deep learning architectures used for solving real-world use cases generally contain more than one layer. In PyTorch, we can do it in multiple ways, shown as follows.</p>
+<p>One simple approach is passing the output of one layer to another layer:</p>
+<pre>myLayer1 = Linear(10,5)<br/>myLayer2 = Linear(5,2)<br/>myLayer2(myLayer1(inp))</pre>
+<p>Each layer will have its own learnable parameters. The idea behind using multiple layers is that each layer will learn some kind of pattern that the later layers will build on. There is a problem in adding just linear layers together, as they fail to learn anything new beyond a simple representation of a linear layer. Let's see through a simple example of why it does not make sense to stack multiple linear layers together.</p>
+<p>Let's say we have two linear layers with the following weights:</p>
+<table>
+<tbody>
+<tr>
+<td><strong>Layers</strong></td>
+<td>
+<p><strong>Weight1</strong></p>
+</td>
+</tr>
+<tr>
+<td>
+<p>Layer1</p>
+</td>
+<td>
+<p>3.0</p>
+</td>
+</tr>
+<tr>
+<td>
+<p>Layer2</p>
+</td>
+<td>
+<p>2.0</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p> </p>
+<p class="mce-root">The preceding architecture with two different layers can be simply represented as a single layer with a different layer. Hence, just stacking multiple linear layers will not help our algorithms to learn anything new. Sometimes, this can be unclear, so we can visualize the architecture with the following mathematical formulas:</p>
+<div class="mce-root CDPAlignCenter CDPAlign"><img height="21" width="233" class="fm-editor-equation" src="images/4556ddc4-d0e1-4e0e-a153-c2ec2c779701.png" /></div>
+<div class="mce-root CDPAlignCenter CDPAlign"><img height="21" width="223" class="fm-editor-equation" src="images/7a28a3ad-2d64-4937-9309-5c062885025f.png" /></div>
+<p>To solve this problem, we have different non-linearity functions that help in learning different relationships, rather than only focusing on linear relationships.</p>
+<p>There are many different non-linear functions available in deep learning. PyTorch provides these non-linear functionalities as layers and we will be able to use them the same way we used the linear layer.</p>
+<p>Some of the popular non-linear functions are as follows:</p>
+<ul>
+<li>Sigmoid</li>
+<li>Tanh</li>
+<li>ReLU</li>
+<li>Leaky ReLU</li>
+</ul>
+
+
+            </article>
+
+            
+        </section>
+    </div>
+</body>
+</html>

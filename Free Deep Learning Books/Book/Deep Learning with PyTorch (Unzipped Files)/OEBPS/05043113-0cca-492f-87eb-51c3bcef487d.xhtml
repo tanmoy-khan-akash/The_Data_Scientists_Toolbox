@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xmlns:m="http://www.w3.org/1998/Math/MathML" xmlns:pls="http://www.w3.org/2005/01/pronunciation-lexicon" xmlns:ssml="http://www.w3.org/2001/10/synthesis" xmlns:svg="http://www.w3.org/2000/svg">
+<head>
+  <meta charset="UTF-8" />
+  <title>Introduction to neural networks</title>
+  <link type="text/css" rel="stylesheet" media="all" href="style.css" />
+  <link type="text/css" rel="stylesheet" media="all" href="core.css" />
+</head>
+<body>
+  <div id="sbo-rt-content"><section>
+
+                            <header>
+                    <h1 class="header-title">Introduction to neural networks</h1>
+                </header>
+            
+            <article>
+                
+<p>In the last few years, CNNs have become popular in the areas of image recognition, object detection, segmentation, and many other tasks in the field of computer vision. They are also becoming popular in the field of <strong>natural language processing</strong> (<strong>NLP</strong>), though they are not commonly used yet. The fundamental difference between fully connected layers and convolution layers is the way the weights are connected to each other in the intermediate layers. Let's take a look at an image where we depict how fully connected, or linear, layers work:</p>
+<div class="CDPAlignCenter CDPAlign"><img height="237" width="198" class="alignnone size-full wp-image-470 image-border" src="images/b11c5a02-626f-4e4c-a4be-d4404fd31f15.png" /></div>
+<p>One of the biggest challenges of using a linear layer or fully connected layers for computer vision is that they lose all spatial information, and the complexity in terms of the number of weights used by fully connected layers is too big. For example, when we represent a 224 pixel image as a flat array, we would end up with 150, 528 (224 x 224 x 3 channels). When the image is flattened, we lose all the spatial information. Let's look at what a simplified version of a CNN looks like:</p>
+<div class="CDPAlignCenter CDPAlign"><img height="262" width="195" class="alignnone size-full wp-image-471 image-border" src="images/612b9675-1581-47c6-8b47-b07d1e20eef2.png" /></div>
+<p>All the convolution layer is doing is applying a window of weights called <strong>filters</strong> across the image. Before we try to understand convolutions and other building blocks in detail, let's build a simple yet powerful image classifier for the <kbd>MNIST</kbd> dataset. Once we build this, we will walk through each component of the network. We will break down building our image classifier into the following steps:</p>
+<ul>
+<li>Getting data</li>
+<li>Creating a validation dataset</li>
+<li>Building our CNN model from scratch</li>
+<li>Training and validating the model</li>
+</ul>
+
+
+            </article>
+
+            
+        </section>
+    </div>
+</body>
+</html>

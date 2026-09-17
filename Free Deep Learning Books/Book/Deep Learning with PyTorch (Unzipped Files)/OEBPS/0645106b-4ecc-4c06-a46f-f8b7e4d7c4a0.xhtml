@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xmlns:m="http://www.w3.org/1998/Math/MathML" xmlns:pls="http://www.w3.org/2005/01/pronunciation-lexicon" xmlns:ssml="http://www.w3.org/2001/10/synthesis" xmlns:svg="http://www.w3.org/2000/svg">
+<head>
+  <meta charset="UTF-8" />
+  <title>Extracting convolutional features using register_forward_hook</title>
+  <link type="text/css" rel="stylesheet" media="all" href="style.css" />
+  <link type="text/css" rel="stylesheet" media="all" href="core.css" />
+</head>
+<body>
+  <div id="sbo-rt-content"><section>
+
+                            <header>
+                    <h1 class="header-title">Extracting convolutional features using register_forward_hook</h1>
+                </header>
+            
+            <article>
+                
+<p>We will be using the same techniques that we used to calculate activations for style transfer. The following is the <kbd>LayerActivations</kbd> class with some minor modifications, as we are interested in extracting only outputs of a particular layer:</p>
+<pre>class LayerActivations():<br/>    features=[]<br/>    <br/>    def __init__(self,model):<br/>        self.features = []<br/>        self.hook = model.register_forward_hook(self.hook_fn)<br/>    <br/>    def hook_fn(self,module,input,output):<br/>        <br/>        self.features.extend(output.view(output.size(0),-1).cpu().data)<br/>    <br/>    def remove(self):<br/>        <br/>        self.hook.remove()</pre>
+<p>Apart from the <kbd>hook</kbd> function, the rest of the code is similar to what we have used for style transfer. As we are capturing the outputs of all the images and storing them, we will not be able to hold the data on <strong>graphics processing unit</strong> (<strong>GPU</strong>) memory. So we extract the tensors from GPU to CPU and just store the tensors instead of <kbd>Variable</kbd>. We are converting it back to tensors as the data loaders will work only with tensors. In the following code, we use the objects of <kbd>LayerActivations</kbd> to extract the output of the Inception model at the last layer, excluding the average pooling layer, dropout and the linear layer. We are skipping the average pooling layer to avoid losing useful information in the data: </p>
+<pre># Create LayerActivations object to store the output of inception model at a particular layer.<br/>trn_features = LayerActivations(my_inception.Mixed_7c)<br/>trn_labels = []<br/><br/># Passing all the data through the model , as a side effect the outputs will get stored <br/># in the features list of the LayerActivations object. <br/>for da,la in train_loader:<br/>    _ = my_inception(Variable(da.cuda()))<br/>    trn_labels.extend(la)<br/>trn_features.remove()<br/><br/># Repeat the same process for validation dataset .<br/><br/>val_features = LayerActivations(my_inception.Mixed_7c)<br/>val_labels = []<br/>for da,la in val_loader:<br/>    _ = my_inception(Variable(da.cuda()))<br/>    val_labels.extend(la)<br/>val_features.remove()</pre>
+<p>Let's create the datasets and loaders required for the new convoluted features.</p>
+
+
+            </article>
+
+            
+        </section>
+    </div>
+</body>
+</html>

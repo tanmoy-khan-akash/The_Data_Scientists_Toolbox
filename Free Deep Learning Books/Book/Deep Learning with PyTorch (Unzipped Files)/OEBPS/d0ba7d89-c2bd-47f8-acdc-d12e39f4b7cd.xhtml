@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xmlns:m="http://www.w3.org/1998/Math/MathML" xmlns:pls="http://www.w3.org/2005/01/pronunciation-lexicon" xmlns:ssml="http://www.w3.org/2001/10/synthesis" xmlns:svg="http://www.w3.org/2000/svg">
+<head>
+  <meta charset="UTF-8" />
+  <title>DenseLayer</title>
+  <link type="text/css" rel="stylesheet" media="all" href="style.css" />
+  <link type="text/css" rel="stylesheet" media="all" href="core.css" />
+</head>
+<body>
+  <div id="sbo-rt-content"><section>
+
+                            <header>
+                    <h1 class="header-title">DenseLayer</h1>
+                </header>
+            
+            <article>
+                
+<p>One good way to learn how a particular network works is to look at the source code. PyTorch has a very clean implementation and most of the time is easily readable. Let's look at the <kbd>DenseLayer</kbd> implementation:</p>
+<pre>class _DenseLayer(nn.Sequential):<br/>    def __init__(self, num_input_features, growth_rate, bn_size, drop_rate):<br/>        super(_DenseLayer, self).__init__()<br/>        self.add_module('norm.1', nn.BatchNorm2d(num_input_features)),<br/>        self.add_module('relu.1', nn.ReLU(inplace=True)),<br/>        self.add_module('conv.1', nn.Conv2d(num_input_features, bn_size *<br/>                        growth_rate, kernel_size=1, stride=1, bias=False)),<br/>        self.add_module('norm.2', nn.BatchNorm2d(bn_size * growth_rate)),<br/>        self.add_module('relu.2', nn.ReLU(inplace=True)),<br/>        self.add_module('conv.2', nn.Conv2d(bn_size * growth_rate, growth_rate,<br/>                        kernel_size=3, stride=1, padding=1, bias=False)),<br/>        self.drop_rate = drop_rate<br/><br/>    def forward(self, x):<br/>        new_features = super(_DenseLayer, self).forward(x)<br/>        if self.drop_rate &gt; 0:<br/>            new_features = F.dropout(new_features, p=self.drop_rate, training=self.training)<br/>        return torch.cat([x, new_features], 1)</pre>
+<p>If you are new to inheritance in Python, then the preceding code may not look intuitive. The <kbd>_DenseLayer</kbd> is a subclass of <kbd>nn.Sequential</kbd>; let's look at what goes on inside each method. </p>
+<p>In the <kbd>__init__</kbd> method, we add all the layers that the input data needs to be passed to. It is quite similar to all the other network architectures we have seen.</p>
+<p>The magic happens in the <kbd>forward</kbd> method. We pass the input to the <kbd>forward</kbd> method of the <kbd>super</kbd> class, which is <kbd>nn.Sequential</kbd>. Let's look at what happens in the <kbd>forward</kbd> method of the sequential class (<a href="https://github.com/pytorch/pytorch/blob/409b1c8319ecde4bd62fcf98d0a6658ae7a4ab23/torch/nn/modules/container.py" target="_blank">https://github.com/pytorch/pytorch/blob/409b1c8319ecde4bd62fcf98d0a6658ae7a4ab23/torch/nn/modules/container.py</a>):</p>
+<pre>def forward(self, input):<br/>    for module in self._modules.values():<br/>        input = module(input)<br/>    return input</pre>
+<p>The input is passed through all the layers that were previously added to the sequential block and the output is concatenated to the input. The process is repeated for the required number of layers in a block.</p>
+<p>With the understanding of how a <kbd>DenseNet</kbd> block works, let's explore how we can use DenseNet for calculating pre-convoluted features and building a classifier model on top of it. At a high level, the DenseNet implementation is similar to the VGG implementation. The DenseNet implementation also has a features module, which contains all the dense blocks, and a classifier module, which contains the fully connected model. We will be going through the following steps to build the model. We will be skipping most of the part that is similar to what we have seen for Inception and ResNet, such as creating the data loader and datasets. Also, we will discuss the following steps in detail:</p>
+<ul>
+<li>Creating a DenseNet model</li>
+<li>Extracting DenseNet features</li>
+<li>Creating a dataset and loaders</li>
+<li>Creating a fully connected model and train</li>
+</ul>
+<p>By now, most of the code will be self-explanatory.</p>
+
+
+            </article>
+
+            
+        </section>
+    </div>
+</body>
+</html>

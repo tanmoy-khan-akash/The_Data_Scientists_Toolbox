@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xmlns:m="http://www.w3.org/1998/Math/MathML" xmlns:pls="http://www.w3.org/2005/01/pronunciation-lexicon" xmlns:ssml="http://www.w3.org/2001/10/synthesis" xmlns:svg="http://www.w3.org/2000/svg">
+<head>
+  <meta charset="UTF-8" />
+  <title>Generator</title>
+  <link type="text/css" rel="stylesheet" media="all" href="style.css" />
+  <link type="text/css" rel="stylesheet" media="all" href="core.css" />
+</head>
+<body>
+  <div id="sbo-rt-content"><section>
+
+                            <header>
+                    <h1 class="header-title">Generator</h1>
+                </header>
+            
+            <article>
+                
+<p>Let's quickly look at the following generator network code, and then discuss the key features of the generator network:</p>
+<pre>class Generator(nn.Module):<br/>    def __init__(self):<br/>        super(Generator, self).__init__()<br/><br/>        self.main = nn.Sequential(<br/>            # input is Z, going into a convolution<br/>            nn.ConvTranspose2d(nz, ngf * 8, 4, 1, 0, bias=False),<br/>            nn.BatchNorm2d(ngf * 8),<br/>            nn.ReLU(True),<br/>            # state size. (ngf*8) x 4 x 4<br/>            nn.ConvTranspose2d(ngf * 8, ngf * 4, 4, 2, 1, bias=False),<br/>            nn.BatchNorm2d(ngf * 4),<br/>            nn.ReLU(True),<br/>            # state size. (ngf*4) x 8 x 8<br/>            nn.ConvTranspose2d(ngf * 4, ngf * 2, 4, 2, 1, bias=False),<br/>            nn.BatchNorm2d(ngf * 2),<br/>            nn.ReLU(True),<br/>            # state size. (ngf*2) x 16 x 16<br/>            nn.ConvTranspose2d(ngf * 2, ngf, 4, 2, 1, bias=False),<br/>            nn.BatchNorm2d(ngf),<br/>            nn.ReLU(True),<br/>            # state size. (ngf) x 32 x 32<br/>            nn.ConvTranspose2d( ngf, nc, 4, 2, 1, bias=False),<br/>            nn.Tanh()<br/>            # state size. (nc) x 64 x 64<br/>        )<br/><br/>    def forward(self, input):<br/>        output = self.main(input)<br/>        return output<br/><br/><br/>netG = Generator()<br/>netG.apply(weights_init)<br/>print(netG)</pre>
+<p>In most of the code examples we have seen, we use a bunch of different layers and then define the flow in the <kbd>forward</kbd> method. In the generator network, we define the layers and the flow of the data inside the <kbd>__init__</kbd> method using a sequential model.</p>
+<p>The model takes as input a tensor of size <kbd>nz</kbd>, and then passes it on to a transposed convolution to map the input to the image size that it needs to generate. The <kbd>forward</kbd> function passes on the input to the sequential module and returns the output. </p>
+<p>The last layer of the generator network is a <kbd>tanh</kbd> layer, which limits the range of values the network can generate.</p>
+<p>Instead of using the same random weights, we initialize the model with weights as defined in the paper. The following is the weight initialization code:</p>
+<pre>def weights_init(m):<br/>    classname = m.__class__.__name__<br/>    if classname.find('Conv') != -1:<br/>        m.weight.data.normal_(0.0, 0.02)<br/>    elif classname.find('BatchNorm') != -1:<br/>        m.weight.data.normal_(1.0, 0.02)<br/>        m.bias.data.fill_(0)</pre>
+<p>We call the <kbd>weight</kbd> function by passing the function to the generator object, <kbd>netG</kbd>. Each layer is passed on to the function; if the layer is a convolution layer we initialize the weights differently, and if it is a <kbd>BatchNorm</kbd>, then we initialize it a bit differently. We call the function on the network object using the following code:</p>
+<pre>netG.apply(weights_init)</pre>
+
+
+            </article>
+
+            
+        </section>
+    </div>
+</body>
+</html>

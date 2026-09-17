@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xmlns:m="http://www.w3.org/1998/Math/MathML" xmlns:pls="http://www.w3.org/2005/01/pronunciation-lexicon" xmlns:ssml="http://www.w3.org/2001/10/synthesis" xmlns:svg="http://www.w3.org/2000/svg">
+<head>
+  <meta charset="UTF-8" />
+  <title>Creating a fully connected model</title>
+  <link type="text/css" rel="stylesheet" media="all" href="style.css" />
+  <link type="text/css" rel="stylesheet" media="all" href="core.css" />
+</head>
+<body>
+  <div id="sbo-rt-content"><section>
+
+                            <header>
+                    <h1 class="header-title">Creating a fully connected model</h1>
+                </header>
+            
+            <article>
+                
+<p>A simple model may end in overfitting, so let's include dropout in the model. Dropout will help avoid overfitting. In the following code, we are creating our model:</p>
+<pre>class FullyConnectedModel(nn.Module):<br/>    <br/>    def __init__(self,in_size,out_size,training=True):<br/>        super().__init__()<br/>        self.fc = nn.Linear(in_size,out_size)<br/><br/>    def forward(self,inp):<br/>        out = F.dropout(inp, training=self.training)<br/>        out = self.fc(out)<br/>        return out<br/><br/># The size of the output from the selected convolution feature <br/>fc_in_size = 131072<br/><br/>fc = FullyConnectedModel(fc_in_size,classes)<br/>if is_cuda:<br/>    fc = fc.cuda()</pre>
+<p>Once the model is created, we can train the model.</p>
+
+
+            </article>
+
+            
+        </section>
+    </div>
+</body>
+</html>

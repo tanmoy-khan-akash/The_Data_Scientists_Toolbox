@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xmlns:m="http://www.w3.org/1998/Math/MathML" xmlns:pls="http://www.w3.org/2005/01/pronunciation-lexicon" xmlns:ssml="http://www.w3.org/2001/10/synthesis" xmlns:svg="http://www.w3.org/2000/svg">
+<head>
+  <meta charset="UTF-8" />
+  <title>Loading the data</title>
+  <link type="text/css" rel="stylesheet" media="all" href="style.css" />
+  <link type="text/css" rel="stylesheet" media="all" href="core.css" />
+</head>
+<body>
+  <div id="sbo-rt-content"><section>
+
+                            <header>
+                    <h1 class="header-title">Loading the data</h1>
+                </header>
+            
+            <article>
+                
+<p>Loading data is similar to what we have seen for solving image classification problems in <a href="3cce1bbe-6d1c-4164-b1ef-8b0688126519.xhtml" target="_blank">Chapter 5</a>, <em>Deep Learning for Computer Vision</em>. We will be using the pretrained VGG model, so we have to normalize the images using the same values on which the pretrained model is trained.</p>
+<p>The following code shows how we can do this. The code is mostly self-explanatory as we have already discussed it in detail in the previous chapters: </p>
+<pre>#Fixing the size of the image, reduce it further if you are not using a GPU.<br/>imsize = 512 <br/>is_cuda = torch.cuda.is_available()<br/><br/>#Converting image ,making it suitable for training using the VGG model.<br/><br/>prep = transforms.Compose([transforms.Resize(imsize),<br/>                           transforms.ToTensor(),<br/>                           transforms.Lambda(lambda x: x[torch.LongTensor([2,1,0])]), #turn to BGR<br/>                           transforms.Normalize(mean=[0.40760392, 0.45795686, 0.48501961], #subtract imagenet mean<br/>                                                std=[1,1,1]),<br/>                           transforms.Lambda(lambda x: x.mul_(255)),<br/>                          ])<br/><br/>#Converting the generated image back to a format which we can visualise. <br/><br/>postpa = transforms.Compose([transforms.Lambda(lambda x: x.mul_(1./255)),<br/>                           transforms.Normalize(mean=[-0.40760392, -0.45795686, -0.48501961], #add imagenet mean<br/>                                                std=[1,1,1]),<br/>                           transforms.Lambda(lambda x: x[torch.LongTensor([2,1,0])]), #turn to RGB<br/>                           ])<br/>postpb = transforms.Compose([transforms.ToPILImage()])<br/><br/>#This method ensures data in the image does not cross the permissible range .<br/>def postp(tensor): # to clip results in the range [0,1]<br/>    t = postpa(tensor)<br/>    t[t&gt;1] = 1 <br/>    t[t&lt;0] = 0<br/>    img = postpb(t)<br/>    return img<br/><br/>#A utility function to make data loading easier.<br/>def image_loader(image_name):<br/>    image = Image.open(image_name)<br/>    image = Variable(prep(image))<br/>    # fake batch dimension required to fit network's input dimensions<br/>    image = image.unsqueeze(0)<br/>    return image</pre>
+<p>In this code, we defined three functionalities, <kbd>prep</kbd> does all the preprocessing required and uses the same values for normalization as those with which the VGG model was trained. The output of the model needs to be normalized back to its original values; the <kbd>postpa</kbd> function does the processing required. The generated model may be out of the range of accepted values, and the <kbd>postp</kbd> function limits all the values greater than 1 to 1 and values that are less than 0 to 0. Finally, the <kbd>image_loader</kbd> function loads the image, applies the preprocessing transformation, and converts it into a variable. The following function loads the style and content image:</p>
+<pre>style_img = image_loader("Images/vangogh_starry_night.jpg")<br/>content_img = image_loader("Images/Tuebingen_Neckarfront.jpg")</pre>
+<p>We can either create an image with noise (random numbers) or we can use the same content image. We will use the content image in this case. The following code creates the content image:</p>
+<pre>opt_img = Variable(content_img.data.clone(),requires_grad=True)</pre>
+<p>We will use an optimizer to tune the values of the <kbd>opt_img</kbd> in order for the image to be closer to the content image and style image. For that reason, we are asking PyTorch to maintain the gradients by mentioning <kbd>requires_grad=True</kbd>.</p>
+
+
+            </article>
+
+            
+        </section>
+    </div>
+</body>
+</html>

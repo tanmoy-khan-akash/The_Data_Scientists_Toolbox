@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xmlns:m="http://www.w3.org/1998/Math/MathML" xmlns:pls="http://www.w3.org/2005/01/pronunciation-lexicon" xmlns:ssml="http://www.w3.org/2001/10/synthesis" xmlns:svg="http://www.w3.org/2000/svg">
+<head>
+  <meta charset="UTF-8" />
+  <title>Optimizing network architecture</title>
+  <link type="text/css" rel="stylesheet" media="all" href="style.css" />
+  <link type="text/css" rel="stylesheet" media="all" href="core.css" />
+</head>
+<body>
+  <div id="sbo-rt-content"><section>
+
+                            <header>
+                    <h1 class="header-title">Optimizing network architecture</h1>
+                </header>
+            
+            <article>
+                
+<p>Once we have calculated the loss of our network, we will optimize the weights to reduce the loss and thus improving the accuracy of the algorithm. For the sake of simplicity, let's see these optimizers as black boxes that take loss functions and all the learnable parameters and move them slightly to improve our performances. PyTorch provides most of the commonly used optimizers required in deep learning. If you want to explore what happens inside these optimizers and have a mathematical background, I would strongly recommend some of the following blogs:</p>
+<ul>
+<li><a href="http://colah.github.io/posts/2015-08-Backprop/" target="_blank">http://colah.github.io/posts/2015-08-Backprop/</a></li>
+<li><a href="http://ruder.io/deep-learning-optimization-2017/" target="_blank">http://ruder.io/deep-learning-optimization-2017/</a></li>
+</ul>
+<p>Some of the optimizers that PyTorch provides are as follows:</p>
+<ul>
+<li>ADADELTA</li>
+<li>Adagrad</li>
+<li>Adam</li>
+<li>SparseAdam</li>
+<li>Adamax</li>
+<li>ASGD</li>
+<li>LBFGS</li>
+<li>RMSProp</li>
+<li>Rprop</li>
+<li>SGD</li>
+</ul>
+<p>We will get into the details of some of the algorithms in<a href="821004b7-d246-4aac-b883-9ab634ae0aea.xhtml" target="_blank"> Chapter 4</a>, <em>Fundamentals of Machine Learning</em>, along with some of the advantages and tradeoffs. Let's walk through some of the important steps in creating any <kbd>optimizer</kbd>:</p>
+<pre>optimizer <span class="o">=</span> <span class="n">optim</span><span class="o">.</span><span class="n">SGD</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">parameters</span><span class="p">(),</span> <span class="n">lr</span> <span class="o">=</span> <span class="mf">0.01)</span></pre>
+<p>In the preceding example, we created an <kbd>SGD</kbd> optimizer that takes all the learnable parameters of your network as the first argument and a learning rate that determines what ratio of change can be made to the learnable parameter. In <a href="821004b7-d246-4aac-b883-9ab634ae0aea.xhtml" target="_blank">Chapter 4</a>, <em>Fundamentals of Machine Learning</em> we will get into more details of learning rates and momentum, which is an important parameter of optimizers. Once you create an optimizer object, we need to call <kbd>zero_grad()</kbd> inside our loop, as the parameters will accumulate the gradients created during the previous <kbd>optimizer</kbd> call:</p>
+<pre><span class="k">for</span> <span class="nb">input</span><span class="p">,</span> <span class="n">target</span> <span class="ow">in</span> <span class="n">dataset</span><span class="p">:</span>
+    <span class="n">optimizer</span><span class="o">.</span><span class="n">zero_grad</span><span class="p">()</span>
+    <span class="n">output</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="nb">input</span><span class="p">)</span>
+    <span class="n">loss</span> <span class="o">=</span> <span class="n">loss_fn</span><span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="n">target</span><span class="p">)</span>
+    <span class="n">loss</span><span class="o">.</span><span class="n">backward</span><span class="p">()</span>
+    <span class="n">optimizer</span><span class="o">.</span><span class="n">step</span><span class="p">()</span></pre>
+<p>Once we call <kbd>backward</kbd> on the <kbd>loss</kbd> function, which calculates the gradients (quantity by which learnable parameters need to change), we call <kbd>optimizer.step()</kbd>, which makes the actual changes to our learnable parameter.</p>
+<p>Now, we have covered most of the components required to help a computer see/ recognize images. Let's build a complex deep learning model that can differentiate between dogs and cats to put all the theory into practice.</p>
+
+
+            </article>
+
+            
+        </section>
+    </div>
+</body>
+</html>

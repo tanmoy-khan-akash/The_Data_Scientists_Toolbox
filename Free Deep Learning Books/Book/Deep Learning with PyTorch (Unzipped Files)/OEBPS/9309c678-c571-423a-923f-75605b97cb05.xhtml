@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xmlns:m="http://www.w3.org/1998/Math/MathML" xmlns:pls="http://www.w3.org/2005/01/pronunciation-lexicon" xmlns:ssml="http://www.w3.org/2001/10/synthesis" xmlns:svg="http://www.w3.org/2000/svg">
+<head>
+  <meta charset="UTF-8" />
+  <title>Training, validation, and test split</title>
+  <link type="text/css" rel="stylesheet" media="all" href="style.css" />
+  <link type="text/css" rel="stylesheet" media="all" href="core.css" />
+</head>
+<body>
+  <div id="sbo-rt-content"><section>
+
+                            <header>
+                    <h1 class="header-title">Training, validation, and test split</h1>
+                </header>
+            
+            <article>
+                
+<p>It is best practice to split the data into three parts—training, validation, and test datasets. The best approach for using the holdout dataset is to:</p>
+<ol>
+<li>Train the algorithm on the training dataset</li>
+<li>Perform hyper parameter tuning based on the validation dataset</li>
+<li>Perform the first two steps iteratively until the expected performance is achieved</li>
+<li>After freezing the algorithm and the hyper parameters, evaluate it on the test dataset</li>
+</ol>
+<p>Avoid splitting the data into two parts, as it may lead to an information leak. Training and testing it on the same dataset is a clear no-no as it does not guarantee algorithm generalization. There are three popular holdout strategies that can be used to split the data into training and validation sets. They are as follows:</p>
+<ul>
+<li>Simple holdout validation</li>
+<li>K-fold validation</li>
+<li>Iterated k-fold validation</li>
+</ul>
+
+
+            </article>
+
+            
+        </section>
+    </div>
+</body>
+</html>

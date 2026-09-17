@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xmlns:m="http://www.w3.org/1998/Math/MathML" xmlns:pls="http://www.w3.org/2005/01/pronunciation-lexicon" xmlns:ssml="http://www.w3.org/2001/10/synthesis" xmlns:svg="http://www.w3.org/2000/svg">
+<head>
+  <meta charset="UTF-8" />
+  <title>Training the complete network</title>
+  <link type="text/css" rel="stylesheet" media="all" href="style.css" />
+  <link type="text/css" rel="stylesheet" media="all" href="core.css" />
+</head>
+<body>
+  <div id="sbo-rt-content"><section>
+
+                            <header>
+                    <h1 class="header-title">Training the complete network</h1>
+                </header>
+            
+            <article>
+                
+<p>We looked at individual pieces of how a GAN is trained. Let's summarize them as follows and look at the complete code that will be used to train the GAN network we created:</p>
+<ul>
+<li>Train the discriminator network with <span>real</span> images</li>
+<li>Train the discriminator network with fake images</li>
+<li>Optimize the discriminator</li>
+<li>Train the generator based on the discriminator feedback</li>
+<li>Optimize the generator network alone</li>
+</ul>
+<p>We will use the following code to train the network:</p>
+<pre>for epoch in range(niter):<br/>    for i, data in enumerate(dataloader, 0):<br/>        ############################<br/>        # (1) Update D network: maximize log(D(x)) + log(1 - D(G(z)))<br/>        ###########################<br/>        # train with real<br/>        netD.zero_grad()<br/>        real, _ = data<br/>        batch_size = real.size(0)<br/>        if torch.cuda.is_available():<br/>            real = real.cuda()<br/>        input.resize_as_(real).copy_(real)<br/>        label.resize_(batch_size).fill_(real_label)<br/>        inputv = Variable(input)<br/>        labelv = Variable(label)<br/><br/>        output = netD(inputv)<br/>        errD_real = criterion(output, labelv)<br/>        errD_real.backward()<br/>        D_x = output.data.mean()<br/><br/>        # train with fake<br/>        noise.resize_(batch_size, nz, 1, 1).normal_(0, 1)<br/>        noisev = Variable(noise)<br/>        fake = netG(noisev)<br/>        labelv = Variable(label.fill_(fake_label))<br/>        output = netD(fake.detach())<br/>        errD_fake = criterion(output, labelv)<br/>        errD_fake.backward()<br/>        D_G_z1 = output.data.mean()<br/>        errD = errD_real + errD_fake<br/>        optimizerD.step()<br/><br/>        ############################<br/>        # (2) Update G network: maximize log(D(G(z)))<br/>        ###########################<br/>        netG.zero_grad()<br/>        labelv = Variable(label.fill_(real_label)) # fake labels are real for generator cost<br/>        output = netD(fake)<br/>        errG = criterion(output, labelv)<br/>        errG.backward()<br/>        D_G_z2 = output.data.mean()<br/>        optimizerG.step()<br/><br/>        print('[%d/%d][%d/%d] Loss_D: %.4f Loss_G: %.4f D(x): %.4f D(G(z)): %.4f / %.4f'<br/>              % (epoch, niter, i, len(dataloader),<br/>                 errD.data[0], errG.data[0], D_x, D_G_z1, D_G_z2))<br/>        if i % 100 == 0:<br/>            vutils.save_image(real_cpu,<br/>                    '%s/real_samples.png' % outf,<br/>                    normalize=True)<br/>            fake = netG(fixed_noise)<br/>            vutils.save_image(fake.data,<br/>                    '%s/fake_samples_epoch_%03d.png' % (outf, epoch),<br/>                    normalize=True)</pre>
+<p>The <kbd>vutils.save_image</kbd> will take a tensor and save it as an image. If provided with a mini-batch of images, then it saves them as a grid of images.</p>
+<p>In the following sections, we will take a look at what the generated images and the real images look like. </p>
+
+
+            </article>
+
+            
+        </section>
+    </div>
+</body>
+</html>

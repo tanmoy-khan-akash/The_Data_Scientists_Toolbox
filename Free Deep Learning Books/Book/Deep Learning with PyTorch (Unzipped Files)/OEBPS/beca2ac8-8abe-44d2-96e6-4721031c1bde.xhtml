@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xmlns:m="http://www.w3.org/1998/Math/MathML" xmlns:pls="http://www.w3.org/2005/01/pronunciation-lexicon" xmlns:ssml="http://www.w3.org/2001/10/synthesis" xmlns:svg="http://www.w3.org/2000/svg">
+<head>
+  <meta charset="UTF-8" />
+  <title>Freezing the layers</title>
+  <link type="text/css" rel="stylesheet" media="all" href="style.css" />
+  <link type="text/css" rel="stylesheet" media="all" href="core.css" />
+</head>
+<body>
+  <div id="sbo-rt-content"><section>
+
+                            <header>
+                    <h1 class="header-title">Freezing the layers</h1>
+                </header>
+            
+            <article>
+                
+<p>Let's freeze all the layers of the <kbd>features</kbd> model, which contains the convolutional block. Freezing the weights in the layers will prevent the weights of these convolutional blocks. As the weights of the model are trained to recognize a lot of important features, our algorithm would be able to do the same from the very first iteration. The ability to use models weights, which were initially trained for a different use case, is called <strong>transfer learning</strong>. Now let's look at how we can freeze the weights, or parameters, of layers: </p>
+<pre>for param in vgg.features.parameters(): param.requires_grad = False</pre>
+<p>This code prevents the optimizer from updating the weights. </p>
+
+
+            </article>
+
+            
+        </section>
+    </div>
+</body>
+</html>

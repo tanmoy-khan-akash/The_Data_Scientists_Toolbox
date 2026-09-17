@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xmlns:m="http://www.w3.org/1998/Math/MathML" xmlns:pls="http://www.w3.org/2005/01/pronunciation-lexicon" xmlns:ssml="http://www.w3.org/2001/10/synthesis" xmlns:svg="http://www.w3.org/2000/svg">
+<head>
+  <meta charset="UTF-8" />
+  <title>Neural network model</title>
+  <link type="text/css" rel="stylesheet" media="all" href="style.css" />
+  <link type="text/css" rel="stylesheet" media="all" href="core.css" />
+</head>
+<body>
+  <div id="sbo-rt-content"><section>
+
+                            <header>
+                    <h1 class="header-title">Neural network model</h1>
+                </header>
+            
+            <article>
+                
+<p>Once we have defined the inputs and outputs of the model using PyTorch variables, we have to build a model which learns how to map the outputs from the inputs. In traditional programming, we build a function by hand coding different logic to map the inputs to the outputs. However, in deep learning and machine learning, we learn the function by showing it the inputs and the associated outputs. In our example, we implement a simple neural network which tries to map the inputs to outputs, assuming a linear relationship. The linear relationship can be represented as <em>y = wx + b</em>, where <em>w</em> and <em>b</em> are learnable parameters. Our network has to learn the values of <em>w</em> and <em>b</em>, so that <em>wx + b</em> will be closer to the actual <em>y</em>. Let's visualize our training dataset and the model that our neural network has to learn:</p>
+<div class="CDPAlignCenter"><img height="283" width="426" class="alignnone size-full wp-image-334 image-border" src="images/4780c540-f052-46b7-94eb-6580d4ae5814.png" /></div>
+<div class="packt_figref CDPAlignCenter CDPAlign">Input data points</div>
+<p>The following figure represents a linear model fitted on input data points:</p>
+<div class="CDPAlignCenter"><img height="248" width="360" class="alignnone size-full wp-image-335 image-border" src="images/81c03405-d31a-45b7-9fbd-4de358111092.png" /></div>
+<div class="packt_figref CDPAlignCenter CDPAlign"><span>Linear model fitted on input data points</span></div>
+<p>The dark-gray (blue) line in the image represents the model that our network learns. </p>
+
+
+            </article>
+
+            
+        </section>
+    </div>
+</body>
+</html>

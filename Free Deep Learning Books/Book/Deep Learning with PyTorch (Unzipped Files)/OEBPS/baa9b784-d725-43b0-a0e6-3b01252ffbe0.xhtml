@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xmlns:m="http://www.w3.org/1998/Math/MathML" xmlns:pls="http://www.w3.org/2005/01/pronunciation-lexicon" xmlns:ssml="http://www.w3.org/2001/10/synthesis" xmlns:svg="http://www.w3.org/2000/svg">
+<head>
+  <meta charset="UTF-8" />
+  <title>Creating an ensembling model</title>
+  <link type="text/css" rel="stylesheet" media="all" href="style.css" />
+  <link type="text/css" rel="stylesheet" media="all" href="core.css" />
+</head>
+<body>
+  <div id="sbo-rt-content"><section>
+
+                            <header>
+                    <h1 class="header-title">Creating an ensembling model</h1>
+                </header>
+            
+            <article>
+                
+<p>We need to create a model that is similar to the architecture diagram show previously. The following code implements this: </p>
+<pre>class EnsembleModel(nn.Module):<br/>    <br/>    def __init__(self,out_size,training=True):<br/>        super().__init__()<br/>        self.fc1 = nn.Linear(8192,512)<br/>        self.fc2 = nn.Linear(131072,512)<br/>        self.fc3 = nn.Linear(82944,512)<br/>        self.fc4 = nn.Linear(512,out_size)<br/><br/>    def forward(self,inp1,inp2,inp3):<br/>        out1 = self.fc1(F.dropout(inp1,training=self.training))<br/>        out2 = self.fc2(F.dropout(inp2,training=self.training))<br/>        out3 = self.fc3(F.dropout(inp3,training=self.training))<br/>        out = out1 + out2 + out3<br/>        out = self.fc4(F.dropout(out,training=self.training))<br/>        return out<br/><br/>em = EnsembleModel(2)<br/>if is_cuda:<br/>    em = em.cuda()</pre>
+<p>In the preceding code, we create three linear layers that take features generated from different models. We sum up all the outputs from these three linear layers and pass them on to another linear layer, which maps them to the required categories. To prevent the model from overfitting, we have used dropouts.</p>
+
+
+            </article>
+
+            
+        </section>
+    </div>
+</body>
+</html>

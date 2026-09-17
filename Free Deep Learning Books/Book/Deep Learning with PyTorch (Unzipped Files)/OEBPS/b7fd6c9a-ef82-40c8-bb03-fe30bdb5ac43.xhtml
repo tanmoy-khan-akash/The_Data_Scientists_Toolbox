@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xmlns:m="http://www.w3.org/1998/Math/MathML" xmlns:pls="http://www.w3.org/2005/01/pronunciation-lexicon" xmlns:ssml="http://www.w3.org/2001/10/synthesis" xmlns:svg="http://www.w3.org/2000/svg">
+<head>
+  <meta charset="UTF-8" />
+  <title>Training and validating the model</title>
+  <link type="text/css" rel="stylesheet" media="all" href="style.css" />
+  <link type="text/css" rel="stylesheet" media="all" href="core.css" />
+</head>
+<body>
+  <div id="sbo-rt-content"><section>
+
+                            <header>
+                    <h1 class="header-title">Training and validating the model</h1>
+                </header>
+            
+            <article>
+                
+<p>We will use the same <kbd>fit</kbd> function that we have been using from <a href="3cce1bbe-6d1c-4164-b1ef-8b0688126519.xhtml" target="_blank">Chapter 5</a><em>, Deep Learning for Computer Vision</em>. I am not including that here, to save space. The following code snippet contains functionality to train the model and shows the results:</p>
+<pre>train_losses , train_accuracy = [],[]<br/>val_losses , val_accuracy = [],[]<br/>for epoch in range(1,10):<br/>    epoch_loss, epoch_accuracy = fit(epoch,fc,trn_feat_loader,phase='training')<br/>    val_epoch_loss , val_epoch_accuracy = fit(epoch,fc,val_feat_loader,phase='validation')<br/>    train_losses.append(epoch_loss)<br/>    train_accuracy.append(epoch_accuracy)<br/>    val_losses.append(val_epoch_loss)<br/>    val_accuracy.append(val_epoch_accuracy)</pre>
+<p>The result of the preceding code is as follows:</p>
+<pre>#Results<br/>training loss is 0.082 and training accuracy is 22473/23000     97.71
+validation loss is   0.1 and validation accuracy is 1934/2000      96.7
+training loss is  0.08 and training accuracy is 22456/23000     97.63
+validation loss is  0.12 and validation accuracy is 1917/2000     95.85
+training loss is 0.077 and training accuracy is 22507/23000     97.86
+validation loss is   0.1 and validation accuracy is 1930/2000      96.5
+training loss is 0.075 and training accuracy is 22518/23000      97.9
+validation loss is 0.096 and validation accuracy is 1938/2000      96.9
+training loss is 0.073 and training accuracy is 22539/23000      98.0
+validation loss is   0.1 and validation accuracy is 1936/2000      96.8
+training loss is 0.073 and training accuracy is 22542/23000     98.01
+validation loss is 0.089 and validation accuracy is 1942/2000      97.1
+training loss is 0.071 and training accuracy is 22545/23000     98.02
+validation loss is  0.09 and validation accuracy is 1941/2000     97.05
+training loss is 0.068 and training accuracy is 22591/23000     98.22
+validation loss is 0.092 and validation accuracy is 1934/2000      96.7
+training loss is 0.067 and training accuracy is 22573/23000     98.14
+validation loss is 0.085 and validation accuracy is 1942/2000      97.1</pre>
+<p>As we can see from the results, the model achieves a 98% training accuracy and 97% validation accuracy. Let's understand another modern architecture and how to use it for calculating pre-convoluted features and use them to train a model.</p>
+
+
+            </article>
+
+            
+        </section>
+    </div>
+</body>
+</html>

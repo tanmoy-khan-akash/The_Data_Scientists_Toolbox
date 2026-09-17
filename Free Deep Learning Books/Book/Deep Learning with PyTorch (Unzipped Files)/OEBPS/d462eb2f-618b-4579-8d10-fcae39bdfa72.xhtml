@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xmlns:m="http://www.w3.org/1998/Math/MathML" xmlns:pls="http://www.w3.org/2005/01/pronunciation-lexicon" xmlns:ssml="http://www.w3.org/2001/10/synthesis" xmlns:svg="http://www.w3.org/2000/svg">
+<head>
+  <meta charset="UTF-8" />
+  <title>Recursive neural networks</title>
+  <link type="text/css" rel="stylesheet" media="all" href="style.css" />
+  <link type="text/css" rel="stylesheet" media="all" href="core.css" />
+</head>
+<body>
+  <div id="sbo-rt-content"><section>
+
+                            <header>
+                    <h1 class="header-title">Recursive neural networks</h1>
+                </header>
+            
+            <article>
+                
+<p>RNNs are among the most powerful models that enable us to take on applications such as classification, labeling on sequential data, generating sequences of text (such as with the <em>SwiftKey</em> <em>Keyboard</em> app which predicts the next word), and converting one sequence to another such as translating a <span>language, say, from French to English. Most of the model architectures such as feedforward neural networks do not take advantage of the sequential nature of data. For example, we need the data to present the features of each example in a vector, say all the tokens that represent a sentence, </span>paragraph, or documents. Feedforward networks are designed just to look at all the features once and map them to output. Let's look at a text example which shows why the order, <span>or sequential nature, is important</span> of text. <em>I had cleaned my car</em> and <em>I had my car cleaned</em> are two English sentences with the same set of words, but they mean different things only when we consider the order of the words.</p>
+<p>Humans make sense of text data by reading words from left to right and building a powerful model that kind of understands all the different things the text says. RNN works slightly similarly, by looking at one word in text at a time. RNN is also a neural network which has a special layer in it, which loops over the data instead of processing all at once. As RNNs can process data in sequence, we can use vectors of different lengths and generate outputs of different lengths. Some of the different representations are provided in the following image:</p>
+<div class="mce-root CDPAlignCenter CDPAlign"><img src="images/163554cd-be34-4dd8-911e-465a50c652c5.jpeg" /></div>
+<div class="mce-root CDPAlignCenter CDPAlign packt_figref">Image source: http://karpathy.github.io/2015/05/21/rnn-effectiveness/</div>
+<p>The previous image is from one of the famous blogs on RNN (<a href="http://karpathy.github.io/2015/05/21/rnn-effectiveness" target="_blank">http://karpathy.github.io/2015/05/21/rnn-effectiveness</a>) , in which the author, Andrej Karpathy, writes about how to build an RNN from scratch using Python and use it as sequence generator.</p>
+
+
+            </article>
+
+            
+        </section>
+    </div>
+</body>
+</html>

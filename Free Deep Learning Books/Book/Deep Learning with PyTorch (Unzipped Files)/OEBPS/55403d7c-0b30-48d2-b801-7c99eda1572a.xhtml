@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xmlns:m="http://www.w3.org/1998/Math/MathML" xmlns:pls="http://www.w3.org/2005/01/pronunciation-lexicon" xmlns:ssml="http://www.w3.org/2001/10/synthesis" xmlns:svg="http://www.w3.org/2000/svg">
+<head>
+  <meta charset="UTF-8" />
+  <title>Language modeling&#xA0;</title>
+  <link type="text/css" rel="stylesheet" media="all" href="style.css" />
+  <link type="text/css" rel="stylesheet" media="all" href="core.css" />
+</head>
+<body>
+  <div id="sbo-rt-content"><section>
+
+                            <header>
+                    <h1 class="header-title">Language modeling </h1>
+                </header>
+            
+            <article>
+                
+<p>We will learn how to teach a <strong>recurrent neural network</strong> (<strong>RNN</strong>) how it can create a sequence of text. In simple words, the RNN model that we will build now will be able to predict the next word, given some context. This is just like the <em>Swift</em> app on your phone, which guesses the next word that you are typing. The ability to generate sequential data has applications in many different areas, such as:</p>
+<ul>
+<li>Image captioning</li>
+<li>Speech recognition</li>
+<li>Language translation</li>
+<li>Automatic email reply</li>
+</ul>
+<p>We learnt in <a href="64a06d7f-a912-46cd-a059-e0e8e1092b63.xhtml" target="_blank">Chapter 6</a>, <em>Deep Learning with Sequence Data and Text,</em> that RNNs are tough to train. So, we will be using a variant of RNN called <strong>Long Short-Term Memory</strong> (<strong>LSTM</strong>). The development of the LSTM algorithm started in 1997 but became popular in the last few years. It became popular due to the availability of powerful hardware and quality data, and some advancements such as dropout also helped in training better LSTM models much more easily than previously.</p>
+<p>It is quite popular to use LSTM models to generate either a character-level language model or a word-level language model. In character-level language modeling, we give one character and the LSTM model is trained to predict the next character, whereas in word-level language modeling, we give a word and the LSTM model predicts the next word. In this section, we will be building a word-level language model using the PyTorch LSTM model. Just like training any other module, we will be following the standard steps:</p>
+<ul>
+<li>Preparing the data</li>
+<li>Generating batches of data</li>
+<li>Defining a model based on LSTM</li>
+<li>Training the model</li>
+<li>Testing the model</li>
+</ul>
+<p>This section is inspired from a slightly simplified version of the word language modeling example available in PyTorch at <a href="https://github.com/pytorch/examples/tree/master/word_language_model" target="_blank">https://github.com/pytorch/examples/tree/master/word_language_model</a>. </p>
+
+
+            </article>
+
+            
+        </section>
+    </div>
+</body>
+</html>

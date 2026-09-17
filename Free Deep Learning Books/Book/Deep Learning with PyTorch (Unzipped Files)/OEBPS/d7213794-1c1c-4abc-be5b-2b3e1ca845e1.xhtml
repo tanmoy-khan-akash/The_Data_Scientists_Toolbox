@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xmlns:m="http://www.w3.org/1998/Math/MathML" xmlns:pls="http://www.w3.org/2005/01/pronunciation-lexicon" xmlns:ssml="http://www.w3.org/2001/10/synthesis" xmlns:svg="http://www.w3.org/2000/svg">
+<head>
+  <meta charset="UTF-8" />
+  <title>Fine-tuning VGG16</title>
+  <link type="text/css" rel="stylesheet" media="all" href="style.css" />
+  <link type="text/css" rel="stylesheet" media="all" href="core.css" />
+</head>
+<body>
+  <div id="sbo-rt-content"><section>
+
+                            <header>
+                    <h1 class="header-title">Fine-tuning VGG16</h1>
+                </header>
+            
+            <article>
+                
+<p>The VGG16 model is trained to classify 1,000 categories, but not trained to classify dogs and cats. So, we need to change the output features of the last layer to <kbd>2</kbd> from <kbd>1000</kbd>. The following code snippet does it:</p>
+<pre>vgg.classifier[6].out_features = 2</pre>
+<p>The <kbd>vgg.classifier</kbd> gives access to all the layers inside the sequential model, and the sixth element will contain the last layer. When we train the VGG16 model, we only need the classifier parameters to be trained. So, we pass only the <kbd>classifier.parameters</kbd> to the optimizer as follows: </p>
+<pre>optimizer = <br/>  optim.SGD(vgg.classifier.parameters(),lr=0.0001,momentum=0.5)</pre>
+
+
+            </article>
+
+            
+        </section>
+    </div>
+</body>
+</html>

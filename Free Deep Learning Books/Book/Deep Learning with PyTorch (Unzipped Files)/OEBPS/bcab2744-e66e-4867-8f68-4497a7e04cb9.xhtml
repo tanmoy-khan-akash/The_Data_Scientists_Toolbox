@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xmlns:m="http://www.w3.org/1998/Math/MathML" xmlns:pls="http://www.w3.org/2005/01/pronunciation-lexicon" xmlns:ssml="http://www.w3.org/2001/10/synthesis" xmlns:svg="http://www.w3.org/2000/svg">
+<head>
+  <meta charset="UTF-8" />
+  <title>Applying weight regularization</title>
+  <link type="text/css" rel="stylesheet" media="all" href="style.css" />
+  <link type="text/css" rel="stylesheet" media="all" href="core.css" />
+</head>
+<body>
+  <div id="sbo-rt-content"><section>
+
+                            <header>
+                    <h1 class="header-title">Applying weight regularization</h1>
+                </header>
+            
+            <article>
+                
+<p>One of the key principles that helps to solve the problem of overfitting or generalization is building simpler models. One technique for building simpler models is to reduce the complexity of the architecture by reducing its size. The other important thing is ensuring that the weights of the network do not take larger values. Regularization provides constraints on the network by penalizing the model when the weights of the model are larger. Whenever the model uses larger weights, the regularization kicks in and increases the loss value, thus penalizing the model. There are two types of regularization possible. They are:</p>
+<ul>
+<li><strong>L1 regularization</strong>: The sum of absolute values of weight coefficients are added to the cost. It is often referred to as the L1 norm of the weights.</li>
+<li><strong>L2 regularization</strong>: The sum of squares of all weight coefficients are added to the cost. It is often referred to as the L2 norm of the weights.</li>
+</ul>
+<p>PyTorch provides an easy way to use L2 regularization by enabling the <kbd>weight_decay</kbd> parameter in the optimizer:</p>
+<pre>model = Architecture1(10,20,2)<br/><br/>optimizer = torch.optim.Adam(model.parameters(), lr=1e-4, weight_decay=1e-5)</pre>
+<p>By default, the weight decay parameter is set to zero. We can try different values for weight decay; a small value such as <kbd>1e-5</kbd> works most of the time.</p>
+
+
+            </article>
+
+            
+        </section>
+    </div>
+</body>
+</html>

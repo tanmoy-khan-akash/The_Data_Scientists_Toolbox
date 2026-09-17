@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xmlns:m="http://www.w3.org/1998/Math/MathML" xmlns:pls="http://www.w3.org/2005/01/pronunciation-lexicon" xmlns:ssml="http://www.w3.org/2001/10/synthesis" xmlns:svg="http://www.w3.org/2000/svg">
+<head>
+  <meta charset="UTF-8" />
+  <title>Visualizing outputs from intermediate layers</title>
+  <link type="text/css" rel="stylesheet" media="all" href="style.css" />
+  <link type="text/css" rel="stylesheet" media="all" href="core.css" />
+</head>
+<body>
+  <div id="sbo-rt-content"><section>
+
+                            <header>
+                    <h1 class="header-title">Visualizing outputs from intermediate layers</h1>
+                </header>
+            
+            <article>
+                
+<p>Visualizing the outputs from intermediate layers will help us in understanding how the input image is being transformed across different layers. Often, the output from each layer is called an <strong>activation</strong>. To do this, we should extract output from intermediate layers, which can be done in different ways. PyTorch provides a method called <kbd>register_forward_hook</kbd>, which allows us to pass a function which can extract outputs of a particular layer.</p>
+<p>By default, PyTorch models only store the output of the last layer, to use memory optimally. So, before we inspect what the activations from the intermediate layers look like, let's understand how to extract outputs from the model. Let's look at the following code snippet, which extracts, and we will walk through it to understand what happens:</p>
+<pre>vgg = models.vgg16(pretrained=True).cuda()<br/><br/>class LayerActivations():<br/>    features=None<br/>    <br/>    def __init__(self,model,layer_num):<br/>        self.hook = model[layer_num].register_forward_hook(self.hook_fn)<br/>    <br/>    def hook_fn(self,module,input,output):<br/>        self.features = output.cpu()<br/>    <br/>    def remove(self):<br/>        self.hook.remove()<br/>        <br/><br/>conv_out = LayerActivations(vgg.features,0)<br/><br/>o = vgg(Variable(img.cuda()))<br/><br/>conv_out.remove()<br/><br/>act = conv_out.features</pre>
+<p>We start with the creation of a pre-trained VGG model, from which we extract the outputs of a particular layer. The <kbd>LayerActivations</kbd> class instructs PyTorch to store the output of a layer to the <kbd>features</kbd> variable. Let's walk through each function inside the <kbd>LayerActivations</kbd> class.</p>
+<p>The <kbd>_init_</kbd> function takes a model and the layer number for which the outputs need to be extracted as arguments. We call the <kbd>register_forward_hook</kbd> method on the layer and pass in a function. PyTorch, when doing a forward pass—that is, when the images are passed through the layers—calls the function that is passed to the <kbd>register_forward_hook</kbd> method. This method returns a handle, which can be used to deregister the function that is passed to the <kbd>register_forward_hook</kbd> method.</p>
+<p>The <kbd>register_forward_hook</kbd> method passes three values to the function that we pass to it. The <kbd>module</kbd> parameter allows us access to the layer itself. The second parameter is <kbd>input</kbd>, which refers to data that is flowing through the layer. The third parameter is <kbd>output</kbd>, which allows access to the transformed inputs, or activation, of the layer. We store the output to the features variable in the <kbd>LayerActivations</kbd> class.</p>
+<p>The third function takes the <kbd>hook</kbd> from the <kbd>_init_</kbd> function and deregisters the function. Now we can pass the model and the layer number for which we are looking for activations. Let's look at the activations created for the following image for different layers:</p>
+<div class="CDPAlignCenter CDPAlign">      <img height="280" width="290" class="alignnone size-full wp-image-493 image-border" src="images/4869b190-ad00-4e28-b4d9-2f6c06447aff.png" /></div>
+<p>Let's visualize some of the activations created by the first convolution layer and the code used for it:</p>
+<pre>fig = plt.figure(figsize=(20,50))<br/>fig.subplots_adjust(left=0,right=1,bottom=0,top=0.8,hspace=0,<br/>  wspace=0.2)<br/>for i in range(30):<br/>    ax = fig.add_subplot(12,5,i+1,xticks=[],yticks=[])<br/>    ax.imshow(act[0][i])</pre>
+<p><span>Let's visualize some of the activations created by the fifth convolution layer:</span></p>
+<div class="CDPAlignCenter CDPAlign"><img height="406" width="404" class="alignnone size-full wp-image-494 image-border" src="images/612e41be-0616-4e24-b63e-f875afe02f56.png" /></div>
+<p>Let's look at the last CNN layer:</p>
+<div class="CDPAlignCenter CDPAlign"><img height="408" width="405" class="alignnone size-full wp-image-495 image-border" src="images/50a60d05-6b3a-4b58-a811-716c608ffe5c.png" /></div>
+<p>From looking at what different layers generate, we can see that the early layers detect lines and edges, and the last layers tend to learn higher-level features and are less interpretable. Before we move on to visualizing weights, let's see how the features maps or activations represents itself after the ReLU layer. So, let's visualize the outputs of the second layer.</p>
+<p>If you take a quick look at the fifth image in the second row of the preceding image, it looks like the filter is detecting the eyes in the image. When the models do not perform, these tricks to visualize can help us understand why the model may not be working.</p>
+
+
+            </article>
+
+            
+        </section>
+    </div>
+</body>
+</html>

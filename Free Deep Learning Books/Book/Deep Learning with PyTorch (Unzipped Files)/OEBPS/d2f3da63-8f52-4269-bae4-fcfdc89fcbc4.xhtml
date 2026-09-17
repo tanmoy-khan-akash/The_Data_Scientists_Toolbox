@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xmlns:m="http://www.w3.org/1998/Math/MathML" xmlns:pls="http://www.w3.org/2005/01/pronunciation-lexicon" xmlns:ssml="http://www.w3.org/2001/10/synthesis" xmlns:svg="http://www.w3.org/2000/svg">
+<head>
+  <meta charset="UTF-8" />
+  <title>Dataset class</title>
+  <link type="text/css" rel="stylesheet" media="all" href="style.css" />
+  <link type="text/css" rel="stylesheet" media="all" href="core.css" />
+</head>
+<body>
+  <div id="sbo-rt-content"><section>
+
+                            <header>
+                    <h1 class="header-title">Dataset class</h1>
+                </header>
+            
+            <article>
+                
+<p>Any custom dataset class, say for example, our <kbd>Dogs</kbd> dataset class, has to inherit from the PyTorch dataset class. The custom class has to implement two main functions, namely <kbd>__len__(self)</kbd> and <kbd>__getitem__(self, idx)</kbd>. Any custom class acting as a <kbd>Dataset</kbd> class should look like the following code snippet:</p>
+<pre>from torch.utils.data import Dataset<br/>class DogsAndCatsDataset(Dataset):<br/>    def __init__(self,):<br/>        pass<br/>    def __len__(self):<br/>        pass<br/>    def __getitem__(self,idx):<br/>        pass</pre>
+<p>We do any initialization, if required, inside the <kbd>init</kbd> method—for example, reading the index of the table and reading the filenames of the images, in our case. The <kbd>__len__(self)</kbd> operation is responsible for returning the maximum number of elements in our dataset. The <kbd>__getitem__(self, idx)</kbd> operation returns an element based on the <kbd>idx</kbd> every time it is called. The following code implements our <kbd>DogsAndCatsDataset</kbd> class:</p>
+<pre>class DogsAndCatsDataset(Dataset):<br/>    <br/>    def __init__(self,root_dir,size=(224,224)):<br/>        self.files = glob(root_dir)<br/>        self.size = size <br/>        <br/>    def __len__(self):<br/>        return len(self.files)<br/>    <br/>    def __getitem__(self,idx):<br/>        img = np.asarray(Image.open(self.files[idx]).resize(self.size))<br/>        label = self.files[idx].split('/')[-2]<br/>        return img,label</pre>
+<p>Once the <kbd>DogsAndCatsDataset</kbd> class is created, we can create an object and iterate over it, which is shown in the following code:</p>
+<pre>for image,label in dogsdset:<br/>#Apply your DL on the dataset.</pre>
+<p>Applying a deep learning algorithm on a single instance of data is not optimal. We need a batch of data, as modern GPUs are optimized for better performance when executed on a batch of data. The <kbd>DataLoader</kbd> class helps to create batches by abstracting a lot of complexity. </p>
+
+
+            </article>
+
+            
+        </section>
+    </div>
+</body>
+</html>

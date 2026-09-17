@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xmlns:m="http://www.w3.org/1998/Math/MathML" xmlns:pls="http://www.w3.org/2005/01/pronunciation-lexicon" xmlns:ssml="http://www.w3.org/2001/10/synthesis" xmlns:svg="http://www.w3.org/2000/svg">
+<head>
+  <meta charset="UTF-8" />
+  <title>Dropout</title>
+  <link type="text/css" rel="stylesheet" media="all" href="style.css" />
+  <link type="text/css" rel="stylesheet" media="all" href="core.css" />
+</head>
+<body>
+  <div id="sbo-rt-content"><section>
+
+                            <header>
+                    <h1 class="header-title">Dropout</h1>
+                </header>
+            
+            <article>
+                
+<p class="mce-root">Dropout is one of the most commonly used and the most powerful regularization techniques used in deep learning. It was developed by Hinton and his students at the University of Toronto. Dropout is applied to intermediate layers of the model during the training time. Let's look at an example of how dropout is applied on a linear layer's output that generates 10 values: </p>
+<div class="mce-root CDPAlignCenter CDPAlign"><img height="413" width="329" class="alignnone size-full wp-image-348 image-border" src="images/ba017512-24f1-4da2-9703-541556e1da4b.png" /></div>
+<p>The preceding figure shows what happens when dropout is applied to the linear layer output with a threshold value of <strong>0.2</strong>. It randomly masks or zeros 20% of data, so that the model will not be dependent on a particular set of weights or patterns, thus overfitting. Let's look at another example where we apply a dropout with a threshold value of <strong>0.5</strong>:</p>
+<div class="CDPAlignCenter CDPAlign"><img height="454" width="370" class="alignnone size-full wp-image-349 image-border" src="images/3976da11-f63f-46f1-9398-e0723c74eb82.png" /></div>
+<p>It is often common to use a threshold of dropout values in the range of 0.2 to 0.5, and the dropout is applied at different layers. Dropouts are used only during the training times, and during the testing values are scaled down by the factor equal to the dropout. PyTorch provides dropout as another layer, thus making it easier to use. The following code snippet shows how to use a dropout layer in PyTorch:</p>
+<pre><span>nn.dropout(x, </span><span class="pl-v">training</span><span class="pl-k">=</span><span>True)</span></pre>
+<p>The dropout layer accepts an argument called <kbd>training</kbd>, which needs to be set to <kbd>True</kbd> during the training phase and false during the validation or test phase.</p>
+
+
+            </article>
+
+            
+        </section>
+    </div>
+</body>
+</html>
