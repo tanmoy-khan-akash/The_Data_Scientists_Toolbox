@@ -1,0 +1,55 @@
+<?xml version='1.0' encoding='utf-8'?>
+<package xmlns="http://www.idpf.org/2007/opf" unique-identifier="uuid_id" version="2.0">
+  <metadata xmlns:opf="http://www.idpf.org/2007/opf" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:calibre="http://calibre.kovidgoyal.net/2009/metadata" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <dc:creator opf:file-as="Unknown" opf:role="aut">LazyProgrammer</dc:creator>
+    <dc:language>en</dc:language>
+    <dc:date>2016-03-10T23:00:00+00:00</dc:date>
+    <dc:title>Deep Learning in Python: Master Data Science and Machine Learning with Modern Neural Networks written in Python, Theano, and TensorFlow (Machine Learning in Python)</dc:title>
+    <meta name="cover" content="cover"/>
+    <dc:contributor opf:role="bkp">toepub.com</dc:contributor>
+    <dc:identifier opf:scheme="MOBI-ASIN">B01CVJ19E8</dc:identifier>
+    <dc:identifier id="uuid_id" opf:scheme="uuid">d1ff675e-80e0-4319-a0bf-86c138ab2354</dc:identifier>
+    <meta name="calibre:timestamp" content="2016-03-14T15:35:01.925728+00:00"/>
+  </metadata>
+  <manifest>
+    <item href="images/00007.jpeg" id="cover" media-type="image/jpeg"/>
+    <item href="images/00001.jpeg" id="id18" media-type="image/jpeg"/>
+    <item href="images/00002.jpeg" id="id17" media-type="image/jpeg"/>
+    <item href="images/00003.jpeg" id="id16" media-type="image/jpeg"/>
+    <item href="images/00004.jpeg" id="id15" media-type="image/jpeg"/>
+    <item href="images/00005.jpeg" id="id14" media-type="image/jpeg"/>
+    <item href="page_styles.css" id="page_css" media-type="text/css"/>
+    <item href="stylesheet.css" id="css" media-type="text/css"/>
+    <item href="text/part0000_split_000.html" id="id112" media-type="application/xhtml+xml"/>
+    <item href="text/part0000_split_001.html" id="id111" media-type="application/xhtml+xml"/>
+    <item href="text/part0001.html" id="id10" media-type="application/xhtml+xml"/>
+    <item href="text/part0002.html" id="id9" media-type="application/xhtml+xml"/>
+    <item href="text/part0003.html" id="id8" media-type="application/xhtml+xml"/>
+    <item href="text/part0004.html" id="id7" media-type="application/xhtml+xml"/>
+    <item href="text/part0005.html" id="id6" media-type="application/xhtml+xml"/>
+    <item href="text/part0006.html" id="id5" media-type="application/xhtml+xml"/>
+    <item href="text/part0007.html" id="id4" media-type="application/xhtml+xml"/>
+    <item href="text/part0008.html" id="id3" media-type="application/xhtml+xml"/>
+    <item href="text/part0009.html" id="id2" media-type="application/xhtml+xml"/>
+    <item href="titlepage.xhtml" id="titlepage" media-type="application/xhtml+xml"/>
+    <item href="toc.ncx" id="ncx" media-type="application/x-dtbncx+xml"/>
+  </manifest>
+  <spine toc="ncx">
+    <itemref idref="titlepage"/>
+    <itemref idref="id112"/>
+    <itemref idref="id111"/>
+    <itemref idref="id10"/>
+    <itemref idref="id9"/>
+    <itemref idref="id8"/>
+    <itemref idref="id7"/>
+    <itemref idref="id6"/>
+    <itemref idref="id5"/>
+    <itemref idref="id4"/>
+    <itemref idref="id3"/>
+    <itemref idref="id2"/>
+  </spine>
+  <guide>
+    <reference href="text/part0000_split_000.html#1-977fc7511c084192adbb6c36138c03ec" title="Title Page" type="text"/>
+    <reference href="titlepage.xhtml" title="Cover" type="cover"/>
+  </guide>
+</package>
