@@ -1,0 +1,64 @@
+<?xml version='1.0' encoding='utf-8'?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+  <head>
+    <title>How to do it...</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <link href="../stylesheet.css" rel="stylesheet" type="text/css"/>
+<link href="../page_styles.css" rel="stylesheet" type="text/css"/>
+</head>
+  <body id="48C0E0-5e1e3ce63feb42db9ae6338e8302dfdb" class="calibre">
+        <section class="calibre1">
+
+                            <header class="calibre1">
+                    </header><h1 class="header-title" id="calibre_pb_0">How to do it...</h1>
+                
+            
+            <article class="calibre1">
+                
+<ol class="calibre17">
+<li value="1" class="calibre15">We start by loading all the necessary libraries, as follows:</li>
+</ol>
+<pre class="calibre23"> import numpy as np<br class="calibre24"/> import tensorflow as tf</pre>
+<ol start="2" class="calibre17">
+<li value="2" class="calibre15">First, we load the text data:</li>
+</ol>
+<pre class="calibre23">article_filename = 'Data/summary/"Data/sumdata/train/train.article.txt'<br class="calibre24"/>title_filename = 'Data/summary/"Data/sumdata/train/train.title.txt'<br class="calibre24"/><br class="calibre24"/>with open(article_filename) as article_file:<br class="calibre24"/> articles = article_file.readlines()<br class="calibre24"/>with open(title_filename) as title_file:<br class="calibre24"/> titles = title_file.readlines()</pre>
+<ol start="3" class="calibre17">
+<li value="3" class="calibre15">To make our data readable for our model, we need to define a function that creates lookup tables for integers to vocabulary and vice versa:</li>
+</ol>
+<pre class="calibre23">def create_lookup_tables(text):<br class="calibre24"/>    vocab = set(text.split())<br class="calibre24"/>    vocab_to_int = {'&lt;S&gt;': 0, '&lt;E&gt;': 1, '&lt;UNK&gt;': 2, '&lt;PAD&gt;': 3 }<br class="calibre24"/><br class="calibre24"/>    for i, v in enumerate(vocab, len(vocab_to_int)):<br class="calibre24"/>        vocab_to_int[v] = i<br class="calibre24"/><br class="calibre24"/>    int_to_vocab = {i: v for v, i in vocab_to_int.items()}<br class="calibre24"/><br class="calibre24"/>    return vocab_to_int, int_to_vocab<br class="calibre24"/><br class="calibre24"/>vocab_to_int_article, int_to_vocab_article = create_lookup_tables(articles.lower())<br class="calibre24"/>vocab_to_int_title, int_to_vocab_title = create_lookup_tables(titles.lower())</pre>
+<ol start="4" class="calibre17">
+<li value="4" class="calibre15">Next, we transform the input data (articles) and the target data (titles):</li>
+</ol>
+<pre class="calibre23">def text_to_ids(source_text, target_text, source_vocab_to_int, target_vocab_to_int):<br class="calibre24"/>source_id_text = [[source_vocab_to_int[word] for word in sentence.split()] for sentence in source_text.split('\n')]<br class="calibre24"/>    target_id_text = [[target_vocab_to_int[word] for word in sentence.split()]+[target_vocab_to_int['&lt;E&gt;']] for sentence in target_text.split('\n')]<br class="calibre24"/>    <br class="calibre24"/>    return source_id_text, target_id_text<br class="calibre24"/><br class="calibre24"/>X, y = text_to_ids(articles.lower(), titles.lower(), vocab_to_int_articles, vocab_to_int_titles)</pre>
+<ol start="5" class="calibre17">
+<li value="5" class="calibre15">Before we define our model, we set the hyperparameters:</li>
+</ol>
+<pre class="calibre23">learning_rate = 0.001<br class="calibre24"/>hidden_units = 400<br class="calibre24"/>embedding_size = 200<br class="calibre24"/>n_layers = 1<br class="calibre24"/>dropout = 0.5<br class="calibre24"/>n_iters = 40</pre>
+<ol start="6" class="calibre17">
+<li value="6" class="calibre15">We will use a bidirectional model, so we define a forward and backward embedding and apply a dropout wrapper:</li>
+</ol>
+<pre class="calibre23">encoder_forward_cell = tf.contrib.rnn.GRUCell(state_size)<br class="calibre24"/>encoder_backward_cell = tf.contrib.rnn.GRUCell(state_size)<br class="calibre24"/>decoder_cell = tf.contrib.rnn.GRUCell(state_size)<br class="calibre24"/><br class="calibre24"/>encoder_forward_cell = tf.contrib.rnn.DropoutWrapper(encoder_forward_cell, output_keep_prob = (1-dropout))<br class="calibre24"/>encoder_backward_cell = tf.contrib.rnn.DropoutWrapper(encoder_backward_cell, output_keep_prob = (1-dropout))<br class="calibre24"/>decoder_cell = tf.contrib.rnn.DropoutWrapper(decoder_cell, output_keep_prob = (1-dropout))</pre>
+<ol start="7" class="calibre17">
+<li value="7" class="calibre15">Next, we stack all the elements together:</li>
+</ol>
+<pre class="calibre23">with tf.variable_scope("seq2seq", dtype=dtype):<br class="calibre24"/>   with tf.variable_scope("encoder"):<br class="calibre24"/><br class="calibre24"/>        encoder_embedding = tf.get_variable("embedding", [source_vocab_size, embedding_size],initializer=embedding_init)<br class="calibre24"/>        encoder_inputs_embedding = tf.nn.embedding_lookup(encoder_embedding, self.encoder_inputs)<br class="calibre24"/>        encoder_outputs, encoder_states = tf.nn.bidirectional_dynamic_rnn(encoder_forward_cell, encoder_backward_cell, encoder_inputs_embedding, sequence_length=self.encoder_len, dtype=dtype)<br class="calibre24"/><br class="calibre24"/>    with tf.variable_scope("init_state"):<br class="calibre24"/>        init_state = fc_layer(<br class="calibre24"/>            tf.concat(encoder_states, 1), state_size)<br class="calibre24"/>        # the shape of bidirectional_dynamic_rnn is weird<br class="calibre24"/>        # None for batch_size<br class="calibre24"/>        self.init_state = init_state<br class="calibre24"/>        self.init_state.set_shape([self.batch_size, state_size])<br class="calibre24"/>        self.att_states = tf.concat(encoder_outputs, 2)<br class="calibre24"/>        self.att_states.set_shape([self.batch_size, None, state_size*2])<br class="calibre24"/><br class="calibre24"/>    with tf.variable_scope("attention"):<br class="calibre24"/>        attention = tf.contrib.seq2seq.BahdanauAttention(<br class="calibre24"/>            state_size, self.att_states, self.encoder_len)<br class="calibre24"/>        decoder_cell = tf.contrib.seq2seq.DynamicAttentionWrapper(<br class="calibre24"/>            decoder_cell, attention, state_size * 2)<br class="calibre24"/>        wrapper_state = tf.contrib.seq2seq.DynamicAttentionWrapperState(<br class="calibre24"/>            self.init_state, self.prev_att)<br class="calibre24"/><br class="calibre24"/>    with tf.variable_scope("decoder") as scope:<br class="calibre24"/><br class="calibre24"/>        decoder_emb = tf.get_variable("embedding", [target_vocab_size, embedding_size],initializer=emb_init)<br class="calibre24"/><br class="calibre24"/>        decoder_cell = tf.contrib.rnn.OutputProjectionWrapper(decoder_cell, target_vocab_size)<br class="calibre24"/><br class="calibre24"/>        decoder_inputs_emb = tf.nn.embedding_lookup(decoder_emb, self.decoder_inputs)<br class="calibre24"/><br class="calibre24"/>        helper = tf.contrib.seq2seq.TrainingHelper(decoder_inputs_emb, self.decoder_len)<br class="calibre24"/>        decoder = tf.contrib.seq2seq.BasicDecoder(decoder_cell, helper, wrapper_state)<br class="calibre24"/><br class="calibre24"/>        outputs, final_state = tf.contrib.seq2seq.dynamic_decode(decoder)<br class="calibre24"/><br class="calibre24"/>        outputs_logits = outputs[0]<br class="calibre24"/>        self.outputs = outputs_logits<br class="calibre24"/><br class="calibre24"/>        weights = tf.sequence_mask(self.decoder_len, dtype=tf.float32)<br class="calibre24"/><br class="calibre24"/>        loss_t = tf.contrib.seq2seq.sequence_loss(outputs_logits, self.decoder_targets, weights, average_across_timesteps=False, average_across_batch=False)<br class="calibre24"/>        self.loss = tf.reduce_sum(loss_t) / self.batch_size<br class="calibre24"/><br class="calibre24"/>        params = tf.trainable_variables()<br class="calibre24"/>        opt = tf.train.AdadeltaOptimizer(self.learning_rate, <br class="calibre24"/>        epsilon=1e-6)<br class="calibre24"/>        gradients = tf.gradients(self.loss, params)<br class="calibre24"/>        clipped_gradients, norm = tf.clip_by_global_norm(gradients,<br class="calibre24"/>        max_gradient)<br class="calibre24"/>        self.updates = opt.apply_gradients(zip(clipped_gradients,<br class="calibre24"/>        params), global_step=self.global_step)</pre>
+<ol start="8" class="calibre17">
+<li value="8" class="calibre15">Before we start training, we need a function that retrieves the correct batches:</li>
+</ol>
+<pre class="calibre23">def get_batches(int_text, batch_size, seq_length):<br class="calibre24"/>    n_batches = int(len(int_text) / (batch_size * seq_length))<br class="calibre24"/>    inputs = np.array(int_text[: n_batches * batch_size * seq_length])<br class="calibre24"/>    outputs = np.array(int_text[1: n_batches * batch_size * seq_length + 1])<br class="calibre24"/><br class="calibre24"/>    x = np.split(inputs.reshape(batch_size, -1), n_batches, 1)<br class="calibre24"/>    y = np.split(outputs.reshape(batch_size, -1), n_batches, 1)<br class="calibre24"/><br class="calibre24"/>    return np.array(list(zip(x, y)))</pre>
+<ol start="9" class="calibre17">
+<li value="9" class="calibre15">We are now ready to start training:</li>
+</ol>
+<pre class="calibre33"> with tf.Session() as sess:<br class="calibre24"/>        model = create_model(sess, False)<br class="calibre24"/>        loss = 0.0<br class="calibre24"/>        current_step = sess.run(model.global_step)<br class="calibre24"/><br class="calibre24"/>        while current_step &lt;= n_iters:<br class="calibre24"/>            rand = np.random.random_sample()<br class="calibre24"/>            bucket_id = min([i for i in range(len(train_buckets_scale))<br class="calibre24"/>                             if train_buckets_scale[i] &gt; rand])<br class="calibre24"/><br class="calibre24"/>            encoder_inputs, decoder_inputs, encoder_len, decoder_len =<br class="calibre24"/>            model.get_batches(train_set, bucket_id)<br class="calibre24"/>            step_loss, _ = model.step(sess, encoder_inputs, <br class="calibre24"/>            decoder_inputs, encoder_len, decoder_len, False, <br class="calibre24"/>            train_writer)<br class="calibre24"/>            loss += step_loss * batch_size / np.sum(decoder_len)<br class="calibre24"/>            current_step += 1</pre>
+<div class="packt_tip">As we have demonstrated in this chapter, you can achieve great results with relatively small datasets. However, understanding languages is a complicated task, and to understand all the small ins-and-outs of a language, one should train their models on terabytes of training data. For subtasks such as translating from one language to another in a certain area (for example, tourist talk), a relatively small training set and stacked RNN model can work well.</div>
+<p class="calibre3"></p>
+<p class="calibre3"></p>
+<p class="calibre3"></p>
+
+
+            </article>
+
+            
+        </section>
+    </body></html>

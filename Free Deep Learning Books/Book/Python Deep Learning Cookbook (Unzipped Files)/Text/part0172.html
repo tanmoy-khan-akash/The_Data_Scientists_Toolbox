@@ -1,0 +1,67 @@
+<?xml version='1.0' encoding='utf-8'?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+  <head>
+    <title>How to do it...</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <link href="../stylesheet.css" rel="stylesheet" type="text/css"/>
+<link href="../page_styles.css" rel="stylesheet" type="text/css"/>
+</head>
+  <body id="5410O0-5e1e3ce63feb42db9ae6338e8302dfdb" class="calibre">
+        <section class="calibre1">
+
+                            <header class="calibre1">
+                    </header><h1 class="header-title" id="calibre_pb_0">How to do it...</h1>
+                
+            
+            <article class="calibre1">
+                
+<ol class="calibre17">
+<li value="1" class="calibre15">First, we import all the libraries in Python, as follows:</li>
+</ol>
+<pre class="calibre23">from keras.datasets import cifar10<br class="calibre24"/>from keras.preprocessing.image import ImageDataGenerator<br class="calibre24"/>from keras.models import Sequential<br class="calibre24"/>from keras.layers import Dense, Dropout, Activation, Flatten<br class="calibre24"/>from keras.layers import Conv2D, MaxPooling2D<br class="calibre24"/>from keras.optimizers import Adam<br class="calibre24"/>from keras.callbacks import EarlyStopping, TensorBoard, ModelCheckpoint<br class="calibre24"/>from keras.utils import to_categorical</pre>
+<ol start="2" class="calibre17">
+<li value="2" class="calibre15">Let's load the <kbd class="calibre12">cifar10</kbd> dataset for this example and pre-process the training and validation data:</li>
+</ol>
+<pre class="calibre23">(X_train, y_train), (X_val, y_val) = cifar10.load_data()<br class="calibre24"/><br class="calibre24"/>X_train = X_train.astype('float32')<br class="calibre24"/>X_train /=255.<br class="calibre24"/>X_val = X_val.astype('float32')<br class="calibre24"/>X_val /=255.<br class="calibre24"/><br class="calibre24"/>n_classes = 10<br class="calibre24"/>y_train = to_categorical(y_train, n_classes)<br class="calibre24"/>y_val = to_categorical(y_val, n_classes)</pre>
+<ol start="3" class="calibre17">
+<li value="3" class="calibre15">Next, we define the the network architecture:</li>
+</ol>
+<pre class="calibre23">model = Sequential()<br class="calibre24"/>model.add(Conv2D(32, (3, 3), padding='same', input_shape=X_train.shape[1:]))<br class="calibre24"/>model.add(Activation('relu'))<br class="calibre24"/>model.add(Conv2D(32, (3, 3)))<br class="calibre24"/>model.add(Activation('relu'))<br class="calibre24"/>model.add(MaxPooling2D(pool_size=(2, 2)))<br class="calibre24"/>model.add(Dropout(0.25))<br class="calibre24"/><br class="calibre24"/>model.add(Conv2D(64, (3, 3), padding='same'))<br class="calibre24"/>model.add(Activation('relu'))<br class="calibre24"/>model.add(Conv2D(64, (3, 3)))<br class="calibre24"/>model.add(Activation('relu'))<br class="calibre24"/>model.add(MaxPooling2D(pool_size=(2, 2)))<br class="calibre24"/>model.add(Dropout(0.25))<br class="calibre24"/><br class="calibre24"/>model.add(Flatten())<br class="calibre24"/>model.add(Dense(512))<br class="calibre24"/>model.add(Activation('relu'))<br class="calibre24"/>model.add(Dropout(0.5))<br class="calibre24"/>model.add(Dense(n_classes))<br class="calibre24"/>model.add(Activation('softmax'))</pre>
+<ol start="4" class="calibre17">
+<li value="4" class="calibre15">We will be using the <kbd class="calibre12">Adam</kbd> optimizer with default settings:</li>
+</ol>
+<pre class="calibre23">opt = Adam()<br class="calibre24"/>model.compile(loss='categorical_crossentropy', optimizer=opt, metrics=['accuracy'])</pre>
+<ol start="5" class="calibre17">
+<li value="5" class="calibre15">Next, we add data augmentation to our dataset with Keras's <kbd class="calibre12">ImageDataGenerator</kbd>:</li>
+</ol>
+<pre class="calibre23">data_gen = ImageDataGenerator(<br class="calibre24"/>   rotation_range=15,<br class="calibre24"/>    width_shift_range=0.15,<br class="calibre24"/>    height_shift_range=0.15,<br class="calibre24"/>    horizontal_flip=True,<br class="calibre24"/>    vertical_flip=False)<br class="calibre24"/><br class="calibre24"/>data_gen.fit(X_train)</pre>
+<ol start="6" class="calibre17">
+<li value="6" class="calibre15">In our <kbd class="calibre12">callbacks</kbd>, we will add <kbd class="calibre12">TensorBoard</kbd> as follows:</li>
+</ol>
+<pre class="calibre23">callbacks = [EarlyStopping(monitor='val_acc', patience=5, verbose=2), ModelCheckpoint('checkpoints/weights.<br class="calibre24"/>{epoch:02d}.hdf5', save_best_only=True), TensorBoard('~/notebooks/logs',<br class="calibre24"/>write_graph=True, write_grads=True, write_images=True, embeddings_freq=0, embeddings_layer_names=None, embeddings_metadata=None)]</pre>
+<ol start="7" class="calibre17">
+<li value="7" class="calibre15">Next, we go to a new terminal window. If you're logged in to a server, make sure you start a new connection to your server and use a different port for SSH-tunneling, for example, when using GCP (replace <kbd class="calibre12">instance-zone</kbd> and <kbd class="calibre12">instance-name</kbd> with your own namings):</li>
+</ol>
+<pre class="calibre23"><strong class="calibre5">gcloud compute ssh --ssh-flag="-L 6006:localhost:6006"  --zone "instance-zone" "instance-name" </strong></pre>
+<ol start="8" class="calibre17">
+<li value="8" class="calibre15">After logging in, you can start the <kbd class="calibre12">tensorBoard</kbd> connection, as follows:</li>
+</ol>
+<pre class="calibre23"><strong class="calibre5">tensorboard --logdir='~/notebooks/logs'</strong></pre>
+<p class="calibre27">The terminal will output the location where you can connect with TensorBoard, for example, <kbd class="calibre12">http://instance-name:6006</kbd>. In our case, because we've enabled SSH-tunneling, we can go to our local browser and use the address <kbd class="calibre12">http://localhost:6006/</kbd> to access the dashboard. TensorBoard won't be showing any data yet.</p>
+<ol start="9" class="calibre17">
+<li value="9" class="calibre15">Now, back in the Python environment, we can start training our model:</li>
+</ol>
+<pre class="calibre23">model.fit_generator(data_gen.flow(X_train, y_train, batch_size=batch_size),<br class="calibre24"/>                    steps_per_epoch=X_train.shape[0] // batch_size,<br class="calibre24"/>                    epochs=n_epochs,<br class="calibre24"/>                    validation_data=(X_val, y_val),<br class="calibre24"/>                    callbacks=callbacks<br class="calibre24"/>                   )</pre>
+<p class="calibre3">After starting to train our model, we should see data coming into our TensorBoard dashboard. This is the output we get after 10 epochs:</p>
+<div class="cdpaligncenter"><img src="../images/00082.jpeg" class="calibre104"/></div>
+<div class="mce-root1">Figure 12.1: Example of a TensorBoard dashboard after 10 epochs</div>
+<p class="calibre3">TensorBoard gives us a lot of flexibility in monitoring our training data. As you can see in the preceding screenshot, we are able to interactively adjust the smoothing parameter. This is just one of many advantages of working with TensorBoard. Another great feature of TensorBoard is the ability to visualize your training data with T-SNE or PCA. Switch to the <span>PROJECTOR</span> tab and your output should look something like this:</p>
+<div class="cdpaligncenter"><img src="../images/00083.jpeg" class="calibre105"/></div>
+<div class="mce-root1">Figure 12.2: An example of training T-SNE on our training data</div>
+
+
+            </article>
+
+            
+        </section>
+    </body></html>

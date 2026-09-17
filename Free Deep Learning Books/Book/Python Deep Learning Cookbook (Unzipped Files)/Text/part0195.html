@@ -1,0 +1,57 @@
+<?xml version='1.0' encoding='utf-8'?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+  <head>
+    <title>How to do it...</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <link href="../stylesheet.css" rel="stylesheet" type="text/css"/>
+<link href="../page_styles.css" rel="stylesheet" type="text/css"/>
+</head>
+  <body id="5PUTM0-5e1e3ce63feb42db9ae6338e8302dfdb" class="calibre">
+        <section class="calibre1">
+
+                            <header class="calibre1">
+                    </header><h1 class="header-title" id="calibre_pb_0">How to do it...</h1>
+                
+            
+            <article class="calibre1">
+                
+<ol class="calibre17">
+<li value="1" class="calibre15">First, we load all libraries as follows:</li>
+</ol>
+<pre class="calibre23">import tensorflow as tf<br class="calibre24"/>from tensorflow.examples.tutorials.mnist import input_data</pre>
+<ol start="2" class="calibre17">
+<li value="2" class="calibre15">In TensorFlow, it's straightforward to load the MNIST dataset:</li>
+</ol>
+<pre class="calibre23">mnist = input_data.read_data_sets('Data/mnist', one_hot=True)</pre>
+<ol start="3" class="calibre17">
+<li value="3" class="calibre15">Next, we define the placeholders:</li>
+</ol>
+<pre class="calibre23">n_classes = 10<br class="calibre24"/>input_size = 784<br class="calibre24"/><br class="calibre24"/>x = tf.placeholder(tf.float32, shape=[None, input_size])<br class="calibre24"/>y = tf.placeholder(tf.float32, shape=[None, n_classes])<br class="calibre24"/>keep_prob = tf.placeholder(tf.float32)</pre>
+<ol start="4" class="calibre17">
+<li value="4" class="calibre15">We define some functions we want to use repeatedly in our network architecture:</li>
+</ol>
+<pre class="calibre23">def weight_variable(shape, name='undefined'):<br class="calibre24"/>    initial = tf.truncated_normal(shape, stddev=0.1)<br class="calibre24"/>    return tf.Variable(initial, name=name)<br class="calibre24"/><br class="calibre24"/>def bias_variable(shape, name='undefined'):<br class="calibre24"/>    initial = tf.constant(0.1, shape=shape)<br class="calibre24"/>    return tf.Variable(initial, name=name)<br class="calibre24"/><br class="calibre24"/>def conv2d(x, W):<br class="calibre24"/>    return tf.nn.conv2d(x, W, strides=[1, 1, 1, 1], padding='SAME')<br class="calibre24"/><br class="calibre24"/>def max_pool_2x2(x):<br class="calibre24"/>    return tf.nn.max_pool(x, ksize=[1, 2, 2, 1],<br class="calibre24"/>    strides=[1, 2, 2, 1], padding='SAME')</pre>
+<ol start="5" class="calibre17">
+<li value="5" class="calibre15">We are now ready to define our network architecture:</li>
+</ol>
+<pre class="calibre23">x_image = tf.reshape(x, [-1,28,28,1])<br class="calibre24"/><br class="calibre24"/>W_conv1 = weight_variable([7, 7, 1, 100], name='1st_layer_weights')<br class="calibre24"/>b_conv1 = bias_variable([100], name='1st_layer_bias')<br class="calibre24"/>h_conv1 = tf.nn.relu(conv2d(x_image, W_conv1) + b_conv1)<br class="calibre24"/>h_pool1 = max_pool_2x2(h_conv1) <br class="calibre24"/><br class="calibre24"/>W_conv2 = weight_variable([4, 4, 100, 150])<br class="calibre24"/>b_conv2 = bias_variable([150])<br class="calibre24"/>h_conv2 = tf.nn.relu(conv2d(h_pool1, W_conv2) + b_conv2)<br class="calibre24"/>h_pool2 = max_pool_2x2(h_conv2)<br class="calibre24"/><br class="calibre24"/>W_conv3 = weight_variable([4, 4, 150, 250])<br class="calibre24"/>b_conv3 = bias_variable([250])<br class="calibre24"/>h_conv3 = tf.nn.relu(conv2d(h_pool2, W_conv3) + b_conv3)<br class="calibre24"/>h_pool3 = max_pool_2x2(h_conv3)<br class="calibre24"/><br class="calibre24"/>W_fc1 = weight_variable([4 * 4 * 250, 300])<br class="calibre24"/>b_fc1 = bias_variable([300])<br class="calibre24"/>h_pool3_flat = tf.reshape(h_pool3, [-1, 4*4*250])<br class="calibre24"/>h_fc1 = tf.nn.relu(tf.matmul(h_pool3_flat, W_fc1) + b_fc1)<br class="calibre24"/>h_fc1_drop = tf.nn.dropout(h_fc1, keep_prob)<br class="calibre24"/><br class="calibre24"/>W_fc2 = weight_variable([300, n_classes])<br class="calibre24"/>b_fc2 = bias_variable([n_classes])<br class="calibre24"/>y_pred = tf.matmul(h_fc1_drop, W_fc2) + b_fc2<br class="calibre24"/><br class="calibre24"/>diff = tf.nn.softmax_cross_entropy_with_logits(labels=y, logits=y_pred)<br class="calibre24"/>cross_entropy = tf.reduce_mean(diff)<br class="calibre24"/>correct_prediction = tf.equal(tf.argmax(y_pred, 1), tf.argmax(y, 1))<br class="calibre24"/>accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))</pre>
+<ol start="6" class="calibre17">
+<li value="6" class="calibre15">Let's print the names of the trainable variables:</li>
+</ol>
+<pre class="calibre23">trainable_vars = tf.trainable_variables()<br class="calibre24"/><br class="calibre24"/>for i in range(len(trainable_vars)):<br class="calibre24"/>    print(trainable_vars[i])</pre>
+<ol start="7" class="calibre17">
+<li value="7" class="calibre15">When defining our optimizer, we can set which variables should be included while training:</li>
+</ol>
+<pre class="calibre23">vars_train = [var for var in trainable_vars if '1st_' in var.name]<br class="calibre24"/><br class="calibre24"/>learning_rate = 0.001<br class="calibre24"/>train_step = tf.train.AdamOptimizer(learning_rate).minimize(cross_entropy, var_list=vars_train)</pre>
+<div class="packt_tip">Instead of using the names of the variables, one can also decide to set the parameter <kbd class="calibre87">trainable</kbd> explicitly in TensorFlow.</div>
+<ol start="8" class="calibre17">
+<li value="8" class="calibre15">Next, we can set the hyperparameters we want to use and start training:</li>
+</ol>
+<pre class="calibre23">n_steps = 10<br class="calibre24"/>batch_size = 128<br class="calibre24"/>dropout = 0.25<br class="calibre24"/>evaluate_every = 10<br class="calibre24"/><br class="calibre24"/>sess = tf.InteractiveSession()<br class="calibre24"/>tf.global_variables_initializer().run()<br class="calibre24"/>for i in range(n_steps):<br class="calibre24"/>    x_batch, y_batch = mnist.train.next_batch(batch_size)<br class="calibre24"/>    _, train_acc = sess.run([train_step, accuracy], feed_dict={x: <br class="calibre24"/>    x_batch, y: y_batch, keep_prob: dropout})<br class="calibre24"/>    print('Step {:04.0f}: train_acc: {:.4f}'.format(i, train_acc))</pre>
+
+
+            </article>
+
+            
+        </section>
+    </body></html>

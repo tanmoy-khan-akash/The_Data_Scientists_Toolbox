@@ -1,0 +1,84 @@
+<?xml version='1.0' encoding='utf-8'?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+  <head>
+    <title>How to do it...</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <link href="../stylesheet.css" rel="stylesheet" type="text/css"/>
+<link href="../page_styles.css" rel="stylesheet" type="text/css"/>
+</head>
+  <body id="4G04U0-5e1e3ce63feb42db9ae6338e8302dfdb" class="calibre">
+        <section class="calibre1">
+
+                            <header class="calibre1">
+                    </header><h1 class="header-title" id="calibre_pb_0">How to do it...</h1>
+                
+            
+            <article class="calibre1">
+                
+<ol class="calibre17">
+<li value="1" class="calibre15">We start by importing all the necessary libraries, as follows:</li>
+</ol>
+<pre class="calibre23">from keras.applications.inception_v3 import InceptionV3<br class="calibre24"/>from keras.preprocessing.image import ImageDataGenerator<br class="calibre24"/>from keras.models import Sequential, Model<br class="calibre24"/>from keras.layeSequential import Dense, GlobalAveragePooling2D<br class="calibre24"/>from keras.optimizers import Adam<br class="calibre24"/>from keras.callbacks import EarlyStopping, ModelCheckpoint</pre>
+<ol start="2" class="calibre17">
+<li value="2" class="calibre15">After importing, we can set the hyperparameters:</li>
+</ol>
+<pre class="calibre23">batch_size = 32<br class="calibre24"/>n_epochs = 50<br class="calibre24"/>steps_per_epoch = 100</pre>
+<ol start="3" class="calibre17">
+<li value="3" class="calibre15">Because of the size of the dataset, it's important to use a batch generator. Before creating the generators, we will define Keras's <kbd class="calibre12">ImageDataGenerator</kbd> for preprocessing purposes:</li>
+</ol>
+<pre class="calibre23"> train_datagen = ImageDataGenerator(<br class="calibre24"/>        rescale=1./255,<br class="calibre24"/>        shear_range=0.2,<br class="calibre24"/>        horizontal_flip=True,<br class="calibre24"/>        rotation_range=10.,<br class="calibre24"/>        width_shift_range=0.2,<br class="calibre24"/>        height_shift_range=0.2)<br class="calibre24"/><br class="calibre24"/>val_datagen = ImageDataGenerator(rescale=1./255)</pre>
+<ol start="4" class="calibre17">
+<li value="4" class="calibre15">We have chosen to apply small image augmentation techniques for our training set. To make our model robust, we can decide to apply more aggressive image augmentation.</li>
+<li value="5" class="calibre15"><span><span>We can now create the generator for training and validation, as follows:<br class="calibre24"/></span></span></li>
+</ol>
+<pre class="calibre23"><span>classes = np.loadtxt('Data/videos/classes.txt') <br class="calibre24"/> train_generator = train_datagen.flow_from_directory(<br class="calibre24"/> 'Data/videos/train/',<br class="calibre24"/> target_size=(299, 299),<br class="calibre24"/> batch_size=batch_size,<br class="calibre24"/> classes=classes,<br class="calibre24"/> class_mode='categorical')<br class="calibre24"/></span> validation_generator = val_datagen.flow_from_directory(<br class="calibre24"/> 'Data/videos/test/',<br class="calibre24"/> target_size=(299, 299),<br class="calibre24"/> batch_size=batch_size,<br class="calibre24"/> classes=classes,<br class="calibre24"/> class_mode='categorical')</pre>
+<ol start="6" class="calibre17">
+<li value="6" class="calibre15">We first load the <kbd class="calibre12">InceptionV3</kbd> model:</li>
+</ol>
+<pre class="calibre23">inception_model = InceptionV3(include_top=False)</pre>
+<ol start="7" class="calibre17">
+<li value="7" class="calibre15">Next, we define the layers we want to add to this model, as follows:</li>
+</ol>
+<pre class="calibre23">x = inception_model.output<br class="calibre24"/>x = GlobalAveragePooling2D()(x)<br class="calibre24"/>x = Dense(1024, activation='relu')(x)<br class="calibre24"/>predictions = Dense(len(classes), activation='softmax')(x)<br class="calibre24"/>model = Model(inputs=inception_model.input, outputs=predictions)</pre>
+<ol start="8" class="calibre17">
+<li value="8" class="calibre15">However, we only want to train these last two layers and keep the other weights fixed:</li>
+</ol>
+<pre class="calibre23"><span>for layer in model.layers[:-2]:</span><br class="calibre24"/><span> layer.trainable = False</span></pre>
+<ol start="9" class="calibre17">
+<li value="9" class="calibre15">Now let's compile our model with the <kbd class="calibre12">Adam</kbd> optimizer and output the summary:</li>
+</ol>
+<pre class="calibre23">model.compile(optimizer=Adam(), loss='categorical_crossentropy',<br class="calibre24"/>metrics=['accuracy'])</pre>
+<ol start="10" class="calibre17">
+<li value="10" class="calibre15">Let's start training our CNN model:</li>
+</ol>
+<pre class="calibre23">model.fit_generator(<br class="calibre24"/>    train_generator,<br class="calibre24"/>    steps_per_epoch=steps_per_epoch,<br class="calibre24"/>    validation_data=validation_generator,<br class="calibre24"/>    validation_steps=10,<br class="calibre24"/>    epochs=n_epochs)</pre>
+<ol start="11" class="calibre17">
+<li value="11" class="calibre15">Our model is now trained. However, we want to extract the features; we don't want the information from our final layer (the classification) but from the max-pooling layer. We do this as follows:</li>
+</ol>
+<pre class="calibre23">model.layers.pop()<br class="calibre24"/>model.layers.pop()<br class="calibre24"/>model.outputs = [model.layers[-1].output]<br class="calibre24"/>model.output_layers = [model.layers[-1]]<br class="calibre24"/>model.layers[-1].outbound_nodes = []</pre>
+<ol start="12" class="calibre17">
+<li value="12" class="calibre15">Next, we loop through the video frames to extract these features per frame and save them to a file:</li>
+</ol>
+<pre class="calibre23">for video in data:<br class="calibre24"/>    path = 'Data/videos/' + str(video)<br class="calibre24"/>    frames = get_frame(video)<br class="calibre24"/>    sequence = []<br class="calibre24"/>    for image in frames:<br class="calibre24"/>        features = model.predict(image)<br class="calibre24"/>        sequence.append(features)<br class="calibre24"/>    np.savetxt(path, sequence)</pre>
+<ol start="13" class="calibre17">
+<li value="13" class="calibre15">We can now define the <kbd class="calibre12">LSTM</kbd> model that we want to apply to these features:</li>
+</ol>
+<pre class="calibre23">model_lstm = Sequential()<br class="calibre24"/>model_lstm.add(LSTM(1024, return_sequences=True, input_shape=input_shape, dropout=dropout))<br class="calibre24"/>model_lstm.add(Flatten())<br class="calibre24"/>model_lstm.add(Dense(512, activation='relu'))<br class="calibre24"/>model_lstm.add(Dropout(dropout))<br class="calibre24"/>model_lstm.add(Dense(self.nb_classes, activation='softmax'))</pre>
+<ol start="14" class="calibre17">
+<li value="14" class="calibre15">Make sure the data split used for validation for this second layer model is the same as the first layer split (otherwise, you will have data leakage):</li>
+</ol>
+<pre class="calibre23"><span>batch_size_lstm = 32</span><br class="calibre24"/><span>n_epochs_lstm = 40</span></pre>
+<ol start="15" class="calibre17">
+<li value="15" class="calibre15">Finally, let's start training our second layer model:</li>
+</ol>
+<pre class="calibre23">model_lstm.fit(X_train,<br class="calibre24"/>            y_train,<br class="calibre24"/>            batch_size=batch_size_lstm,<br class="calibre24"/>            validation_data=(X_val, y_val),<br class="calibre24"/>            verbose=1,<br class="calibre24"/>            epochs=n_epochs_lstm)</pre>
+<p class="calibre3">State-of-the-art models have proven to achieve well above 90% accuracy on these videos. However, our main goal in this recipe is to provide a stepping stone for those interested in classifying videos.</p>
+<div class="packt_tip"><span class="calibre30">Instead of using an <kbd class="calibre87">LSTM</kbd> as a second layer model, one can also use a shallow neural network. Other options include blending the results of frames within a video or using a 3D convolution network.</span></div>
+<p class="calibre3"></p>
+
+
+            </article>
+
+            
+        </section>
+    </body></html>

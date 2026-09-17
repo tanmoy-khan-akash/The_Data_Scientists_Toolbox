@@ -1,0 +1,66 @@
+<?xml version='1.0' encoding='utf-8'?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+  <head>
+    <title>How to do it..</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <link href="../stylesheet.css" rel="stylesheet" type="text/css"/>
+<link href="../page_styles.css" rel="stylesheet" type="text/css"/>
+</head>
+  <body id="506UG0-5e1e3ce63feb42db9ae6338e8302dfdb" class="calibre">
+        <section class="calibre1">
+
+                            <header class="calibre1">
+                    </header><h1 class="header-title" id="calibre_pb_0">How to do it..</h1>
+                
+            
+            <article class="calibre1">
+                
+<ol class="calibre17">
+<li value="1" class="calibre15">We start by importing all libraries as follows:</li>
+</ol>
+<pre class="calibre23">from functools import reduce<br class="calibre24"/>from operator import add<br class="calibre24"/>import random<br class="calibre24"/><br class="calibre24"/>from keras.datasets import mnist<br class="calibre24"/>from keras.models import Sequential<br class="calibre24"/>from keras.layers import Dense, Dropout<br class="calibre24"/>from keras.utils.np_utils import to_categorical<br class="calibre24"/>from keras.callbacks import EarlyStopping, <br class="calibre24"/>ModelCheckpoint</pre>
+<ol start="2" class="calibre17">
+<li value="2" class="calibre15">After importing the libraries, we set some of the hyperparameters:</li>
+</ol>
+<pre class="calibre23">n_classes = 10<br class="calibre24"/>batch_size = 128<br class="calibre24"/>n_epochs = 1000</pre>
+<ol start="3" class="calibre17">
+<li value="3" class="calibre15">Next, we load and preprocess the training data:</li>
+</ol>
+<pre class="calibre23">(X_train, y_train), (X_val, y_val) = mnist.load_data()<br class="calibre24"/>X_train = X_train.reshape(60000, 28, 28, 1)<br class="calibre24"/>X_val = X_val.reshape(10000, 28, 28, 1)<br class="calibre24"/>X_train = X_train.astype('float32')<br class="calibre24"/>X_val = X_val.astype('float32')<br class="calibre24"/>X_val /= 255<br class="calibre24"/>X_val /= 255<br class="calibre24"/><br class="calibre24"/>y_train = to_categorical(y_train, n_classes)<br class="calibre24"/>y_val = to_categorical(y_val, n_classes)</pre>
+<ol start="4" class="calibre17">
+<li value="4" class="calibre15">Next, we define a function that creates and compiles a model. Some of the settings of our network are not set, but can be set as parameter. These include the dropout percentage, the learning rate, and the number of hidden units in our final fully connected layer:</li>
+</ol>
+<pre class="calibre23">def create_model(parameters, n_classes, input_shape):<br class="calibre24"/>    print(parameters)<br class="calibre24"/>    dropout = parameters['dropout']<br class="calibre24"/>    learning_rate = parameters['learning_rate']<br class="calibre24"/>    hidden_inputs = parameters['hidden_inputs']<br class="calibre24"/><br class="calibre24"/>    model = Sequential()<br class="calibre24"/>    model.add(Conv2D(32, (3, 3), padding='same', input_shape=input_shape))<br class="calibre24"/>    model.add(Activation('relu'))<br class="calibre24"/>    model.add(Conv2D(32, (3, 3)))<br class="calibre24"/>    model.add(Activation('relu'))<br class="calibre24"/>    model.add(MaxPooling2D(pool_size=(2, 2)))<br class="calibre24"/>    model.add(Dropout(dropout))<br class="calibre24"/><br class="calibre24"/>    model.add(Conv2D(64, (3, 3), padding='same'))<br class="calibre24"/>    model.add(Activation('relu'))<br class="calibre24"/>    model.add(Conv2D(64, (3, 3)))<br class="calibre24"/>    model.add(Activation('relu'))<br class="calibre24"/>    model.add(MaxPooling2D(pool_size=(2, 2)))<br class="calibre24"/>    model.add(Dropout(dropout))<br class="calibre24"/><br class="calibre24"/>    model.add(Flatten())<br class="calibre24"/>    model.add(Dense(hidden_inputs))<br class="calibre24"/>    model.add(Activation('relu'))<br class="calibre24"/>    model.add(Dropout(dropout))<br class="calibre24"/>    model.add(Dense(n_classes))<br class="calibre24"/>    model.add(Activation('softmax'))<br class="calibre24"/>    opt = Adam(learning_rate)<br class="calibre24"/><br class="calibre24"/>    model.compile(loss='categorical_crossentropy', <br class="calibre24"/>    optimizer=opt, metrics=['accuracy'])<br class="calibre24"/><br class="calibre24"/>    return model</pre>
+<ol start="5" class="calibre17">
+<li value="5" class="calibre15">We need a class <kbd class="calibre12">Network</kbd> that we can use to create a network with random parameters and train the network. Moreover, it should be able to retrieve the accuracy of the network:</li>
+</ol>
+<pre class="calibre23">class Network():<br class="calibre24"/>    def __init__(self, parameter_space=None):<br class="calibre24"/>        self.accuracy = 0.<br class="calibre24"/>        self.parameter_space = parameter_space<br class="calibre24"/>        self.network_parameters = {}<br class="calibre24"/><br class="calibre24"/>    def set_random_parameters(self):<br class="calibre24"/>        for parameter in self.parameter_space:<br class="calibre24"/>            self.network_parameters[parameter] = random.choice(self.parameter_space[parameter])<br class="calibre24"/><br class="calibre24"/>    def create_network(self, network):<br class="calibre24"/>        self.network_parameters = network<br class="calibre24"/><br class="calibre24"/>    def train(self):<br class="calibre24"/>        model = create_model(self.network_parameters, <br class="calibre24"/>        n_classes, input_shape)<br class="calibre24"/>        history = model.fit(X_train, y_train, <br class="calibre24"/>        batch_size=batch_size, epochs=n_epochs, <br class="calibre24"/>        verbose=0, validation_data=(X_val, y_val),<br class="calibre24"/>        callbacks=callbacks)<br class="calibre24"/>        self.accuracy = max(history.history['val_acc'])  </pre>
+<ol start="6" class="calibre17">
+<li value="6" class="calibre15">Next, we will be defining a class that does the heavy lifting. Our class GA should be able to create a random population and evolve–including breeding and mutating a network. Also, it should be able to retrieve some statistics of the networks in the population:</li>
+</ol>
+<pre class="calibre23">class Genetic_Algorithm():<br class="calibre24"/>    def __init__(self, parameter_space, retain=0.3, random_select=0.1, mutate_prob=0.25):<br class="calibre24"/>        self.mutate_prob = mutate_prob<br class="calibre24"/>        self.random_select = random_select<br class="calibre24"/>        self.retain = retain<br class="calibre24"/>        self.parameter_space = parameter_space<br class="calibre24"/><br class="calibre24"/>    def create_population(self, count):<br class="calibre24"/>        population = []<br class="calibre24"/>        for _ in range(0, count):<br class="calibre24"/>            network = Network(self.parameter_space)<br class="calibre24"/>            network.set_random_parameters()<br class="calibre24"/>            population.append(network)<br class="calibre24"/>        return population<br class="calibre24"/><br class="calibre24"/>    def get_fitness(network):<br class="calibre24"/>        return network.accuracy<br class="calibre24"/><br class="calibre24"/>    def get_grade(self, population):<br class="calibre24"/>        total = reduce(add, (self.fitness(network) <br class="calibre24"/>        for network in population))<br class="calibre24"/>        return float(total) / len(population)<br class="calibre24"/><br class="calibre24"/>    def breed(self, mother, father):<br class="calibre24"/>        children = []<br class="calibre24"/>        for _ in range(2):<br class="calibre24"/>            child = {}<br class="calibre24"/>            for param in self.parameter_space:<br class="calibre24"/>                child[param] = random.choice(<br class="calibre24"/>                    [mother.network[param],<br class="calibre24"/>                    father.network[param]]<br class="calibre24"/>                )<br class="calibre24"/>            network = Network(self.nn_param_choices)<br class="calibre24"/>            network.create_set(child)<br class="calibre24"/>            if self.mutate_chance &gt; random.random():<br class="calibre24"/>                network = self.mutate(network)<br class="calibre24"/>            children.append(network)<br class="calibre24"/>        return children<br class="calibre24"/><br class="calibre24"/>    def mutate(self, network):<br class="calibre24"/>        mutation = random.choice(list<br class="calibre24"/>        (self.parameter_space.keys()))<br class="calibre24"/>        network.network[mutation] = <br class="calibre24"/>        random.choice(self.parameter_space[mutation])<br class="calibre24"/>        return network<br class="calibre24"/><br class="calibre24"/>    def evolve(self, pop):<br class="calibre24"/>        graded = [(self.fitness(network),<br class="calibre24"/>        network) for network in pop]<br class="calibre24"/>        graded = [x[1] for x in sorted(graded,<br class="calibre24"/>        key=lambda x: x[0], reverse=True)]<br class="calibre24"/>        retain_length = int(len(graded)*self.retain)<br class="calibre24"/><br class="calibre24"/>        parents = graded[:retain_length]<br class="calibre24"/><br class="calibre24"/>        for individual in graded[retain_length:]:<br class="calibre24"/>            if self.random_select &gt; random.random():<br class="calibre24"/>                parents.append(individual)<br class="calibre24"/><br class="calibre24"/>        parents_length = len(parents)<br class="calibre24"/>        desired_length = len(pop) - parents_length<br class="calibre24"/>        children = []<br class="calibre24"/><br class="calibre24"/>        while len(children) &lt; desired_length:<br class="calibre24"/><br class="calibre24"/>            male = random.randint(0, <br class="calibre24"/>            parents_length-1)<br class="calibre24"/>            female = random.randint(0, <br class="calibre24"/>            parents_length-1)<br class="calibre24"/><br class="calibre24"/>            if male != female:<br class="calibre24"/>                male = parents[male]<br class="calibre24"/>                female = parents[female]<br class="calibre24"/><br class="calibre24"/>                children_new = self.breed(male,<br class="calibre24"/>                 female)<br class="calibre24"/><br class="calibre24"/>                for child_new in children_new:<br class="calibre24"/>                    if len(children) &lt; desired_length:<br class="calibre24"/>                        children.append(child_new)<br class="calibre24"/><br class="calibre24"/>        parents.extend(children)<br class="calibre24"/><br class="calibre24"/>        return parents</pre>
+<ol start="7" class="calibre17">
+<li value="7" class="calibre15">Our last function will retrieve the average accuracy across a population:</li>
+</ol>
+<pre class="calibre23">def get_population_accuracy(population):<br class="calibre24"/>    total_accuracy = 0<br class="calibre24"/>    for network in population:<br class="calibre24"/>        total_accuracy += network.get_accuracy<br class="calibre24"/><br class="calibre24"/>    return total_accuracy / len(population)</pre>
+<ol start="8" class="calibre17">
+<li value="8" class="calibre15">We can now set the remaining hyperparameters that we want to explore:</li>
+</ol>
+<pre class="calibre23">n_generations = 10<br class="calibre24"/>population_size = 20<br class="calibre24"/><br class="calibre24"/>parameter_space = {<br class="calibre24"/>    'dropout': [0.25, 0.5, 0.75],<br class="calibre24"/>    'hidden_inputs': [256, 512, 1024],<br class="calibre24"/>    'learning_rate': [0.1, 0.01, 0.001, 0.0001]<br class="calibre24"/>}</pre>
+<ol start="9" class="calibre17">
+<li value="9" class="calibre15">Next, we create our <kbd class="calibre12">Genetic_Algorithm</kbd> and create a population:</li>
+</ol>
+<pre class="calibre23">GA = Genetic_Algorithm(parameter_space)<br class="calibre24"/>population = GA.create_population(population_size)</pre>
+<ol start="10" class="calibre17">
+<li value="10" class="calibre15">Let's start training our <kbd class="calibre12">Genetic_Algorithm</kbd>:</li>
+</ol>
+<pre class="calibre23">for i in range(n_generations):<br class="calibre24"/>    print('Generation {}'.format(i))<br class="calibre24"/><br class="calibre24"/>    for network in population:<br class="calibre24"/>        network.train() <br class="calibre24"/><br class="calibre24"/>    average_accuracy = get_population_accuracy(population)<br class="calibre24"/>    print('Average accuracy: {:.2f}'.<br class="calibre24"/>    format(average_accuracy))<br class="calibre24"/><br class="calibre24"/>    # Evolve<br class="calibre24"/>    if i &lt; n_generations - 1:<br class="calibre24"/>        s = GA.evolve(networks)</pre>
+<div class="packt_tip">In this recipe, we focused on optimizing the hyperparameters. However, Genetic Algorithms can also be used to evolve complete network architectures. For example, the number of layers and the layer type.  </div>
+<p class="calibre3"></p>
+
+
+            </article>
+
+            
+        </section>
+    </body></html>

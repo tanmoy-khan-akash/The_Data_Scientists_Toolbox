@@ -1,0 +1,70 @@
+<?xml version='1.0' encoding='utf-8'?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+  <head>
+    <title>How to do it...</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <link href="../stylesheet.css" rel="stylesheet" type="text/css"/>
+<link href="../page_styles.css" rel="stylesheet" type="text/css"/>
+</head>
+  <body id="4LN8A0-5e1e3ce63feb42db9ae6338e8302dfdb" class="calibre">
+        <section class="calibre1">
+
+                            <header class="calibre1">
+                    </header><h1 class="header-title" id="calibre_pb_0">How to do it...</h1>
+                
+            
+            <article class="calibre1">
+                
+<ol class="calibre17">
+<li value="1" class="calibre15">First, we import all libraries:</li>
+</ol>
+<pre class="calibre23">from sklearn import preprocessing<br class="calibre24"/>import pandas as pd<br class="calibre24"/>import numpy as np<br class="calibre24"/>from math import pi, sin, cos<br class="calibre24"/>from datetime import datetime<br class="calibre24"/><br class="calibre24"/>from keras.models import Sequential<br class="calibre24"/>from keras.layers import Dense, Activation, Dropout<br class="calibre24"/>from keras.optimizers import Adam<br class="calibre24"/>from keras.callbacks import EarlyStopping<br class="calibre24"/><br class="calibre24"/></pre>
+<ol start="2" class="calibre17">
+<li value="2" class="calibre15">The training and test data is stored in two separate <kbd class="calibre12">.csv</kbd> files:</li>
+</ol>
+<pre class="calibre23">train = pd.read_csv('Data/bike-sharing/train.csv')<br class="calibre24"/>test = pd.read_csv('Data/bike-sharing/test.csv')<br class="calibre24"/>data = pd.concat([train, test])<br class="calibre24"/>test_split = train.shape[0]</pre>
+<ol start="3" class="calibre17">
+<li value="3" class="calibre15">Let's output the first five rows to have a look at the data:</li>
+</ol>
+<pre class="calibre23">data.head()</pre>
+<p class="calibre27"><br class="calibre24"/>
+In the following figure, we can see that the <kbd class="calibre12">datetime</kbd> feature cannot be parsed correctly by a neural network:</p>
+<div class="cdpaligncenter"><img src="../images/00078.jpeg" class="calibre101"/></div>
+<div class="mce-root1">Figure 10-3: First five entries of training data</div>
+<ol start="4" class="calibre17">
+<li value="4" class="calibre15">We preprocess this variable as follows:</li>
+</ol>
+<pre class="calibre23">data['hour'] = data.apply(lambda x:<br class="calibre24"/>datetime.strptime(x['datetime'], <br class="calibre24"/>'%Y-%m-%d %H:%M:%S').hour, axis=1)<br class="calibre24"/>data['weekday'] = data.apply(lambda x: datetime.strptime(x['datetime'],<br class="calibre24"/>'%Y-%m-%d %H:%M:%S').weekday(), axis=1)<br class="calibre24"/>data['month'] = data.apply(lambda x: datetime.strptime(x['datetime'], <br class="calibre24"/>'%Y-%m-%d %H:%M:%S').month, axis=1)<br class="calibre24"/>data['year'] = data.apply(lambda x:<br class="calibre24"/>datetime.strptime(x['datetime'], <br class="calibre24"/>'%Y-%m-%d %H:%M:%S').year, axis=1)</pre>
+<ol start="5" class="calibre17">
+<li value="5" class="calibre15">Even though we want to keep the amount of feature engineering limited, we might want to make sure that our model understands that, after the end of the week, a new week starts. More specifically, these time variables are circular. We can add this information with the following code:</li>
+</ol>
+<pre class="calibre23">data['hour_sin'] = data.apply(lambda x: <br class="calibre24"/>sin(x['hour'] / 24.0 * 2 * pi), axis=1)<br class="calibre24"/>data['hour_cos'] = data.apply(lambda x: <br class="calibre24"/>cos(x['hour'] / 24.0 * 2 * pi), axis=1)<br class="calibre24"/>data['weekday_sin'] = data.apply(lambda x: <br class="calibre24"/>sin(x['weekday'] / 7.0 * 2 * pi), axis=1)<br class="calibre24"/>data['weekday_cos'] = data.apply(lambda x: <br class="calibre24"/>cos(x['weekday'] / 7.0 * 2 * pi), axis=1)<br class="calibre24"/>data['month_sin'] = data.apply(lambda x: <br class="calibre24"/>sin(((x['month'] - 5) % 12) / 12.0 * 2 * pi), axis=1)<br class="calibre24"/>data['month_cos'] = data.apply(lambda x:<br class="calibre24"/>cos(((x['month'] - 5) % 12) / 12.0 * 2 * pi), axis=1)<br class="calibre24"/>data['season_sin'] = data.apply(lambda x: <br class="calibre24"/>sin(((x['season'] - 3) % 4) / 4.0 * 2 * pi), axis=1)<br class="calibre24"/>data['season_cos'] = data.apply(lambda x: <br class="calibre24"/>cos(((x['season'] - 3) % 4) / 4.0 * 2 * pi), axis=1)</pre>
+<ol start="6" class="calibre17">
+<li value="6" class="calibre15">After preprocessing, we can split the training and test data again:</li>
+</ol>
+<pre class="calibre23">X_train = data[:test_split].drop(['datetime',<br class="calibre24"/>'casual', 'registered', 'count'], inplace=False, axis=1)<br class="calibre24"/>X_test = data[test_split:].drop(['datetime',<br class="calibre24"/>'casual', 'registered', 'count'], inplace=False, axis=1)<br class="calibre24"/>y_train = data['count'][:test_split]<br class="calibre24"/>y_test = data['count'][test_split:]<br class="calibre24"/><br class="calibre24"/></pre>
+<ol start="7" class="calibre17">
+<li value="7" class="calibre15">Before feeding the data, we should normalize the inputs:</li>
+</ol>
+<pre class="calibre23">scaler = preprocessing.StandardScaler()<br class="calibre24"/>X_train = scaler.fit_transform(X_train)<br class="calibre24"/>X_test = scaler.transform(X_test)</pre>
+<div class="packt_infobox">The split in training and test data for this problem can be considered as unorthodox. T<span class="calibre30">he entries in the training set are the first 19 days of each month and the entries in the test set are from day 20 to the end of the month. If we want to validate our results correctly, we should also split our validation set in the same way. For example, use days 14 to 19 as a validation set. <br class="calibre102"/></span></div>
+<ol start="8" class="calibre17">
+<li value="8" class="calibre15">We can now define our model architecture and optimizer and compile our model:</li>
+</ol>
+<pre class="calibre23">model = Sequential()<br class="calibre24"/>model.add(Dense(200, input_dim=X_train.shape[1]))<br class="calibre24"/>model.add(Activation('relu'))<br class="calibre24"/>model.add(Dropout(0.1))<br class="calibre24"/>model.add(Dense(200))<br class="calibre24"/>model.add(Activation('relu'))<br class="calibre24"/>model.add(Dropout(0.1))<br class="calibre24"/>model.add(Dense(1))<br class="calibre24"/><br class="calibre24"/>opt = Adam()<br class="calibre24"/>model.compile(loss='mean_squared_logarithmic_error',<br class="calibre24"/> optimizer=opt)</pre>
+<ol start="9" class="calibre17">
+<li value="9" class="calibre15">We'll be using the following hyperparameters:</li>
+</ol>
+<pre class="calibre23">n_epochs = 1000<br class="calibre24"/>batch_size = 128</pre>
+<ol start="10" class="calibre17">
+<li value="10" class="calibre15">Let's start training with early stopping:</li>
+</ol>
+<pre class="calibre23">callbacks = [EarlyStopping(monitor='val_loss', <br class="calibre24"/>patience=5)]<br class="calibre24"/>history = model.fit(X_train, y_train, shuffle=True,<br class="calibre24"/>epochs=n_epochs, batch_size=batch_size, <br class="calibre24"/>validation_split=0.1, verbose=1, callbacks=callbacks)</pre>
+<div class="packt_infobox">In this recipe, we used a standard feed-forward neural network architecture. The temporal nature of this data has been captured by the features and not by the model.</div>
+
+
+            </article>
+
+            
+        </section>
+    </body></html>

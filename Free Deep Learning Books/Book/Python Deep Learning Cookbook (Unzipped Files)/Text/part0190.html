@@ -1,0 +1,91 @@
+<?xml version='1.0' encoding='utf-8'?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+  <head>
+    <title>How to do it..</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <link href="../stylesheet.css" rel="stylesheet" type="text/css"/>
+<link href="../page_styles.css" rel="stylesheet" type="text/css"/>
+</head>
+  <body id="5L6AS0-5e1e3ce63feb42db9ae6338e8302dfdb" class="calibre">
+        <section class="calibre1">
+
+                            <header class="calibre1">
+                    </header><h1 class="header-title" id="calibre_pb_0">How to do it..</h1>
+                
+            
+            <article class="calibre1">
+                
+<ol class="calibre17">
+<li value="1" class="calibre15">Let's start by importing TensorFlow and a tool to load <kbd class="calibre12">mnist</kbd> datasets, as follows:</li>
+</ol>
+<pre class="calibre23">import tensorflow as tf<br class="calibre24"/>from tensorflow.examples.tutorials.mnist import input_data</pre>
+<ol start="2" class="calibre17">
+<li value="2" class="calibre15">Next, we specify the Fashion MNIST dataset and load it:</li>
+</ol>
+<pre class="calibre23">mnist = input_data.read_data_sets('Data/fashion', one_hot=True)</pre>
+<ol start="3" class="calibre17">
+<li value="3" class="calibre15">Let's create the placeholders for the input data:</li>
+</ol>
+<pre class="calibre23">n_classes = 10<br class="calibre24"/>input_size = 784<br class="calibre24"/><br class="calibre24"/>x = tf.placeholder(tf.float32, shape=[None, input_size])<br class="calibre24"/>y = tf.placeholder(tf.float32, shape=[None, n_classes])</pre>
+<ol start="4" class="calibre17">
+<li value="4" class="calibre15">Before we specify our network architecture, we will define a couple of functions we will be using multiple times in our model. We start with a function that creates and initializes the weights:</li>
+</ol>
+<pre class="calibre23">def weight_variable(shape):<br class="calibre24"/>    initial = tf.truncated_normal(shape, stddev=0.1)<br class="calibre24"/>    return tf.Variable(initial)</pre>
+<ol start="5" class="calibre17">
+<li value="5" class="calibre15">We create a similar function for the bias:</li>
+</ol>
+<pre class="calibre23">def bias_variable(shape):<br class="calibre24"/>    initial = tf.constant(0.1, shape=shape)<br class="calibre24"/>    return tf.Variable(initial)</pre>
+<ol start="6" class="calibre17">
+<li value="6" class="calibre15">In our architecture, we will be using multiple convolutional blocks that include a <kbd class="calibre12">max-pooling</kbd> layer:</li>
+</ol>
+<pre class="calibre23">def conv2d(x, W):<br class="calibre24"/>    return tf.nn.conv2d(x, W, strides=[1, 1, 1, 1], padding='SAME')<br class="calibre24"/><br class="calibre24"/>def max_pool_2x2(x):<br class="calibre24"/>    return tf.nn.max_pool(x, ksize=[1, 2, 2, 1],<br class="calibre24"/>    strides=[1, 2, 2, 1], padding='SAME')</pre>
+<ol start="7" class="calibre17">
+<li value="7" class="calibre15">Next, we define our complete network architecture. We will be using three convolutional blocks followed by two fully connected layers:</li>
+</ol>
+<pre class="calibre23">W_conv1 = weight_variable([7, 7, 1, 100])<br class="calibre24"/>b_conv1 = bias_variable([100])<br class="calibre24"/>x_image = tf.reshape(x, [-1,28,28,1])<br class="calibre24"/>h_conv1 = tf.nn.relu(conv2d(x_image, W_conv1) + b_conv1)<br class="calibre24"/>h_pool1 = max_pool_2x2(h_conv1)<br class="calibre24"/><br class="calibre24"/>W_conv2 = weight_variable([4, 4, 100, 150])<br class="calibre24"/>b_conv2 = bias_variable([150])<br class="calibre24"/>h_conv2 = tf.nn.relu(conv2d(h_pool1, W_conv2) + b_conv2)<br class="calibre24"/>h_pool2 = max_pool_2x2(h_conv2)<br class="calibre24"/><br class="calibre24"/>W_conv3 = weight_variable([4, 4, 150, 250])<br class="calibre24"/>b_conv3 = bias_variable([250])<br class="calibre24"/>h_conv3 = tf.nn.relu(conv2d(h_pool2, W_conv3) + b_conv3)<br class="calibre24"/>h_pool3 = max_pool_2x2(h_conv3)<br class="calibre24"/><br class="calibre24"/>W_fc1 = weight_variable([4 * 4 * 250, 300])<br class="calibre24"/>b_fc1 = bias_variable([300])<br class="calibre24"/>h_pool3_flat = tf.reshape(h_pool3, [-1, 4*4*250])<br class="calibre24"/>h_fc1 = tf.nn.relu(tf.matmul(h_pool3_flat, W_fc1) + b_fc1)<br class="calibre24"/>keep_prob = tf.placeholder(tf.float32)<br class="calibre24"/>h_fc1_drop = tf.nn.dropout(h_fc1, keep_prob)<br class="calibre24"/><br class="calibre24"/>W_fc2 = weight_variable([300, n_classes])<br class="calibre24"/>b_fc2 = bias_variable([n_classes])<br class="calibre24"/>y_pred = tf.matmul(h_fc1_drop, W_fc2) + b_fc2</pre>
+<ol start="8" class="calibre17">
+<li value="8" class="calibre15">Next, we need to extract <kbd class="calibre12">cross_entropy</kbd> as follows:</li>
+</ol>
+<pre class="calibre23">with tf.name_scope('cross_entropy'):<br class="calibre24"/>    diff = tf.nn.softmax_cross_entropy_with_logits(labels=y, logits=y_pred)<br class="calibre24"/>    with tf.name_scope('total'):<br class="calibre24"/>        cross_entropy = tf.reduce_mean(diff)<br class="calibre24"/>tf.summary.scalar('cross_entropy', cross_entropy)</pre>
+<ol start="9" class="calibre17">
+<li value="9" class="calibre15">We will be using <kbd class="calibre12">AdamOptimizer</kbd> during training with a learning rate of <kbd class="calibre12">0.001</kbd>:</li>
+</ol>
+<pre class="calibre23">learning_rate = 0.001<br class="calibre24"/>train_step = tf.train.AdamOptimizer(learning_rate).minimize(cross_entropy)</pre>
+<ol start="10" class="calibre17">
+<li value="10" class="calibre15">To track the progress, we want to extract the accuracy. We can do this as follows:</li>
+</ol>
+<pre class="calibre23">with tf.name_scope('accuracy'):<br class="calibre24"/>    correct_prediction = tf.equal(tf.argmax(y_pred, 1), tf.argmax(y, 1))<br class="calibre24"/>    accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))<br class="calibre24"/>tf.summary.scalar('accuracy', accuracy)</pre>
+<ol start="11" class="calibre17">
+<li value="11" class="calibre15">We create an interactive TensorFlow session:</li>
+</ol>
+<pre class="calibre23">sess = tf.InteractiveSession()</pre>
+<ol start="12" class="calibre17">
+<li value="12" class="calibre15">Let's set up the summary writers for TensorFlow that we will be using for TensorBoard:</li>
+</ol>
+<pre class="calibre23">log_dir = 'tensorboard-example'<br class="calibre24"/>merged = tf.summary.merge_all()<br class="calibre24"/>train_writer = tf.summary.FileWriter(log_dir + '/train', sess.graph)<br class="calibre24"/>val_writer = tf.summary.FileWriter(log_dir + '/val')</pre>
+<ol start="13" class="calibre17">
+<li value="13" class="calibre15">Next, we define some hyperparameters before we start training:</li>
+</ol>
+<pre class="calibre23">n_steps = 1000<br class="calibre24"/>batch_size = 128<br class="calibre24"/>dropout = 0.25<br class="calibre24"/>evaluate_every = 10</pre>
+<ol start="14" class="calibre17">
+<li value="14" class="calibre15">Finally, we can start training:</li>
+</ol>
+<pre class="calibre23">tf.global_variables_initializer().run()<br class="calibre24"/>for i in range(n_steps):<br class="calibre24"/>    x_batch, y_batch = mnist.train.next_batch(batch_size)<br class="calibre24"/>    summary, _, train_acc = sess.run([merged, train_step,<br class="calibre24"/>    accuracy], feed_dict={x: x_batch, y: y_batch, keep_prob:<br class="calibre24"/>    dropout})<br class="calibre24"/>    train_writer.add_summary(summary, i)<br class="calibre24"/>    <br class="calibre24"/>    if i % evaluate_every == 0:<br class="calibre24"/>        summary, val_acc = sess.run([merged, accuracy],<br class="calibre24"/>        feed_dict={x: mnist.test.images, y: mnist.test.labels,<br class="calibre24"/>        keep_prob: 1.0})<br class="calibre24"/>        val_writer.add_summary(summary, i)<br class="calibre24"/>        print('Step {:04.0f}: train_acc: {:.4f}; val_acc <br class="calibre24"/>        {:.4f}'.format(i, train_acc, val_acc))<br class="calibre24"/>train_writer.close()<br class="calibre24"/>val_writer.close()</pre>
+<ol start="15" class="calibre17">
+<li value="15" class="calibre15">To connect with TensorBoard, we open a new terminal window. If you're logged in to a server, make sure you start a new connection to your server and use a different port for SSH-tunneling, for example, when using GCP (replace instance-zone and instance-name with your own settings):</li>
+</ol>
+<pre class="calibre23"><strong class="calibre5">gcloud compute ssh --ssh-flag="-L 6006:localhost:6006"  --zone "instance-zone" "instance-name"</strong> </pre>
+<ol start="16" class="calibre17">
+<li value="16" class="calibre15">After logging in, you can start the TensorBoard connection as follows:</li>
+</ol>
+<pre class="calibre23"><strong class="calibre5">tensorboard --logdir='~/tensorflow-example'</strong></pre>
+<p class="calibre29">The terminal will output the location where you can connect with TensorBoard, for example, <kbd class="calibre12">http://instance-name:6006</kbd>. In our case, because we've enabled SSH-tunneling, we can go to our local browser and use the address <kbd class="calibre12">http://localhost:6006/</kbd> to access the dashboard. Within our TensorFlow dashboard, we can track the progress of our model. In the following figure, we can see the output after training is complete:</p>
+<div class="cdpaligncenter"><img src="../images/00089.jpeg" class="calibre110"/></div>
+<div class="mce-root1">Figure 13.1: Training (orange) and validation (blue) results after 1,000 epochs</div>
+
+
+            </article>
+
+            
+        </section>
+    </body></html>

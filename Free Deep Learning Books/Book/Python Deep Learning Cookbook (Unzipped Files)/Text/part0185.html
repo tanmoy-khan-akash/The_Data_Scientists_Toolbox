@@ -1,0 +1,52 @@
+<?xml version='1.0' encoding='utf-8'?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+  <head>
+    <title>How to do it...</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <link href="../stylesheet.css" rel="stylesheet" type="text/css"/>
+<link href="../page_styles.css" rel="stylesheet" type="text/css"/>
+</head>
+  <body id="5GDO20-5e1e3ce63feb42db9ae6338e8302dfdb" class="calibre">
+        <section class="calibre1">
+
+                            <header class="calibre1">
+                    </header><h1 class="header-title" id="calibre_pb_0">How to do it...</h1>
+                
+            
+            <article class="calibre1">
+                
+<ol class="calibre17">
+<li value="1" class="calibre15">We start by importing all libraries as usual:</li>
+</ol>
+<pre class="calibre23">from keras.preprocessing.image import ImageDataGenerator<br class="calibre24"/>from keras.models import Sequential<br class="calibre24"/>from keras.layers import Dense, Dropout, Activation, Flatten<br class="calibre24"/>from keras.layers import Conv2D, MaxPooling2D<br class="calibre24"/>from keras.optimizers import Adam<br class="calibre24"/>from keras.callbacks import EarlyStopping, TensorBoard, ModelCheckpoint<br class="calibre24"/><br class="calibre24"/>from keras.datasets import cifar10</pre>
+<ol start="2" class="calibre17">
+<li value="2" class="calibre15">We load and pre-process the training and validation data as follows:</li>
+</ol>
+<pre class="calibre23">(X_train, y_train), (X_val, y_val) = cifar10.load_data()<br class="calibre24"/><br class="calibre24"/>X_train = X_train.astype('float32')/255.<br class="calibre24"/>X_val = X_val.astype('float32')/255.<br class="calibre24"/>n_classes = 10<br class="calibre24"/>y_train = keras.utils.to_categorical(y_train, n_classes)<br class="calibre24"/>y_val = keras.utils.to_categorical(y_val, n_classes)</pre>
+<ol start="3" class="calibre17">
+<li value="3" class="calibre15">Next, we define our model architecture:</li>
+</ol>
+<pre class="calibre23">model = Sequential()<br class="calibre24"/>model.add(Conv2D(32, (3, 3), padding='same', input_shape=X_train.shape[1:]))<br class="calibre24"/>model.add(Activation('relu'))<br class="calibre24"/>model.add(Conv2D(32, (3, 3)))<br class="calibre24"/>model.add(Activation('relu'))<br class="calibre24"/>model.add(MaxPooling2D(pool_size=(2, 2)))<br class="calibre24"/>model.add(Dropout(0.25))<br class="calibre24"/><br class="calibre24"/>model.add(Conv2D(64, (3, 3), padding='same'))<br class="calibre24"/>model.add(Activation('relu'))<br class="calibre24"/>model.add(Conv2D(64, (3, 3)))<br class="calibre24"/>model.add(Activation('relu'))<br class="calibre24"/>model.add(MaxPooling2D(pool_size=(2, 2)))<br class="calibre24"/>model.add(Dropout(0.25))<br class="calibre24"/><br class="calibre24"/>model.add(Flatten())<br class="calibre24"/>model.add(Dense(512))<br class="calibre24"/>model.add(Activation('relu'))<br class="calibre24"/>model.add(Dropout(0.5))<br class="calibre24"/>model.add(Dense(n_classes))<br class="calibre24"/>model.add(Activation('softmax'))</pre>
+<ol start="4" class="calibre17">
+<li value="4" class="calibre15">We define the <kbd class="calibre12">Adam</kbd> optimizer and compile our model:</li>
+</ol>
+<pre class="calibre23">opt = Adam(lr=0.0001)<br class="calibre24"/>model.compile(loss='categorical_crossentropy',<br class="calibre24"/>optimizer=opt, metrics=['accuracy'])</pre>
+<ol start="5" class="calibre17">
+<li value="5" class="calibre15">In Keras, we can use <kbd class="calibre12">ImageDataGenerator</kbd> to easily set image augmentations, as follows:</li>
+</ol>
+<pre class="calibre23">datagen = ImageDataGenerator(<br class="calibre24"/>    rotation_range=15,<br class="calibre24"/>    width_shift_range=0.15,<br class="calibre24"/>    height_shift_range=0.15,<br class="calibre24"/>    horizontal_flip=True,<br class="calibre24"/>    vertical_flip=False)<br class="calibre24"/><br class="calibre24"/>datagen.fit(X_train)</pre>
+<ol start="6" class="calibre17">
+<li value="6" class="calibre15">Next, we set our <kbd class="calibre12">callback</kbd> functions:</li>
+</ol>
+<pre class="calibre23">callbacks = [EarlyStopping(monitor='val_acc', patience=5, verbose=2), ModelCheckpoint('checkpoints/weights.{epoch:02d}-'+str(batch_size)+'.hdf5', save_best_only=True),<br class="calibre24"/>TensorBoard('~/notebooks/logs-lrscheduler', <br class="calibre24"/>write_graph=True, write_grads=True, write_images=True, embeddings_freq=0, embeddings_layer_names=None, embeddings_metadata=None)<br class="calibre24"/>]</pre>
+<ol start="7" class="calibre17">
+<li value="7" class="calibre15">Let's start training our model:</li>
+</ol>
+<pre class="calibre23">batch_size = 128<br class="calibre24"/>n_epochs = 1000<br class="calibre24"/>history = model.fit_generator(datagen.flow(X_train, y_train,<br class="calibre24"/>                                 batch_size=batch_size),<br class="calibre24"/>                    steps_per_epoch=X_train.shape[0] // batch_size,<br class="calibre24"/>                    epochs=epochs,<br class="calibre24"/>                    validation_data=(X_val, y_val),<br class="calibre24"/>                  <strong class="calibre5">  callbacks=callbacks</strong><br class="calibre24"/><strong class="calibre5">                   )</strong></pre>
+
+
+            </article>
+
+            
+        </section>
+    </body></html>

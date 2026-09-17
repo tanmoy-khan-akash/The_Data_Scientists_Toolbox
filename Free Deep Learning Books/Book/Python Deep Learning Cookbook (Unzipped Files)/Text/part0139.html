@@ -1,0 +1,53 @@
+<?xml version='1.0' encoding='utf-8'?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+  <head>
+    <title>How to do it...</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <link href="../stylesheet.css" rel="stylesheet" type="text/css"/>
+<link href="../page_styles.css" rel="stylesheet" type="text/css"/>
+</head>
+  <body id="44HU60-5e1e3ce63feb42db9ae6338e8302dfdb" class="calibre">
+        <section class="calibre1">
+
+                            <header class="calibre1">
+                    </header><h1 class="header-title" id="calibre_pb_0">How to do it...</h1>
+                
+            
+            <article class="calibre1">
+                
+<ol class="calibre17">
+<li value="1" class="calibre15">We start by importing all the libraries as follows:</li>
+</ol>
+<pre class="calibre23">from nltk.tokenize import word_tokenize <br class="calibre24"/>from nltk.stem import WordNetLemmatizer <br class="calibre24"/>import numpy as np <br class="calibre24"/>import random <br class="calibre24"/>import pickle <br class="calibre24"/>from collections import Counter <br class="calibre24"/><br class="calibre24"/>import tensorflow as tf</pre>
+<ol start="2" class="calibre17">
+<li value="2" class="calibre15">Next, we process the English sentences with the nltk package. We start by defining the functions we need for preprocessing:</li>
+</ol>
+<p class="calibre3"> </p>
+<pre class="calibre33">lemmatizer = WordNetLemmatizer() <br class="calibre24"/>pos = '../Data/positive.txt'<br class="calibre24"/>neg = '../Data/negative.txt'<br class="calibre24"/>def create_lexicon(pos, neg): <br class="calibre24"/>    lexicon = [] <br class="calibre24"/>    for fi in [pos, neg]: <br class="calibre24"/>        with open(fi, 'r') as f: <br class="calibre24"/>            contents = f.readlines() <br class="calibre24"/>            for l in contents[:10000000]: <br class="calibre24"/>                all_words = word_tokenize(l.lower()) <br class="calibre24"/>                lexicon += list(all_words) <br class="calibre24"/>    lexicon = [lemmatizer.lemmatize(i) for i in lexicon] <br class="calibre24"/>    w_counts = Counter(lexicon) <br class="calibre24"/>    l2 =[] <br class="calibre24"/>    for w in w_counts: <br class="calibre24"/>        if 1000 &gt; w_counts[w] &gt; 50: <br class="calibre24"/>            l2.append(w) <br class="calibre24"/>    return l2 <br class="calibre24"/>def sample_handling(sample,lexicon,classification): <br class="calibre24"/>    featureset = [] <br class="calibre24"/>    with open(sample,'r') as f: <br class="calibre24"/>        contents = f.readlines() <br class="calibre24"/>        for l in contents[:10000000]: <br class="calibre24"/>            current_words = word_tokenize(l.lower()) <br class="calibre24"/>            current_words = [lemmatizer.lemmatize(i) for i in <br class="calibre24"/>            current_words] <br class="calibre24"/>            features = np.zeros(len(lexicon)) <br class="calibre24"/>            for word in current_words: <br class="calibre24"/>                if word.lower() in lexicon: <br class="calibre24"/>                    index_value = lexicon.index(word.lower()) <br class="calibre24"/>                    features[index_value] += 1 <br class="calibre24"/>            features = list(features) <br class="calibre24"/>            featureset.append([features,classification]) <br class="calibre24"/>    return featureset </pre>
+<ol start="3" class="calibre17">
+<li value="3" class="calibre15">Next, we process the data as follows: </li>
+</ol>
+<pre class="calibre23">lexicon = create_lexicon(pos,neg) <br class="calibre24"/>features = [] <br class="calibre24"/>features += sample_handling(pos, lexicon,[1,0]) <br class="calibre24"/>features += sample_handling(neg, lexicon,[0,1]) <br class="calibre24"/>random.shuffle(features) <br class="calibre24"/>features = np.array(features) <br class="calibre24"/><br class="calibre24"/>testing_size = int(0.1*len(features)) <br class="calibre24"/><br class="calibre24"/>X_train = list(features[:,0][:-testing_size]) <br class="calibre24"/>y_train = list(features[:,1][:-testing_size]) <br class="calibre24"/>X_test = list(features[:,0][-testing_size:]) <br class="calibre24"/>y_test = list(features[:,1][-testing_size:]) </pre>
+<ol start="4" class="calibre17">
+<li value="4" class="calibre15">Before we implement the model, we need to set the hyperparameters:</li>
+</ol>
+<pre class="calibre23">n_epochs = 10 <br class="calibre24"/>batch_size = 128 <br class="calibre24"/>h1 = 500 <br class="calibre24"/>h2 = 500 <br class="calibre24"/>n_classes = 2 </pre>
+<ol start="5" class="calibre17">
+<li value="5" class="calibre15">Next, we define the input placeholders and the initializators for the weights and biases:</li>
+</ol>
+<pre class="calibre23">x_input = tf.placeholder('float') <br class="calibre24"/>y_input = tf.placeholder('float') <br class="calibre24"/> <br class="calibre24"/>hidden_1 = {'weight':tf.Variable(tf.random_normal([len(X_train[0]), h1])), <br class="calibre24"/>                  'bias':tf.Variable(tf.random_normal([h1]))} <br class="calibre24"/> <br class="calibre24"/>hidden_2 = {'weight':tf.Variable(tf.random_normal([h1, h2])), <br class="calibre24"/>                  'bias':tf.Variable(tf.random_normal([h2]))} <br class="calibre24"/>  <br class="calibre24"/>output_layer = {'weight':tf.Variable(tf.random_normal([h2,<br class="calibre24"/>                n_classes])), <br class="calibre24"/>                'bias':tf.Variable(tf.random_normal([n_classes])),}</pre>
+<ol start="6" class="calibre17">
+<li value="6" class="calibre15">Define the network architecture, loss, and optimizer as follows:</li>
+</ol>
+<pre class="calibre23">l1 = tf.add(tf.matmul(x_input, hidden_1['weight']), hidden_1['bias']) <br class="calibre24"/>l1 = tf.nn.relu(l1) <br class="calibre24"/>l2 = tf.add(tf.matmul(l1, hidden_2'weight']), hidden_2['bias']) <br class="calibre24"/>l2 = tf.nn.relu(l2) <br class="calibre24"/>output = tf.matmul(l2, output_layer['weight']) + output_layer['bias']<br class="calibre24"/><br class="calibre24"/>loss = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(logits=output, labels=y_input)) <br class="calibre24"/>opt = tf.train.AdamOptimizer().minimize(loss) </pre>
+<ol start="7" class="calibre17">
+<li value="7" class="calibre15">Finally, we can start training our model:</li>
+</ol>
+<pre class="calibre23">with tf.Session() as sess: <br class="calibre24"/> sess.run(tf.global_variables_initializer()) <br class="calibre24"/><br class="calibre24"/> for epoch in range(n_epochs): <br class="calibre24"/> epoch_loss = 0 <br class="calibre24"/> i = 0 <br class="calibre24"/> while i &lt; len(X_train): <br class="calibre24"/> start = i <br class="calibre24"/> end = i + batch_size <br class="calibre24"/> batch_x = np.array(X_train[start:end]) <br class="calibre24"/> batch_y = np.array(y_train[start:end]) <br class="calibre24"/><br class="calibre24"/> _, batch_loss = sess.run([opt, loss], feed_dict={x_input: batch_x, y_input: batch_y}) <br class="calibre24"/> epoch_loss += batch_loss<br class="calibre24"/> i += batch_size <br class="calibre24"/><br class="calibre24"/> print('Epoch {}: loss {}'.format(epoch, epoch_loss))</pre>
+
+
+            </article>
+
+            
+        </section>
+    </body></html>

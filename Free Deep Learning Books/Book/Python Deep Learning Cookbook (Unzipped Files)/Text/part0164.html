@@ -1,0 +1,69 @@
+<?xml version='1.0' encoding='utf-8'?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+  <head>
+    <title>How to do it...</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <link href="../stylesheet.css" rel="stylesheet" type="text/css"/>
+<link href="../page_styles.css" rel="stylesheet" type="text/css"/>
+</head>
+  <body id="4SCS80-5e1e3ce63feb42db9ae6338e8302dfdb" class="calibre">
+        <section class="calibre1">
+
+                            <header class="calibre1">
+                    </header><h1 class="header-title" id="calibre_pb_0">How to do it...</h1>
+                
+            
+            <article class="calibre1">
+                
+<ol class="calibre17">
+<li value="1" class="calibre15">First, we import all libraries as follows:</li>
+</ol>
+<pre class="calibre23">import pandas as pd<br class="calibre24"/>import numpy as np<br class="calibre24"/>import cv2<br class="calibre24"/>import math<br class="calibre24"/><br class="calibre24"/>from keras.models import Sequential<br class="calibre24"/>from keras.layers.core import Dense, Dropout, Activation, Lambda<br class="calibre24"/>from keras.layers import Input, ELU<br class="calibre24"/>from keras.optimizers import SGD, Adam, RMSprop<br class="calibre24"/>from keras.utils import np_utils<br class="calibre24"/>from keras.layers import Conv2D, MaxPooling2D, Flatten<br class="calibre24"/>from keras import initializers<br class="calibre24"/>from keras.callbacks import ModelCheckpoint</pre>
+<ol start="2" class="calibre17">
+<li value="2" class="calibre15">Next, we load the training data as follows:</li>
+</ol>
+<pre class="calibre23">data_path = 'Data/SDC/training.csv'<br class="calibre24"/>data = pd.read_csv(data_path, header=None, skiprows=[0], names=['center', 'left', 'right', 'steering', 'throttle', 'brake', 'speed'])</pre>
+<ol start="3" class="calibre17">
+<li value="3" class="calibre15">We need to define some image parameters before proceeding:</li>
+</ol>
+<pre class="calibre23"> img_cols = 64<br class="calibre24"/>img_rows = 64<br class="calibre24"/>img_channels = 3</pre>
+<ol start="4" class="calibre17">
+<li value="4" class="calibre15">For data augmentation, we define the following function:</li>
+</ol>
+<pre class="calibre23"> def augment_image(image):<br class="calibre24"/>    image = cv2.cvtColor(image,cv2.COLOR_RGB2HSV)<br class="calibre24"/>    random_bright = .25 + np.random.uniform()<br class="calibre24"/>    image[:,:,2] = image[:,:,2] * random_bright<br class="calibre24"/>    image = cv2.cvtColor(image,cv2.COLOR_HSV2RGB)<br class="calibre24"/>    return(image)</pre>
+<ol start="5" class="calibre17">
+<li value="5" class="calibre15">Next, we define a function to preprocess the incoming images:</li>
+</ol>
+<pre class="calibre23"> def preprocess_image(data):<br class="calibre24"/>    # Randomly pick left, center or right<br class="calibre24"/>    # camera image<br class="calibre24"/>    rand = np.random.randint(3)<br class="calibre24"/>    if (rand == 0):<br class="calibre24"/>        path_file = data['left'][0].strip()<br class="calibre24"/>        shift_ang = .25<br class="calibre24"/>    if (rand == 1):<br class="calibre24"/>        path_file = data['center'][0].strip()<br class="calibre24"/>        shift_ang = 0.<br class="calibre24"/>    if (rand == 2):<br class="calibre24"/>        path_file = data['right'][0].strip()<br class="calibre24"/>        shift_ang = -.25<br class="calibre24"/>    y = data['steering'][0] + shift_ang<br class="calibre24"/><br class="calibre24"/>    # Read image<br class="calibre24"/>    image = cv2.imread(path_file)<br class="calibre24"/>    image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)<br class="calibre24"/><br class="calibre24"/>    # Crop image<br class="calibre24"/>    shape = image.shape<br class="calibre24"/>    image = image[math.floor(shape[0]/4):<br class="calibre24"/>    shape[0]-20, 0:shape[1]]<br class="calibre24"/><br class="calibre24"/>    # Resize image<br class="calibre24"/>    image = cv2.resize(image, (img_cols, img_rows),<br class="calibre24"/>    interpolation=cv2.INTER_AREA) <br class="calibre24"/><br class="calibre24"/>    # Augment image<br class="calibre24"/>    image = augment_image(image)<br class="calibre24"/>    image = np.array(image)<br class="calibre24"/><br class="calibre24"/>    if np.random.choice([True, False]):<br class="calibre24"/>        image = cv2.flip(image,1)<br class="calibre24"/>        y = -y<br class="calibre24"/>    <br class="calibre24"/>    return(image, y)</pre>
+<ol start="6" class="calibre17">
+<li value="6" class="calibre15">Our total training set is quite large, so we use a batch generator to load the images on the fly:</li>
+</ol>
+<pre class="calibre23"> def batch_gen(data, batch_size):<br class="calibre24"/>    # Create empty numpy arrays<br class="calibre24"/>    batch_images = np.zeros((batch_size, img_rows,<br class="calibre24"/>    img_cols, img_channels))<br class="calibre24"/>    batch_steering = np.zeros(batch_size)<br class="calibre24"/><br class="calibre24"/>    small_steering_threshold = 0.8<br class="calibre24"/><br class="calibre24"/>    # Custom batch generator <br class="calibre24"/>    while 1:<br class="calibre24"/>        for n in range(batch_size):<br class="calibre24"/>            i = np.random.randint(len(data))<br class="calibre24"/>            data_sub = data.iloc[[i]].reset_index()<br class="calibre24"/>            # Only keep training data with small <br class="calibre24"/>            #steering angles with probablitiy <br class="calibre24"/>            keep = False<br class="calibre24"/>            while keep == False:<br class="calibre24"/>                x, y = preprocess_image(data_sub)<br class="calibre24"/>                pr_unif = np.random<br class="calibre24"/>                if abs(y) &lt; .01:<br class="calibre24"/>                    next;<br class="calibre24"/>                if abs(y) &lt; .10:<br class="calibre24"/>                    small_steering_rand = np.random.uniform()<br class="calibre24"/>                    if small_steering_rand &gt; <br class="calibre24"/>                    small_steering_threshold:<br class="calibre24"/>                        keep = True<br class="calibre24"/>                else:<br class="calibre24"/>                    keep = True<br class="calibre24"/><br class="calibre24"/>            batch_images[n] = x<br class="calibre24"/>            batch_steering[n] = y<br class="calibre24"/>        yield batch_images, batch_steering</pre>
+<ol start="7" class="calibre17">
+<li value="7" class="calibre15">Let's define our model architecture:</li>
+</ol>
+<pre class="calibre23">input_shape = (img_rows, img_cols, img_channels)<br class="calibre24"/>model = Sequential()<br class="calibre24"/>model.add(Lambda(lambda x: x/255.-0.5, <br class="calibre24"/>input_shape=input_shape))<br class="calibre24"/>model.add(Conv2D(3, (1, 1), padding='valid', kernel_initializer='he_normal'))<br class="calibre24"/>model.add(ELU())<br class="calibre24"/>model.add(Conv2D(32, (3, 3), padding='valid', kernel_initializer='he_normal'))<br class="calibre24"/>model.add(ELU())<br class="calibre24"/>model.add(Conv2D(32, (3, 3), padding='valid', kernel_initializer='he_normal'))<br class="calibre24"/>model.add(ELU())<br class="calibre24"/>model.add(MaxPooling2D(pool_size=(2, 2)))<br class="calibre24"/>model.add(Dropout(0.5))<br class="calibre24"/>model.add(Conv2D(64, (3, 3), padding='valid', kernel_initializer='he_normal'))<br class="calibre24"/>model.add(ELU())<br class="calibre24"/>model.add(Conv2D(64, (3, 3), padding='valid', kernel_initializer='he_normal'))<br class="calibre24"/>model.add(ELU())<br class="calibre24"/>model.add(MaxPooling2D(pool_size=(2, 2)))<br class="calibre24"/>model.add(Dropout(0.5))<br class="calibre24"/>model.add(Conv2D(128, (3, 3), padding='valid', kernel_initializer='he_normal'))<br class="calibre24"/>model.add(ELU())<br class="calibre24"/>model.add(Conv2D(128, (3, 3), padding='valid', kernel_initializer='he_normal'))<br class="calibre24"/>model.add(ELU())<br class="calibre24"/>model.add(MaxPooling2D(pool_size=(2, 2)))<br class="calibre24"/>model.add(Dropout(0.5))<br class="calibre24"/>model.add(Flatten())<br class="calibre24"/>model.add(Dense(512, kernel_initializer='he_normal', activation='relu'))<br class="calibre24"/>model.add(ELU())<br class="calibre24"/>model.add(Dropout(0.5))<br class="calibre24"/>model.add(Dense(64, kernel_initializer='he_normal'))<br class="calibre24"/>model.add(ELU())<br class="calibre24"/>model.add(Dropout(0.5))<br class="calibre24"/>model.add(Dense(16, kernel_initializer='he_normal'))<br class="calibre24"/>model.add(ELU())<br class="calibre24"/>model.add(Dropout(0.5))<br class="calibre24"/>model.add(Dense(1, kernel_initializer='he_normal'))<br class="calibre24"/><br class="calibre24"/>opt = Adam(lr=1e-4, beta_1=0.9, beta_2=0.999, <br class="calibre24"/>epsilon=1e-08, decay=0.0)<br class="calibre24"/>model.compile(optimizer=opt, loss='mse')<br class="calibre24"/>model.summary()</pre>
+<ol start="8" class="calibre17">
+<li value="8" class="calibre15">To store our trained model, we use a callback function:</li>
+</ol>
+<pre class="calibre55">   callbacks = [ModelCheckpoint('checkpoints/sdc.h5',<br class="calibre24"/>   save_best_only=False)]</pre>
+<ol start="9" class="calibre17">
+<li value="9" class="calibre15">Next, we create the generator for training and validation:</li>
+</ol>
+<pre class="calibre23">train_generator = batchgen(data, batch_size)<br class="calibre24"/>val_generator = batchgen(data, batch_size)</pre>
+<ol start="10" class="calibre17">
+<li value="10" class="calibre15">Before we start training, we need to set some hyperparameters:</li>
+</ol>
+<pre class="calibre23">n_epochs = 8<br class="calibre24"/>batch_size = 64<br class="calibre24"/>steps_per_epoch = 500<br class="calibre24"/>validation_steps = 50</pre>
+<ol start="11" class="calibre17">
+<li value="11" class="calibre15">Finally, we can start training:</li>
+</ol>
+<pre class="calibre23">history = model.fit_generator(train_generator, steps_per_epoch=steps_per_epoch, epochs=n_epochs, validation_data=val_generator,<br class="calibre24"/>validation_steps=validation_steps, callbacks=callbacks)</pre>
+<p class="calibre3">In this recipe, we've trained an agent to drive around a track without specifying any rules. The agent copies the behavior of the training data and learns to steer. Therefore, this is also called end-to-end learning. </p>
+
+
+            </article>
+
+            
+        </section>
+    </body></html>

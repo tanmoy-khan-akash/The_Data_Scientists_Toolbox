@@ -1,0 +1,81 @@
+<?xml version='1.0' encoding='utf-8'?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+  <head>
+    <title>How to do it...</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <link href="../stylesheet.css" rel="stylesheet" type="text/css"/>
+<link href="../page_styles.css" rel="stylesheet" type="text/css"/>
+</head>
+  <body id="63G3A0-5e1e3ce63feb42db9ae6338e8302dfdb" class="calibre">
+        <section class="calibre1">
+
+                            <header class="calibre1">
+                    </header><h1 class="header-title" id="calibre_pb_0">How to do it...</h1>
+                
+            
+            <article class="calibre1">
+                
+<ol class="calibre17">
+<li value="1" class="calibre15">We start by importing all libraries, as follows:</li>
+</ol>
+<pre class="calibre23"><span>import numpy as np</span><br class="calibre24"/><span>import matplotlib.pyplot as plt</span><br class="calibre24"/><br class="calibre24"/><span>from keras.models import Model</span><br class="calibre24"/><span>from keras.applications.vgg16 import VGG16</span><br class="calibre24"/><span>from keras.layers import Dense, GlobalAveragePooling2D</span><br class="calibre24"/><span>from keras.optimizers import Adam</span><br class="calibre24"/><br class="calibre24"/><span>from keras.applications import imagenet_utils</span><br class="calibre24"/><span>from keras.utils import np_utils</span><br class="calibre24"/><span>from keras.callbacks import EarlyStopping</span></pre>
+<ol start="2" class="calibre17">
+<li value="2" class="calibre15">In this recipe, we will be using Keras' <kbd class="calibre12">cifar10</kbd> dataset:</li>
+</ol>
+<pre class="calibre23">from keras.datasets import cifar10<br class="calibre24"/>(X_train, y_train), (X_test, y_test) = cifar10.load_data()</pre>
+<ol start="3" class="calibre17">
+<li value="3" class="calibre15">We need to preprocess the data before we feed it to our model:</li>
+</ol>
+<pre class="calibre23">n_classes = len(np.unique(y_train))<br class="calibre24"/>y_train = np_utils.to_categorical(y_train, n_classes)<br class="calibre24"/>y_test = np_utils.to_categorical(y_test, n_classes)<br class="calibre24"/><br class="calibre24"/>X_train = X_train.astype('float32')/255.<br class="calibre24"/>X_test = X_test.astype('float32')/255.</pre>
+<ol start="4" class="calibre17">
+<li value="4" class="calibre15">We will be using the <kbd class="calibre12">VGG16</kbd> model and load the weights without the top dense layers:</li>
+</ol>
+<pre class="calibre23">vgg_model = VGG16(weights='imagenet', include_top=False)</pre>
+<ol start="5" class="calibre17">
+<li value="5" class="calibre15">The great thing about Keras is that when you use the weights for the first time, the weights will be downloaded automatically. This can be seen as follows:</li>
+</ol>
+<p class="cdpaligncenter1"><img src="../images/00093.jpeg" class="calibre62"/></p>
+<div class="mce-root1">Figure 14.2: Keras automatically downloads the weights</div>
+<ol start="6" class="calibre17">
+<li value="6" class="calibre15">On top of this <kbd class="calibre12">VGG16</kbd> model, we will add a dense layer and an output layer:</li>
+</ol>
+<pre class="calibre23">x = vgg_model.output<br class="calibre24"/> x = GlobalAveragePooling2D()(x)<br class="calibre24"/> x = Dense(512, activation='relu')(x)<br class="calibre24"/> out = Dense(10, activation='softmax')(x)</pre>
+<ol start="7" class="calibre17">
+<li value="7" class="calibre15">We combine the two models as follows:</li>
+</ol>
+<pre class="calibre23">model = Model(inputs=vgg_model.input, outputs=out)</pre>
+<ol start="8" class="calibre17">
+<li value="8" class="calibre15">We can freeze the weights of our <kbd class="calibre12">VGG16</kbd> model with the following code:</li>
+</ol>
+<pre class="calibre23">for layer in vgg_model.layers:<br class="calibre24"/> layer.trainable = False</pre>
+<ol start="9" class="calibre17">
+<li value="9" class="calibre15"><span>Next, we compile our model with the <kbd class="calibre12">Adam</kbd> optimizer and output a <kbd class="calibre12">summary</kbd> of our model:</span></li>
+</ol>
+<pre class="calibre23">opt = Adam()<br class="calibre24"/>model.compile(optimizer=opt, loss='categorical_crossentropy', metrics=['accuracy'])<br class="calibre24"/>model.summary()</pre>
+<ol start="10" class="calibre17">
+<li value="10" class="calibre15">As you can see in the summary, in total our model has over 15 million parameters. However, by freezing the <kbd class="calibre12">VGG16</kbd> layers, we end up with 535,562 trainable parameters.</li>
+<li value="11" class="calibre15">
+<p class="calibre11">We define a callback with early stopping to prevent overfitting:</p>
+</li>
+</ol>
+<pre class="calibre23">callbacks = [EarlyStopping(monitor='val_acc', patience=5, verbose=0)]</pre>
+<ol start="12" class="calibre17">
+<li value="12" class="calibre15">We are now ready to train our model:</li>
+</ol>
+<pre class="calibre23">n_epochs = 50<br class="calibre24"/>batch_size = 512<br class="calibre24"/>history = model.fit(X_train, y_train, epochs=n_epochs, batch_size=batch_size, validation_split=0.2, verbose=1, callbacks=callbacks)</pre>
+<ol start="13" class="calibre17">
+<li value="13" class="calibre15"><span>Let's plot the training and validation accuracy:</span></li>
+</ol>
+<pre class="calibre23">plt.plot(np.arange(len(history.history['acc'])), history.history['acc'], label='training')<br class="calibre24"/>plt.plot(np.arange(len(history.history['val_acc'])), history.history['val_acc'], label='validation')<br class="calibre24"/> plt.title('Accuracy')<br class="calibre24"/> plt.xlabel('batches')<br class="calibre24"/> plt.ylabel('accuracy ')<br class="calibre24"/> plt.legend(loc=0)<br class="calibre24"/> plt.show()</pre>
+<ol start="14" class="calibre17">
+<li value="14" class="calibre15"><span>In the following figure, we can see that our model tops at a final validation accuracy of around 60%:</span></li>
+</ol>
+<p class="cdpaligncenter1"><img src="../images/00094.jpeg" class="calibre62"/></p>
+<div class="mce-root1">Figure 14.3: Training results after leveraging the VGG16 weights</div>
+
+
+            </article>
+
+            
+        </section>
+    </body></html>

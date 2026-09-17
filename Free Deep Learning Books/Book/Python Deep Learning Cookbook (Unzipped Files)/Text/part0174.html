@@ -1,0 +1,66 @@
+<?xml version='1.0' encoding='utf-8'?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+  <head>
+    <title>How to do it...</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <link href="../stylesheet.css" rel="stylesheet" type="text/css"/>
+<link href="../page_styles.css" rel="stylesheet" type="text/css"/>
+</head>
+  <body id="55U1S0-5e1e3ce63feb42db9ae6338e8302dfdb" class="calibre">
+        <section class="calibre1">
+
+                            <header class="calibre1">
+                    </header><h1 class="header-title" id="calibre_pb_0">How to do it...</h1>
+                
+            
+            <article class="calibre1">
+                
+<ol class="calibre17">
+<li value="1" class="calibre15">Let's start with importing all the libraries, as follows:</li>
+</ol>
+<pre class="calibre23">from keras.datasets import cifar10<br class="calibre24"/>from keras.preprocessing.image import ImageDataGenerator<br class="calibre24"/>from keras.models import Sequential<br class="calibre24"/>from keras.layers import Dense, Dropout, Activation, Flatten<br class="calibre24"/>from keras.layers import Conv2D, MaxPooling2D<br class="calibre24"/>from keras.optimizers import Adam<br class="calibre24"/>from keras.callbacks import EarlyStopping, TensorBoard, ModelCheckpoint</pre>
+<ol start="2" class="calibre17">
+<li value="2" class="calibre15">We will be using the <kbd class="calibre12">cifar10</kbd> dataset for our experiments. We load and pre-process the data like this:</li>
+</ol>
+<pre class="calibre23">(X_train, y_train), (X_test, y_test) = cifar10.load_data()<br class="calibre24"/><br class="calibre24"/>X_train = X_train.astype('float32')/255.<br class="calibre24"/>X_test = X_test.astype('float32')/255.<br class="calibre24"/>n_classes = 10<br class="calibre24"/>y_train = keras.utils.to_categorical(y_train, n_classes)<br class="calibre24"/>y_test = keras.utils.to_categorical(y_test, n_classes)</pre>
+<ol start="3" class="calibre17">
+<li value="3" class="calibre15">As model architecture, we use a straightforward convolutional neural network with convolutional blocks (both with two convolutional layers) and a fully connected layer before the output layer:</li>
+</ol>
+<pre class="calibre23">model = Sequential()<br class="calibre24"/>model.add(Conv2D(32, (3, 3), padding='same', input_shape=X_train.shape[1:]))<br class="calibre24"/>model.add(Activation('relu'))<br class="calibre24"/>model.add(Conv2D(32, (3, 3)))<br class="calibre24"/>model.add(Activation('relu'))<br class="calibre24"/>model.add(MaxPooling2D(pool_size=(2, 2)))<br class="calibre24"/>model.add(Dropout(0.25))<br class="calibre24"/><br class="calibre24"/>model.add(Conv2D(64, (3, 3), padding='same'))<br class="calibre24"/>model.add(Activation('relu'))<br class="calibre24"/>model.add(Conv2D(64, (3, 3)))<br class="calibre24"/>model.add(Activation('relu'))<br class="calibre24"/>model.add(MaxPooling2D(pool_size=(2, 2)))<br class="calibre24"/>model.add(Dropout(0.25))<br class="calibre24"/><br class="calibre24"/>model.add(Flatten())<br class="calibre24"/>model.add(Dense(512))<br class="calibre24"/>model.add(Activation('relu'))<br class="calibre24"/>model.add(Dropout(0.5))<br class="calibre24"/>model.add(Dense(n_classes))<br class="calibre24"/>model.add(Activation('softmax'))</pre>
+<ol start="4" class="calibre17">
+<li value="4" class="calibre15">We define the <kbd class="calibre12">Adam</kbd> optimizer and compile our model:</li>
+</ol>
+<pre class="calibre23">opt = Adam(lr=0.0001)<br class="calibre24"/>model.compile(loss='categorical_crossentropy', optimizer=opt, metrics=['accuracy'])</pre>
+<ol start="5" class="calibre17">
+<li value="5" class="calibre15">Because we want to make our model more robust, we will be using some data augmentation for training:</li>
+</ol>
+<pre class="calibre23">datagen = ImageDataGenerator(<br class="calibre24"/>    rotation_range=15,<br class="calibre24"/>    width_shift_range=0.15,<br class="calibre24"/>    height_shift_range=0.15,<br class="calibre24"/>    horizontal_flip=True,<br class="calibre24"/>    vertical_flip=False)<br class="calibre24"/><br class="calibre24"/>datagen.fit(x_train)</pre>
+<ol start="6" class="calibre17">
+<li value="6" class="calibre15">Next, we set our callback functions. We use early stopping to prevent overfitting, <kbd class="calibre12">ModelCheckpoint</kbd> to save our best model automatically, and TensorBoard for an analysis of our results:</li>
+</ol>
+<pre class="calibre23">callbacks = [EarlyStopping(monitor='val_acc', patience=5, verbose=2), ModelCheckpoint('checkpoints/weights.<br class="calibre24"/>{epoch:02d}-'+str(batch_size)+'.hdf5', <br class="calibre24"/>save_best_only=True),  TensorBoard()]</pre>
+<ol start="7" class="calibre17">
+<li value="7" class="calibre15">Let's start training our first model with a batch size of <kbd class="calibre12">32</kbd>:</li>
+</ol>
+<pre class="calibre23">batch_size = 32<br class="calibre24"/>n_epochs = 1000<br class="calibre24"/>history_32 = model.fit_generator(datagen.flow(X_train, y_train,<br class="calibre24"/>                                 batch_size=batch_size),<br class="calibre24"/>                    steps_per_epoch=X_train.shape[0] // batch_size,<br class="calibre24"/>                    epochs=epochs,<br class="calibre24"/>                    validation_data=(X_val, y_val),<br class="calibre24"/>                    callbacks=callbacks<br class="calibre24"/>                   )</pre>
+<ol start="8" class="calibre17">
+<li value="8" class="calibre15">Next, we recompile our model to make sure the weights are initialized:</li>
+</ol>
+<pre class="calibre23">model.compile(loss='categorical_crossentropy', optimizer=opt, metrics=['accuracy'])</pre>
+<ol start="9" class="calibre17">
+<li value="9" class="calibre15">We can now start training our model with a batch size of <kbd class="calibre12">256</kbd>:</li>
+</ol>
+<pre class="calibre23">batch_size = 256<br class="calibre24"/>history_32 = model.fit_generator(datagen.flow(X_train, y_train,<br class="calibre24"/>                                 batch_size=batch_size),<br class="calibre24"/>                    steps_per_epoch=X_train.shape[0] // batch_size,<br class="calibre24"/>                    epochs=epochs,<br class="calibre24"/>                    validation_data=(X_val, y_val),<br class="calibre24"/>                    callbacks=callbacks<br class="calibre24"/>                   )</pre>
+<p class="calibre3">Here is the validation accuracy of both models against the number of epochs (with early stopping):</p>
+<div class="cdpaligncenter"><img src="../images/00084.jpeg" class="calibre106"/></div>
+<div class="mce-root1">Figure 12.3: V<span>alidation accuracy for our model with batch size 32</span></div>
+<div class="cdpaligncenter"><img src="../images/00085.jpeg" class="calibre107"/></div>
+<div class="mce-root1">Figure 12.4: Validation accuracy for our model with batch size 256</div>
+<p class="calibre3">So, we've noticed quite a few differences between the results of our two models. As expected, when using a bigger batch size, we need more epochs (in theory, the total number of steps/updates for converging should be the same regardless of the batch size). However, more interestingly, the validation accuracy of the model with a batch size of 256 is a bit higher: around 0.84%. Whereas the model with a batch size of 32 tops around 79%. When we train our model with a smaller batch size, the model might pick up a bit more noise. However, by fine-tuning our model further (for example, increasing the patience when using early stopping and decreasing the learning rate), the model with a batch size of 32 should be able to achieve similar accuracies. </p>
+
+
+            </article>
+
+            
+        </section>
+    </body></html>

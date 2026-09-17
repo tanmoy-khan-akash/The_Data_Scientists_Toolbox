@@ -1,0 +1,55 @@
+<?xml version='1.0' encoding='utf-8'?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+  <head>
+    <title>How to do it...</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <link href="../stylesheet.css" rel="stylesheet" type="text/css"/>
+<link href="../page_styles.css" rel="stylesheet" type="text/css"/>
+</head>
+  <body id="4NK9E0-5e1e3ce63feb42db9ae6338e8302dfdb" class="calibre">
+        <section class="calibre1">
+
+                            <header class="calibre1">
+                    </header><h1 class="header-title" id="calibre_pb_0">How to do it...</h1>
+                
+            
+            <article class="calibre1">
+                
+<ol class="calibre17">
+<li value="1" class="calibre15">Start with importing all libraries as follows:</li>
+</ol>
+<pre class="calibre23">import numpy as np<br class="calibre24"/>import pandas as pd<br class="calibre24"/>from sklearn.preprocessing import LabelEncoder<br class="calibre24"/><br class="calibre24"/>from keras.models import Sequential<br class="calibre24"/>from keras.layers import Dense<br class="calibre24"/>from keras.callbacks import EarlyStopping</pre>
+<ol start="2" class="calibre17">
+<li value="2" class="calibre15">Next, we load the dataset:</li>
+</ol>
+<pre class="calibre23">dataframe = pandas.read_csv("Data/sonar.all-data", <br class="calibre24"/>header=None)<br class="calibre24"/>data = dataframe.values</pre>
+<ol start="3" class="calibre17">
+<li value="3" class="calibre15">Let's split the labels from the features:</li>
+</ol>
+<pre class="calibre23">X = data[:,0:60].astype(float)<br class="calibre24"/>y = data[:,60]</pre>
+<ol start="4" class="calibre17">
+<li value="4" class="calibre15">Currently, the labels are strings. We need to binarize them for our network:</li>
+</ol>
+<pre class="calibre23">encoder = LabelEncoder()<br class="calibre24"/>encoder.fit(y)<br class="calibre24"/>y = encoder.transform(y)</pre>
+<ol start="5" class="calibre17">
+<li value="5" class="calibre15">Let's define a simple network with one hidden layer:</li>
+</ol>
+<pre class="calibre23">model = Sequential()<br class="calibre24"/>model.add(Dense(32, input_dim=60, activation='relu'))<br class="calibre24"/>model.add(Dense(1, activation='sigmoid'))<br class="calibre24"/>model.compile(loss='binary_crossentropy',<br class="calibre24"/>optimizer='adam', metrics=['accuracy'])</pre>
+<ol start="6" class="calibre17">
+<li value="6" class="calibre15">We want to use early stopping to prevent overfitting by defining a callback:</li>
+</ol>
+<pre class="calibre23">callbacks = [EarlyStopping(monitor='val_acc', patience=20)]</pre>
+<ol start="7" class="calibre17">
+<li value="7" class="calibre15">Next, we define the hyperparameters and start training:</li>
+</ol>
+<pre class="calibre23">n_epochs = 1000<br class="calibre24"/>batch_size = 2<br class="calibre24"/>model.fit(X, y, epochs=n_epochs, batch_size=batch_size, validation_split=0.1, callbacks=callbacks)</pre>
+<p class="calibre3">Within fewer than 100 epochs, you should have obtained a validation accuracy that is greater than 90%.</p>
+<div class="packt_infobox">In this recipe, we have demonstrated that it's not always necessary to implement deep networks to get good results. In some cases, a smaller and less complex network can work just as well or even better. When the data is structured nicely and the task is straightforward, it can be valuable to keep it simple.</div>
+<p class="calibre3"></p>
+
+
+            </article>
+
+            
+        </section>
+    </body></html>

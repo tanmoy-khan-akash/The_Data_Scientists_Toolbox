@@ -1,0 +1,26 @@
+<?xml version='1.0' encoding='utf-8'?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+  <head>
+    <title>Learning rates and learning rate schedulers</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <link href="../stylesheet.css" rel="stylesheet" type="text/css"/>
+<link href="../page_styles.css" rel="stylesheet" type="text/css"/>
+</head>
+  <body id="58PJI0-5e1e3ce63feb42db9ae6338e8302dfdb" class="calibre">
+        <section class="calibre1">
+
+                            <header class="calibre1">
+                    </header><h1 class="header-title" id="calibre_pb_0">Learning rates and learning rate schedulers</h1>
+                
+            
+            <article class="calibre1">
+                
+<p class="calibre3">It helps to avoid local optimas when using smaller learning rates. However, it often takes longer to converge. What can help shorten the training time is using a warm-up period. In this period, we can use a bigger learning rate for the first few epochs. After a certain number of epochs, we can decrease the learning rate. It's even possible to decrease the learning rate after each step, but this is not recommended, because you might be better off using a different optimizer instead (for example, if you want to use decay, you can specify this in as a hyperparameter). In theory, when the learning rate is too big during the warm-up period, it can be the case that you won't be able to reach the global optima at all.</p>
+<p class="calibre3">In the following recipe, we demonstrate how to set a custom learning rate scheduler with Keras.</p>
+
+
+            </article>
+
+            
+        </section>
+    </body></html>

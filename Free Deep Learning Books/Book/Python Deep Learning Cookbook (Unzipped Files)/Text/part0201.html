@@ -1,0 +1,63 @@
+<?xml version='1.0' encoding='utf-8'?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+  <head>
+    <title>How to do it...</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <link href="../stylesheet.css" rel="stylesheet" type="text/css"/>
+<link href="../page_styles.css" rel="stylesheet" type="text/css"/>
+</head>
+  <body id="5VM120-5e1e3ce63feb42db9ae6338e8302dfdb" class="calibre">
+        <section class="calibre1">
+
+                            <header class="calibre1">
+                    </header><h1 class="header-title" id="calibre_pb_0">How to do it...</h1>
+                
+            
+            <article class="calibre1">
+                
+<ol class="calibre17">
+<li value="1" class="calibre15">Keras has some great tools for using pretrained models. We start with importing the libraries and tools, as follows:</li>
+</ol>
+<pre class="calibre23">import numpy as np<br class="calibre24"/><br class="calibre24"/>from keras.applications.inception_v3 import InceptionV3<br class="calibre24"/>from keras.applications import imagenet_utils<br class="calibre24"/>from keras.preprocessing.image import load_img<br class="calibre24"/>from keras.preprocessing.image import img_to_array<br class="calibre24"/><br class="calibre24"/></pre>
+<div class="packt_tip"><span class="calibre30">Note that you can replace VGG16 with any of the included pretrained models in Keras.</span></div>
+<ol start="2" class="calibre17">
+<li value="2" class="calibre15">Next, we load the <kbd class="calibre12">InceptionV3</kbd> model as follows:</li>
+</ol>
+<pre class="calibre23">pretrained_model = InceptionV3<br class="calibre24"/>model = pretrained_model(weights="imagenet")</pre>
+<ol start="3" class="calibre17">
+<li value="3" class="calibre15">The <kbd class="calibre12">InceptionV3</kbd> model is trained on the ImageNet dataset, and therefore we should use the same input dimensions if we want to feed the model new images:</li>
+</ol>
+<pre class="calibre23">input_dim = (299, 299)</pre>
+<ol start="4" class="calibre17">
+<li value="4" class="calibre15">We will be using the default ImageNet preprocessing techniques included in Keras:</li>
+</ol>
+<pre class="calibre23">preprocess = imagenet_utils.preprocess_input</pre>
+<ol start="5" class="calibre17">
+<li value="5" class="calibre15">In the next step, we load an example image and preprocess it:</li>
+</ol>
+<pre class="calibre23">image = load_img('Data/dog_example.jpg', target_size=input_dim)<br class="calibre24"/>image = img_to_array(image)<br class="calibre24"/>image = image.reshape((1, *image.shape))<br class="calibre24"/>image = preprocess(image)</pre>
+<ol start="6" class="calibre17">
+<li value="6" class="calibre15">After these simple steps, we are ready to predict the class of our example image, as follows:</li>
+</ol>
+<pre class="calibre23">preds = model.predict(image)</pre>
+<ol start="7" class="calibre17">
+<li value="7" class="calibre15">To decode the predictions, we can use Keras's <kbd class="calibre12">imagenet_utils.decode_predictions</kbd> method:</li>
+</ol>
+<pre class="calibre23">preds_decoded = imagenet_utils.decode_predictions(preds)</pre>
+<ol start="8" class="calibre17">
+<li value="8" class="calibre15">Finally, let's print these values:</li>
+</ol>
+<pre class="calibre23">preds_decoded</pre>
+<ol start="9" class="calibre17">
+<li value="9" class="calibre15">Your output should look like this:</li>
+</ol>
+<div class="cdpaligncenter"><img src="../images/00092.jpeg" class="calibre113"/></div>
+<div class="mce-root1"><span>Figure 14.1: Predictions and probabilities of VGG16 on the example image</span></div>
+<p class="calibre3">It's amazing how we are able to retrieve predictions on any image with just 16 lines of code. However, we can use this model <span>only</span><span> </span><span>if the target class is actually included in the original ImageNet dataset (1,000 classes). </span></p>
+
+
+            </article>
+
+            
+        </section>
+    </body></html>

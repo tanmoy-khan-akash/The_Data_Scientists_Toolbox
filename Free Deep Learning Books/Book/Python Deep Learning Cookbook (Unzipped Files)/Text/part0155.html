@@ -1,0 +1,79 @@
+<?xml version='1.0' encoding='utf-8'?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+  <head>
+    <title>How to do it...</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <link href="../stylesheet.css" rel="stylesheet" type="text/css"/>
+<link href="../page_styles.css" rel="stylesheet" type="text/css"/>
+</head>
+  <body id="4JQ760-5e1e3ce63feb42db9ae6338e8302dfdb" class="calibre">
+        <section class="calibre1">
+
+                            <header class="calibre1">
+                    </header><h1 class="header-title" id="calibre_pb_0">How to do it...</h1>
+                
+            
+            <article class="calibre1">
+                
+<ol class="calibre17">
+<li class="calibre15" value="1">We start by importing all the libraries, as follows:</li>
+</ol>
+<pre class="calibre23">import matplotlib.pyplot as plt<br class="calibre24"/>import numpy as np<br class="calibre24"/>import pandas as pd<br class="calibre24"/>from sklearn.preprocessing import MinMaxScaler<br class="calibre24"/><br class="calibre24"/>from keras.layers.core import Dense, <br class="calibre24"/>Activation, Dropout<br class="calibre24"/>from keras.layers.recurrent import LSTM<br class="calibre24"/>from keras.models import Sequential</pre>
+<ol start="2" class="calibre17">
+<li value="2" class="calibre15">Let's load the data and print the first rows:</li>
+</ol>
+<pre class="calibre23">data = pd.read_csv('Data/stock-data-2000-2017.csv')<br class="calibre24"/># Reorder the columns for convenience<br class="calibre24"/>data = data[['Open', 'High', 'Low', 'Volume', <br class="calibre24"/>'Close']]<br class="calibre24"/>data.head()</pre>
+<p class="calibre27">The following figure shows the output of the preceding code:</p>
+<div class="cdpaligncenter"><img src="../images/00076.jpeg" class="calibre99"/></div>
+<div class="mce-root1">Figure 10.1: First five entries of the stock dataset</div>
+<ol start="3" class="calibre17">
+<li value="3" class="calibre15">Before we move on, we need to set the hyperparameters:</li>
+</ol>
+<pre class="calibre23">sequence_length = 21 # 20 preceeding inputs<br class="calibre24"/>n_features = len(data.columns)<br class="calibre24"/>val_ratio = 0.1<br class="calibre24"/>n_epochs = 300<br class="calibre24"/>batch_size = 512</pre>
+<ol start="4" class="calibre17">
+<li value="4" class="calibre15">The data needs to be preprocessed before we can feed it to an RNN. Every input should include the data of 20 proceding (<kbd class="calibre12">sequence_length - 1</kbd>) inputs. This means, one row of data (including the label) should be of the shape <kbd class="calibre12">sequence_length</kbd> by <kbd class="calibre12">n_features</kbd>:</li>
+</ol>
+<pre class="calibre23">data = data.as_matrix()<br class="calibre24"/>data_processed = []<br class="calibre24"/>for index in range(len(data) - sequence_length):<br class="calibre24"/>    data_processed.append(data[index : <br class="calibre24"/>    index + sequence_length])<br class="calibre24"/>data_processed = np.array(data_processed)</pre>
+<ol start="5" class="calibre17">
+<li value="5" class="calibre15">When modeling time series data, we should be extremely careful with splitting the data for training and validation. The split should resemble the training data and test data split. In this case, we should split the training data for training and validation as time-based:</li>
+</ol>
+<pre class="calibre23">val_split = round((1-val_ratio) * <br class="calibre24"/>data_processed.shape[0])<br class="calibre24"/>train = data_processed[: int(val_split), :]<br class="calibre24"/>val = data_processed[int(val_split) :, :]<br class="calibre24"/><br class="calibre24"/>print('Training data: {}'.format(train.shape))<br class="calibre24"/>print('Validation data: {}'.format(val.shape))</pre>
+<ol start="6" class="calibre17">
+<li value="6" class="calibre15">As we can see in <em class="calibre22">Figure 10-1</em><span>, the values used as input are quite large. Moreover, one of the variables, <kbd class="calibre12">Volume</kbd>, has significantly larger values than the other variables. Therefore, it's important that we normalize the data with scikit-learn's <kbd class="calibre12">MinMaxScaler</kbd>, as follows:</span></li>
+</ol>
+<pre class="calibre23">train_samples, train_nx, train_ny = train.shape<br class="calibre24"/>val_samples, val_nx, val_ny = val.shape<br class="calibre24"/><br class="calibre24"/>train = train.reshape((train_samples, train_nx * train_ny))<br class="calibre24"/>val = val.reshape((val_samples, val_nx * val_ny))<br class="calibre24"/><br class="calibre24"/>preprocessor = MinMaxScaler().fit(train)<br class="calibre24"/>train = preprocessor.transform(train)<br class="calibre24"/>val = preprocessor.transform(val)<br class="calibre24"/><br class="calibre24"/>train = train.reshape((train_samples, <br class="calibre24"/>train_nx, train_ny))<br class="calibre24"/>val = val.reshape((val_samples, <br class="calibre24"/>val_nx, val_ny))</pre>
+<ol start="7" class="calibre17">
+<li value="7" class="calibre15">Next, we need to make sure that the labels are correctly extracted. From our 21 x 5 matrix, we need the last value as a label. As input data, we will use the first 20 rows only (using the input variables of the 21st row would be cheating):</li>
+</ol>
+<pre class="calibre23">X_train = train[:, : -1]<br class="calibre24"/>y_train = train[:, -1][: ,-1]<br class="calibre24"/>X_val = val[:, : -1]<br class="calibre24"/>y_val = val[:, -1][ : ,-1]<br class="calibre24"/><br class="calibre24"/>X_train = np.reshape(X_train, (X_train.shape[0], <br class="calibre24"/>X_train.shape[1], n_features))<br class="calibre24"/>X_val = np.reshape(X_val, (X_val.shape[0],<br class="calibre24"/>X_val.shape[1], n_features))</pre>
+<ol start="8" class="calibre17">
+<li value="8" class="calibre15">We can now define our model architecture. We will stack two LSTM cells and an output layer with a dropout in between. We'll be using <kbd class="calibre12">adam</kbd> as the optimizer and <kbd class="calibre12">mse</kbd> as the loss function:</li>
+</ol>
+<pre class="calibre23">model = Sequential()<br class="calibre24"/>model.add(LSTM(input_shape=(X_train.shape[1:]), units = 128, return_sequences=True))<br class="calibre24"/>model.add(Dropout(0.5))<br class="calibre24"/>model.add(LSTM(128, return_sequences=False))<br class="calibre24"/>model.add(Dropout(0.25))<br class="calibre24"/>model.add(Dense(units=1))<br class="calibre24"/>model.add(Activation("linear"))<br class="calibre24"/><br class="calibre24"/>model.compile(loss="mse", optimizer="adam")</pre>
+<ol start="9" class="calibre17">
+<li value="9" class="calibre15">Let's start training our model and store the training results in <kbd class="calibre12">history</kbd>:</li>
+</ol>
+<pre class="calibre23">history = model.fit(<br class="calibre24"/>    X_train,<br class="calibre24"/>    y_train,<br class="calibre24"/>    batch_size=batch_size,<br class="calibre24"/>    epochs=n_epochs,<br class="calibre24"/>    verbose=2)</pre>
+<p class="calibre27">As you can see, we didn't use a validation split while training. If we do want to use a validation set during training, we should split the training set time-based and use a fixed validation set. </p>
+<ol start="10" class="calibre17">
+<li value="10" class="calibre15">Instead, we'll be validating our results after training. In addition, we store the differences between the labels and the predictions, as follows:</li>
+</ol>
+<pre class="calibre23">preds_val = model.predict(X_val)<br class="calibre24"/>diff = []<br class="calibre24"/>for i in range(len(y_val)):<br class="calibre24"/>    pred = preds_val[i][0]<br class="calibre24"/>    diff.append(y_val[i] - pred)</pre>
+<ol start="11" class="calibre17">
+<li value="11" class="calibre15">Because we've normalized all input variables and the label, our predictions will also be normalized. That's why we need an inverse transformation to get the actual values:</li>
+</ol>
+<pre class="calibre23">real_min = preprocessor.data_min_[104]<br class="calibre24"/>real_max = preprocessor.data_max_[104]<br class="calibre24"/>print(preprocessor.data_min_[104])<br class="calibre24"/>print(preprocessor.data_max_[104])<br class="calibre24"/><br class="calibre24"/>preds_real = preds_val * <br class="calibre24"/>(real_max - real_min) + real_min<br class="calibre24"/>y_val_real = y_val *<br class="calibre24"/>(real_max - real_min) + real_min</pre>
+<ol start="12" class="calibre17">
+<li value="12" class="calibre15">Finally, we can plot the actual stock prices and the predicted prices, as follows:</li>
+</ol>
+<pre class="calibre23">plt.plot(preds_real, label='Predictions')<br class="calibre24"/>plt.plot(y_val_real, label='Actual values')<br class="calibre24"/>plt.xlabel('test')<br class="calibre24"/>plt.legend(loc=0)<br class="calibre24"/>plt.show()</pre>
+<p class="calibre27">In the following figure, we've plotted the actual stock prices and our predictions. As you can see the predictions do follow the actual prices quite closely but overestimate the price in most of the steps:</p>
+<div class="cdpaligncenter"><img src="../images/00077.jpeg" class="calibre100"/></div>
+<div class="mce-root1">Figure 10-2: Actual stock prices and predictions on the validation set</div>
+
+
+            </article>
+
+            
+        </section>
+    </body></html>

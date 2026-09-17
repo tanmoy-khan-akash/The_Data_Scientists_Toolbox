@@ -1,0 +1,76 @@
+<?xml version='1.0' encoding='utf-8'?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+  <head>
+    <title>How to do it...</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <link href="../stylesheet.css" rel="stylesheet" type="text/css"/>
+<link href="../page_styles.css" rel="stylesheet" type="text/css"/>
+</head>
+  <body id="4E33Q0-5e1e3ce63feb42db9ae6338e8302dfdb" class="calibre">
+        <section class="calibre1">
+
+                            <header class="calibre1">
+                    </header><h1 class="header-title" id="calibre_pb_0">How to do it...</h1>
+                
+            
+            <article class="calibre1">
+                
+<ol class="calibre17">
+<li value="1" class="calibre15">In this recipe, we start by importing all libraries:</li>
+</ol>
+<pre class="calibre23">import glob<br class="calibre24"/>import numpy as np<br class="calibre24"/>import random<br class="calibre24"/>import librosa<br class="calibre24"/>from sklearn.model_selection import train_test_split<br class="calibre24"/>from sklearn.preprocessing import LabelBinarizer<br class="calibre24"/><br class="calibre24"/>import keras<br class="calibre24"/>from keras.layers import LSTM, Dense, Dropout, Flatten<br class="calibre24"/>from keras.models import Sequential<br class="calibre24"/>from keras.optimizers import Adam<br class="calibre24"/><span>from keras.callbacks import EarlyStopping, ModelCheckpoint</span></pre>
+<ol start="2" class="calibre17">
+<li value="2" class="calibre15">Let's set <kbd class="calibre12">SEED</kbd> and the location of the <kbd class="calibre12">.wav</kbd> files:</li>
+</ol>
+<pre class="calibre23">SEED = 2017<br class="calibre24"/>DATA_DIR = 'Data/spoken_numbers_pcm/' </pre>
+<ol start="3" class="calibre17">
+<li value="3" class="calibre15">Let's split the <kbd class="calibre12">.wav</kbd> files in a training set and a validation set with scikit-learn's <kbd class="calibre12">train_test_split</kbd> function:</li>
+</ol>
+<pre class="calibre23">files = glob.glob(DATA_DIR + "*.wav")<br class="calibre24"/>X_train, X_val = train_test_split(files, test_size=0.2, random_state=SEED)<br class="calibre24"/><br class="calibre24"/>print('# Training examples: {}'.format(len(X_train)))<br class="calibre24"/>print('# Validation examples: {}'.format(len(X_val)))</pre>
+<ol start="4" class="calibre17">
+<li value="4" class="calibre15">To extract and print all unique <kbd class="calibre12">labels</kbd>, we use the following code:</li>
+</ol>
+<pre class="calibre23">labels = []<br class="calibre24"/>for i in range(len(X_train)):<br class="calibre24"/>    label = X_train[i].split('/')[-1].split('_')[1]<br class="calibre24"/>    if label not in labels:<br class="calibre24"/>        labels.append(label)<br class="calibre24"/>print(labels)</pre>
+<ol start="5" class="calibre17">
+<li value="5" class="calibre15">We can now define our <kbd class="calibre12">one_hot_encode</kbd> function as follows:</li>
+</ol>
+<pre class="calibre23">label_binarizer = LabelBinarizer()<br class="calibre24"/>label_binarizer.fit(list(set(labels)))<br class="calibre24"/><br class="calibre24"/>def one_hot_encode(x): return label_binarizer.transform(x)</pre>
+<ol start="6" class="calibre17">
+<li value="6" class="calibre15">Before we can feed the data to our network, some preprocessing needs to be done. We use the following settings:</li>
+</ol>
+<pre class="calibre23">n_features = 20<br class="calibre24"/>max_length = 80<br class="calibre24"/>n_classes = len(labels)</pre>
+<ol start="7" class="calibre17">
+<li value="7" class="calibre15">We can now define our batch generator. The generator includes all preprocessing tasks, such as reading a <kbd class="calibre12">.wav</kbd> file and transforming it into usable input:</li>
+</ol>
+<pre class="calibre23">def batch_generator(data, batch_size=16):<br class="calibre24"/>    while 1:<br class="calibre24"/>        random.shuffle(data)<br class="calibre24"/>        X, y = [], []<br class="calibre24"/>        for i in range(batch_size):<br class="calibre24"/>            wav = data[i]<br class="calibre24"/>            wave, sr = librosa.load(wav, mono=True)<br class="calibre24"/>            label = wav.split('/')[-1].split('_')[1]<br class="calibre24"/>            y.append(one_hot_encode(label))<br class="calibre24"/>            mfcc = librosa.feature.mfcc(wave, sr)<br class="calibre24"/>            mfcc = np.pad(mfcc, ((0,0), (0, max_length-<br class="calibre24"/>            len(mfcc[0]))), mode='constant', constant_values=0) <br class="calibre24"/>            X.append(np.array(mfcc))<br class="calibre24"/>        yield np.array(X), np.array(y)</pre>
+<div class="packt_infobox">Please note the difference in our batch generator compared to the previous recipe.</div>
+<ol start="8" class="calibre17">
+<li value="8" class="calibre15">Let's define the hyperparameters before defining our network architecture:</li>
+</ol>
+<pre class="calibre23">learning_rate = 0.001<br class="calibre24"/>batch_size = 64<br class="calibre24"/>n_epochs = 50<br class="calibre24"/>dropout = 0.5<br class="calibre24"/><br class="calibre24"/>input_shape = (n_features, max_length)<br class="calibre24"/>steps_per_epoch = 50</pre>
+<ol start="9" class="calibre17">
+<li value="9" class="calibre15">The network architecture we will use is quite straightforward. We will stack an <kbd class="calibre12">LSTM</kbd> layer on top of a dense layer, as follows:</li>
+</ol>
+<pre class="calibre23"><span> model = Sequential()<br class="calibre24"/> model.add(LSTM(256, return_sequences=True, input_shape=input_shape,<br class="calibre24"/>   dropout=dropout))<br class="calibre24"/> model.add(Flatten())<br class="calibre24"/> model.add(Dense(128, activation='relu'))<br class="calibre24"/> model.add(Dropout(dropout))<br class="calibre24"/> model.add(Dense(n_classes, activation='softmax'))</span></pre>
+<ol start="10" class="calibre17">
+<li value="10" class="calibre15">Next, we set the loss function, compile the model, and output a summary of our model:</li>
+</ol>
+<pre class="calibre23"><span>opt = Adam(lr=learning_rate)<br class="calibre24"/> model.compile(loss='categorical_crossentropy', optimizer=opt,<br class="calibre24"/> metrics=['accuracy'])<br class="calibre24"/> model.summary()</span><span><br class="calibre24"/></span></pre>
+<ol start="11" class="calibre17">
+<li value="11" class="calibre15">To prevent overfitting, we will be using early stopping and automatically store the model that has the highest validation accuracy:</li>
+</ol>
+<pre class="calibre23">callbacks = [ModelCheckpoint('checkpoints/voice_recognition_best_model_{epoch:02d}.hdf5', save_best_only=True),<br class="calibre24"/>            EarlyStopping(monitor='val_acc', patience=2)]</pre>
+<ol start="12" class="calibre17">
+<li value="12" class="calibre15">We are ready to start training and we will store the results in <kbd class="calibre12">history</kbd>:</li>
+</ol>
+<pre class="calibre23"><span> history = model.fit_generator(<br class="calibre24"/>   generator=batch_generator(X_train, batch_size),<br class="calibre24"/>   steps_per_epoch=steps_per_epoch,<br class="calibre24"/>   epochs=n_epochs,<br class="calibre24"/>   verbose=1,<br class="calibre24"/>   validation_data=batch_generator(X_val, 32),<br class="calibre24"/>   validation_steps=5,<br class="calibre24"/>   callbacks=callbacks<br class="calibre24"/> )</span><span><br class="calibre24"/></span></pre>
+<p class="calibre27">In the following figure, the <strong class="calibre5">training accuracy</strong> and <strong class="calibre5">validation accuracy</strong> are plotted against the epochs:</p>
+<div class="mce-root1"><img src="../images/00075.jpeg" class="calibre98"/></div>
+<div class="mce-root1">Figure 9.1: Training and validation accuracy </div>
+
+
+            </article>
+
+            
+        </section>
+    </body></html>

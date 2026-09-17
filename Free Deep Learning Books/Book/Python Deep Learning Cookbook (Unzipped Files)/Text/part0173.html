@@ -1,0 +1,26 @@
+<?xml version='1.0' encoding='utf-8'?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+  <head>
+    <title>Working with batches and mini-batches</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <link href="../stylesheet.css" rel="stylesheet" type="text/css"/>
+<link href="../page_styles.css" rel="stylesheet" type="text/css"/>
+</head>
+  <body id="54VHA0-5e1e3ce63feb42db9ae6338e8302dfdb" class="calibre">
+        <section class="calibre1">
+
+                            <header class="calibre1">
+                    </header><h1 class="header-title" id="calibre_pb_0">Working with batches and mini-batches</h1>
+                
+            
+            <article class="calibre1">
+                
+<p class="calibre3">When training a neural network, we feed the training data to our network. Each full scan of the training data is called an epoch. If we feed all of the training data in one step, we call it batch mode (the batch size equals the size of the training set). However, in most cases, we divide the training data into smaller subsets while feeding the data to our model,<span> just as in other machine learning algorithms</span>. This is called mini-batch mode. Sometimes, we are forced to do this because the complete training set is too big and doesn't fit in the memory. If we look at the training time, we would say: the bigger the batch size, the better (as long as the batch fits in the memory). However, using mini-batches also has other advantages. Firstly, it reduces the complexity of the training process. Secondly, it reduces the effect of noise on the model by summing or averaging the gradient (reducing the variance). In mini-batch mode, the optimizer uses a balance of efficiency and robustness.</p>
+<p class="calibre3">If the size of the mini-batch–also called batch size–is too small, the model can converge faster but is more likely to pick up noise. If the batch size is too large, the model will probably converge slower but the estimates of error gradients will be more accurate. For deep learning, when dealing with a lot of data, it's good to use large batch sizes. These batches are also great for parallelization on GPUs. In the following recipe, we will show you an example of steps to take when tuning the batch size.</p>
+
+
+            </article>
+
+            
+        </section>
+    </body></html>

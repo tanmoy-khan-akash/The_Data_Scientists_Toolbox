@@ -1,0 +1,71 @@
+<?xml version='1.0' encoding='utf-8'?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+  <head>
+    <title>How to do it...</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <link href="../stylesheet.css" rel="stylesheet" type="text/css"/>
+<link href="../page_styles.css" rel="stylesheet" type="text/css"/>
+</head>
+  <body id="4C62M0-5e1e3ce63feb42db9ae6338e8302dfdb" class="calibre">
+        <section class="calibre1">
+
+                            <header class="calibre1">
+                    </header><h1 class="header-title" id="calibre_pb_0">How to do it...</h1>
+                
+            
+            <article class="calibre1">
+                
+<ol class="calibre17">
+<li value="1" class="calibre15">We start by importing <kbd class="calibre12">keras</kbd> and other libraries, as follows:</li>
+</ol>
+<pre class="calibre23">import glob<br class="calibre24"/>import numpy as np<br class="calibre24"/>import random<br class="calibre24"/>import librosa<br class="calibre24"/>from sklearn.model_selection import train_test_split<br class="calibre24"/><br class="calibre24"/>import keras<br class="calibre24"/>from keras.layers import LSTM, Dense, Dropout, Flatten<br class="calibre24"/>from keras.models import Sequential<br class="calibre24"/>from keras.optimizers import Adam<br class="calibre24"/><span>from keras.callbacks import EarlyStopping, ModelCheckpoint</span></pre>
+<ol start="2" class="calibre17">
+<li value="2" class="calibre15">First, we set the location of the training files, and for reproducibility, we also set a <kbd class="calibre12">SEED</kbd>:</li>
+</ol>
+<pre class="calibre23">SEED = 2017<br class="calibre24"/>DATA_DIR = 'Data/spoken_numbers_pcm/' </pre>
+<ol start="3" class="calibre17">
+<li value="3" class="calibre15">The training files are located in a directory, and we will be using a batch generator to retrieve them. First, we split the training files into a training and a validation set:</li>
+</ol>
+<pre class="calibre23">files = glob.glob(DATA_DIR + "*.wav")<br class="calibre24"/>X_train, X_val = train_test_split(files, test_size=0.2, random_state=SEED)<br class="calibre24"/><br class="calibre24"/>print('# Training examples: {}'.format(len(X_train)))<br class="calibre24"/>print('# Validation examples: {}'.format(len(X_val)))</pre>
+<ol start="4" class="calibre17">
+<li value="4" class="calibre15">Before proceeding to the batch generator, we need to define some settings:</li>
+</ol>
+<pre class="calibre23">n_features = 20<br class="calibre24"/>max_length = 80<br class="calibre24"/>n_classes = 10</pre>
+<ol start="5" class="calibre17">
+<li value="5" class="calibre15">This ensures that the used <kbd class="calibre12">.wav</kbd> files are all standardized to the same length.</li>
+<li value="6" class="calibre15">Our batch generator should return a batch of preprocessed <kbd class="calibre12">.wav</kbd> files and their labels:</li>
+</ol>
+<pre class="calibre23">def batch_generator(data, batch_size=16):<br class="calibre24"/>    while 1:<br class="calibre24"/>        random.shuffle(data)<br class="calibre24"/>        X, y = [], []<br class="calibre24"/>        for i in range(batch_size):<br class="calibre24"/>            wav = data[i]<br class="calibre24"/>            wave, sr = librosa.load(wav, mono=True)<br class="calibre24"/>            label = one_hot_encode(int(wav.split('/')[-1][0]),<br class="calibre24"/>                    n_classes)<br class="calibre24"/>            y.append(label)<br class="calibre24"/>            mfcc = librosa.feature.mfcc(wave, sr)<br class="calibre24"/>            mfcc = np.pad(mfcc, ((0,0), (0, max_length-<br class="calibre24"/>            len(mfcc[0]))), mode='constant', constant_values=0) <br class="calibre24"/>            X.append(np.array(mfcc))<br class="calibre24"/>        yield np.array(X), np.array(y)</pre>
+<ol start="7" class="calibre17">
+<li value="7" class="calibre15">In our batch generator, we've used a <kbd class="calibre12">dense_to_one_hot</kbd> function to <kbd class="calibre12">one_hot_encode</kbd> the labels. This function can be defined as follows:</li>
+</ol>
+<pre class="calibre23">def one_hot_encode(labels_dense, n_classes=10):<br class="calibre24"/>    return np.eye(n_classes)[labels_dense]</pre>
+<ol start="8" class="calibre17">
+<li value="8" class="calibre15">Now, let's extract an example of the training set to determine the final shapes:</li>
+</ol>
+<pre class="calibre23"><span> X_example, y_example = next(batch_generator(X_train, batch_size=1))<br class="calibre24"/> print('Shape of training example: {}'.format(X_example.shape))<br class="calibre24"/> print('Shape of training example label: {}'.format(y_example.shape))</span></pre>
+<ol start="9" class="calibre17">
+<li value="9" class="calibre15">Next, we define the hyperparameters before defining our network architecture:</li>
+</ol>
+<pre class="calibre23">learning_rate = 0.001<br class="calibre24"/>batch_size = 64<br class="calibre24"/>n_epochs = 50<br class="calibre24"/>dropout = 0.5<br class="calibre24"/><br class="calibre24"/>input_shape = X_example.shape[1:]<br class="calibre24"/>steps_per_epoch = 50</pre>
+<ol start="10" class="calibre17">
+<li value="10" class="calibre15">The network architecture we will use is quite straightforward. We will stack an LSTM layer on top of a dense layer, as follows:</li>
+</ol>
+<pre class="calibre23"><span>model = Sequential() model.add(LSTM(256, return_sequences=True, input_shape=input_shape, dropout=dropout)) <br class="calibre24"/>model.add(Flatten()) model.add(Dense(128, activation='relu')) model.add(Dropout(dropout)) <br class="calibre24"/>model.add(Dense(n_classes, activation='softmax'))</span></pre>
+<ol start="11" class="calibre17">
+<li value="11" class="calibre15">As a loss function, we use softmax cross entropy and we compile the model:</li>
+</ol>
+<pre class="calibre23"><span>opt = Adam(lr=learning_rate) model.compile(loss='categorical_crossentropy', optimizer=opt, <br class="calibre24"/>metrics=['accuracy']) model.summary()</span><span><br class="calibre24"/></span></pre>
+<p class="calibre27"><span>To check the progress during training, we will be measuring the accuracy.</span></p>
+<ol start="12" class="calibre17">
+<li value="12" class="calibre15">We are ready to start training and we will store the results in <kbd class="calibre12">history</kbd>:</li>
+</ol>
+<pre class="calibre23"><span>history = model.fit_generator(<br class="calibre24"/>  generator=batch_generator(X_train, batch_size),<br class="calibre24"/>  steps_per_epoch=steps_per_epoch,<br class="calibre24"/>  epochs=n_epochs,<br class="calibre24"/>  verbose=1,<br class="calibre24"/>  validation_data=batch_generator(X_val, 32),<br class="calibre24"/>  validation_steps=5<br class="calibre24"/>)</span></pre>
+<div class="packt_infobox">The high validation accuracy obtained with this relatively simple model shows the power of deep learning. However, we must note that the task is relatively straightforward. Upon increasing the number of labels, the amount of training data necessary to obtain good results grows significantly as well. Also, different accents, background noise, and other factors play an important role in real-world applications.</div>
+
+
+            </article>
+
+            
+        </section>
+    </body></html>
