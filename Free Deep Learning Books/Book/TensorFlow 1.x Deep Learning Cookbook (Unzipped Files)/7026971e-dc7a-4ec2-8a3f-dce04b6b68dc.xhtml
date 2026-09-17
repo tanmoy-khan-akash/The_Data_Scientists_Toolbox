@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+    <head>
+        <title>A working example - MNIST</title>
+        <link rel="stylesheet" href="css/style.css" type="text/css"/>
+        <meta charset="utf-8"/>
+    
+<!-- kobo-style -->
+<script xmlns="http://www.w3.org/1999/xhtml" type="text/javascript" src="js/kobo.js"/>
+<style xmlns="http://www.w3.org/1999/xhtml" type="text/css" id="koboSpanStyle">.koboSpan { -webkit-text-combine: inherit; }</style>
+
+</head>
+
+    <body>
+        <section>
+
+                            <header>
+                    <h1 class="header-title"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.1.1">A working example - MNIST</span></h1>
+                </header>
+            
+            <article>
+                
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.2.1">The working example is based on the Github page: </span><a href="https://github.com/ywpkwon/siamese_tf_mnist" target="_blank"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.3.1">https://github.com/ywpkwon/siamese_tf_mnist</span></a><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.4.1">. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.4.2">This code here uses Siamese Networks to embed hand-written MNIST digits into 2D space, digits belonging to same class are embedded together. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.4.3">The code consists of three major files:</span></p>
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.5.1">● </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.6.1">run.py</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.7.1">: It contains the basic wrapper to perform training. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.7.2">It uses the Gradient Descent algorithm to minimize the contrastive loss.</span></p>
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.8.1">● </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.9.1">inference.py</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.10.1">: This contains the Siamese Class which defines a 3-layered fully connected network. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.10.2">The similarity between the output of two networks in the code is Euclidean. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.10.3">The partial generative loss and the partial imposter Loss are used to then to calculate the Contrastive loss.</span></p>
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.11.1">● </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.12.1">visualize.py</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.13.1">: This is again just a wrapper to visualize the results.</span></p>
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.14.1">After first 100,000 training steps, the results are:</span></p>
+<div class="CDPAlignCenter CDPAlign"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.15.1"><img src="assets/8b5c32c0-e504-4d4d-bdaf-24d3eb4ccef3.png"/></span></div>
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.16.1">You can see that same (labeled) digits embedded together in the 2D space.</span></p>
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.17.1">There is another interesting example at </span><a href="https://github.com/dhwajraj/deep-siamese-text-similarity"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.18.1">https://github.com/dhwajraj/deep-siamese-text-similarity</span></a><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.19.1">.</span></p>
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.20.1">Here, using Tensorflow, deep Siamese LSTM networks are trained to capture phrase/sentence similarity using character embeddings.</span></p>
+
+
+            </article>
+
+            
+        </section>
+    </body>
+
+</html>

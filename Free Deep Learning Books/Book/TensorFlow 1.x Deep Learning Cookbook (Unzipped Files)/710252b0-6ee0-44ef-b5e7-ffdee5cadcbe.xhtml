@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+    <head>
+        <title>How it works...</title>
+        <link rel="stylesheet" href="css/style.css" type="text/css"/>
+        <meta charset="utf-8"/>
+    
+<!-- kobo-style -->
+<script xmlns="http://www.w3.org/1999/xhtml" type="text/javascript" src="js/kobo.js"/>
+<style xmlns="http://www.w3.org/1999/xhtml" type="text/css" id="koboSpanStyle">.koboSpan { -webkit-text-combine: inherit; }</style>
+
+</head>
+
+    <body>
+        <section>
+
+                            <header>
+                    <h1 class="header-title"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.1.1">How it works...</span></h1>
+                </header>
+            
+            <article>
+                
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.2.1">CapsNets are very different from state-of-the-art deep learning networks. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.2.2">Instead of adding more layers and making the network deeper, CapsNets use a shallow network where capsule layers are nested inside other layers. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.2.3">Each capsule specializes in detecting a specific entity in an image, and a dynamic routing mechanism is used to send the detected entity to parents layers. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.2.4">With CNNs you have to consider thousands of images from many different perspectives in order to recognize an object from different angles. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.2.5">Hinton believes the redundancies in the layers will allow capsule networks to identify objects from multiple angles and in different scenarios with less data that is typically used by CNNs. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.2.6">Let's examine the network as shown by tensorboad:</span></p>
+<div class="CDPAlignCenter CDPAlign"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.3.1"><img class=" image-border" src="assets/23569842-8cea-4cde-a5ed-39ed16b08d7a.png"/></span></div>
+<div class="packt_figref CDPAlignCenter CDPAlign"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.4.1">An example of CapsNet as defined in the code and shown by tensorboard</span></div>
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.5.1">The results are impressive as shown in the following diagram taken from the seminal paper. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.5.2">CapsNet has a low test error (0.25 percent) on a three-layer network previously only achieved in deeper networks. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.5.3">The baseline is a standard CNN with three convolutional layers of 256,256—128 channels. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.5.4">Each has 5 x 5 kernels and a stride of 1. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.5.5">The last convolutional layers are followed by two fully connected layers of size 328,192. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.5.6">The last fully connected layer is connected with dropout to a 10 class softmax layer with cross-entropy losses:</span></p>
+<div class="CDPAlignCenter CDPAlign"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.6.1"><img class=" image-border" src="assets/19bafff9-7a12-40a4-91ef-68a4f2d51577.png"/></span></div>
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.7.1">Let's examine the reduction of margin loss, reconstruction loss, and total loss:</span></p>
+<table>
+<tbody>
+<tr>
+<td>
+<div class="CDPAlignCenter CDPAlign"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.8.1"><img class=" image-border" src="assets/2917c003-d3e1-46f7-891a-b4e15197ee89.png"/></span></div>
+</td>
+</tr>
+<tr>
+<td>
+<div class="packt_figure CDPAlignCenter CDPAlign"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.9.1"><img class=" image-border" src="assets/467c0b72-d272-43f9-a763-84f088317f09.png"/></span></div>
+</td>
+</tr>
+</tbody>
+</table>
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.10.1">Let's also examine the increase in accuracy; after 500 iterations it achieves 92 percent and 98.46 percent in 3,500 iterations:</span></p>
+<table class="a4">
+<tbody>
+<tr>
+<td>
+<div class="packt_figure">
+<div class="CDPAlignCenter CDPAlign"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.11.1">&gt;</span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.12.1"><img class=" image-border" src="assets/6007750c-8a79-4239-ad01-5ebaff4f3986.png"/></span></div>
+</div>
+</td>
+<td>
+<table class="a3">
+<tbody>
+<tr>
+<td>
+<p><strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.13.1">Iteration</span></strong></p>
+</td>
+<td>
+<p><strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.14.1">Accuracy</span></strong></p>
+</td>
+</tr>
+<tr>
+<td>
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.15.1">500</span></p>
+</td>
+<td>
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.16.1">0.922776442308</span></p>
+</td>
+</tr>
+<tr>
+<td>
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.17.1">1000</span></p>
+</td>
+<td>
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.18.1">0.959735576923</span></p>
+</td>
+</tr>
+<tr>
+<td>
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.19.1">1500</span></p>
+</td>
+<td>
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.20.1">0.971955128205</span></p>
+</td>
+</tr>
+<tr>
+<td>
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.21.1">2000</span></p>
+</td>
+<td>
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.22.1">0.978365384615</span></p>
+</td>
+</tr>
+<tr>
+<td>
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.23.1">2500</span></p>
+</td>
+<td>
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.24.1">0.981770833333</span></p>
+</td>
+</tr>
+<tr>
+<td>
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.25.1">3000</span></p>
+</td>
+<td>
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.26.1">0.983473557692</span></p>
+</td>
+</tr>
+<tr>
+<td>
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.27.1">3500</span></p>
+</td>
+<td>
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.28.1">0.984675480769</span></p>
+</td>
+</tr>
+</tbody>
+</table>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="packt_figref CDPAlignCenter CDPAlign"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.29.1">Examples of increase in accuracy for CapsNet</span></div>
+
+
+            </article>
+
+            
+        </section>
+    </body>
+
+</html>

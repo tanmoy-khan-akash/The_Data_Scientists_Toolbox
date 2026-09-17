@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+    <head>
+        <title>Answering questions about images (Visual Q&amp;A)</title>
+        <link rel="stylesheet" href="css/style.css" type="text/css"/>
+        <meta charset="utf-8"/>
+    
+<!-- kobo-style -->
+<script xmlns="http://www.w3.org/1999/xhtml" type="text/javascript" src="js/kobo.js"/>
+<style xmlns="http://www.w3.org/1999/xhtml" type="text/css" id="koboSpanStyle">.koboSpan { -webkit-text-combine: inherit; }</style>
+
+</head>
+
+    <body>
+        <section>
+
+                            <header>
+                    <h1 class="header-title"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.1.1">Answering questions about images (Visual Q&amp;A)</span></h1>
+                </header>
+            
+            <article>
+                
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.2.1">In this recipe, we will learn how to answer questions about the content of a specific image. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.2.2">This is a powerful form of Visual Q&amp;A based on a combination of visual features extracted from a pre-trained VGG16 model together with word clustering (embedding). </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.2.3">These two sets of heterogeneous features are then combined into a single network where the last layers are made up of an alternating sequence of Dense and Dropout. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.2.4">This recipe works on Keras 2.0+.</span></p>
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.3.1">Therefore, this recipe will teach you how to:</span></p>
+<ul>
+<li class="MsoNormalCxSpMiddle"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.4.1">Extract features from a pre-trained VGG16 network.</span></li>
+<li class="MsoNormalCxSpMiddle"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.5.1">Use pre-built word embeddings for mapping words into a space where similar words are adjacent.</span></li>
+<li class="MsoNormalCxSpMiddle"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.6.1">Use LSTM layers for building a language model. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.6.2">LSTM will be discussed in Chapter 6 and for now we will use them as black boxes.</span></li>
+<li class="MsoNormalCxSpMiddle"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.7.1">Combine different heterogeneous input features to create a combined feature space. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.7.2">For this task, we will use the new Keras 2.0 functional API.</span></li>
+<li class="MsoNormalCxSpMiddle"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.8.1">Attach a few additional Dense and Dropout layers for creating a multi-layer perceptron and increasing the power of our deep learning network.</span></li>
+</ul>
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.9.1">For the sake of simplicity we will not re-train the combined network in 5 but, instead, will use a pre-trained set of weights already available online (</span><a href="https://avisingh599.github.io/deeplearning/visual-qa/"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.10.1">https://avisingh599.github.io/deeplearning/visual-qa/</span></a><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.11.1">) . </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.11.2">The interested reader can re-train the network on his own train dataset made up of N images, N questions, and N answers. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.11.3">This is left as an optional exercise. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.11.4">The network is inspired by the paper </span><em><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.12.1">VQA: Visual Question Answering</span></em><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.13.1">, Aishwarya Agrawal, Jiasen Lu, Stanislaw Antol, Margaret Mitchell, C. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.13.2">Lawrence Zitnick, Dhruv Batra, Devi Parikh, 2015. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.13.3">(</span><a href="http://arxiv.org/pdf/1505.00468v4.pdf"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.14.1">http://arxiv.org/pdf/1505.00468v4.pdf</span></a><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.15.1">) :</span></p>
+<div class="CDPAlignCenter CDPAlign"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.16.1"><img class=" image-border" src="assets/a0988e7d-0ef5-4f89-a2f4-f8c0b2b887fe.png"/></span></div>
+<div class="packt_figref CDPAlignCenter CDPAlign"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.17.1">An example of Visual Q&amp;A as seen in </span><em><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.18.1">Visual Question Answering</span></em><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.19.1"> paper</span></div>
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.20.1">The only difference in our case is that we will concatenate the features produced by the image layer with the features produced by the language layer.</span></p>
+
+
+            </article>
+
+            
+        </section>
+    </body>
+
+</html>

@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+    <head>
+        <title>Working with constants, variables, and placeholders</title>
+        <link rel="stylesheet" href="css/style.css" type="text/css"/>
+        <meta charset="utf-8"/>
+    
+<!-- kobo-style -->
+<script xmlns="http://www.w3.org/1999/xhtml" type="text/javascript" src="js/kobo.js"/>
+<style xmlns="http://www.w3.org/1999/xhtml" type="text/css" id="koboSpanStyle">.koboSpan { -webkit-text-combine: inherit; }</style>
+
+</head>
+
+    <body>
+        <section>
+
+                            <header>
+                    <h1 class="header-title"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.1.1">Working with constants, variables, and placeholders</span></h1>
+                </header>
+            
+            <article>
+                
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.2.1">TensorFlow in the simplest terms provides a library to define and perform different mathematical operations with tensors. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.2.2">A tensor is basically an n-dimensional matrix. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.2.3">All types of data, that is, scalar, vectors, and matrices are special types of tensors:</span></p>
+<table class="table">
+<tbody>
+<tr>
+<td>
+<p><strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.3.1">Types of data</span></strong></p>
+</td>
+<td>
+<p><strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.4.1">Tensor</span></strong></p>
+</td>
+<td>
+<p><strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.5.1">Shape</span></strong></p>
+</td>
+</tr>
+<tr>
+<td>
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.6.1">Scalar</span></p>
+</td>
+<td>
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.7.1">0-D Tensor</span></p>
+</td>
+<td>
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.8.1">[]</span></p>
+</td>
+</tr>
+<tr>
+<td>
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.9.1">Vector</span></p>
+</td>
+<td>
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.10.1">1-D Tensor</span></p>
+</td>
+<td>
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.11.1">[D</span><sub><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.12.1">0</span></sub><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.13.1">]</span></p>
+</td>
+</tr>
+<tr>
+<td>
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.14.1">Matrix</span></p>
+</td>
+<td>
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.15.1">2-D Tensor</span></p>
+</td>
+<td>
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.16.1">[D</span><sub><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.17.1">0</span></sub><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.18.1">,D</span><sub><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.19.1">1</span></sub><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.20.1">]</span></p>
+</td>
+</tr>
+<tr>
+<td>
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.21.1">Tensors</span></p>
+</td>
+<td>
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.22.1">N-D Tensor</span></p>
+</td>
+<td>
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.23.1">[D</span><sub><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.24.1">0</span></sub><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.25.1">,D</span><sub><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.26.1">1</span></sub><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.27.1">,....D</span><sub><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.28.1">n-1</span></sub><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.29.1">]</span></p>
+</td>
+</tr>
+</tbody>
+</table>
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.30.1"> </span></p>
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.31.1">TensorFlow supports three types of tensors:</span></p>
+<ul>
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.32.1">Constants</span></li>
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.33.1">Variables</span></li>
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.34.1">Placeholders</span></li>
+</ul>
+<p><strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.35.1">Constants</span></strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.36.1">: Constants are the tensors whose values cannot be changed.</span></p>
+<p><strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.37.1">Variables</span></strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.38.1">: We use variable tensors when the values require updating within a session. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.38.2">For example, in the case of neural networks, the weights need to be updated during the training session, which is achieved by declaring weights as variables. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.38.3">The variables need to be explicitly initialized before use. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.38.4">Another important thing to note is that constants are stored in the computation graph definition; they are loaded every time the graph is loaded. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.38.5">In other words, they are memory expensive. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.38.6">Variables, on the other hand, are stored separately; they can exist on the parameter server.</span></p>
+<p><strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.39.1">Placeholders</span></strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.40.1">: These are used to feed values into a TensorFlow graph. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.40.2">They are used along with </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.41.1">feed_dict</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.42.1"> to feed the data. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.42.2">They are normally used to feed new training examples while training a neural network. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.42.3">We assign a value to a placeholder while running the graph in the session. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.42.4">They allow us to create our operations and build the computation graph without requiring the data. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.42.5">An important point to note is that placeholders do not contain any data and thus there is no need to initialize them as well.</span></p>
+
+
+            </article>
+
+            
+        </section>
+    </body>
+
+</html>

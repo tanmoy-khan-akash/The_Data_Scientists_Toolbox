@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+    <head>
+        <title>How to do it...</title>
+        <link rel="stylesheet" href="css/style.css" type="text/css"/>
+        <meta charset="utf-8"/>
+    
+<!-- kobo-style -->
+<script xmlns="http://www.w3.org/1999/xhtml" type="text/javascript" src="js/kobo.js"/>
+<style xmlns="http://www.w3.org/1999/xhtml" type="text/css" id="koboSpanStyle">.koboSpan { -webkit-text-combine: inherit; }</style>
+
+</head>
+
+    <body>
+        <section>
+
+                            <header>
+                    <h1 class="header-title"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.1.1">How to do it...</span></h1>
+                </header>
+            
+            <article>
+                
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.2.1">We will proceed with the recipe as follows:</span></p>
+<ol>
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.3.1">Install cocoapods with the following commands</span></li>
+</ol>
+<pre style="padding-left: 60px"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.4.1">sudo gem install cocoapods</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.5.1">pod setup</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.6.1">Setting up CocoaPods master repo</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.7.1">$ /usr/local/git/current/bin/git clone https://github.com/CocoaPods/Specs.git master --progress</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.8.1">Cloning into 'master'...</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.9.1">remote: Counting objects: 1602077, done.</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.10.1">remote: Compressing objects: 100% (243/243), done.</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.11.1">remote: Total 1602077 (delta 125), reused 172 (delta 74), pack-reused 1601747</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.12.1">Receiving objects: 100% (1602077/1602077), 432.12 MiB | 1.83 MiB/s, done.</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.13.1">Resolving deltas: 100% (849517/849517), done.</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.14.1">Checking out files: 100% (188907/188907), done.</span></pre>
+<ol start="2">
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.15.1">Install TensorFlow distribution with CocoaPods:</span></li>
+</ol>
+<pre style="padding-left: 60px"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.16.1">cd TensorFlow/TensorFlow/examples/ios/benchmark</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.17.1">pod install</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.18.1">Analyzing dependencies</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.19.1">Downloading dependencies</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.20.1">Installing TensorFlow-experimental (1.1.1)</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.21.1">Generating Pods project</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.22.1">Integrating client project</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.23.1">[!] Please close any current Xcode sessions and use `tf_benchmark_example.xcworkspace` for this project from now on.</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.24.1">Sending stats</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.25.1">Pod installation complete! </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.25.2">There is 1 dependency from the Podfile and 1 total pod installed.</span></pre>
+<ol start="3">
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.26.1">Download some sample data from Inception v1. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.26.2">Extract the label and graph files into the data folders inside both the </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.27.1">simple</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.28.1"> and </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.29.1">camera</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.30.1"> folders:</span></li>
+</ol>
+<pre style="padding-left: 60px"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.31.1">mkdir -p ~/graphs</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.32.1"> curl -o ~/graphs/inception5h.zip \</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.33.1"> https://storage.googleapis.com/download.TensorFlow.org/models/inception5h.zip \</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.34.1"> &amp;&amp; unzip ~/graphs/inception5h.zip -d ~/graphs/inception5h</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.35.1"> cp ~/graphs/inception5h/* TensorFlow/examples/ios/benchmark/data/</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.36.1"> cp ~/graphs/inception5h/* TensorFlow/examples/ios/camera/data/</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.37.1"> cp ~/graphs/inception5h/* TensorFlow/examples/ios/simple/data/</span></pre>
+<ol start="4">
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.38.1">Download an image used as a test from and copy it into the benchmark directory:</span></li>
+</ol>
+<p style="padding-left: 60px"><a href="https://upload.wikimedia.org/wikipedia/commons/5/55/Grace_Hopper.jpg"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.39.1">https://upload.wikimedia.org/wikipedia/commons/5/55/Grace_Hopper.jpg</span></a></p>
+<pre style="padding-left: 60px"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.40.1">cp grace_hopper.jpg ../../benchmark/data/</span></pre>
+<div class="CDPAlignCenter CDPAlign"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.41.1"><img height="245" width="209" src="assets/3938ac3e-c841-457f-8387-50626a8013ad.jpg"/></span></div>
+<div class="packt_figref CDPAlignCenter CDPAlign"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.42.1">An image of Grace Hopper</span></div>
+<ol start="5">
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.43.1"> Open the sample project used previously. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.43.2">The following command will open Xcode with TensorFlow already available: After that, run compile,  as shown in the following code and image:</span></li>
+</ol>
+<pre style="padding-left: 60px"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.44.1">open tf_benchmark_example.xcworkspace</span></pre>
+<div class="mce-root CDPAlignCenter CDPAlign"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.45.1"><img class=" image-border" src="assets/1c72bbac-403e-4a7a-80b3-7998dd265818.png"/></span></div>
+<ol start="6">
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.46.1"> Look at the results in the iPhone simulator. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.46.2">The image used in step 4 is recognized as being an image of a </span><em><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.47.1">military uniform</span></em><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.48.1">, according to the Inception v1 categories:</span></li>
+</ol>
+<table style="width: 358px;height: 627px" class="a">
+<tbody>
+<tr>
+<td>
+<div class="CDPAlignCenter CDPAlign"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.49.1"><img class=" image-border" src="assets/a78f6a3f-28e9-4d64-abe6-dca885e9db20.png"/></span></div>
+</td>
+<td>
+<div class="CDPAlignCenter CDPAlign"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.50.1"><img class=" image-border" src="assets/15c84022-0244-4d47-b696-7a63679210a2.png"/></span></div>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="packt_figref CDPAlignCenter CDPAlign"><span><span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.51.1">An example of Iphone application for Tensorflow computation</span></span></span></div>
+
+
+            </article>
+
+            
+        </section>
+    </body>
+
+</html>

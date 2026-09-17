@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+    <head>
+        <title>How it works...</title>
+        <link rel="stylesheet" href="css/style.css" type="text/css"/>
+        <meta charset="utf-8"/>
+    
+<!-- kobo-style -->
+<script xmlns="http://www.w3.org/1999/xhtml" type="text/javascript" src="js/kobo.js"/>
+<style xmlns="http://www.w3.org/1999/xhtml" type="text/css" id="koboSpanStyle">.koboSpan { -webkit-text-combine: inherit; }</style>
+
+</head>
+
+    <body>
+        <section>
+
+                            <header>
+                    <h1 class="header-title"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.1.1">How it works...</span></h1>
+                </header>
+            
+            <article>
+                
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.2.1">The main code of the sparse autoencoder, as you must have noticed, is exactly the same as that of the vanilla autoencoder, which is so because the sparse autoencoder has just one major change--the addition of the KL divergence loss to ensure sparsity of the hidden (bottleneck) layer. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.2.2">However, if you compare the two reconstructions, you can see that the sparse autoencoder is much better than the standard encoder, even with the same number of units in the hidden layer:</span></p>
+<div class="CDPAlignCenter CDPAlign"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.3.1"><img height="311" width="467" src="assets/faa06c5a-28a5-4527-b367-f774f025a756.png"/></span></div>
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.4.1">The reconstruction loss after training the vanilla autoencoder for the MNIST dataset is 0.022, while for the sparse autoencoder, it is 0.006. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.4.2">Thus, adding constraint forces the network to learn hidden representations of the data.</span></p>
+
+
+            </article>
+
+            
+        </section>
+    </body>
+
+</html>

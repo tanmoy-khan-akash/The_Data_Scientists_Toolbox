@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+    <head>
+        <title>How it works...</title>
+        <link rel="stylesheet" href="css/style.css" type="text/css"/>
+        <meta charset="utf-8"/>
+    
+<!-- kobo-style -->
+<script xmlns="http://www.w3.org/1999/xhtml" type="text/javascript" src="js/kobo.js"/>
+<style xmlns="http://www.w3.org/1999/xhtml" type="text/css" id="koboSpanStyle">.koboSpan { -webkit-text-combine: inherit; }</style>
+
+</head>
+
+    <body>
+        <section>
+
+                            <header>
+                    <h1 class="header-title"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.1.1">How it works...</span></h1>
+                </header>
+            
+            <article>
+                
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.2.1">At each epoch, the generator makes a number of predictions (it creates forged MNIST images) and the discriminator tries to learn how to produce forged images after mixing the prediction with real MNIST images. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.2.2">After 32 epochs, the generator learns to forge this set of handwritten numbers. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.2.3">No one has programmed the machine to write, but it has learned how to write numbers that are indistinguishable from the ones written by humans. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.2.4">Note that training GANs can be very difficult because it is necessary to find the equilibrium between two players. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.2.5">If you are interested in the topic, I'd suggest you have a look at the series of tricks collected by practitioners (</span><a href="https://github.com/soumith/ganhacks"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.3.1">https://github.com/soumith/ganhacks</span></a><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.4.1">).</span></p>
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.5.1">Let's look at a number of practical examples for different epochs to understand how the machine will learn to improve its writing process:</span></p>
+<table class="a">
+<tbody>
+<tr>
+<td>
+<div class="CDPAlignCenter CDPAlign"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.6.1"><img class=" image-border" src="assets/a2e806fd-a42f-4a87-b850-beb0c36a1392.png"/></span></div>
+</td>
+<td>
+<div class="CDPAlignCenter CDPAlign"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.7.1"><img class=" image-border" src="assets/62be9039-67e4-474a-a4d3-1b5a5f22f9f6.png"/></span></div>
+</td>
+<td>
+<div class="CDPAlignCenter CDPAlign"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.8.1"><img class=" image-border" src="assets/3fa34dce-a7f5-4beb-b69f-e4a56adb8010.png"/></span></div>
+</td>
+</tr>
+<tr>
+<td>
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.9.1">Epoch 0</span></p>
+</td>
+<td>
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.10.1">Epoch 2</span></p>
+</td>
+<td>
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.11.1">Epoch 4</span></p>
+</td>
+</tr>
+<tr>
+<td>
+<div class="CDPAlignCenter CDPAlign"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.12.1"><img class=" image-border" src="assets/dce02074-88d4-426f-8fb6-3a7af718befd.png"/></span></div>
+</td>
+<td>
+<div class="CDPAlignCenter CDPAlign"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.13.1"><img class=" image-border" src="assets/fe7664aa-20b2-491e-879b-bad57a38c38f.png"/></span></div>
+</td>
+<td>
+<div class="CDPAlignCenter CDPAlign"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.14.1"><img class=" image-border" src="assets/64bbaff9-829c-4591-bbcd-cf8d5cfd915c.png"/></span></div>
+</td>
+</tr>
+<tr>
+<td>
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.15.1">Epoch 8</span></p>
+</td>
+<td>
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.16.1">Epoch 16</span></p>
+</td>
+<td>
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.17.1">Epoch 32</span></p>
+</td>
+</tr>
+<tr>
+<td>
+<div class="CDPAlignCenter CDPAlign"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.18.1"><img class=" image-border" src="assets/acc43ab3-a2c3-460b-bcac-58d579da5951.png"/></span></div>
+</td>
+<td>
+<div class="CDPAlignCenter CDPAlign"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.19.1"><img class=" image-border" src="assets/3e2db1d3-fa7d-49a0-8871-139223797609.png"/></span></div>
+</td>
+<td>
+<div class="CDPAlignCenter CDPAlign"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.20.1"><img class=" image-border" src="assets/47e5390f-e506-4e24-b024-c36dbf67b0d8.png"/></span></div>
+</td>
+</tr>
+<tr>
+<td>
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.21.1">Epoch 64</span></p>
+</td>
+<td>
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.22.1">Epoch 128</span></p>
+</td>
+<td>
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.23.1">Epoch 200</span></p>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="packt_figref CDPAlignCenter CDPAlign"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.24.1">Example of forged MNIST-like characters with a GAN</span></div>
+
+
+            </article>
+
+            
+        </section>
+    </body>
+
+</html>

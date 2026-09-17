@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+    <head>
+        <title>How to do it...</title>
+        <link rel="stylesheet" href="css/style.css" type="text/css"/>
+        <meta charset="utf-8"/>
+    
+<!-- kobo-style -->
+<script xmlns="http://www.w3.org/1999/xhtml" type="text/javascript" src="js/kobo.js"/>
+<style xmlns="http://www.w3.org/1999/xhtml" type="text/css" id="koboSpanStyle">.koboSpan { -webkit-text-combine: inherit; }</style>
+
+</head>
+
+    <body>
+        <section>
+
+                            <header>
+                    <h1 class="header-title"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.1.1">How to do it...</span></h1>
+                </header>
+            
+            <article>
+                
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.2.1">We proceed with profiling as follows:</span></p>
+<ol>
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.3.1">Install Android Studio from </span><a href="https://developer.android.com/studio/install.html"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.4.1">https://developer.android.com/studio/install.html.</span></a></li>
+</ol>
+<ol start="2">
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.5.1">Install Bazel by following the instructions at </span><a href="https://docs.bazel.build/versions/master/install.html"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.6.1">https://docs.bazel.build/versions/master/install.html</span></a><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.7.1">. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.7.2">For macOS, we are going to use Homebrew:</span></li>
+</ol>
+<pre style="padding-left: 60px"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.8.1">/usr/bin/ruby -e "$(curl -fsSL \</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.9.1"> https://raw.githubusercontent.com/Homebrew/install/master/install)"</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.10.1">brew install bazel</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.11.1">bazel version</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.12.1">brew upgrade bazel</span></pre>
+<ol start="3">
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.13.1">Clone the TensorFlow distribution from GitHub:</span></li>
+</ol>
+<pre style="padding-left: 60px"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.14.1">git clone https://github.com/TensorFlow/TensorFlow.git</span></pre>
+<ol start="4">
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.15.1">Build the graph transformer which profiles the graph itself:</span></li>
+</ol>
+<pre style="padding-left: 60px"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.16.1">cd ~/TensorFlow/</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.17.1">bazel build -c opt TensorFlow/tools/benchmark:benchmark_model</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.18.1">INFO: Found 1 target...</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.19.1">Target //TensorFlow/tools/benchmark:benchmark_model up-to-date:</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.20.1">bazel-bin/TensorFlow/tools/benchmark/benchmark_model</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.21.1">INFO: Elapsed time: 0.493s, Critical Path: 0.01s</span></pre>
+<ol start="5">
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.22.1">Benchmark the model by running the following command on the desktop:</span></li>
+</ol>
+<pre style="padding-left: 60px"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.23.1">bazel-bin/TensorFlow/tools/benchmark/benchmark_model --graph=/Users/gulli/graphs/TensorFlow_inception_graph.pb --show_run_order=false --show_time=false --show_memory=false --show_summary=true --show_flops=true</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.24.1">Graph: [/Users/gulli/graphs/TensorFlow_inception_graph.pb]</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.25.1">Input layers: [input:0]</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.26.1">Input shapes: [1,224,224,3]</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.27.1">Input types: [float]</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.28.1">Output layers: [output:0]</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.29.1">Num runs: [1000]</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.30.1">Inter-inference delay (seconds): [-1.0]</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.31.1">Inter-benchmark delay (seconds): [-1.0]</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.32.1">Num threads: [-1]</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.33.1">Benchmark name: []</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.34.1">Output prefix: []</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.35.1">Show sizes: [0]</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.36.1">Warmup runs: [2]</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.37.1">Loading TensorFlow.</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.38.1">Got config, 0 devices</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.39.1">Running benchmark for max 2 iterations, max -1 seconds without detailed stat logging, with -1s sleep between inferences</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.40.1">count=2 first=279182 curr=41827 min=41827 max=279182 avg=160504 std=118677</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.41.1">Running benchmark for max 1000 iterations, max 10 seconds without detailed stat logging, with -1s sleep between inferences</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.42.1">count=259 first=39945 curr=44189 min=36539 max=51743 avg=38651.1 std=1886</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.43.1">Running benchmark for max 1000 iterations, max 10 seconds with detailed stat logging, with -1s sleep between inferences</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.44.1">count=241 first=40794 curr=39178 min=37634 max=153345 avg=41644.8 std=8092</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.45.1">Average inference timings in us: Warmup: 160504, no stats: 38651, with stats: 41644</span></pre>
+<div class="CDPAlignCenter CDPAlign"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.46.1"><img class=" image-border" src="assets/aa17e86d-817b-4f9b-a2e3-f6f44328c0c9.png"/></span></div>
+<ol start="6">
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.47.1">Benchmark the model by running the following command on a target android device running a 64-bit ARM processor. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.47.2">Note that the following command pushes the inception graph onto the device and runs a shell, where the benchmark can be executed:</span></li>
+</ol>
+<pre style="padding-left: 60px"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.48.1">bazel build -c opt --config=android_arm64 \ TensorFlow/tools/benchmark:benchmark_model</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.49.1">adb push bazel-bin/TensorFlow/tools/benchmark/benchmark_model \ /data/local/tmp</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.50.1">adb push /tmp/TensorFlow_inception_graph.pb /data/local/tmp/</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.51.1">adb push ~gulli/graphs/inception5h/TensorFlow_inception_graph.pb /data/local/tmp/</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.52.1">/Users/gulli/graphs/inception5h/TensorFlow_inception_graph.pb: 1 file pushed. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.52.2">83.2 MB/s (53884595 bytes in 0.618s)</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.53.1">adb shell</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.54.1">generic_x86:/ $</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.55.1">/data/local/tmp/benchmark_model --graph=/data/local/tmp/TensorFlow_inception_graph.pb --show_run_order=false --show_time=false --show_memory=false --show_summary=true</span></pre>
+
+
+            </article>
+
+            
+        </section>
+    </body>
+
+</html>

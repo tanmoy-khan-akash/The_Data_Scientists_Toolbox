@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+    <head>
+        <title>How it works...</title>
+        <link rel="stylesheet" href="css/style.css" type="text/css"/>
+        <meta charset="utf-8"/>
+    
+<!-- kobo-style -->
+<script xmlns="http://www.w3.org/1999/xhtml" type="text/javascript" src="js/kobo.js"/>
+<style xmlns="http://www.w3.org/1999/xhtml" type="text/css" id="koboSpanStyle">.koboSpan { -webkit-text-combine: inherit; }</style>
+
+</head>
+
+    <body>
+        <section>
+
+                            <header>
+                    <h1 class="header-title"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.1.1">How it works...</span></h1>
+                </header>
+            
+            <article>
+                
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.2.1">The preceding code is divided into three main parts. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.2.2">There is the </span><strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.3.1">import block</span></strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.4.1"> that contains all the libraries our code will use; in the present code, we use only TensorFlow. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.4.2">The </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.5.1">import tensorflow as tf</span></kbd> <span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.6.1">statement</span></span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.7.1"> gives Python access to all TensorFlow's classes, methods, and symbols. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.7.2">The second block contains the graph definition part; here, we build our desired computational graph. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.7.3">In the present case, our graph consists of only one node, the tensor constant message consisting of byte string, </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.8.1">"Welcome to the exciting world of Deep Neural Networks"</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.9.1">. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.9.2">The third component of our code is </span><strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.10.1">running the computational graph</span></strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.11.1"> as Session; we created a Session using the </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.12.1">with</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.13.1"> keyword. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.13.2">Finally , in the Session, we run the graph created above.</span></p>
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.14.1">Let's now understand the output. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.14.2">The warning messages that are received tell you that TensorFlow code could run at an even higher speed, which can be achieved by installing TensorFlow from source (we will do this in a later recipe in this chapter). </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.14.3">The information messages received inform you about the devices used for computation. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.14.4">On their part, both messages are quite harmless, but if you don't like seeing them, adding this two-line code will do the trick:</span></p>
+<pre><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.15.1">import os</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.16.1">os.environ['TF_CPP_MIN_LOG_LEVEL']='2'   </span></pre>
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.17.1">The code is to ignore all messages till level 2. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.17.2">Level 1 is for information, 2 for warnings, and 3 for error messages.</span></p>
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.18.1">The program prints the result of running the graph created the graph is run using the </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.19.1">sess.run()</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.20.1"> statement. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.20.2">The result of running the graph is fed to the </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.21.1">print</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.22.1"> function, which is further modified using the </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.23.1">decode</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.24.1"> method. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.24.2">The </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.25.1">sess.run</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.26.1"> evaluates the tensor defined in the message. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.26.2">The </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.27.1">print</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.28.1"> function prints on </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.29.1">stdout</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.30.1"> the result of the evaluation:</span></p>
+<pre><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.31.1">b'Welcome to the exciting world of Deep Neural Networks' </span></pre>
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.32.1">This says that the result is a </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.33.1">byte string</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.34.1">. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.34.2">To remove string quotes and </span><strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.35.1">b</span></strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.36.1"> (for </span><strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.37.1">byte</span></strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.38.1">), we use the method </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.39.1">decode()</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.40.1">.</span></p>
+
+
+            </article>
+
+            
+        </section>
+    </body>
+
+</html>

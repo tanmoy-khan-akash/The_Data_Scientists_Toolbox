@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+    <head>
+        <title>Transforming a TensorFlow graph for mobile devices</title>
+        <link rel="stylesheet" href="css/style.css" type="text/css"/>
+        <meta charset="utf-8"/>
+    
+<!-- kobo-style -->
+<script xmlns="http://www.w3.org/1999/xhtml" type="text/javascript" src="js/kobo.js"/>
+<style xmlns="http://www.w3.org/1999/xhtml" type="text/css" id="koboSpanStyle">.koboSpan { -webkit-text-combine: inherit; }</style>
+
+</head>
+
+    <body>
+        <section>
+
+                            <header>
+                    <h1 class="header-title"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.1.1">Transforming a TensorFlow graph for mobile devices</span></h1>
+                </header>
+            
+            <article>
+                
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.2.1">In this recipe, we will learn how to transform a TensorFlow graph so that all the training-only nodes are removed. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.2.2">This will reduce the size of the graph and make it more suitable for mobile devices.</span></p>
+<div class="packt_quote"><strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.3.1">What is a graph transform tool?</span></strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.4.1"> According to https://github.com/tensorflow/tensorflow/blob/master/tensorflow/tools/graph_transforms/README.md "</span><span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.5.1">When you have finished training a model and want to deploy it in production, you'll often want to modify it to better run in its final environment. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.5.2">For example if you're targeting a phone you might want to shrink the file size by quantizing the weights, or optimize away batch normalization or other training-only features. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.5.3">The Graph Transform framework offers a suite of tools for modifying computational graphs, and a framework to make it easy to write your own modifications".</span></span></div>
+
+
+            </article>
+
+            
+        </section>
+    </body>
+
+</html>

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+    <head>
+        <title>How to do it...</title>
+        <link rel="stylesheet" href="css/style.css" type="text/css"/>
+        <meta charset="utf-8"/>
+    
+<!-- kobo-style -->
+<script xmlns="http://www.w3.org/1999/xhtml" type="text/javascript" src="js/kobo.js"/>
+<style xmlns="http://www.w3.org/1999/xhtml" type="text/css" id="koboSpanStyle">.koboSpan { -webkit-text-combine: inherit; }</style>
+
+</head>
+
+    <body>
+        <section>
+
+                            <header>
+                    <h1 class="header-title"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.1.1">How to do it...</span></h1>
+                </header>
+            
+            <article>
+                
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.2.1">We proceed with the recipe as follows:</span></p>
+<ol>
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.3.1">The best way to install the packages is to use the pre-built APK which is created every night. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.3.2">Point your browser to </span><a href="https://ci.tensorflow.org/view/Nightly/job/nightly-android/"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.4.1">https://ci.TensorFlow.org/view/Nightly/job/nightly-android/</span></a><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.5.1"> and download </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.6.1">TensorFlow_demo.apk</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.7.1"> as shown in the following screenshot:</span></li>
+</ol>
+<div class="CDPAlignCenter CDPAlign"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.8.1"><img height="348" width="586" class=" image-border" src="assets/6b31eaf7-6ffc-47f9-b77d-83dbe4100063.png"/></span></div>
+<ol start="2">
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.9.1">Install the applications on your device. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.9.2">In my example, I will use the Pixel XL emulated device available in Android Studio. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.9.3">This is a terminal device emulated directly from inside Android Studio. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.9.4">The command </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.10.1">adb devices</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.11.1"> lists all the attached devices. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.11.2">In this case, I have an emulator for the Pixel XL and i can install the </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.12.1">TensorFlow_demo apk</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.13.1">.</span></li>
+</ol>
+<pre style="padding-left: 60px"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.14.1">adb devices</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.15.1">List of devices attached</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.16.1">emulator-5554 device</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.17.1">adb install -r TensorFlow_demo.apk</span></pre>
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.18.1">After the installation, the emulator will have a new set of TensorFlow applications available for use as shown in the following figure.</span></p>
+<div class="CDPAlignCenter CDPAlign"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.19.1"><img height="441" width="247" class=" image-border" src="assets/4e4c9442-f20a-4849-89f5-a10b66e13654.png"/></span></div>
+<ol start="3">
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.20.1">Run your favorite application. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.20.2">For instance, the following image is an example of TF Stylize, used for restyling the camera preview image to that of a number of different art styles via Transfer Learning:</span></li>
+</ol>
+<div class="CDPAlignCenter CDPAlign"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.21.1"><img height="457" width="254" class=" image-border" src="assets/0fe0352b-059e-48eb-b4e6-ec3a999133e1.png"/></span></div>
+<p style="padding-left: 90px"><span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.22.1">The</span></span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.23.1"> following i</span><span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.24.1">mage is an example of TF Speech (remember to activate the microphone for the emulator):</span></span></p>
+<div class="CDPAlignCenter CDPAlign"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.25.1"><img height="315" width="523" class=" image-border" src="assets/14cf32c8-a750-4010-9122-933384624efa.png"/></span></div>
+
+
+            </article>
+
+            
+        </section>
+    </body>
+
+</html>

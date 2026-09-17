@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+    <head>
+        <title>Learning to forge Celebrity Faces and other datasets with DCGAN</title>
+        <link rel="stylesheet" href="css/style.css" type="text/css"/>
+        <meta charset="utf-8"/>
+    
+<!-- kobo-style -->
+<script xmlns="http://www.w3.org/1999/xhtml" type="text/javascript" src="js/kobo.js"/>
+<style xmlns="http://www.w3.org/1999/xhtml" type="text/css" id="koboSpanStyle">.koboSpan { -webkit-text-combine: inherit; }</style>
+
+</head>
+
+    <body>
+        <section>
+
+                            <header>
+                    <h1 class="header-title"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.1.1">Learning to forge Celebrity Faces and other datasets with DCGAN</span></h1>
+                </header>
+            
+            <article>
+                
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.2.1">The same ideas used for forging MNIST images can be applied to other image domains. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.2.2">In this recipe, you will learn how to use the package located at </span><a href="https://github.com/carpedm20/DCGAN-tensorflow"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.3.1">https://github.com/carpedm20/DCGAN-tensorflow</span></a><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.4.1"> to train a DCGAN model on different datasets. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.4.2">The work is based on the paper </span><em><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.5.1">Unsupervised Representation Learning with Deep Convolutional Generative Adversarial Networks, Alec Radford, Luke Metz, Soumith Chintal, 2015.</span></em><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.6.1"> Quoting the abstract:</span></p>
+<div class="packt_quote"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.7.1">In recent years, supervised learning with convolutional networks (CNNs) has seen huge adoption in computer vision applications. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.7.2">Comparatively, unsupervised learning with CNNs has received less attention. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.7.3">In this work we hope to help bridge the gap between the success of CNNs for supervised learning and unsupervised learning. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.7.4">We introduce a class of CNNs called deep convolutional generative adversarial networks (DCGANs), that have certain architectural constraints, and demonstrate that they are a strong candidate for unsupervised learning. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.7.5">Training on various image datasets, we show convincing evidence that our deep convolutional adversarial pair learns a hierarchy of representations from object parts to scenes in both the generator and discriminator. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.7.6">Additionally, we use the learned features for novel tasks - demonstrating their applicability as general image representations.</span></div>
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.8.1">Note that the generator has the architecture represented in the following diagram:</span></p>
+<div class="CDPAlignCenter CDPAlign"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.9.1"><img class=" image-border" src="assets/7aa964c6-fb7f-4d74-8578-efcc5b36b500.png"/></span></div>
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.10.1">Note that in the package there are changes with respect to the original paper to avoid the fast convergence of D (discriminator) network, G (generator) network is updated twice for each D network update.</span></p>
+
+
+            </article>
+
+            
+        </section>
+    </body>
+
+</html>

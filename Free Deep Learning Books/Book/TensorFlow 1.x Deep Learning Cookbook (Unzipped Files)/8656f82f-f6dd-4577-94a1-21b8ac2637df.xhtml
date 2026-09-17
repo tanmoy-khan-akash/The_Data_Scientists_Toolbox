@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+    <head>
+        <title>How to do it...</title>
+        <link rel="stylesheet" href="css/style.css" type="text/css"/>
+        <meta charset="utf-8"/>
+    
+<!-- kobo-style -->
+<script xmlns="http://www.w3.org/1999/xhtml" type="text/javascript" src="js/kobo.js"/>
+<style xmlns="http://www.w3.org/1999/xhtml" type="text/css" id="koboSpanStyle">.koboSpan { -webkit-text-combine: inherit; }</style>
+
+</head>
+
+    <body>
+        <section>
+
+                            <header>
+                    <h1 class="header-title"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.1.1">How to do it...</span></h1>
+                </header>
+            
+            <article>
+                
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.2.1">We proceed with Keras as follows:</span></p>
+<ol>
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.3.1">As the first step, we define the type of our model. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.3.2">Keras offers two types of models: sequential and Model class API. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.3.3">Keras offers various types of neural network layers:</span></li>
+</ol>
+<pre style="padding-left: 60px"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.4.1"># Import the model and layers needed  
+from keras.model import Sequential 
+from keras.layers import Dense 
+ 
+model = Sequential() </span></pre>
+<ol start="2">
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.5.1">Add the layers to the model with the help of</span><span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.6.1"> </span></span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.7.1">model.add()</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.8.1">. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.8.2">Keras offers the option of a dense layer--for a densely connected neural network,</span><span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.9.1"> </span></span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.10.1">layer Dense(units, activation=None, use_bias=True, kernel_initializer='glorot_uniform', bias_initializer='zeros', kernel_regularizer=None, bias_regularizer=None, activity_regularizer=None, kernel_constraint=None, bias_constraint=None)</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.11.1">. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.11.2">According to Keras documentation:</span></li>
+</ol>
+<div class="mce-root packt_infobox"><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.12.1">
+Dense implements the operation:</span><span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.13.1"> </span></span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.14.1">output = activation(dot(input, kernel) + bias)</span></kbd><span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.15.1"> </span></span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.16.1">where activation is the element-wise activation function passed as the activation argument,</span><span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.17.1"> </span></span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.18.1">kernel</span><span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.19.1"> </span></span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.20.1">is a weights matrix created by the layer, and bias is a bias vector created by the layer (only applicable if</span><span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.21.1"> </span></span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.22.1">use_bias</span></kbd><span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.23.1"> </span></span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.24.1">is</span><span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.25.1"> </span></span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.26.1">True</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.27.1">).</span></div>
+<ol start="3">
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.28.1">We can use it to add as many layers as we want, with each hidden layer being fed by the previous layer. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.28.2">We need to specify the input dimension only for the first layer:</span></li>
+</ol>
+<pre style="padding-left: 60px"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.29.1">#This will add a fully connected neural network layer with 32 neurons, each taking 13 inputs, and with activation function ReLU 
+mode.add(Dense(32, input_dim=13, activation='relu')) )) 
+model.add(10, activation='sigmoid')</span></pre>
+<ol start="4">
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.30.1">Once the model is defined, we need to choose a</span><span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.31.1"> </span></span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.32.1">loss</span></kbd><span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.33.1"> </span></span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.34.1">function and optimizers. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.34.2">Keras offers a variety of</span><span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.35.1"> </span></span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.36.1">loss_functions</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.37.1">:</span><span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.38.1"> </span></span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.39.1">mean_squared_error</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.40.1">,</span><span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.41.1"> </span></span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.42.1">mean_absolute_error</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.43.1">,</span><span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.44.1"> </span></span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.45.1">mean_absolute_percentage_error</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.46.1">,</span><span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.47.1"> </span></span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.48.1">categorical_crossentropy</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.49.1">; and optimizers:</span><span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.50.1"> </span></span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.51.1">sgd, RMSprop, Adagrad, Adadelta, Adam, and so on. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.51.2">With these two decided, we can configure the learning process using</span><span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.52.1"> </span></span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.53.1">compile(self, optimizer, loss, metrics=None, sample_weight_mode=None)</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.54.1">:</span></li>
+</ol>
+<pre style="padding-left: 60px"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.55.1">model.compile(optimizer='rmsprop', 
+          loss='categorical_crossentropy', 
+          metrics=['accuracy']) </span></pre>
+<ol start="5">
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.56.1">Next, the model is trained using the</span><span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.57.1"> </span></span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.58.1">fit</span></kbd><span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.59.1"> </span></span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.60.1">method:</span></li>
+</ol>
+<pre style="padding-left: 60px"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.61.1">model.fit(data, labels, epochs=10, batch_size=32) </span></pre>
+<ol start="6">
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.62.1">Lastly, prediction can be performed with the help of the </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.63.1">predict</span></kbd><span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.64.1"> </span></span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.65.1">method </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.66.1">predict(self, x, batch_size=32, verbose=0)</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.67.1">:</span></li>
+</ol>
+<pre style="padding-left: 60px"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.68.1">model.predict(test_data, batch_size=10) </span></pre>
+
+
+            </article>
+
+            
+        </section>
+    </body>
+
+</html>

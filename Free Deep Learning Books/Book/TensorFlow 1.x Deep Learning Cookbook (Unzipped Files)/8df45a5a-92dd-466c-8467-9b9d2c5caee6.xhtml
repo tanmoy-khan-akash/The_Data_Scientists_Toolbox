@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+    <head>
+        <title>So what is a GAN?</title>
+        <link rel="stylesheet" href="css/style.css" type="text/css"/>
+        <meta charset="utf-8"/>
+    
+<!-- kobo-style -->
+<script xmlns="http://www.w3.org/1999/xhtml" type="text/javascript" src="js/kobo.js"/>
+<style xmlns="http://www.w3.org/1999/xhtml" type="text/css" id="koboSpanStyle">.koboSpan { -webkit-text-combine: inherit; }</style>
+
+</head>
+
+    <body>
+        <section>
+
+                            <header>
+                    <h1 class="header-title"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.1.1">So what is a GAN?</span></h1>
+                </header>
+            
+            <article>
+                
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.2.1">The key process of GAN can be easily understood by considering it analogous to </span><em><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.3.1">art forgery</span></em><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.4.1">, which is the process of creating works of art which are falsely credited to other, usually more famous, artists. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.4.2">GANs train two neural networks simultaneously.</span></p>
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.5.1">The </span><strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.6.1">Generator</span></strong> <em><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.7.1">G(Z)</span></em><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.8.1"> is the one that makes the forgery happen, and the </span><strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.9.1">Discriminator</span></strong> <em><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.10.1">D(Y)</span></em><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.11.1"> is the one that can judge how realistic the reproduction is based on its observations of authentic pieces of art and copies. </span><em><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.12.1">D(Y)</span></em><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.13.1"> takes an input Y (for instance an image) and expresses a vote to judge how real the input is. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.13.2">In general, a value close to zero denotes </span><em><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.14.1">real</span></em><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.15.1">, while a value close to one denotes </span><em><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.16.1">forgery</span></em><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.17.1">. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.17.2">G(Z) takes an input from a random noise </span><em><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.18.1">Z</span></em><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.19.1"> and trains itself to fool D into thinking that whatever G(Z) produces is real. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.19.2">So the goal of training the discriminator </span><em><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.20.1">D(Y)</span></em><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.21.1"> is to maximize </span><em><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.22.1">D(Y)</span></em><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.23.1"> for every image from the true data distribution and to minimize </span><em><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.24.1">D(Y)</span></em><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.25.1"> for every image not from the true data distribution. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.25.2">So G and D play an opposite game: hence the name adversarial training. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.25.3">Note that we train G and D in an alternating manner, where each of their objectives is expressed as a loss function optimized via a gradient descent. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.25.4">The generative model learns how to forge better and better, and the discriminative model learns how to recognize forgery better and better.</span></p>
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.26.1">The discriminator network (usually a standard convolutional neural network) tries to classify if an input image is real or generated. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.26.2">The important new idea is to backpropagate both the discriminator and the generator to adjust the generator's parameters in such a way that the generator can learn how to fool the discriminator in an increasing number of situations. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.26.3">In the end, the generator will learn how to produce images that are indistinguishable from the real ones:</span></p>
+<div class="CDPAlignCenter CDPAlign"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.27.1"><img src="assets/7c949720-9d74-4438-b62f-1e34e72c2ece.png"/></span></div>
+<div class="packt_figref CDPAlignCenter CDPAlign"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.28.1">An example of Generator (forger) -Discriminator (judge) model. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.28.2">The Discriminator receives forged and real images</span></div>
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.29.1">Of course, GANs find the equilibrium in a game with two players. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.29.2">For effective learning, it is necessary that if a player successfully moves downhill in a round of updates, the same update must move the other player downhill too. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.29.3">Think about it! </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.29.4">If the forger learns how to fool the judge on every occasion, then the forger himself has nothing more to learn. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.29.5">Sometimes the two players eventually reach an equilibrium, but this is not always guaranteed and the two players can continue playing for a long time. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.29.6">An example of this from both sides is provided in the following figure:</span></p>
+<div class="CDPAlignCenter CDPAlign"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.30.1"><img height="646" width="767" class=" image-border" src="assets/e58a4195-d083-46fb-85e5-7495cee19173.png"/></span></div>
+<div class="packt_figref CDPAlignCenter CDPAlign"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.31.1">An example of convergence for Generator and Discriminator</span></div>
+
+
+            </article>
+
+            
+        </section>
+    </body>
+
+</html>
