@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+    <head>
+        <title>Gated Recurrent Units (GRUs) and Peephole LSTM</title>
+        <link rel="stylesheet" href="css/style.css" type="text/css"/>
+        <meta charset="utf-8"/>
+    
+<!-- kobo-style -->
+<script xmlns="http://www.w3.org/1999/xhtml" type="text/javascript" src="js/kobo.js"/>
+<style xmlns="http://www.w3.org/1999/xhtml" type="text/css" id="koboSpanStyle">.koboSpan { -webkit-text-combine: inherit; }</style>
+
+</head>
+
+    <body>
+        <section>
+
+                            <header>
+                    <h1 class="header-title"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.1.1">Gated Recurrent Units (GRUs) and Peephole LSTM</span></h1>
+                </header>
+            
+            <article>
+                
+<p class="mce-root"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.2.1">There have been a number of variants of LSTM cells proposed during recent years. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.2.2">Two of them are really popular. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.2.3">Peephole LSTM allows the gate layers to look at the cell state, as depicted in the following figure with dotted lines, while </span><strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.3.1">Gated Recurrent Units</span></strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.4.1"> (</span><strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.5.1">GRUs</span></strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.6.1">) merge the hidden state and the cell state into one single channel of information.</span></p>
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.7.1">Again, both GRUs and Peephole LSTM can be used as a blackbox drop-in for standard RNN cells with no need to know the underlying math. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.7.2">Both cells can be used for solving the problem of vanishing gradients and can be used for building deep neural networks:</span></p>
+<div class="CDPAlignCenter CDPAlign"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.8.1"><img height="523" width="410" src="assets/01d98910-b7d4-4512-8ebf-c0cb3ea7dc25.png"/></span></div>
+<div class="packt_figref CDPAlignCenter CDPAlign"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.9.1">Examples of Standard LSTM, PeepHole LSTM, and GRU</span></div>
+
+
+            </article>
+
+            
+        </section>
+    </body>
+
+</html>

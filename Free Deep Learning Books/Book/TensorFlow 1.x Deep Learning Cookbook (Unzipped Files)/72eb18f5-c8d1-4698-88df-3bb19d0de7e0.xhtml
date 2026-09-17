@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+    <head>
+        <title>How to do it...</title>
+        <link rel="stylesheet" href="css/style.css" type="text/css"/>
+        <meta charset="utf-8"/>
+    
+<!-- kobo-style -->
+<script xmlns="http://www.w3.org/1999/xhtml" type="text/javascript" src="js/kobo.js"/>
+<style xmlns="http://www.w3.org/1999/xhtml" type="text/css" id="koboSpanStyle">.koboSpan { -webkit-text-combine: inherit; }</style>
+
+</head>
+
+    <body>
+        <section>
+
+                            <header>
+                    <h1 class="header-title"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.1.1">How to do it...</span></h1>
+                </header>
+            
+            <article>
+                
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.2.1">Here is how we start with function approximation using MLP:</span></p>
+<ol>
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.3.1">Import the modules needed--</span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.4.1">sklearn</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.5.1"> for datasets, preprocessing data, and splitting it into train and test; Pandas to understand the dataset; and </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.6.1">matplotlib</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.7.1"> and </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.8.1">seaborn</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.9.1"> to visualize:</span></li>
+</ol>
+<pre style="padding-left: 60px"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.10.1">import tensorflow as tf 
+import tensorflow.contrib.layers as layers 
+from sklearn import datasets 
+import matplotlib.pyplot as plt 
+from sklearn.model_selection  import train_test_split 
+from sklearn.preprocessing import MinMaxScaler 
+import pandas as pd 
+import seaborn as sns 
+%matplotlib inline</span></pre>
+<ol start="2">
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.11.1">Load the dataset and create a Pandas dataframe to understand the data:</span></li>
+</ol>
+<pre style="padding-left: 60px"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.12.1"># Data 
+boston = datasets.load_boston() 
+df = pd.DataFrame(boston.data, columns=boston.feature_names) 
+df['target'] = boston.target </span></pre>
+<ol start="3">
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.13.1">Let us get some details about the data:</span></li>
+</ol>
+<pre style="padding-left: 60px"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.14.1">#Understanding Data 
+df.describe() </span></pre>
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.15.1">The following image gives a good idea of the concept:</span></p>
+<div class="CDPAlignCenter CDPAlign"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.16.1"><img src="assets/5eea1487-7809-4d4f-812d-a21d64cf1af8.png"/></span></div>
+<ol start="4">
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.17.1">Find correlation between different input features and the target:</span></li>
+</ol>
+<pre style="padding-left: 60px" class="mce-root CDPAlignLeft CDPAlign"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.18.1"># Plotting correlation </span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.19.1">color map _ , ax = plt.subplots( figsize =( 12 , 10 ) ) </span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.20.1">corr = df.corr(method='pearson') </span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.21.1">cmap = sns.diverging_palette( 220 , 10 , as_cmap = True ) </span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.22.1">_ = sns.heatmap( corr, cmap = cmap, square=True, cbar_kws={ 'shrink' : .9 }, ax=ax, annot = True, annot_kws = { 'fontsize' : 12 })</span></pre>
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.23.1">Following is the output of the preceding code:</span></p>
+<div class="CDPAlignCenter CDPAlign"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.24.1"><img src="assets/17069a14-5c69-4456-8329-d9750c1147cd.png"/></span></div>
+<ol start="5">
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.25.1">From the preceding code, we can see that three parameters--</span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.26.1">RM</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.27.1">, </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.28.1">PTRATIO</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.29.1">, and </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.30.1">LSTAT</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.31.1">--have a correlation greater than 0.5 in magnitude. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.31.2">We choose them for the training. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.31.3">Split the dataset into Train and Test datasets. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.31.4">We also use </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.32.1">MinMaxScaler</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.33.1"> to normalize our data set. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.33.2">One important change to note is that since our neural network is using the Sigmoid activation function (output of sigmoid can be between 0-1 only), we will have to normalize the target value </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.34.1">Y</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.35.1"> as well:</span></li>
+</ol>
+<pre style="padding-left: 60px" class="mce-root"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.36.1"># Create Test Train Split </span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.37.1">X_train, X_test, y_train, y_test = train_test_split(df [['RM', 'LSTAT', 'PTRATIO']], df[['target']], test_size=0.3, random_state=0) </span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.38.1"># Normalize data </span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.39.1">X_train = MinMaxScaler().fit_transform(X_train) </span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.40.1">y_train = MinMaxScaler().fit_transform(y_train) </span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.41.1">X_test = MinMaxScaler().fit_transform(X_test) </span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.42.1">y_test = MinMaxScaler().fit_transform(y_test)</span></pre>
+<ol start="6">
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.43.1">Define the constants and hyperparameters:</span></li>
+</ol>
+<pre style="padding-left: 60px" class="mce-root"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.44.1">#Network Parameters </span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.45.1">m = len(X_train) </span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.46.1">n = 3 # Number of features </span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.47.1">n_hidden = 20 # Number of hidden neurons </span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.48.1"># Hyperparameters </span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.49.1">batch_size = 200 </span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.50.1">eta = 0.01 </span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.51.1">max_epoch = 1000</span></pre>
+<ol start="7">
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.52.1">Create a multilayer perceptron model with one hidden layer:</span></li>
+</ol>
+<pre style="padding-left: 60px" class="mce-root"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.53.1">def multilayer_perceptron(x): </span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.54.1">    fc1 = layers.fully_connected(x, n_hidden, activation_fn=tf.nn.relu, scope='fc1') </span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.55.1">    out = layers.fully_connected(fc1, 1, activation_fn=tf.sigmoid, scope='out') </span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.56.1">    return out</span></pre>
+<ol start="8">
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.57.1">Declare the placeholders for the training data and define the loss and optimizer:</span></li>
+</ol>
+<pre style="padding-left: 60px" class="mce-root"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.58.1"># build model, loss, and train op </span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.59.1">x = tf.placeholder(tf.float32, name='X', shape=[m,n]) </span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.60.1">y = tf.placeholder(tf.float32, name='Y') </span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.61.1">y_hat = multilayer_perceptron(x) </span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.62.1">correct_prediction = tf.square(y - y_hat) </span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.63.1">mse = tf.reduce_mean(tf.cast(correct_prediction, "float")) </span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.64.1">train = tf.train.AdamOptimizer(learning_rate= eta).minimize(mse) </span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.65.1">init = tf.global_variables_initializer()</span></pre>
+<ol start="9">
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.66.1">Execute the computational graph:</span></li>
+</ol>
+<pre style="padding-left: 60px" class="mce-root"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.67.1"># Computation Graph </span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.68.1">with tf.Session() as sess: # Initialize variables</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.69.1">     sess.run(init) writer = tf.summary.FileWriter('graphs', sess.graph) </span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.70.1"># train the model for 100 epcohs </span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.71.1">    for i in range(max_epoch): </span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.72.1">        _, l, p = sess.run([train, loss, y_hat], feed_dict={x: X_train, y: y_train}) </span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.73.1">        if i%100 == 0: </span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.74.1">            print('Epoch {0}: Loss {1}'.format(i, l))</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.75.1">    print("Training Done") </span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.76.1">print("Optimization Finished!") </span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.77.1"># Test model correct_prediction = tf.square(y - y_hat) </span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.78.1"># Calculate accuracy </span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.79.1">accuracy = tf.reduce_mean(tf.cast(correct_prediction, "float"))</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.80.1">print(" Mean Error:", accuracy.eval({x: X_train, y: y_train})) plt.scatter(y_train, p) </span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.81.1">writer.close()</span></pre>
+
+
+            </article>
+
+            
+        </section>
+    </body>
+
+</html>

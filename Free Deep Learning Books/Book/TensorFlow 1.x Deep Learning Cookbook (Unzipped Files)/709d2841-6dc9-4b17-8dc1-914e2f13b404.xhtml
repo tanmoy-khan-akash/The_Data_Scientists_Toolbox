@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+    <head>
+        <title>Neural machine translation - inference on a seq2seq RNN</title>
+        <link rel="stylesheet" href="css/style.css" type="text/css"/>
+        <meta charset="utf-8"/>
+    
+<!-- kobo-style -->
+<script xmlns="http://www.w3.org/1999/xhtml" type="text/javascript" src="js/kobo.js"/>
+<style xmlns="http://www.w3.org/1999/xhtml" type="text/css" id="koboSpanStyle">.koboSpan { -webkit-text-combine: inherit; }</style>
+
+</head>
+
+    <body>
+        <section>
+
+                            <header>
+                    <h1 class="header-title"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.1.1">Neural machine translation - inference on a seq2seq RNN</span></h1>
+                </header>
+            
+            <article>
+                
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.2.1">In this recipe, we use the results of the previous recipe to translate from a source language into a target language. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.2.2">The idea is very simple: a source sentence is given the two combined RNNs (encoder + decoder) as input . </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.2.3">As soon as the sentence concludes, the decoder will emit logit values and we </span><em><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.3.1">greedily</span></em><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.4.1"> emit the word associated with the maximum value. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.4.2">As an example, the word </span><em><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.5.1">moi</span></em><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.6.1"> is emitted as the first token from the decoder because this word has the maximum logit value. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.6.2">After that, the word </span><em><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.7.1">suis</span></em><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.8.1"> is emitted, and so on:</span></p>
+<div class="CDPAlignCenter CDPAlign"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.9.1"><img height="315" width="297" src="assets/7c5d2780-428a-40ef-9016-4487daf95aa4.jpg"/></span></div>
+<div class="packt_figref CDPAlignCenter CDPAlign"><span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.10.1">An example of</span></span><span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.11.1"> sequence models for NMT</span></span><span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.12.1"> with probabilities </span></span><span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.13.1">as seen in https://github.com/lmthang/thesis/blob/master/thesis.pdf</span></span></div>
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.14.1">There are multiple strategies for using the output of a decoder:</span></p>
+<ul>
+<li class="MsoNormalCxSpMiddle"><strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.15.1">Greedy:</span></strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.16.1"> The word corresponding to the maximum logit is emitted</span></li>
+<li class="MsoNormalCxSpMiddle"><strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.17.1">Sampling:</span></strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.18.1"> A word is emitted by sampling the logit emitted by logits</span></li>
+<li class="MsoNormalCxSpLast"><strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.19.1">Beam Search</span></strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.20.1">: More than one prediction and therefore a tree of possible expansions is created</span></li>
+</ul>
+
+
+            </article>
+
+            
+        </section>
+    </body>
+
+</html>

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+    <head>
+        <title>There's more...</title>
+        <link rel="stylesheet" href="css/style.css" type="text/css"/>
+        <meta charset="utf-8"/>
+    
+<!-- kobo-style -->
+<script xmlns="http://www.w3.org/1999/xhtml" type="text/javascript" src="js/kobo.js"/>
+<style xmlns="http://www.w3.org/1999/xhtml" type="text/css" id="koboSpanStyle">.koboSpan { -webkit-text-combine: inherit; }</style>
+
+</head>
+
+    <body>
+        <section>
+
+                            <header>
+                    <h1 class="header-title"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.1.1">There's more...</span></h1>
+                </header>
+            
+            <article>
+                
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.2.1">There are a few rules of thumb to consider according to the specific classification task:</span></p>
+<ul>
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.3.1">If the new dataset is small and similar to the ImageNet dataset, then we can freeze all the VGG16 networks and retrain only the custom network. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.3.2">In this way, we also minimize the risk of overfitting for the juxtaposed network:</span></li>
+</ul>
+<p style="padding-left: 60px" class="mce-root"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.4.1"># Freeze all lower layers for layer in </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.5.1">base_model.layers</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.6.1">: </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.7.1">layer.trainable = False</span></kbd></p>
+<ul>
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.8.1">If the new dataset is large and similar to the ImageNet dataset, then we can retrain the whole juxtaposed network. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.8.2">We have still maintained the precomputed weights as a starting point and perform a few iterations for the fine-tuning:</span></li>
+</ul>
+<p style="padding-left: 60px" class="mce-root"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.9.1"># UnFreeze all lower layers for layer in </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.10.1">model.layers</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.11.1">: </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.12.1">layer.trainable = True</span></kbd></p>
+<ul>
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.13.1">If the new dataset is very different from the ImageNet dataset, in practice it might be still good to initialize with weights from a pretrained model. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.13.2">In this case, we would have enough data and confidence to fine-tune through the entire network. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.13.3">More information can be found online at </span><a href="http://cs231n.github.io/transfer-learning/"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.14.1">http://cs231n.github.io/transfer-learning/</span></a><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.15.1">.</span></li>
+</ul>
+
+
+            </article>
+
+            
+        </section>
+    </body>
+
+</html>

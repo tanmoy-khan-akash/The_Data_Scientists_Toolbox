@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+    <head>
+        <title>ConvNets in TensorFlow</title>
+        <link rel="stylesheet" href="css/style.css" type="text/css"/>
+        <meta charset="utf-8"/>
+    
+<!-- kobo-style -->
+<script xmlns="http://www.w3.org/1999/xhtml" type="text/javascript" src="js/kobo.js"/>
+<style xmlns="http://www.w3.org/1999/xhtml" type="text/css" id="koboSpanStyle">.koboSpan { -webkit-text-combine: inherit; }</style>
+
+</head>
+
+    <body>
+        <section>
+
+                            <header>
+                    <h1 class="header-title"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.1.1">ConvNets in TensorFlow</span></h1>
+                </header>
+            
+            <article>
+                
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.2.1">In TensorFlow, if we want to add a convolutional layer, we will write the following:</span></p>
+<pre><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.3.1">tf.nn.conv2d(input, filter, strides, padding, use_cudnn_on_gpu=None, data_format=None, name=None)</span></pre>
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.4.1">The following are the arguments:</span></p>
+<ul>
+<li><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.5.1">input</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.6.1">: A tensor, must be one of the following types: half, </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.7.1">float32</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.8.1">, </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.9.1">float64</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.10.1">.</span></li>
+<li><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.11.1">filter</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.12.1">: A tensor, must have the same type as input.</span></li>
+<li><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.13.1">strides</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.14.1">: A list of ints. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.14.2">1D of length 4. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.14.3">The stride of the sliding window for each dimension of input. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.14.4">Must be in the same order as the dimension specified with format.</span></li>
+<li><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.15.1">padding</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.16.1">: A string from: </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.17.1">SAME</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.18.1">, </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.19.1">VALID</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.20.1">. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.20.2">The type of padding algorithm to use.</span></li>
+<li><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.21.1">use_cudnn_on_gpu</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.22.1">: An optional bool. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.22.2">Defaults to </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.23.1">True</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.24.1">.</span></li>
+<li><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.25.1">data_format</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.26.1">: An optional string from: </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.27.1">NHWC</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.28.1"> and </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.29.1">NCHW</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.30.1">. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.30.2">Defaults to </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.31.1">NHWC</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.32.1">. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.32.2">Specifies the data format of the input and output data. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.32.3">With the default format </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.33.1">NHWC</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.34.1">, the data is stored in the order of: [</span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.35.1">batch</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.36.1">, </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.37.1">in_height</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.38.1">, </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.39.1">in_width</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.40.1">, and </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.41.1">in_channels</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.42.1">]. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.42.2">Alternatively, the format could be </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.43.1">NCHW</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.44.1">, the data storage order of: [</span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.45.1">batch</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.46.1">, </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.47.1">in_channels</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.48.1">, </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.49.1">in_height, in_width</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.50.1">].</span></li>
+<li><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.51.1">name</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.52.1">: A name for the operation (optional).</span></li>
+</ul>
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.53.1">An example of convolution is provided in the following image:</span></p>
+<div class="CDPAlignCenter CDPAlign"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.54.1"><img height="180" width="387" src="assets/c08487ea-3c34-4c2e-9774-86a8a365c8db.png"/></span></div>
+<div class="packt_figref CDPAlignCenter CDPAlign"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.55.1">An example of convolutional operation</span></div>
+
+
+            </article>
+
+            
+        </section>
+    </body>
+
+</html>

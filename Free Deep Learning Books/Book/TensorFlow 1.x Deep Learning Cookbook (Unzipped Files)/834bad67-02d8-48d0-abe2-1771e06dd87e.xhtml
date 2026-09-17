@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+    <head>
+        <title>How it works...</title>
+        <link rel="stylesheet" href="css/style.css" type="text/css"/>
+        <meta charset="utf-8"/>
+    
+<!-- kobo-style -->
+<script xmlns="http://www.w3.org/1999/xhtml" type="text/javascript" src="js/kobo.js"/>
+<style xmlns="http://www.w3.org/1999/xhtml" type="text/css" id="koboSpanStyle">.koboSpan { -webkit-text-combine: inherit; }</style>
+
+</head>
+
+    <body>
+        <section>
+
+                            <header>
+                    <h1 class="header-title"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.1.1">How it works...</span></h1>
+                </header>
+            
+            <article>
+                
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.2.1">Due to its ability to reconstruct images, RBM can be used to generate more data from the existing data. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.2.2">We can see the original and reconstructed MNIST images by making a small helper plotting code:</span></p>
+<pre><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.3.1">row, col = </span><span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.4.1">2</span></span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.5.1">, </span><span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.6.1">8</span><br/></span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.7.1">idx = np.random.randint(</span><span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.8.1">0</span></span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.9.1">, </span><span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.10.1">100</span></span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.11.1">, row * col // </span><span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.12.1">2</span></span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.13.1">)</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.14.1">f, axarr = plt.subplots(row, col, </span><span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.15.1">sharex</span></span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.16.1">=</span><span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.17.1">True</span></span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.18.1">, </span><span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.19.1">sharey</span></span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.20.1">=</span><span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.21.1">True</span></span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.22.1">, </span><span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.23.1">figsize</span></span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.24.1">=(</span><span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.25.1">20</span></span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.26.1">,</span><span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.27.1">4</span></span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.28.1">))</span><br/><span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.29.1">for </span></span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.30.1">fig, row </span><span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.31.1">in </span></span><span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.32.1">zip</span></span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.33.1">([Xtest_noisy,out], axarr):</span><br/>    <span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.34.1">for </span></span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.35.1">i,ax </span><span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.36.1">in </span></span><span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.37.1">zip</span></span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.38.1">(idx,row):</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.39.1">        ax.imshow(fig[i].reshape((</span><span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.40.1">28</span></span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.41.1">, </span><span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.42.1">28</span></span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.43.1">)), </span><span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.44.1">cmap</span></span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.45.1">=</span><span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.46.1">'Greys_r'</span></span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.47.1">)</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.48.1">        ax.get_xaxis().set_visible(</span><span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.49.1">False</span></span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.50.1">)</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.51.1">        ax.get_yaxis().set_visible(</span><span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.52.1">False</span></span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.53.1">)</span></pre>
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.54.1">We get the result as follows:</span></p>
+<div class="CDPAlignCenter CDPAlign"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.55.1"><img height="64" width="304" src="assets/ceafa00a-4ca3-442a-8258-6a45a8494ef7.png"/></span></div>
+
+
+            </article>
+
+            
+        </section>
+    </body>
+
+</html>

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+    <head>
+        <title>How to do it...</title>
+        <link rel="stylesheet" href="css/style.css" type="text/css"/>
+        <meta charset="utf-8"/>
+    
+<!-- kobo-style -->
+<script xmlns="http://www.w3.org/1999/xhtml" type="text/javascript" src="js/kobo.js"/>
+<style xmlns="http://www.w3.org/1999/xhtml" type="text/css" id="koboSpanStyle">.koboSpan { -webkit-text-combine: inherit; }</style>
+
+</head>
+
+    <body>
+        <section>
+
+                            <header>
+                    <h1 class="header-title"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.1.1">How to do it...</span></h1>
+                </header>
+            
+            <article>
+                
+<ol>
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.2.1">We will use the </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.3.1">RBM</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.4.1"> class created in the previous recipe. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.4.2">Let's define our RBM network; the number of visible units will be the number of movies, in our case, 3,883 (</span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.5.1">movies_df</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.6.1"> is the data frame containing data from the </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.7.1">movies.dat</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.8.1"> file):</span></li>
+</ol>
+<pre style="padding-left: 60px"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.9.1">m = len(movies_df)  # Number of visible units</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.10.1">n = 20  # Number of Hidden units</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.11.1">recommender = rbm.RBM(m,n)</span></pre>
+<ol start="2">
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.12.1">We created a list, </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.13.1">trX</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.14.1">, of about 1,000 users with their normalized movie ratings </span><span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.15.1">using</span></span> <span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.16.1">Pandas merge and </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.17.1">groupby</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.18.1"> commands</span></span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.19.1">. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.19.2">The list is of size 1000 x 3883. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.19.3">We use this to train our RBM:</span></li>
+</ol>
+<pre style="padding-left: 60px"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.20.1">Xtrain = np.array(trX) </span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.21.1">init = tf.global_variables_initializer()</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.22.1">with tf.Session() as sess:</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.23.1"> sess.run(init)</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.24.1"> recommender.set_session(sess)</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.25.1"> err = recommender.fit(Xtrain, epochs=10)</span></pre>
+<ol start="3">
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.26.1">The cross-logit error per epoch decreases:</span></li>
+</ol>
+<div class="CDPAlignCenter CDPAlign"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.27.1"><img height="260" width="386" src="assets/4f6d416b-0f30-4dc2-82c3-07136f577161.png"/></span></div>
+<ol start="4">
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.28.1">The network is now trained; we use it get the recommendation for a random user with index 150 (it could be any existing user):</span></li>
+</ol>
+<pre style="padding-left: 60px"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.29.1">user_index = 150</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.30.1">x = np.array([Xtrain[user_index, :]])</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.31.1">init = tf.global_variables_initializer()</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.32.1">with tf.Session() as sess:</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.33.1"> sess.run(init)</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.34.1"> recommender.set_session(sess)</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.35.1"> out = recommender.reconstruct(x.astype(np.float32))</span></pre>
+<ol start="5">
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.36.1">The result is merged with the existing data frame and we can see the recommendation score for this user:</span></li>
+</ol>
+<div class="CDPAlignCenter CDPAlign"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.37.1"><img src="assets/c9170c8b-d8d0-49eb-8a78-ac7b95a3386b.png"/></span></div>
+
+
+            </article>
+
+            
+        </section>
+    </body>
+
+</html>

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+    <head>
+        <title>Components of TPUs</title>
+        <link rel="stylesheet" href="css/style.css" type="text/css"/>
+        <meta charset="utf-8"/>
+    
+<!-- kobo-style -->
+<script xmlns="http://www.w3.org/1999/xhtml" type="text/javascript" src="js/kobo.js"/>
+<style xmlns="http://www.w3.org/1999/xhtml" type="text/css" id="koboSpanStyle">.koboSpan { -webkit-text-combine: inherit; }</style>
+
+</head>
+
+    <body>
+        <section>
+
+                            <header>
+                    <h1 class="header-title"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.1.1">Components of TPUs</span></h1>
+                </header>
+            
+            <article>
+                
+<p><span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.2.1">In all the deep learning models covered in this book, irrespective of the learning paradigm, three basic calculations were necessary: multiplication, addition, and application of an activation function. </span></span></p>
+<p><span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.3.1">The first two components are part of matrix multiplication: the weight matrix </span><em><strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.4.1">W</span></strong></em><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.5.1"> needs to be multiplied to input matrix </span><em><strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.6.1">X</span></strong></em><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.7.1">, generally expressed as </span><em><strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.8.1">W</span><sup><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.9.1">T</span></sup><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.10.1">X</span></strong></em><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.11.1">; matrix multiplication is computationally expensive on a CPU, and though a GPU parallelizes the operation, still there is scope for improvement.</span></span></p>
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.12.1">The TPU has a </span><span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.13.1">65,536 8-bit integer matrix multiplier unit (</span><strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.14.1">MXU</span></strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.15.1">) that gives a peak throughput of 92 TOPS. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.15.2">The major difference between GPU and TPU multiplication is that GPUs contain floating point multipliers, while TPUs contain 8-bit integer multipliers.  TPUs also contain a Unified Buffer (</span><strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.16.1">UB</span></strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.17.1">), 24 MB of SRAM that works as registers, and an Activation Unit (</span><strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.18.1">AU</span></strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.19.1">), which contains hardwired activation functions. </span></span></p>
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.20.1">The MXU is implemented using systolic array architecture. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.20.2">It contains an array of Arithmetic Logic Units (ALUs) connected to a small number of nearest neighbors in a mesh-like topology. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.20.3">Each data value is read only once but used many times for different operations as it flows through the ALU array, without storing it back to a register. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.20.4">The ALUs in TPUs perform only multiplications and additions in a fixed pattern. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.20.5">The MXU is optimized for matrix multiplication and is not suited for general-purpose computations. </span></p>
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.21.1">Each TPU also has an off-chip 8-GiB DRAM pool, called weight memory. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.21.2">It has a four-stage pipeline and executes CISC instructions. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.21.3">TPUs, as of now, consist of six neural networks: two MLPs, two CNNs, and two LSTMs. </span></p>
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.22.1">The TPU is programmed with the help of high-level instructions; some of the instructions used to program TPUs are the following:</span></p>
+<ul>
+<li><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.23.1">Read_Weights</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.24.1">: Read weights from memory</span></li>
+<li><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.25.1">Read_Host_Memory</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.26.1">: Read data from memory</span></li>
+<li><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.27.1">MatrixMultiply/Convolve</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.28.1">: Multiply  or convolve with the data and accumulate the results</span></li>
+<li><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.29.1">Activate</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.30.1">: Apply the activation functions</span></li>
+<li><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.31.1">Write_Host_Memory</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.32.1">: Write the results to the memory</span></li>
+</ul>
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.33.1">Google has created an API stack to facilitate TPU programming; it translates the API calls from Tensorflow graphs into TPU instructions.</span></p>
+
+
+            </article>
+
+            
+        </section>
+    </body>
+
+</html>

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+    <head>
+        <title>How to do it...</title>
+        <link rel="stylesheet" href="css/style.css" type="text/css"/>
+        <meta charset="utf-8"/>
+    
+<!-- kobo-style -->
+<script xmlns="http://www.w3.org/1999/xhtml" type="text/javascript" src="js/kobo.js"/>
+<style xmlns="http://www.w3.org/1999/xhtml" type="text/css" id="koboSpanStyle">.koboSpan { -webkit-text-combine: inherit; }</style>
+
+</head>
+
+    <body>
+        <section>
+
+                            <header>
+                    <h1 class="header-title"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.1.1">How to do it...</span></h1>
+                </header>
+            
+            <article>
+                
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.2.1">TensorFlow generates TensorFlow graphs. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.2.2">With the help of XLA, it is possible to run the TensorFlow graphs on any new kind of device.</span></p>
+<ol>
+<li><strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.3.1">JIT Compilation:</span></strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.4.1"> This is to turn on JIT compilation at session level:</span></li>
+</ol>
+<pre style="padding-left: 60px"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.5.1"># Config to turn on JIT compilation</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.6.1"> config = tf.ConfigProto()</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.7.1"> config.graph_options.optimizer_options.global_jit_level = tf.OptimizerOptions.ON_1</span><br/><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.8.1"> sess = tf.Session(config=config) </span></pre>
+<ol start="2">
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.9.1">This is to turn on JIT compilation manually:</span></li>
+</ol>
+<pre style="padding-left: 60px"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.10.1">jit_scope = tf.contrib.compiler.jit.experimental_jit_scope</span><br/><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.11.1">x = tf.placeholder(np.float32)</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.12.1">with jit_scope():</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.13.1">   y = tf.add(x, x)  # The "add" will be compiled with XLA. </span></pre>
+<ol start="3">
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.14.1">We can also run computations via XLA by placing the operator on a specific XLA device </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.15.1">XLA_CPU</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.16.1"> or </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.17.1">XLA_GPU</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.18.1">:</span></li>
+</ol>
+<pre style="padding-left: 60px"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.19.1">with tf.device \ ("/job:localhost/replica:0/task:0/device:XLA_GPU:0"):</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.20.1">   output = tf.add(input1, input2) </span></pre>
+<p><strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.21.1">AoT Compilation</span></strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.22.1">: Here, we use tfcompile as standalone to convert TensorFlow graphs into executable code for different devices (mobile).</span></p>
+<p class="mce-root"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.23.1">TensorFlow.org tells about tfcompile:</span></p>
+<div class="packt_quote"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.24.1">tfcompile takes a subgraph, identified by the TensorFlow concepts of feeds and fetches, and generates a function that implements that subgraph. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.24.2">The feeds are the input arguments for the function, and the fetches are the output arguments for the function. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.24.3">All inputs must be fully specified by the feeds; the resulting pruned subgraph cannot contain placeholder or variable nodes. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.24.4">It is common to specify all placeholders and variables as feeds, which ensures the resulting subgraph no longer contains these nodes. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.24.5">The generated function is packaged as a cc_library, with a header file exporting the function signature, and an object file containing the implementation. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.24.6">The user writes code to invoke the generated function as appropriate.</span></div>
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.25.1">For advanced steps to do the same, you can refer to </span><a href="https://www.tensorflow.org/performance/xla/tfcompile"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.26.1">https://www.tensorflow.org/performance/xla/tfcompile</span></a><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.27.1">.</span></p>
+
+
+            </article>
+
+            
+        </section>
+    </body>
+
+</html>

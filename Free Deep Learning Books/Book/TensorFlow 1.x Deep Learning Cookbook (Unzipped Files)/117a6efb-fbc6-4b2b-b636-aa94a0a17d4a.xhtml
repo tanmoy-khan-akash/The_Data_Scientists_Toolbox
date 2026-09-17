@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+    <head>
+        <title>Introduction</title>
+        <link rel="stylesheet" href="css/style.css" type="text/css"/>
+        <meta charset="utf-8"/>
+    
+<!-- kobo-style -->
+<script xmlns="http://www.w3.org/1999/xhtml" type="text/javascript" src="js/kobo.js"/>
+<style xmlns="http://www.w3.org/1999/xhtml" type="text/css" id="koboSpanStyle">.koboSpan { -webkit-text-combine: inherit; }</style>
+
+</head>
+
+    <body>
+        <section>
+
+                            <header>
+                    <h1 class="header-title"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.1.1">Introduction</span></h1>
+                </header>
+            
+            <article>
+                
+<p class="mce-root"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.2.1">In March 2016, AlphaGo--the program made by Google's DeepMind--defeated the world's best Go player, 18-time world champion Lee Sedol, by 4 to 1. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.2.2">The match was historic because Go is a notoriously difficult game for computers to play, with:</span></p>
+<pre><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.3.1">208,168,199,381,979,984,699,478,633,344,862,770,286,522,</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.4.1">453,884,530,548,425,639,456,820,927,419,612,738,015,378,</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.5.1">525,648,451,698,519,643,907,259,916,015,628,128,546,089,</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.6.1">888,314,427, 129,715,319,317,557,736,620,397,247,064,840,935</span></pre>
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.7.1">possible legal board positions. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.7.2">Playing and winning Go cannot be done by simple brute force. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.7.3">It requires skill, creativity, and, as professional Go players say, intuition. </span></p>
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.8.1">This remarkable feat was accomplished by AlphaGo with the help of RL algorithm-based deep neural networks combined with a state-of-the-art tree search algorithm. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.8.2">This chapter introduces RL and some algorithms that we employ to perform </span><span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.9.1">RL</span></span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.10.1">.</span></p>
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.11.1">So, the first question that arises is what is </span><span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.12.1">RL</span></span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.13.1"> and how is it different from supervised and unsupervised learning, which we explored in earlier chapters?</span></p>
+<p><span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.14.1">Anyone who owns a pet knows that the best strategy to train a pet is rewarding it for desirable behavior and punishing it for bad behavior. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.14.2">The </span></span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.15.1">RL, also called </span><strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.16.1">learning with a critic</span></strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.17.1">, is a learning paradigm where the agent learns in the same manner. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.17.2">The Agent here corresponds to our network (program); it can perform a set of </span><strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.18.1">Actions</span></strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.19.1"> (</span><strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.20.1">a</span></strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.21.1">), which brings about a change in the </span><strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.22.1">State</span></strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.23.1"> (</span><strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.24.1">s</span></strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.25.1">) of the environment and, in turn, the Agent perceives whether it gets a reward or punishment.</span></p>
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.26.1">For example, in the case of a dog, the dog is our Agent, the voluntary muscle movements that the dog makes are the actions, and the ground is the environment; the dog perceives our reaction to its action in terms of giving it a bone as a reward:</span></p>
+<div class="CDPAlignCenter CDPAlign"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.27.1"><img height="299" width="499" src="assets/8c77eafc-a869-4077-9f2b-30250831ca9f.png"/></span></div>
+<div class="packt_figref CDPAlignCenter CDPAlign"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.28.1">Adapted from Reinforcement Learning: an Introduction by Sutton and Barto</span></div>
+<div class="packt_tip packt_infobox"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.29.1">Even our brain has a group of subcortical nuclei situated at the base of the forebrain called </span><strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.30.1">basal ganglia</span></strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.31.1">, which, according to neuroscience, are responsible for action selection, that is, help us decide which of several possible actions to execute at any given time.</span></div>
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.32.1">The aim of the agent is to maximize the rewards and reduce the punishments. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.32.2">There are various challenges involved in making this decision, </span><span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.33.1">the </span></span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.34.1">most important one being how to maximize future rewards, also known as the </span><strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.35.1">temporal credit assignment problem</span></strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.36.1">. </span><span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.37.1">The agent decides its action based on some policy (π); the agent learns this policy (π) based on its interaction with the environment. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.37.2">There are various policy learning algorithms; we will explore some of them in this chapter. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.37.3">The agent infers the optimal policy (π*) by a process of trial and error, and to learn the optimal policy, the agent requires an environment to interact with; we will be using OpenAI Gym, which provides different environments.</span></span></p>
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.38.1">We have given here only a review of the basic concepts involved in RL; we assume that you are familiar with the Markov concepts decision process, discount factor, and value function (state value and action value).</span></p>
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.39.1">In this chapter, and the recipes that follow, we define an episode as one run of the game, for example, solving one sudoku. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.39.2">Typically, an agent will play many episodes to learn an optimal policy, the one which maximizes the rewards.</span></p>
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.40.1">It is really amazing to see how the RL agent, without any implicit knowledge of the game, learns to play and, not only play, even beat humans in these games.</span></p>
+
+
+            </article>
+
+            
+        </section>
+    </body>
+
+</html>

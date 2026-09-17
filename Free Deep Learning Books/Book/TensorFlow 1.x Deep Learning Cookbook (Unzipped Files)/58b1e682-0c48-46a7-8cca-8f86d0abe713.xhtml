@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+    <head>
+        <title>Local receptive fields</title>
+        <link rel="stylesheet" href="css/style.css" type="text/css"/>
+        <meta charset="utf-8"/>
+    
+<!-- kobo-style -->
+<script xmlns="http://www.w3.org/1999/xhtml" type="text/javascript" src="js/kobo.js"/>
+<style xmlns="http://www.w3.org/1999/xhtml" type="text/css" id="koboSpanStyle">.koboSpan { -webkit-text-combine: inherit; }</style>
+
+</head>
+
+    <body>
+        <section>
+
+                            <header>
+                    <h1 class="header-title"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.1.1">Local receptive fields</span></h1>
+                </header>
+            
+            <article>
+                
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.2.1">If we want to preserve the spatial information typically found in images, then it is convenient to represent each image with a matrix of pixels. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.2.2">Then, a simple way to encode the local structure is to connect a submatrix of adjacent input neurons into one single hidden neuron belonging to the next layer. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.2.3">That single hidden neuron represents one local receptive field. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.2.4">Note that this operation is named </span><strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.3.1">Convolution</span></strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.4.1"> and it provides the name to this type of network.</span></p>
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.5.1">Of course, we can encode more information by having overlapping submatrices. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.5.2">For instance, let's suppose that the size of every single submatrix is 5 x 5 and that those submatrices are used with MNIST images of 28 x 28 pixels. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.5.3">Then we will be able to generate 23 x 23 local receptive field neurons in the next hidden layer. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.5.4">In fact, it is possible to slide the submatrices by only 23 positions before touching the borders of the images.</span></p>
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.6.1">Let's define the feature map from one layer to another. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.6.2">Of course, we can have multiple feature maps that learn independently from each hidden layer. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.6.3">For instance, we can start with 28 x 28 input neurons to process MNIST images, and then recall </span><em><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.7.1">k</span></em><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.8.1"> feature maps of size 23 x 23 neurons each (again with a stride of 5 x 5) in the next hidden layer.</span></p>
+
+
+            </article>
+
+            
+        </section>
+    </body>
+
+</html>

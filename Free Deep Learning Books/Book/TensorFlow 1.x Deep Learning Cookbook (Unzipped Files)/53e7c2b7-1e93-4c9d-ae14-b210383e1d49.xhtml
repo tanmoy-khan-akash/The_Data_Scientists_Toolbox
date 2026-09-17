@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+    <head>
+        <title>How to do it...</title>
+        <link rel="stylesheet" href="css/style.css" type="text/css"/>
+        <meta charset="utf-8"/>
+    
+<!-- kobo-style -->
+<script xmlns="http://www.w3.org/1999/xhtml" type="text/javascript" src="js/kobo.js"/>
+<style xmlns="http://www.w3.org/1999/xhtml" type="text/css" id="koboSpanStyle">.koboSpan { -webkit-text-combine: inherit; }</style>
+
+</head>
+
+    <body>
+        <section>
+
+                            <header>
+                    <h1 class="header-title"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.1.1">How to do it...</span></h1>
+                </header>
+            
+            <article>
+                
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.2.1">Let us start with the recipe:</span></p>
+<ol>
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.3.1">Import </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.4.1">tensorflow</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.5.1">, </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.6.1">matplotlib</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.7.1">, </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.8.1">random</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.9.1">, and </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.10.1">numpy</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.11.1">. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.11.2">Then, import the </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.12.1">minst</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.13.1"> data and perform one-hot encoding. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.13.2">Note the TensorFlow has some built-in libraries to deal with </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.14.1">MNIST</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.15.1"> and we are going to use them:</span></li>
+</ol>
+<pre style="padding-left: 60px"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.16.1">from __future__ import  division, print_function 
+import tensorflow as tf 
+import matplotlib.pyplot as plt 
+import numpy as np 
+# Import MNIST data 
+from tensorflow.examples.tutorials.mnist import input_data 
+mnist = input_data.read_data_sets("MNIST_data/", one_hot=True) </span></pre>
+<ol start="2">
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.17.1">Introspect some data to understand what </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.18.1">MNIST</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.19.1"> is. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.19.2">This gives us an idea of how many images are in the training dataset and how many are in the test dataset. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.19.3">We are also going to visualize a few numbers just to understand how they are represented. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.19.4">The multi-flat output can give us a visual sense of how difficult it can be to recognize a handwritten number, even for humans.</span></li>
+</ol>
+<pre style="padding-left: 60px"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.20.1">def train_size(num): 
+    print ('Total Training Images in Dataset = ' + str(mnist.train.images.shape)) 
+    print ('--------------------------------------------------') 
+    x_train = mnist.train.images[:num,:] 
+    print ('x_train Examples Loaded = ' + str(x_train.shape)) 
+    y_train = mnist.train.labels[:num,:] 
+    print ('y_train Examples Loaded = ' + str(y_train.shape)) 
+    print('') 
+    return x_train, y_train 
+def test_size(num): 
+    print ('Total Test Examples in Dataset = ' + str(mnist.test.images.shape)) 
+    print ('--------------------------------------------------') 
+    x_test = mnist.test.images[:num,:] 
+    print ('x_test Examples Loaded = ' + str(x_test.shape)) 
+    y_test = mnist.test.labels[:num,:] 
+    print ('y_test Examples Loaded = ' + str(y_test.shape)) 
+    return x_test, y_test 
+def display_digit(num): 
+    print(y_train[num]) 
+    label = y_train[num].argmax(axis=0) 
+    image = x_train[num].reshape([28,28]) 
+    plt.title('Example: %d  Label: %d' % (num, label)) 
+    plt.imshow(image, cmap=plt.get_cmap('gray_r')) 
+    plt.show() 
+def display_mult_flat(start, stop): 
+    images = x_train[start].reshape([1,784]) 
+    for i in range(start+1,stop): 
+        images = np.concatenate((images, x_train[i].reshape([1,784]))) 
+    plt.imshow(images, cmap=plt.get_cmap('gray_r')) 
+    plt.show() 
+x_train, y_train = train_size(55000) 
+display_digit(np.random.randint(0, x_train.shape[0])) 
+display_mult_flat(0,400) </span></pre>
+<p style="padding-left: 60px"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.21.1">Let us look at the output of the preceding code:</span></p>
+<table>
+<tbody>
+<tr>
+<td>
+<div class="CDPAlignCenter CDPAlign"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.22.1"><img src="assets/46324985-e137-4450-a6dd-61604fb54b9b.png"/></span></div>
+</td>
+<td>
+<div class="CDPAlignCenter CDPAlign"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.23.1"><img src="assets/6b92acfd-90ce-4c5a-baa8-e534825ef57b.png"/></span></div>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="packt_figref CDPAlignCenter CDPAlign"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.24.1">An example of MNIST handwritten numbers</span></div>
+<ol start="3">
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.25.1">Set up the learning parameter, the </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.26.1">batch_size</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.27.1">, and the </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.28.1">display_step</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.29.1">. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.29.2">In addition, set up </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.30.1">n_input = 784</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.31.1"> given that the MNIST images share 28 x 28 pixels, output </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.32.1">n_classes = 10</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.33.1"> representing the output digits [0-9], and the dropout probability = 0.85:</span></li>
+</ol>
+<pre style="padding-left: 60px"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.34.1"># Parameters 
+learning_rate = 0.001 
+training_iters = 500 
+batch_size = 128 
+display_step = 10 
+# Network Parameters 
+n_input = 784 </span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.35.1"># MNIST data input (img shape: 28*28) 
+n_classes = 10 </span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.36.1"># MNIST total classes (0-9 digits) 
+dropout = 0.85 </span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.37.1"># Dropout, probability to keep units </span></pre>
+<ol start="4">
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.38.1">Set up the TensorFlow computation graph input. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.38.2">Let's define two placeholders to store predictions and true labels:</span></li>
+</ol>
+<pre style="padding-left: 60px"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.39.1">x = tf.placeholder(tf.float32, [None, n_input]) 
+y = tf.placeholder(tf.float32, [None, n_classes]) 
+keep_prob = tf.placeholder(tf.float32)  </span></pre>
+<ol start="5">
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.40.1">Define a convolutional layer with input </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.41.1">x</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.42.1">, weight </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.43.1">W</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.44.1">, bias </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.45.1">b</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.46.1">, and a given stride. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.46.2">The activation function is ReLU and padding is </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.47.1">SAME</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.48.1">:</span></li>
+</ol>
+<pre style="padding-left: 60px"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.49.1">def conv2d(x, W, b, strides=1): 
+    x = tf.nn.conv2d(x, W, strides=[1, strides, strides, 1], padding='SAME') 
+    x = tf.nn.bias_add(x, b) 
+    return tf.nn.relu(x)</span></pre>
+<ol start="6">
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.50.1">Define a maxpool layer with input </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.51.1">x</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.52.1">, with </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.53.1">ksize</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.54.1"> and padding </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.55.1">SAME</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.56.1">:</span></li>
+</ol>
+<pre style="padding-left: 60px"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.57.1">def maxpool2d(x, k=2): 
+    return tf.nn.max_pool(x, ksize=[1, k, k, 1], strides=[1, k, k, 1], padding='SAME') </span></pre>
+<ol start="7">
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.58.1">Define convnet with two convolutional layers followed by a fully connected layer, a dropout layer, and a final output layer:</span></li>
+</ol>
+<pre style="padding-left: 60px"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.59.1">def conv_net(x, weights, biases, dropout): 
+    # reshape the input picture 
+    x = tf.reshape(x, shape=[-1, 28, 28, 1]) 
+    # First convolution layer 
+    conv1 = conv2d(x, weights['wc1'], biases['bc1']) 
+    # Max Pooling used for downsampling 
+    conv1 = maxpool2d(conv1, k=2) 
+    # Second convolution layer 
+    conv2 = conv2d(conv1, weights['wc2'], biases['bc2']) 
+    # Max Pooling used for downsampling 
+    conv2 = maxpool2d(conv2, k=2) 
+    # Reshape conv2 output to match the input of fully connected layer  
+    fc1 = tf.reshape(conv2, [-1, weights['wd1'].get_shape().as_list()[0]]) 
+    # Fully connected layer 
+    fc1 = tf.add(tf.matmul(fc1, weights['wd1']), biases['bd1']) 
+    fc1 = tf.nn.relu(fc1) 
+    # Dropout 
+    fc1 = tf.nn.dropout(fc1, dropout) 
+    # Output the class prediction 
+    out = tf.add(tf.matmul(fc1, weights['out']), biases['out']) 
+    return out</span></pre>
+<ol start="8">
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.60.1">Define the layers weights and the bias. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.60.2">The first conv layer has a 5 x 5 convolution, 1 input, and 32 outputs. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.60.3">The second conv layer has 5 x 5 convolutions, 32 inputs, and 64 outputs. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.60.4">The fully connected layer has 7 x 7 x 64 inputs and 1,024 outputs, while the second layer has 1,024 inputs and 10 outputs corresponding to the final digit classes. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.60.5">All the weights and bias are initialized with </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.61.1">randon_normal</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.62.1"> distribution:</span></li>
+</ol>
+<pre style="padding-left: 60px"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.63.1">weights = { 
+    # 5x5 conv, 1 input, and 32 outputs 
+    'wc1': tf.Variable(tf.random_normal([5, 5, 1, 32])), 
+    # 5x5 conv, 32 inputs, and 64 outputs 
+    'wc2': tf.Variable(tf.random_normal([5, 5, 32, 64])), 
+    # fully connected, 7*7*64 inputs, and 1024 outputs 
+    'wd1': tf.Variable(tf.random_normal([7*7*64, 1024])), 
+    # 1024 inputs, 10 outputs for class digits 
+    'out': tf.Variable(tf.random_normal([1024, n_classes])) 
+} 
+biases = { 
+    'bc1': tf.Variable(tf.random_normal([32])), 
+    'bc2': tf.Variable(tf.random_normal([64])), 
+    'bd1': tf.Variable(tf.random_normal([1024])), 
+    'out': tf.Variable(tf.random_normal([n_classes])) 
+} </span></pre>
+<ol start="9">
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.64.1">Build the convnet with the given weights and bias. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.64.2">Define the </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.65.1">loss</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.66.1"> function based on </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.67.1">cross_entropy</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.68.1"> with </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.69.1">logits</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.70.1"> and use the Adam optimizer for cost minimization. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.70.2">After optimization, compute the accuracy:</span></li>
+</ol>
+<pre style="padding-left: 60px"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.71.1">pred = conv_net(x, weights, biases, keep_prob) 
+cost = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(logits=pred, labels=y)) 
+optimizer = tf.train.AdamOptimizer(learning_rate=learning_rate).minimize(cost) 
+correct_prediction = tf.equal(tf.argmax(pred, 1), tf.argmax(y, 1)) 
+accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32)) 
+init = tf.global_variables_initializer()</span></pre>
+<ol start="10">
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.72.1">Launch the graph and iterate for </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.73.1">training_iterats</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.74.1"> times where each time a </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.75.1">batch_size</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.76.1"> is taken in the input to run the optimizer. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.76.2">Note that we train by using the </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.77.1">mnist.train</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.78.1"> data, which is separated from </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.79.1">minst</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.80.1">. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.80.2">Each </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.81.1">display_step</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.82.1">, the current partial accuracy is computed. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.82.2">At the end, the accuracy is computed on 2,048 test images with no dropout.</span></li>
+</ol>
+<pre style="padding-left: 60px"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.83.1">train_loss = [] 
+train_acc = [] 
+test_acc = [] 
+with tf.Session() as sess: 
+    sess.run(init) 
+    step = 1 
+    while step &lt;= training_iters: 
+        batch_x, batch_y = mnist.train.next_batch(batch_size) 
+        sess.run(optimizer, feed_dict={x: batch_x, y: batch_y, 
+                                       keep_prob: dropout}) 
+        if step % display_step == 0: 
+            loss_train, acc_train = sess.run([cost, accuracy],  
+                                             feed_dict={x: batch_x, 
+                                                        y: batch_y, 
+                                                        keep_prob: 1.}) 
+            print "Iter " + str(step) + ", Minibatch Loss= " + \ 
+                  "{:.2f}".format(loss_train) + ", Training Accuracy= " + \ 
+                  "{:.2f}".format(acc_train) 
+            # Calculate accuracy for 2048 mnist test images.  
+            </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.83.2"># Note that in this case no dropout 
+            acc_test = sess.run(accuracy,  
+                                feed_dict={x: mnist.test.images, 
+                                      y: mnist.test.labels, 
+                                      keep_prob: 1.}) 
+            print "Testing Accuracy:" + \ 
+               "{:.2f}".format(acc_train) 
+            train_loss.append(loss_train) 
+            train_acc.append(acc_train) 
+            test_acc.append(acc_test)             
+        step += 1</span></pre>
+<ol start="11">
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.84.1">Plot the Softmax loss per iteration, together with train and test accuracy:</span></li>
+</ol>
+<pre style="padding-left: 60px"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.85.1">eval_indices = range(0, training_iters, display_step) 
+# Plot loss over time 
+plt.plot(eval_indices, train_loss, 'k-') 
+plt.title('Softmax Loss per iteration') 
+plt.xlabel('Iteration') 
+plt.ylabel('Softmax Loss') 
+plt.show() 
+# Plot train and test accuracy 
+plt.plot(eval_indices, train_acc, 'k-', label='Train Set Accuracy') 
+plt.plot(eval_indices, test_acc, 'r--', label='Test Set Accuracy') 
+plt.title('Train and Test Accuracy') 
+plt.xlabel('Generation') 
+plt.ylabel('Accuracy') 
+plt.legend(loc='lower right') 
+plt.show() </span></pre>
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.86.1">Following is the output of the preceding code. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.86.2">We first look at Softmax per iteration:</span></p>
+<div class="CDPAlignCenter CDPAlign"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.87.1"><img height="191" width="277" src="assets/6e8a4e09-d221-47ae-adf0-cb39c23f8858.png"/></span></div>
+<div class="packt_figref CDPAlignCenter CDPAlign"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.88.1">An example of loss decrease</span></div>
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.89.1">We look at the train and text accuracy next:</span></p>
+<div class="CDPAlignCenter CDPAlign"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.90.1"><img height="195" width="272" src="assets/7f73c15d-23e8-4d13-aee6-56d2a5788532.png"/></span></div>
+<div class="packt_figref CDPAlignCenter CDPAlign"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.91.1">An example of train and test accuracy increase</span></div>
+
+
+            </article>
+
+            
+        </section>
+    </body>
+
+</html>

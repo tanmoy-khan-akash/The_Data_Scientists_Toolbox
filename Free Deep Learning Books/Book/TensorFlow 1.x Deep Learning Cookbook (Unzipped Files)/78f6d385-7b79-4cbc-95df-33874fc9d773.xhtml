@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+    <head>
+        <title>Calculating gradients of backpropagation algorithm </title>
+        <link rel="stylesheet" href="css/style.css" type="text/css"/>
+        <meta charset="utf-8"/>
+    
+<!-- kobo-style -->
+<script xmlns="http://www.w3.org/1999/xhtml" type="text/javascript" src="js/kobo.js"/>
+<style xmlns="http://www.w3.org/1999/xhtml" type="text/css" id="koboSpanStyle">.koboSpan { -webkit-text-combine: inherit; }</style>
+
+</head>
+
+    <body>
+        <section>
+
+                            <header>
+                    <h1 class="header-title"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.1.1">Calculating gradients of backpropagation algorithm </span></h1>
+                </header>
+            
+            <article>
+                
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.2.1">The BPN algorithm is one of the most studied and most used algorithms in neural networks. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.2.2">It is used to propagate the errors from the output layers to the neurons of the hidden layer, which are then used to update the weights. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.2.3">The whole learning can be broken into two passes--forward pass and backward pass.</span></p>
+<p><strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.3.1">Forward pass</span></strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.4.1">: The inputs are fed to the network and the signal is propagated from the input layer via the hidden layers, finally to the output layer. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.4.2">At the output layer, the error and the </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.5.1">loss</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.6.1"> function are computed.</span></p>
+<p><strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.7.1">Backward pass</span></strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.8.1">: In backward pass, the gradient of the </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.9.1">loss</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.10.1"> function is computed first for the output layer neurons and then for the hidden layer neurons. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.10.2">The gradients are then used to update the weights.</span></p>
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.11.1">The two passes are repeatedly iterated till convergence is reached.</span></p>
+
+
+            </article>
+
+            
+        </section>
+    </body>
+
+</html>

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+    <head>
+        <title>How to do it...</title>
+        <link rel="stylesheet" href="css/style.css" type="text/css"/>
+        <meta charset="utf-8"/>
+    
+<!-- kobo-style -->
+<script xmlns="http://www.w3.org/1999/xhtml" type="text/javascript" src="js/kobo.js"/>
+<style xmlns="http://www.w3.org/1999/xhtml" type="text/css" id="koboSpanStyle">.koboSpan { -webkit-text-combine: inherit; }</style>
+
+</head>
+
+    <body>
+        <section>
+
+                            <header>
+                    <h1 class="header-title"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.1.1">How to do it...</span></h1>
+                </header>
+            
+            <article>
+                
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.2.1">We proceed with the recipe as follows:</span></p>
+<ol>
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.3.1">Consider this piece of code where we specify the cluster architecture with one master running on 192.168.1.1:1111 and two workers running on 192.168.1.2:1111 and 192.168.1.3:1111 respectively.</span></li>
+</ol>
+<pre><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.4.1">import sys</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.5.1">import tensorflow as tf</span><br/> <br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.6.1"># specify the cluster's architecture</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.7.1">cluster = tf.train.ClusterSpec({'ps': ['192.168.1.1:1111'],</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.8.1">     'worker': ['192.168.1.2:1111',</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.9.1">     '192.168.1.3:1111']</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.10.1">})</span></pre>
+<ol start="2">
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.11.1">Note that the code is replicated on multiple machines and therefore it is important to know what is the role of the current execution node. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.11.2">This information we get from the command line. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.11.3">A machine can be either a worker or a parameter server (ps).</span></li>
+</ol>
+<pre><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.12.1"># parse command-line to specify machine</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.13.1">job_type = sys.argv[1] # job type: "worker" or "ps"</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.14.1">task_idx = sys.argv[2] # index job in the worker or ps list</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.15.1"># as defined in the ClusterSpec</span></pre>
+<ol start="3">
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.16.1">Run the training server where given a cluster, we bless each computational with a role (either worker or ps), and an id.</span></li>
+</ol>
+<pre><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.17.1"># create TensorFlow Server. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.17.2">This is how the machines communicate.</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.18.1">server = tf.train.Server(cluster, job_name=job_type, task_index=task_idx)</span></pre>
+<ol start="4">
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.19.1">The computation is different according to the role of the specific computation node:
+</span><ul>
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.20.1">If the role is a parameter server, then the condition is to join the server. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.20.2">Note that in this case there is no code to execute because the workers will continuously push updates and the only thing that the Parameter Server has to do is waiting.</span></li>
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.21.1">Otherwise the worker code is executed on a specific device within the cluster. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.21.2">This part of code is similar to the one executed on a single machine where we first build the model and then we train it locally. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.21.3">Note that all the distribution of the work and the collection of the updated results is done transparently by Tensoflow. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.21.4">Note that TensorFlow provides a convenient </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.22.1">tf.train.replica_device_setter</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.23.1"> that automatically assigns operations to devices.</span></li>
+</ul>
+</li>
+</ol>
+<pre><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.24.1"># parameter server is updated by remote clients.</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.25.1"># will not proceed beyond this if statement.</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.26.1">if job_type == 'ps':</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.27.1">  server.join()</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.28.1">else:</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.29.1">  # workers only</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.30.1">  with tf.device(tf.train.replica_device_setter(</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.31.1">    worker_device='/job:worker/task:'+task_idx,</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.32.1">    cluster=cluster)):</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.33.1"># build your model here as if you only were using a single machine</span><br/> <br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.34.1">with tf.Session(server.target):</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.35.1">  # train your model here</span></pre>
+
+
+            </article>
+
+            
+        </section>
+    </body>
+
+</html>

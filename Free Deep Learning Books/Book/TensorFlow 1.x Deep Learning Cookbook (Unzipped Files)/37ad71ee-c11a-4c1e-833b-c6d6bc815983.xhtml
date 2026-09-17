@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+    <head>
+        <title>Understanding the TensorFlow program structure</title>
+        <link rel="stylesheet" href="css/style.css" type="text/css"/>
+        <meta charset="utf-8"/>
+    
+<!-- kobo-style -->
+<script xmlns="http://www.w3.org/1999/xhtml" type="text/javascript" src="js/kobo.js"/>
+<style xmlns="http://www.w3.org/1999/xhtml" type="text/css" id="koboSpanStyle">.koboSpan { -webkit-text-combine: inherit; }</style>
+
+</head>
+
+    <body>
+        <section>
+
+                            <header>
+                    <h1 class="header-title"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.1.1">Understanding the TensorFlow program structure</span></h1>
+                </header>
+            
+            <article>
+                
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.2.1">TensorFlow is very unlike other programming languages. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.2.2">We first need to build a blueprint of whatever neural network we want to create. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.2.3">This is accomplished by dividing the program into two separate parts, namely, definition of the computational graph and its execution. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.2.4">At first, this might appear cumbersome to the conventional programmer, but it is this separation of the execution graph from the graph definition that gives TensorFlow its strength, that is, the ability to work on multiple platforms and parallel execution.</span></p>
+<p><strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.3.1">Computational graph:</span></strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.4.1"> A computational graph is a network of nodes and edges. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.4.2">In this section, all the data to be used, in other words, tensor Objects (constants, variables, and placeholders) and all the computations to be performed, namely, Operation Objects (in short referred as ops), are defined. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.4.3">Each node can have zero or more inputs but only one output. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.4.4">Nodes in the network represent Objects (tensors and Operations), and edges represent the Tensors that flow between operations. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.4.5">The computation graph defines the blueprint of the neural network but Tensors in it have no value associated with them yet.</span></p>
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.5.1">To build a computation graph we define all the constants, variables, and operations that we need to perform. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.5.2">Constants, variables, and placeholders will be dealt with in the next recipe. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.5.3">Mathematical operations will be dealt in detail in the recipe for matrix manipulations. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.5.4">Here, we describe the structure using a simple example of defining and executing a graph to add two vectors.</span></p>
+<p><strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.6.1">Execution of the graph:</span></strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.7.1"> The execution of the graph is performed using Session Object. </span><em><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.8.1">The Session Object encapsulates the environment in which tensor and Operation Objects are evaluated</span></em><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.9.1">. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.9.2">This is the place where actual calculations and transfer of information from one layer to another takes place. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.9.3">The values of different tensor Objects are initialized, accessed, and saved in Session Object only. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.9.4">Up to now the tensor Objects were just abstract definitions, here they come to life.</span></p>
+
+
+            </article>
+
+            
+        </section>
+    </body>
+
+</html>

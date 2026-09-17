@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+    <head>
+        <title>There's more...</title>
+        <link rel="stylesheet" href="css/style.css" type="text/css"/>
+        <meta charset="utf-8"/>
+    
+<!-- kobo-style -->
+<script xmlns="http://www.w3.org/1999/xhtml" type="text/javascript" src="js/kobo.js"/>
+<style xmlns="http://www.w3.org/1999/xhtml" type="text/css" id="koboSpanStyle">.koboSpan { -webkit-text-combine: inherit; }</style>
+
+</head>
+
+    <body>
+        <section>
+
+                            <header>
+                    <h1 class="header-title"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.1.1">There's more...</span></h1>
+                </header>
+            
+            <article>
+                
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.2.1">Very often, we will need constant tensor objects with a large size; in this case, to optimize memory, it is better to declare them as variables with a trainable flag set to </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.3.1">False</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.4.1">:</span></p>
+<pre><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.5.1">t_large = tf.Variable(large_array, trainable = False) </span></pre>
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.6.1">TensorFlow was designed to work impeccably with Numpy, hence all the TensorFlow data types are based on those of Numpy. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.6.2">Using </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.7.1">tf.convert_to_tensor()</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.8.1">, we can convert the given value to tensor type and use it with TensorFlow functions and operators. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.8.2">This function accepts Numpy arrays, Python Lists, and Python scalars and allows interoperability with tensor Objects.</span></p>
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.9.1">The following table lists some of the common TensorFlow supported data types (taken from </span><a href="http://TensorFlow.org" target="_blank"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.10.1">TensorFlow.org</span></a><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.11.1">):</span></p>
+<table class="table">
+<tbody>
+<tr>
+<td>
+<p><strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.12.1">Data type</span></strong></p>
+</td>
+<td>
+<p><strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.13.1">TensorFlow type</span></strong></p>
+</td>
+</tr>
+<tr>
+<td>
+<p><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.14.1">DT_FLOAT</span></kbd></p>
+</td>
+<td>
+<p><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.15.1">tf.float32</span></kbd></p>
+</td>
+</tr>
+<tr>
+<td>
+<p><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.16.1">DT_DOUBLE</span></kbd></p>
+</td>
+<td>
+<p><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.17.1">tf.float64</span></kbd></p>
+</td>
+</tr>
+<tr>
+<td>
+<p><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.18.1">DT_INT8</span></kbd></p>
+</td>
+<td>
+<p><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.19.1">tf.int8</span></kbd></p>
+</td>
+</tr>
+<tr>
+<td>
+<p><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.20.1">DT_UINT8</span></kbd></p>
+</td>
+<td>
+<p><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.21.1">tf.uint8</span></kbd></p>
+</td>
+</tr>
+<tr>
+<td>
+<p><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.22.1">DT_STRING</span></kbd></p>
+</td>
+<td>
+<p><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.23.1">tf.string</span></kbd></p>
+</td>
+</tr>
+<tr>
+<td>
+<p><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.24.1">DT_BOOL</span></kbd></p>
+</td>
+<td>
+<p><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.25.1">tf.bool</span></kbd></p>
+</td>
+</tr>
+<tr>
+<td>
+<p><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.26.1">DT_COMPLEX64</span></kbd></p>
+</td>
+<td>
+<p><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.27.1">tf.complex64</span></kbd></p>
+</td>
+</tr>
+<tr>
+<td>
+<p><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.28.1">DT_QINT32</span></kbd></p>
+</td>
+<td>
+<p><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.29.1">tf.qint32</span></kbd></p>
+</td>
+</tr>
+</tbody>
+</table>
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.30.1"> </span></p>
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.31.1">Note that unlike Python/Numpy sequences, TensorFlow sequences are not iterable. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.31.2">Try the following code:</span></p>
+<pre><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.32.1">for i in tf.range(10)  </span></pre>
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.33.1">You will get an error:</span></p>
+<pre><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.34.1">#TypeError("'Tensor' object is not iterable.")</span></pre>
+
+
+            </article>
+
+            
+        </section>
+    </body>
+
+</html>

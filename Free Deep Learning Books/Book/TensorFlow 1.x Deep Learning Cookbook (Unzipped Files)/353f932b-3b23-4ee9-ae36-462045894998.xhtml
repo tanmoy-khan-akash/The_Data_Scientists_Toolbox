@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+    <head>
+        <title>How it works...</title>
+        <link rel="stylesheet" href="css/style.css" type="text/css"/>
+        <meta charset="utf-8"/>
+    
+<!-- kobo-style -->
+<script xmlns="http://www.w3.org/1999/xhtml" type="text/javascript" src="js/kobo.js"/>
+<style xmlns="http://www.w3.org/1999/xhtml" type="text/css" id="koboSpanStyle">.koboSpan { -webkit-text-combine: inherit; }</style>
+
+</head>
+
+    <body>
+        <section>
+
+                            <header>
+                    <h1 class="header-title"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.1.1">How it works...</span></h1>
+                </header>
+            
+            <article>
+                
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.2.1">One-dimension ConvNets for sentiment analysis are discussed in detail in the paper </span><em><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.3.1">Convolutional Neural Networks for Sentence Classification</span></em><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.4.1">, Yoon Kim, EMNLP 2014 (</span><a href="https://arxiv.org/abs/1408.5882"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.5.1">https://arxiv.org/abs/1408.5882</span></a><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.6.1">) . </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.6.2">Note that the model proposed by the paper retains some pieces of information about the position, thanks to the filter windows operating over consecutive words. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.6.3">The following image extracted from the paper graphically represents the key intuitions beyond the network. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.6.4">At the beginning the text is represented as a vector based on standard embeddings, providing us a compact representation in a one-dimensional dense space. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.6.5">Then the matrix is processed with multiple standard one-dimensional convolutional layers.</span></p>
+<div class="packt_infobox"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.7.1">Note that the model uses multiple filters (with varying window sizes) to obtain multiple features. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.7.2">After that, there is a max pool operation where the idea is to capture the most important feature-the one with the highest value for each feature map. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.7.3">For regularization, the article proposed to adopt a dropout on the penultimate layer with a constraint on L2-norms of the weight vectors. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.7.4">The final layer will output the sentiment as positive or negative.</span></div>
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.8.1">A couple of observations for better understanding the model are as follows:</span></p>
+<ul>
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.9.1"> Filters are typically convolving on a continuous space. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.9.2">For images, this space is the pixel matrix representation which is spatially continuous over height and width. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.9.3">For texts, the continuous space is nothing more than the continuous dimension naturally induced by continuous words. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.9.4">If we use only words represented with one-hot encoding then space is sparse, if we use embedding then the resulting space is dense because similar words are aggregated.</span></li>
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.10.1">Images typically have three channels (RGB), while text naturally has only one channel because we have no need to represent colors.</span></li>
+</ul>
+
+
+            </article>
+
+            
+        </section>
+    </body>
+
+</html>

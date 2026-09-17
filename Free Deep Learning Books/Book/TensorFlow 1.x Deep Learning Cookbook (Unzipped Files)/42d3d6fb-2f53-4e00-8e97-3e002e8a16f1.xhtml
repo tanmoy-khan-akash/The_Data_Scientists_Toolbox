@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+    <head>
+        <title>Some cool GAN applications</title>
+        <link rel="stylesheet" href="css/style.css" type="text/css"/>
+        <meta charset="utf-8"/>
+    
+<!-- kobo-style -->
+<script xmlns="http://www.w3.org/1999/xhtml" type="text/javascript" src="js/kobo.js"/>
+<style xmlns="http://www.w3.org/1999/xhtml" type="text/css" id="koboSpanStyle">.koboSpan { -webkit-text-combine: inherit; }</style>
+
+</head>
+
+    <body>
+        <section>
+
+                            <header>
+                    <h1 class="header-title"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.1.1">Some cool GAN applications</span></h1>
+                </header>
+            
+            <article>
+                
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.2.1">We have established that the generator learns how to forge data. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.2.2">This means that it learns how to create new synthetic data which is created by the network and </span><em><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.3.1">looks</span></em><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.4.1"> real and created by humans. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.4.2">Before going into details about the GAN code, I'd like to share the results of a recent paper (code is available online </span><a href="https://github.com/hanzhanggit/StackGAN"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.5.1">https://github.com/hanzhanggit/StackGAN</span></a><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.6.1"> ) in which a GAN was used to synthesize forged images starting with a text description. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.6.2">The results were impressive. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.6.3">The first column is the real image in the test set and all the other columns are the images generated from the same text description in Stage-I and Stage-II of StackGAN. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.6.4">More examples are available on YouTube (</span><a href="https://www.youtube.com/watch?v=SuRyL5vhCIM&amp;feature=youtu.be"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.7.1">https://www.youtube.com/watch?v=SuRyL5vhCIM&amp;feature=youtu.be</span></a><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.8.1">):</span></p>
+<div class="CDPAlignCenter CDPAlign"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.9.1"><img src="assets/60422def-cdf2-489b-8974-49708350aea0.png"/></span></div>
+<div class="mce-root CDPAlignCenter CDPAlign"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.10.1"><img src="assets/8a65baee-568b-4c4f-bb07-a60ad7bb16f8.png"/></span></div>
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.11.1">Now let us see how a GAN can learn to </span><strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.12.1">forge</span></strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.13.1"> the MNIST dataset. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.13.2">In this case, it is a combination of GAN and ConvNets used for the generator and the discriminator networks. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.13.3">In the beginning, the generator creates nothing understandable, but after a few iterations, synthetic forged numbers are progressively clearer and clearer. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.13.4">In the following figure, the panels are ordered by increasing training epochs and you can see the quality improvement among the panels:</span></p>
+<div class="packt_figure CDPAlignCenter CDPAlign"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.14.1"><img class=" image-border" src="assets/850e0191-0019-4bfc-906b-4043e91ce23f.png"/></span></div>
+<div><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.15.1">The improved image is as follows:</span></div>
+<div class="packt_figure CDPAlignCenter CDPAlign"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.16.1"><img class=" image-border" src="assets/e716e40e-9737-44bd-abc2-d6cc7b240339.png"/></span></div>
+<div><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.17.1">We can see further improvements in the following image:</span></div>
+<div class="packt_figure CDPAlignCenter CDPAlign"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.18.1"><img class=" image-border" src="assets/c905787d-d0ac-421d-9826-a925c4ada1a8.png"/></span></div>
+<p class="mce-root"><span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.19.1">One of the coolest uses of GAN is doing </span></span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.20.1">arithmetics </span><span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.21.1">on faces in the generator's vector Z. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.21.2">In other words, if we stay in the space of synthetic forged images, it is possible to see things like this: </span></span><span class="packt_screen"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.22.1">[smiling woman] - [neutral woman] + [neutral man] = [smiling man]</span></span><span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.23.1">, or like this: </span></span><span class="packt_screen"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.24.1">[man with glasses] - [man without glasses] + [woman without glasses] = [woman with glasses]</span></span><span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.25.1">. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.25.2">The following figure was taken</span></span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.26.1"> from: </span><em><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.27.1">Unsupervised Representation Learning with Deep Convolutional Generative Adversarial Networks,</span></em><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.28.1"> Alec Radford, Luke Metz, Soumith Chintala, 2016, </span><a href="https://arxiv.org/abs/1511.06434"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.29.1">https://arxiv.org/abs/1511.06434</span></a></p>
+<div class="packt_figure CDPAlignCenter CDPAlign"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.30.1"><img height="631" width="641" class=" image-border" src="assets/01744226-effd-46ec-9e04-f7668a1379aa.png"/></span></div>
+<div>
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.31.1">Other cool examples of GANs are provided at </span><a href="https://github.com/Newmu/dcgan_code"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.32.1">https://github.com/Newmu/dcgan_code</span></a><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.33.1">. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.33.2">All images in this paper were generated by a neural network. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.33.3">They are NOT REAL. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.33.4">The full paper is available here:</span><span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.34.1"> </span></span><a href="http://arxiv.org/abs/1511.06434"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.35.1">http://arxiv.org/abs/1511.06434.</span></a></p>
+<p><strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.36.1">Bedrooms</span></strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.37.1">: Generated bedrooms after five epochs of training:</span></p>
+</div>
+<div class="CDPAlignCenter CDPAlign"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.38.1"> </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.39.1"><img style="text-align: center;color: #333333;font-size: 1em" class=" image-border" src="assets/098bf513-346d-4c13-b692-c15567295ae9.png"/></span></div>
+<div class="mce-root CDPAlignCenter CDPAlign packt_figref"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.40.1">An example of generated bedrooms</span><br/>
+<p><strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.41.1">Album covers:</span></strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.42.1"> these images are not real but generated by the GAN. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.42.2">Album covers looks like real:</span></p>
+</div>
+<div class="packt_figure CDPAlignCenter CDPAlign"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.43.1"><img height="485" width="485" class=" image-border" src="assets/3f94861f-9f24-4b33-92d1-44b413fb0408.png"/></span></div>
+<div class="packt_figure packt_figref CDPAlignCenter CDPAlign"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.44.1">An example of generated album covers</span></div>
+
+
+            </article>
+
+            
+        </section>
+    </body>
+
+</html>

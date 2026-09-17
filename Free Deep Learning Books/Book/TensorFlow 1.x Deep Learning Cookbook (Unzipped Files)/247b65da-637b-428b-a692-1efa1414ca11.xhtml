@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+    <head>
+        <title>How to do it...</title>
+        <link rel="stylesheet" href="css/style.css" type="text/css"/>
+        <meta charset="utf-8"/>
+    
+<!-- kobo-style -->
+<script xmlns="http://www.w3.org/1999/xhtml" type="text/javascript" src="js/kobo.js"/>
+<style xmlns="http://www.w3.org/1999/xhtml" type="text/css" id="koboSpanStyle">.koboSpan { -webkit-text-combine: inherit; }</style>
+
+</head>
+
+    <body>
+        <section>
+
+                            <header>
+                    <h1 class="header-title"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.1.1">How to do it...</span></h1>
+                </header>
+            
+            <article>
+                
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.2.1">Here is how we proceed with the recipe:</span></p>
+<ol>
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.3.1">The first step in tuning hyperparameters is building the model. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.3.2">Build the model in TensorFlow, exactly the way we have been.</span></li>
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.4.1">Add a way to save the model in </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.5.1">model_file</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.6.1">. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.6.2">In TensorFlow, this can be done using a </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.7.1">Saver</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.8.1"> object. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.8.2">Then save it in the session:</span></li>
+</ol>
+<pre style="padding-left: 60px" class="mce-root"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.9.1">... </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.9.2">saver = tf.train.Saver() ... </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.9.3">with tf.Session() as sess: ... </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.9.4">#Do the training steps ... </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.9.5">save_path = saver.save(sess, "/tmp/model.ckpt") print("Model saved in file: %s" % save_path)</span></pre>
+<ol start="3">
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.10.1">Next, identify the hyperparameters that you want to tune.</span></li>
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.11.1">Choose possible values for the hyperparameters. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.11.2">Here, you can make a random choice, constant spaced choice, or manual choice. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.11.3">The three are respectively known as random search, grid search, or manual search for optimized hyperparameters. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.11.4">For example, this is for the learning rate:</span></li>
+</ol>
+<pre style="padding-left: 60px" class="mce-root"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.12.1"># Random Choice: generate 5 random values of learning rate </span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.13.1"># lying between 0 and 1 </span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.14.1">learning_rate = </span><a><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.15.1">np.random.rand(5)</span></a> <br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.16.1">#Grid Search: generate 5 values starting from 0, separated by </span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.17.1"># 0.2 </span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.18.1">learning_rate = [i for i in np.arange(0,1,0.2)] </span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.19.1">#Manual Search: give any values you seem plausible manually learning_rate = [0.5, 0.6, 0.32, 0.7, 0.01]</span></pre>
+<ol start="5">
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.20.1">We choose the parameters that give the best response to our chosen </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.21.1">loss</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.22.1"> function. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.22.2">So, we can define a maximum value of </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.23.1">loss</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.24.1"> function at the start as </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.25.1">best_loss</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.26.1"> (in the case of accuracy, you will choose the minimum accuracy you desire from your model):</span></li>
+</ol>
+<pre style="padding-left: 60px" class="mce-root"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.27.1">best_loss = 2 </span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.28.1"># It can be any number, but it would be better if you keep it same as the loss you achieved from your base model defined in steps 1 and 2</span></pre>
+<ol start="6">
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.29.1">Wrap your model in a for loop for the learning rate; any model that gives a better estimate of loss is then saved:</span></li>
+</ol>
+<pre style="padding-left: 60px" class="mce-root"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.30.1">... </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.30.2"># Load and preprocess data </span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.31.1">... </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.31.2"># Hyperparameters </span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.32.1">Tuning epochs = [50, 60, 70] </span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.33.1">batches = [5, 10, 20] </span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.34.1">rmse_min = 0.04 </span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.35.1">for epoch in epochs: </span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.36.1">    for batch in batches: </span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.37.1">        model = get_model() </span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.38.1">        model.compile(loss='mean_squared_error', optimizer='adam') </span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.39.1">        model.fit(X_train, y_train, validation_data=(X_test, y_test),epochs=epoch, batch_size=batch, verbose=1) </span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.40.1">        y_test_pred = model.predict(X_test) </span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.41.1">        rmse = mean_squared_error( y_test, y_test_pred ) </span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.42.1">        if rmse &lt; rmse_min: </span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.43.1">            rmse_min = rmse </span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.44.1">            # serialize model to JSON </span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.45.1">            model_json = model.to_json() </span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.46.1">            with open("model.json", "w") as json_file: </span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.47.1">                json_file.write(model_json) </span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.48.1">                # serialize weights to HDF5  </span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.49.1">                model.save_weights("model.hdf5") </span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.50.1">                print("Saved model to disk")</span></pre>
+
+
+            </article>
+
+            
+        </section>
+    </body>
+
+</html>

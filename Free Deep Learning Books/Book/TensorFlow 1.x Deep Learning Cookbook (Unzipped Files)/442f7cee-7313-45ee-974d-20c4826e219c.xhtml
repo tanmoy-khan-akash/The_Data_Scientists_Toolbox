@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+    <head>
+        <title>How it works...</title>
+        <link rel="stylesheet" href="css/style.css" type="text/css"/>
+        <meta charset="utf-8"/>
+    
+<!-- kobo-style -->
+<script xmlns="http://www.w3.org/1999/xhtml" type="text/javascript" src="js/kobo.js"/>
+<style xmlns="http://www.w3.org/1999/xhtml" type="text/css" id="koboSpanStyle">.koboSpan { -webkit-text-combine: inherit; }</style>
+
+</head>
+
+    <body>
+        <section>
+
+                            <header>
+                    <h1 class="header-title"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.1.1">How it works...</span></h1>
+                </header>
+            
+            <article>
+                
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.2.1">The building of a computational graph is very simple; you go on adding the variables and operations and passing them through (flow the tensors) in the sequence you build your neural network layer by layer. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.2.2">TensorFlow also allows you to use specific devices (CPU/GPU) with different objects of the computation graph using </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.3.1">with tf.device()</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.4.1">. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.4.2">In our example, the computational graph consists of three nodes, </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.5.1">v_1</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.6.1"> and </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.7.1">v_2</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.8.1"> representing the two vectors, and </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.9.1">Add</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.10.1"> is the operation to be performed on them.</span></p>
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.11.1">Now, to bring this graph to life, we first need to define a session object using </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.12.1">tf.Session()</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.13.1">; we gave the name </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.14.1">sess</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.15.1"> to our session object. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.15.2">Next, we run it using the </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.16.1">run</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.17.1"> method defined in Session class as follows:</span></p>
+<pre><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.18.1">run (fetches, feed_dict=None, options=None, run_metadata) </span></pre>
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.19.1">This evaluates the tensor in </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.20.1">fetches</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.21.1">; our example has tensor </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.22.1">v_add</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.23.1"> in fetches. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.23.2">The </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.24.1">run</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.25.1"> method will execute every tensor and every operation in the graph leading to </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.26.1">v_add</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.27.1">. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.27.2">If instead of </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.28.1">v_add</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.29.1">, you have </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.30.1">v_1</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.31.1"> in fetches, the result will be the value of vector </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.32.1">v_1</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.33.1">:</span></p>
+<pre><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.34.1">[1,2,3,4]  </span></pre>
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.35.1">Fetches can be a single tensor/operation object or more, for example, if the fetches is </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.36.1">[v_1, v_2, v_add]</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.37.1">, the output will be the following:</span></p>
+<pre><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.38.1">[array([1, 2, 3, 4]), array([2, 1, 5, 3]), array([3, 3, 8, 7])] </span></pre>
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.39.1">In the same program code, we can have many session objects.</span></p>
+
+
+            </article>
+
+            
+        </section>
+    </body>
+
+</html>

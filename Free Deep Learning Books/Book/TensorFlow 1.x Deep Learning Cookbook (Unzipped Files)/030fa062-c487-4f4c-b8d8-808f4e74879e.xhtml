@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+    <head>
+        <title>Implementing Variational Autoencoders</title>
+        <link rel="stylesheet" href="css/style.css" type="text/css"/>
+        <meta charset="utf-8"/>
+    
+<!-- kobo-style -->
+<script xmlns="http://www.w3.org/1999/xhtml" type="text/javascript" src="js/kobo.js"/>
+<style xmlns="http://www.w3.org/1999/xhtml" type="text/css" id="koboSpanStyle">.koboSpan { -webkit-text-combine: inherit; }</style>
+
+</head>
+
+    <body>
+        <section>
+
+                            <header>
+                    <h1 class="header-title"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.1.1">Implementing Variational Autoencoders</span></h1>
+                </header>
+            
+            <article>
+                
+<p><strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.2.1">Variational Autoencoders</span></strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.3.1"> (</span><strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.4.1">VAE</span></strong><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.5.1">) are a mix of the best of both worlds of the neural networks and the Bayesian inference. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.5.2">They are the coolest neural networks and have emerged as one of the popular approaches to unsupervised learning. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.5.3">They are Autoencoders with a twist. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.5.4">Along with the conventional Encoder and the Decoder network of the Autoencoders (see Chapter 8, </span><em><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.6.1">Autoencoders</span></em><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.7.1">), they have additional stochastic layers. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.7.2">The stochastic layer, after the Encoder network, samples the data using a Gaussian distribution, and the one after the Decoder network samples the data using Bernoulli's distribution. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.7.3">Like GANs, Variational Autoencoders can be used to generate images and figures based on the distribution they have been trained on. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.7.4">VAEs allow one to set complex priors in the latent and thus learn powerful latent representations.</span></p>
+<p class="packt_figure"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.8.1">The following diagram describes a VAE. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.8.2">The Encoder network </span><em><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.9.1">qᵩ(z|x)</span></em><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.10.1"> approximates the true but intractable posterior distribution </span><em><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.11.1">p(z|x)</span></em><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.12.1">, where </span><em><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.13.1">x</span></em><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.14.1"> is the input to the VAE and </span><em><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.15.1">z</span></em><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.16.1"> is the latent representation. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.16.2">The decoder network </span><em><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.17.1">p</span><sub><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.18.1">ϴ</span></sub><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.19.1">(x|z</span></em><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.20.1">) takes the </span><em><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.21.1">d</span></em><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.22.1">-dimensional latent variables (also called latent space) as its input and generate new images following the same distribution as </span><em><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.23.1">P(x)</span></em><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.24.1">. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.24.2">The latent representation </span><em><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.25.1">z</span></em><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.26.1"> is sampled from z|x ~ </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.27.1"><img height="27" width="116" class="fm-editor-equation" src="assets/054d905b-e2ab-43ae-9ca0-4d6bc08481a9.png"/></span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.28.1"> , and the output of the decoder network samples x|z from x|z ~ </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.29.1"><img height="25" width="107" class="fm-editor-equation" src="assets/7eab5955-16aa-4182-b62e-7278f7600221.png"/></span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.30.1"> :</span></p>
+<div class="packt_figure CDPAlignCenter CDPAlign"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.31.1"><img class=" image-border" src="assets/cc5ebb49-22fd-4e57-9992-6643c79fee21.png"/></span></div>
+<div class="packt_figref CDPAlignCenter CDPAlign"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.32.1">Example of Encoder-Decoder for Autoencoders.</span></div>
+
+
+            </article>
+
+            
+        </section>
+    </body>
+
+</html>

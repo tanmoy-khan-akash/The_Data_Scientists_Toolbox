@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+    <head>
+        <title>How to do it...</title>
+        <link rel="stylesheet" href="css/style.css" type="text/css"/>
+        <meta charset="utf-8"/>
+    
+<!-- kobo-style -->
+<script xmlns="http://www.w3.org/1999/xhtml" type="text/javascript" src="js/kobo.js"/>
+<style xmlns="http://www.w3.org/1999/xhtml" type="text/css" id="koboSpanStyle">.koboSpan { -webkit-text-combine: inherit; }</style>
+
+</head>
+
+    <body>
+        <section>
+
+                            <header>
+                    <h1 class="header-title"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.1.1">How to do it...</span></h1>
+                </header>
+            
+            <article>
+                
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.2.1">We proceed with the recipe as follows:</span></p>
+<ol start="1">
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.3.1">The first step would be to install Azure CLI. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.3.2">The details for installing Azure CLI on different OS platforms can be obtained from here </span><a href="https://docs.microsoft.com/en-us/cli/azure/install-azure-cli?view=azure-cli-latest"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.4.1">https://docs.microsoft.com/en-us/cli/azure/install-azure-cli?view=azure-cli-latest</span></a><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.5.1">.</span></li>
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.6.1">Before creating a cluster you would require to login in Azure, using command </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.7.1">az login</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.8.1">. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.8.2">It will generate a code and provide you with a website address, where you will be asked to verify your credentials, once all the steps on the website are over, you will be asked to close, and your az credentials will be verified.</span></li>
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.9.1"> Configure the default location, create and configure a resource group.</span></li>
+</ol>
+<pre><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.10.1">az group create --name myResourceGroup --location eastus</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.11.1">az configure --defaults group=myResourceGroup</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.12.1">az configure --defaults location=eastus</span></pre>
+<ol start="4">
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.13.1">Next, we will require creating a storage using &lt;az storage account create&gt; command, and set the environmental variables depending upon your OS, details about environment variables and their values are given at </span><a href="https://docs.microsoft.com/en-us/azure/batch-ai/quickstart-cli"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.14.1">https://docs.microsoft.com/en-us/azure/batch-ai/quickstart-cli</span></a></li>
+</ol>
+<ol start="5">
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.15.1">Download and extract the preprocessed MNIST database</span></li>
+</ol>
+<pre><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.16.1">wget "https://batchaisamples.blob.core.windows.net/samples/mnist_dataset_original.zip?st=2017-09-29T18%3A29%3A00Z&amp;se=2099-12-31T08%3A00%3A00Z&amp;sp=rl&amp;sv=2016-05-31&amp;sr=b&amp;sig=Qc1RA3zsXIP4oeioXutkL1PXIrHJO0pHJlppS2rID3I%3D" -O mnist_dataset_original.zip</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.17.1">unzip mnist_dataset_original.zip</span></pre>
+<ol start="6">
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.18.1">Download the </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.19.1">mnist_replica</span></kbd></li>
+</ol>
+<pre><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.20.1">wget "https://raw.githubusercontent.com/Azure/BatchAI/master/recipes/TensorFlow/TensorFlow-GPU-Distributed/mnist_replica.py?token=AcZzrcpJGDHCUzsCyjlWiKVNfBuDdkqwks5Z4dPrwA%3D%3D" -O mnist_replica.py</span></pre>
+<ol start="7">
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.21.1">Next create an Azure File Share, where you upload the downloaded MNIST dataset and </span><kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.22.1">mnist_replica.py</span></kbd><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.23.1"> files.</span></li>
+</ol>
+<pre><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.24.1">az storage share create --name batchaisample</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.25.1">az storage directory create --share-name batchaisample --name mnist_dataset</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.26.1">az storage file upload --share-name batchaisample --source t10k-images-idx3-ubyte.gz --path mnist_dataset</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.27.1">az storage file upload --share-name batchaisample --source t10k-labels-idx1-ubyte.gz --path mnist_dataset</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.28.1">az storage file upload --share-name batchaisample --source train-images-idx3-ubyte.gz --path mnist_dataset</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.29.1">az storage file upload --share-name batchaisample --source train-labels-idx1-ubyte.gz --path mnist_dataset</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.30.1">az storage directory create --share-name batchaisample --name tensorflow_samples</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.31.1">az storage file upload --share-name batchaisample --source mnist_replica.py --path tensorflow_samples</span></pre>
+<ol start="8">
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.32.1">Now we create a cluster, for this recipe, the cluster consists of two GPU nodes of standard_NC6 size, with standard Ubuntu LTS or Ubuntu DVSM. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.32.2">The cluster can be created using Azure CLI command:</span></li>
+</ol>
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.33.1">For Linux:</span></p>
+<pre><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.34.1">az batchai cluster create -n nc6 -i UbuntuDSVM -s Standard_NC6 --min 2 --max 2 --afs-name batchaisample --afs-mount-path external -u $USER -k ~/.ssh/id_rsa.pub</span></pre>
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.35.1">For Windows:</span></p>
+<pre><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.36.1">az batchai cluster create -n nc6 -i UbuntuDSVM -s Standard_NC6 --min 2 --max 2 --afs-name batchaisample --afs-mount-path external -u &lt;user_name&gt; -p &lt;password&gt;</span></pre>
+<ol start="9">
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.37.1">The next step is creating job creation parameters in job.json file:</span></li>
+</ol>
+<pre><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.38.1">{</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.39.1">  "properties": {</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.40.1">    "nodeCount": 2,</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.41.1">    "tensorFlowSettings": {</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.42.1">      "parameterServerCount": 1,</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.43.1">      "workerCount": 2,</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.44.1">      "pythonScriptFilePath": "$AZ_BATCHAI_INPUT_SCRIPT/mnist_replica.py",</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.45.1">      "masterCommandLineArgs": "--job_name=worker --num_gpus=1 --ps_hosts=$AZ_BATCHAI_PS_HOSTS --worker_hosts=$AZ_BATCHAI_WORKER_HOSTS --task_index=$AZ_BATCHAI_TASK_INDEX --data_dir=$AZ_BATCHAI_INPUT_DATASET --output_dir=$AZ_BATCHAI_OUTPUT_MODEL",</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.46.1">      "workerCommandLineArgs": "--job_name=worker --num_gpus=1 --ps_hosts=$AZ_BATCHAI_PS_HOSTS --worker_hosts=$AZ_BATCHAI_WORKER_HOSTS --task_index=$AZ_BATCHAI_TASK_INDEX --data_dir=$AZ_BATCHAI_INPUT_DATASET --output_dir=$AZ_BATCHAI_OUTPUT_MODEL",</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.47.1">      "parameterServerCommandLineArgs": "--job_name=ps --num_gpus=0 --ps_hosts=$AZ_BATCHAI_PS_HOSTS --worker_hosts=$AZ_BATCHAI_WORKER_HOSTS --task_index=$AZ_BATCHAI_TASK_INDEX --data_dir=$AZ_BATCHAI_INPUT_DATASET --output_dir=$AZ_BATCHAI_OUTPUT_MODEL"</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.48.1">},</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.49.1">     "stdOutErrPathPrefix": "$AZ_BATCHAI_MOUNT_ROOT/external",</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.50.1">     "inputDirectories": [{</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.51.1">     "id": "DATASET",</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.52.1">     "path": "$AZ_BATCHAI_MOUNT_ROOT/external/mnist_dataset"</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.53.1">    }, {</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.54.1">    "id": "SCRIPT",</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.55.1">    "path": "$AZ_BATCHAI_MOUNT_ROOT/external/tensorflow_samples"</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.56.1">    }],</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.57.1">     "outputDirectories": [{</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.58.1">       "id": "MODEL",</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.59.1">       "pathPrefix": "$AZ_BATCHAI_MOUNT_ROOT/external",</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.60.1">     "pathSuffix": "Models"</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.61.1">   }],</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.62.1">    "containerSettings": {</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.63.1">      "imageSourceRegistry": {</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.64.1">      "image": "tensorflow/tensorflow:1.1.0-gpu"</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.65.1">    }</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.66.1">  }</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.67.1"> }</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.68.1">}</span></pre>
+<ol start="10">
+<li><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.69.1">Finally, create the Batch AI job using the command:</span></li>
+</ol>
+<pre><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.70.1">az batchai job create -n distibuted_tensorflow --cluster-name nc6 -c job.json</span></pre>
+
+
+            </article>
+
+            
+        </section>
+    </body>
+
+</html>

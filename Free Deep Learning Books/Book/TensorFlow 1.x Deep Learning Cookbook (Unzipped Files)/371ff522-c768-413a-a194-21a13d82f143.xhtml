@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+    <head>
+        <title>How it works...</title>
+        <link rel="stylesheet" href="css/style.css" type="text/css"/>
+        <meta charset="utf-8"/>
+    
+<!-- kobo-style -->
+<script xmlns="http://www.w3.org/1999/xhtml" type="text/javascript" src="js/kobo.js"/>
+<style xmlns="http://www.w3.org/1999/xhtml" type="text/css" id="koboSpanStyle">.koboSpan { -webkit-text-combine: inherit; }</style>
+
+</head>
+
+    <body>
+        <section>
+
+                            <header>
+                    <h1 class="header-title"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.1.1">How it works...</span></h1>
+                </header>
+            
+            <article>
+                
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.2.1">VAE learns to reconstruct and at the same time generate new images. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.2.2">The generated images are dependent upon the latent space. </span><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.2.3">The images generated have the same distribution as the dataset they are trained on.</span></p>
+<p><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.3.1">We can also see the data in the latent space by defining a transform function within the VariationalAutoencoder class:</span></p>
+<pre><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.4.1">def transform(self, X):</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.5.1">    """Transform data by mapping it into the latent space."""</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.6.1">    # Note: This maps to mean of distribution, we could alternatively sample from Gaussian distribution</span><br/><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.7.1">    return self.sess.run(self.z_mean,   feed_dict={self.x: X})</span></pre>
+<p class="mce-root"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.8.1">The latent representation of the MNIST dataset using the transform function is as follows:</span></p>
+<div class="CDPAlignCenter CDPAlign"><span xmlns="http://www.w3.org/1999/xhtml" class="koboSpan" id="kobo.9.1"><img class=" image-border" src="assets/2bb795f1-19cc-4f46-8c1f-d896d3b0e01c.png"/></span></div>
+<div class="packt_figure"/>
+
+
+            </article>
+
+            
+        </section>
+    </body>
+
+</html>
