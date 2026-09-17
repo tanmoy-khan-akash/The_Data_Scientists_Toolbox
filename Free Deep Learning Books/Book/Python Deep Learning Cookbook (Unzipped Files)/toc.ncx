@@ -1,0 +1,1203 @@
+<?xml version='1.0' encoding='utf-8'?>
+<ncx xmlns="http://www.daisy.org/z3986/2005/ncx/" version="2005-1" xml:lang="eng">
+  <head>
+    <meta content="ba7f2d46-bfd0-4cf8-9106-01380c9ee7c4" name="dtb:uid"/>
+    <meta content="4" name="dtb:depth"/>
+    <meta content="calibre (2.55.0)" name="dtb:generator"/>
+    <meta content="0" name="dtb:totalPageCount"/>
+    <meta content="0" name="dtb:maxPageNumber"/>
+  </head>
+  <docTitle>
+    <text>Python Deep Learning Cookbook: Over 75 practical recipes on neural network modeling, reinforcement learning, and transfer learning using Python</text>
+  </docTitle>
+  <navMap>
+    <navPoint class="chapter" id="num_1" playOrder="0">
+      <navLabel>
+        <text>Preface</text>
+      </navLabel>
+      <content src="text/part0010.html#9H5K0-5e1e3ce63feb42db9ae6338e8302dfdb"/>
+      <navPoint class="chapter" id="num_2" playOrder="1">
+        <navLabel>
+          <text>What this book covers</text>
+        </navLabel>
+        <content src="text/part0011.html#AFM60-5e1e3ce63feb42db9ae6338e8302dfdb"/>
+      </navPoint>
+      <navPoint class="chapter" id="num_3" playOrder="2">
+        <navLabel>
+          <text>What you need for this book</text>
+        </navLabel>
+        <content src="text/part0012.html#BE6O0-5e1e3ce63feb42db9ae6338e8302dfdb"/>
+      </navPoint>
+      <navPoint class="chapter" id="num_4" playOrder="3">
+        <navLabel>
+          <text>Who this book is for</text>
+        </navLabel>
+        <content src="text/part0013.html#CCNA0-5e1e3ce63feb42db9ae6338e8302dfdb"/>
+      </navPoint>
+      <navPoint class="chapter" id="num_5" playOrder="4">
+        <navLabel>
+          <text>Conventions</text>
+        </navLabel>
+        <content src="text/part0014.html#DB7S0-5e1e3ce63feb42db9ae6338e8302dfdb"/>
+      </navPoint>
+      <navPoint class="chapter" id="num_6" playOrder="5">
+        <navLabel>
+          <text>Reader feedback</text>
+        </navLabel>
+        <content src="text/part0015.html#E9OE0-5e1e3ce63feb42db9ae6338e8302dfdb"/>
+      </navPoint>
+      <navPoint class="chapter" id="num_7" playOrder="6">
+        <navLabel>
+          <text>Customer support</text>
+        </navLabel>
+        <content src="text/part0016.html#F8900-5e1e3ce63feb42db9ae6338e8302dfdb"/>
+        <navPoint class="chapter" id="num_8" playOrder="7">
+          <navLabel>
+            <text>Downloading the example code</text>
+          </navLabel>
+          <content src="text/part0017.html#G6PI0-5e1e3ce63feb42db9ae6338e8302dfdb"/>
+        </navPoint>
+        <navPoint class="chapter" id="num_9" playOrder="8">
+          <navLabel>
+            <text>Errata</text>
+          </navLabel>
+          <content src="text/part0018.html#H5A40-5e1e3ce63feb42db9ae6338e8302dfdb"/>
+        </navPoint>
+        <navPoint class="chapter" id="num_10" playOrder="9">
+          <navLabel>
+            <text>Piracy</text>
+          </navLabel>
+          <content src="text/part0019.html#I3QM0-5e1e3ce63feb42db9ae6338e8302dfdb"/>
+        </navPoint>
+        <navPoint class="chapter" id="num_11" playOrder="10">
+          <navLabel>
+            <text>Questions</text>
+          </navLabel>
+          <content src="text/part0020.html#J2B80-5e1e3ce63feb42db9ae6338e8302dfdb"/>
+        </navPoint>
+      </navPoint>
+    </navPoint>
+    <navPoint class="chapter" id="num_12" playOrder="11">
+      <navLabel>
+        <text>Programming Environments, GPU Computing, Cloud Solutions, and Deep Learning Frameworks</text>
+      </navLabel>
+      <content src="text/part0021.html#K0RQ0-5e1e3ce63feb42db9ae6338e8302dfdb"/>
+      <navPoint class="chapter" id="num_13" playOrder="12">
+        <navLabel>
+          <text>Introduction</text>
+        </navLabel>
+        <content src="text/part0022.html#KVCC0-5e1e3ce63feb42db9ae6338e8302dfdb"/>
+      </navPoint>
+      <navPoint class="chapter" id="num_14" playOrder="13">
+        <navLabel>
+          <text>Setting up a deep learning environment</text>
+        </navLabel>
+        <content src="text/part0023.html#LTSU0-5e1e3ce63feb42db9ae6338e8302dfdb"/>
+        <navPoint class="chapter" id="num_15" playOrder="14">
+          <navLabel>
+            <text>How to do it...</text>
+          </navLabel>
+          <content src="text/part0024.html#MSDG0-5e1e3ce63feb42db9ae6338e8302dfdb"/>
+        </navPoint>
+      </navPoint>
+      <navPoint class="chapter" id="num_16" playOrder="15">
+        <navLabel>
+          <text>Launching an instance on Amazon Web Services (AWS)</text>
+        </navLabel>
+        <content src="text/part0025.html#NQU20-5e1e3ce63feb42db9ae6338e8302dfdb"/>
+        <navPoint class="chapter" id="num_17" playOrder="16">
+          <navLabel>
+            <text>Getting ready</text>
+          </navLabel>
+          <content src="text/part0026.html#OPEK0-5e1e3ce63feb42db9ae6338e8302dfdb"/>
+        </navPoint>
+        <navPoint class="chapter" id="num_18" playOrder="17">
+          <navLabel>
+            <text>How to do it...</text>
+          </navLabel>
+          <content src="text/part0027.html#PNV60-5e1e3ce63feb42db9ae6338e8302dfdb"/>
+        </navPoint>
+      </navPoint>
+      <navPoint class="chapter" id="num_19" playOrder="18">
+        <navLabel>
+          <text>Launching an instance on Google Cloud Platform (GCP)</text>
+        </navLabel>
+        <content src="text/part0028.html#QMFO0-5e1e3ce63feb42db9ae6338e8302dfdb"/>
+        <navPoint class="chapter" id="num_20" playOrder="19">
+          <navLabel>
+            <text>Getting ready</text>
+          </navLabel>
+          <content src="text/part0029.html#RL0A0-5e1e3ce63feb42db9ae6338e8302dfdb"/>
+        </navPoint>
+        <navPoint class="chapter" id="num_21" playOrder="20">
+          <navLabel>
+            <text>How to do it...</text>
+          </navLabel>
+          <content src="text/part0030.html#SJGS0-5e1e3ce63feb42db9ae6338e8302dfdb"/>
+        </navPoint>
+      </navPoint>
+      <navPoint class="chapter" id="num_22" playOrder="21">
+        <navLabel>
+          <text>Installing CUDA and cuDNN</text>
+        </navLabel>
+        <content src="text/part0031.html#TI1E0-5e1e3ce63feb42db9ae6338e8302dfdb"/>
+        <navPoint class="chapter" id="num_23" playOrder="22">
+          <navLabel>
+            <text>Getting ready</text>
+          </navLabel>
+          <content src="text/part0032.html#UGI00-5e1e3ce63feb42db9ae6338e8302dfdb"/>
+        </navPoint>
+        <navPoint class="chapter" id="num_24" playOrder="23">
+          <navLabel>
+            <text>How to do it...</text>
+          </navLabel>
+          <content src="text/part0033.html#VF2I0-5e1e3ce63feb42db9ae6338e8302dfdb"/>
+        </navPoint>
+      </navPoint>
+      <navPoint class="chapter" id="num_25" playOrder="24">
+        <navLabel>
+          <text>Installing Anaconda and libraries</text>
+        </navLabel>
+        <content src="text/part0034.html#10DJ40-5e1e3ce63feb42db9ae6338e8302dfdb"/>
+        <navPoint class="chapter" id="num_26" playOrder="25">
+          <navLabel>
+            <text>How to do it...</text>
+          </navLabel>
+          <content src="text/part0035.html#11C3M0-5e1e3ce63feb42db9ae6338e8302dfdb"/>
+        </navPoint>
+      </navPoint>
+      <navPoint class="chapter" id="num_27" playOrder="26">
+        <navLabel>
+          <text>Connecting with Jupyter Notebooks on a server</text>
+        </navLabel>
+        <content src="text/part0036.html#12AK80-5e1e3ce63feb42db9ae6338e8302dfdb"/>
+        <navPoint class="chapter" id="num_28" playOrder="27">
+          <navLabel>
+            <text>How to do it...</text>
+          </navLabel>
+          <content src="text/part0037.html#1394Q0-5e1e3ce63feb42db9ae6338e8302dfdb"/>
+        </navPoint>
+      </navPoint>
+      <navPoint class="chapter" id="num_29" playOrder="28">
+        <navLabel>
+          <text>Building state-of-the-art, production-ready models with TensorFlow</text>
+        </navLabel>
+        <content src="text/part0038.html#147LC0-5e1e3ce63feb42db9ae6338e8302dfdb"/>
+        <navPoint class="chapter" id="num_30" playOrder="29">
+          <navLabel>
+            <text>How to do it...</text>
+          </navLabel>
+          <content src="text/part0039.html#1565U0-5e1e3ce63feb42db9ae6338e8302dfdb"/>
+        </navPoint>
+      </navPoint>
+      <navPoint class="chapter" id="num_31" playOrder="30">
+        <navLabel>
+          <text>Intuitively building networks with Keras</text>
+        </navLabel>
+        <content src="text/part0040.html#164MG0-5e1e3ce63feb42db9ae6338e8302dfdb"/>
+        <navPoint class="chapter" id="num_32" playOrder="31">
+          <navLabel>
+            <text>How to do it...</text>
+          </navLabel>
+          <content src="text/part0041.html#173720-5e1e3ce63feb42db9ae6338e8302dfdb"/>
+        </navPoint>
+      </navPoint>
+      <navPoint class="chapter" id="num_33" playOrder="32">
+        <navLabel>
+          <text>Using PyTorch’s dynamic computation graphs for RNNs</text>
+        </navLabel>
+        <content src="text/part0042.html#181NK0-5e1e3ce63feb42db9ae6338e8302dfdb"/>
+        <navPoint class="chapter" id="num_34" playOrder="33">
+          <navLabel>
+            <text>How to do it...</text>
+          </navLabel>
+          <content src="text/part0043.html#190860-5e1e3ce63feb42db9ae6338e8302dfdb"/>
+        </navPoint>
+      </navPoint>
+      <navPoint class="chapter" id="num_35" playOrder="34">
+        <navLabel>
+          <text>Implementing high-performance models with CNTK</text>
+        </navLabel>
+        <content src="text/part0044.html#19UOO0-5e1e3ce63feb42db9ae6338e8302dfdb"/>
+        <navPoint class="chapter" id="num_36" playOrder="35">
+          <navLabel>
+            <text>How to do it...</text>
+          </navLabel>
+          <content src="text/part0045.html#1AT9A0-5e1e3ce63feb42db9ae6338e8302dfdb"/>
+        </navPoint>
+      </navPoint>
+      <navPoint class="chapter" id="num_37" playOrder="36">
+        <navLabel>
+          <text>Building efficient models with MXNet</text>
+        </navLabel>
+        <content src="text/part0046.html#1BRPS0-5e1e3ce63feb42db9ae6338e8302dfdb"/>
+        <navPoint class="chapter" id="num_38" playOrder="37">
+          <navLabel>
+            <text>How to do it...</text>
+          </navLabel>
+          <content src="text/part0047.html#1CQAE0-5e1e3ce63feb42db9ae6338e8302dfdb"/>
+        </navPoint>
+      </navPoint>
+      <navPoint class="chapter" id="num_39" playOrder="38">
+        <navLabel>
+          <text>Defining networks using simple and efficient code with Gluon</text>
+        </navLabel>
+        <content src="text/part0048.html#1DOR00-5e1e3ce63feb42db9ae6338e8302dfdb"/>
+        <navPoint class="chapter" id="num_40" playOrder="39">
+          <navLabel>
+            <text>How to do it...</text>
+          </navLabel>
+          <content src="text/part0049.html#1ENBI0-5e1e3ce63feb42db9ae6338e8302dfdb"/>
+        </navPoint>
+      </navPoint>
+    </navPoint>
+    <navPoint class="chapter" id="num_41" playOrder="40">
+      <navLabel>
+        <text>Feed-Forward Neural Networks</text>
+      </navLabel>
+      <content src="text/part0050.html#1FLS40-5e1e3ce63feb42db9ae6338e8302dfdb"/>
+      <navPoint class="chapter" id="num_42" playOrder="41">
+        <navLabel>
+          <text>Introduction</text>
+        </navLabel>
+        <content src="text/part0051.html#1GKCM0-5e1e3ce63feb42db9ae6338e8302dfdb"/>
+      </navPoint>
+      <navPoint class="chapter" id="num_43" playOrder="42">
+        <navLabel>
+          <text>Understanding the perceptron</text>
+        </navLabel>
+        <content src="text/part0052.html#1HIT80-5e1e3ce63feb42db9ae6338e8302dfdb"/>
+        <navPoint class="chapter" id="num_44" playOrder="43">
+          <navLabel>
+            <text>How to do it...</text>
+          </navLabel>
+          <content src="text/part0053.html#1IHDQ0-5e1e3ce63feb42db9ae6338e8302dfdb"/>
+        </navPoint>
+      </navPoint>
+      <navPoint class="chapter" id="num_45" playOrder="44">
+        <navLabel>
+          <text>Implementing a single-layer neural network</text>
+        </navLabel>
+        <content src="text/part0054.html#1JFUC0-5e1e3ce63feb42db9ae6338e8302dfdb"/>
+        <navPoint class="chapter" id="num_46" playOrder="45">
+          <navLabel>
+            <text>How to do it...</text>
+          </navLabel>
+          <content src="text/part0055.html#1KEEU0-5e1e3ce63feb42db9ae6338e8302dfdb"/>
+        </navPoint>
+      </navPoint>
+      <navPoint class="chapter" id="num_47" playOrder="46">
+        <navLabel>
+          <text>Building a multi-layer neural network</text>
+        </navLabel>
+        <content src="text/part0056.html#1LCVG0-5e1e3ce63feb42db9ae6338e8302dfdb"/>
+        <navPoint class="chapter" id="num_48" playOrder="47">
+          <navLabel>
+            <text>How to do it...</text>
+          </navLabel>
+          <content src="text/part0057.html#1MBG20-5e1e3ce63feb42db9ae6338e8302dfdb"/>
+        </navPoint>
+      </navPoint>
+      <navPoint class="chapter" id="num_49" playOrder="48">
+        <navLabel>
+          <text>Getting started with activation functions</text>
+        </navLabel>
+        <content src="text/part0058.html#1NA0K0-5e1e3ce63feb42db9ae6338e8302dfdb"/>
+        <navPoint class="chapter" id="num_50" playOrder="49">
+          <navLabel>
+            <text>How to do it...</text>
+          </navLabel>
+          <content src="text/part0059.html#1O8H60-5e1e3ce63feb42db9ae6338e8302dfdb"/>
+        </navPoint>
+      </navPoint>
+      <navPoint class="chapter" id="num_51" playOrder="50">
+        <navLabel>
+          <text>Experiment with hidden layers and hidden units</text>
+        </navLabel>
+        <content src="text/part0060.html#1P71O0-5e1e3ce63feb42db9ae6338e8302dfdb"/>
+        <navPoint class="chapter" id="num_52" playOrder="51">
+          <navLabel>
+            <text>How to do it...</text>
+          </navLabel>
+          <content src="text/part0061.html#1Q5IA0-5e1e3ce63feb42db9ae6338e8302dfdb"/>
+        </navPoint>
+        <navPoint class="chapter" id="num_53" playOrder="52">
+          <navLabel>
+            <text>There's more...</text>
+          </navLabel>
+          <content src="text/part0062.html#1R42S0-5e1e3ce63feb42db9ae6338e8302dfdb"/>
+        </navPoint>
+      </navPoint>
+      <navPoint class="chapter" id="num_54" playOrder="53">
+        <navLabel>
+          <text>Implementing an autoencoder</text>
+        </navLabel>
+        <content src="text/part0063.html#1S2JE0-5e1e3ce63feb42db9ae6338e8302dfdb"/>
+        <navPoint class="chapter" id="num_55" playOrder="54">
+          <navLabel>
+            <text>How to do it...</text>
+          </navLabel>
+          <content src="text/part0064.html#1T1400-5e1e3ce63feb42db9ae6338e8302dfdb"/>
+        </navPoint>
+      </navPoint>
+      <navPoint class="chapter" id="num_56" playOrder="55">
+        <navLabel>
+          <text>Tuning the loss function</text>
+        </navLabel>
+        <content src="text/part0065.html#1TVKI0-5e1e3ce63feb42db9ae6338e8302dfdb"/>
+        <navPoint class="chapter" id="num_57" playOrder="56">
+          <navLabel>
+            <text>How to do it...</text>
+          </navLabel>
+          <content src="text/part0066.html#1UU540-5e1e3ce63feb42db9ae6338e8302dfdb"/>
+        </navPoint>
+      </navPoint>
+      <navPoint class="chapter" id="num_58" playOrder="57">
+        <navLabel>
+          <text>Experimenting with different optimizers</text>
+        </navLabel>
+        <content src="text/part0067.html#1VSLM0-5e1e3ce63feb42db9ae6338e8302dfdb"/>
+        <navPoint class="chapter" id="num_59" playOrder="58">
+          <navLabel>
+            <text>How to do it...</text>
+          </navLabel>
+          <content src="text/part0068.html#20R680-5e1e3ce63feb42db9ae6338e8302dfdb"/>
+        </navPoint>
+      </navPoint>
+      <navPoint class="chapter" id="num_60" playOrder="59">
+        <navLabel>
+          <text>Improving generalization with regularization</text>
+        </navLabel>
+        <content src="text/part0069.html#21PMQ0-5e1e3ce63feb42db9ae6338e8302dfdb"/>
+        <navPoint class="chapter" id="num_61" playOrder="60">
+          <navLabel>
+            <text>How to do it...</text>
+          </navLabel>
+          <content src="text/part0070.html#22O7C0-5e1e3ce63feb42db9ae6338e8302dfdb"/>
+        </navPoint>
+      </navPoint>
+      <navPoint class="chapter" id="num_62" playOrder="61">
+        <navLabel>
+          <text>Adding dropout to prevent overfitting</text>
+        </navLabel>
+        <content src="text/part0071.html#23MNU0-5e1e3ce63feb42db9ae6338e8302dfdb"/>
+        <navPoint class="chapter" id="num_63" playOrder="62">
+          <navLabel>
+            <text>How to do it...</text>
+          </navLabel>
+          <content src="text/part0072.html#24L8G0-5e1e3ce63feb42db9ae6338e8302dfdb"/>
+        </navPoint>
+      </navPoint>
+    </navPoint>
+    <navPoint class="chapter" id="num_64" playOrder="63">
+      <navLabel>
+        <text>Convolutional Neural Networks</text>
+      </navLabel>
+      <content src="text/part0073.html#25JP20-5e1e3ce63feb42db9ae6338e8302dfdb"/>
+      <navPoint class="chapter" id="num_65" playOrder="64">
+        <navLabel>
+          <text>Introduction</text>
+        </navLabel>
+        <content src="text/part0074.html#26I9K0-5e1e3ce63feb42db9ae6338e8302dfdb"/>
+        <navPoint class="chapter" id="num_66" playOrder="65">
+          <navLabel>
+            <text>Getting started with filters and parameter sharing</text>
+          </navLabel>
+          <content src="text/part0075.html#27GQ60-5e1e3ce63feb42db9ae6338e8302dfdb"/>
+        </navPoint>
+        <navPoint class="chapter" id="num_67" playOrder="66">
+          <navLabel>
+            <text>How to do it...</text>
+          </navLabel>
+          <content src="text/part0076.html#28FAO0-5e1e3ce63feb42db9ae6338e8302dfdb"/>
+        </navPoint>
+      </navPoint>
+      <navPoint class="chapter" id="num_68" playOrder="67">
+        <navLabel>
+          <text>Applying pooling layers</text>
+        </navLabel>
+        <content src="text/part0077.html#29DRA0-5e1e3ce63feb42db9ae6338e8302dfdb"/>
+        <navPoint class="chapter" id="num_69" playOrder="68">
+          <navLabel>
+            <text>How to do it...</text>
+          </navLabel>
+          <content src="text/part0078.html#2ACBS0-5e1e3ce63feb42db9ae6338e8302dfdb"/>
+        </navPoint>
+      </navPoint>
+      <navPoint class="chapter" id="num_70" playOrder="69">
+        <navLabel>
+          <text>Optimizing with batch normalization</text>
+        </navLabel>
+        <content src="text/part0079.html#2BASE0-5e1e3ce63feb42db9ae6338e8302dfdb"/>
+        <navPoint class="chapter" id="num_71" playOrder="70">
+          <navLabel>
+            <text>How to do it...</text>
+          </navLabel>
+          <content src="text/part0080.html#2C9D00-5e1e3ce63feb42db9ae6338e8302dfdb"/>
+        </navPoint>
+      </navPoint>
+      <navPoint class="chapter" id="num_72" playOrder="71">
+        <navLabel>
+          <text>Understanding padding and strides</text>
+        </navLabel>
+        <content src="text/part0081.html#2D7TI0-5e1e3ce63feb42db9ae6338e8302dfdb"/>
+        <navPoint class="chapter" id="num_73" playOrder="72">
+          <navLabel>
+            <text>How to do it...</text>
+          </navLabel>
+          <content src="text/part0082.html#2E6E40-5e1e3ce63feb42db9ae6338e8302dfdb"/>
+        </navPoint>
+      </navPoint>
+      <navPoint class="chapter" id="num_74" playOrder="73">
+        <navLabel>
+          <text>Experimenting with different types of initialization</text>
+        </navLabel>
+        <content src="text/part0083.html#2F4UM0-5e1e3ce63feb42db9ae6338e8302dfdb"/>
+        <navPoint class="chapter" id="num_75" playOrder="74">
+          <navLabel>
+            <text>How to do it...</text>
+          </navLabel>
+          <content src="text/part0084.html#2G3F80-5e1e3ce63feb42db9ae6338e8302dfdb"/>
+        </navPoint>
+      </navPoint>
+      <navPoint class="chapter" id="num_76" playOrder="75">
+        <navLabel>
+          <text>Implementing a convolutional autoencoder</text>
+        </navLabel>
+        <content src="text/part0085.html#2H1VQ0-5e1e3ce63feb42db9ae6338e8302dfdb"/>
+        <navPoint class="chapter" id="num_77" playOrder="76">
+          <navLabel>
+            <text>How to do it...</text>
+          </navLabel>
+          <content src="text/part0086.html#2I0GC0-5e1e3ce63feb42db9ae6338e8302dfdb"/>
+        </navPoint>
+      </navPoint>
+      <navPoint class="chapter" id="num_78" playOrder="77">
+        <navLabel>
+          <text>Applying a 1D CNN to text</text>
+        </navLabel>
+        <content src="text/part0087.html#2IV0U0-5e1e3ce63feb42db9ae6338e8302dfdb"/>
+        <navPoint class="chapter" id="num_79" playOrder="78">
+          <navLabel>
+            <text>How to do it...</text>
+          </navLabel>
+          <content src="text/part0088.html#2JTHG0-5e1e3ce63feb42db9ae6338e8302dfdb"/>
+        </navPoint>
+      </navPoint>
+    </navPoint>
+    <navPoint class="chapter" id="num_80" playOrder="79">
+      <navLabel>
+        <text>Recurrent Neural Networks</text>
+      </navLabel>
+      <content src="text/part0089.html#2KS220-5e1e3ce63feb42db9ae6338e8302dfdb"/>
+      <navPoint class="chapter" id="num_81" playOrder="80">
+        <navLabel>
+          <text>Introduction</text>
+        </navLabel>
+        <content src="text/part0090.html#2LQIK0-5e1e3ce63feb42db9ae6338e8302dfdb"/>
+      </navPoint>
+      <navPoint class="chapter" id="num_82" playOrder="81">
+        <navLabel>
+          <text>Implementing a simple RNN</text>
+        </navLabel>
+        <content src="text/part0091.html#2MP360-5e1e3ce63feb42db9ae6338e8302dfdb"/>
+        <navPoint class="chapter" id="num_83" playOrder="82">
+          <navLabel>
+            <text>How to do it...</text>
+          </navLabel>
+          <content src="text/part0092.html#2NNJO0-5e1e3ce63feb42db9ae6338e8302dfdb"/>
+        </navPoint>
+      </navPoint>
+      <navPoint class="chapter" id="num_84" playOrder="83">
+        <navLabel>
+          <text>Adding Long Short-Term Memory (LSTM)</text>
+        </navLabel>
+        <content src="text/part0093.html#2OM4A0-5e1e3ce63feb42db9ae6338e8302dfdb"/>
+        <navPoint class="chapter" id="num_85" playOrder="84">
+          <navLabel>
+            <text>How to do it...</text>
+          </navLabel>
+          <content src="text/part0094.html#2PKKS0-5e1e3ce63feb42db9ae6338e8302dfdb"/>
+        </navPoint>
+      </navPoint>
+      <navPoint class="chapter" id="num_86" playOrder="85">
+        <navLabel>
+          <text>Using gated recurrent units (GRUs)</text>
+        </navLabel>
+        <content src="text/part0095.html#2QJ5E0-5e1e3ce63feb42db9ae6338e8302dfdb"/>
+        <navPoint class="chapter" id="num_87" playOrder="86">
+          <navLabel>
+            <text>How to do it...</text>
+          </navLabel>
+          <content src="text/part0096.html#2RHM00-5e1e3ce63feb42db9ae6338e8302dfdb"/>
+        </navPoint>
+      </navPoint>
+      <navPoint class="chapter" id="num_88" playOrder="87">
+        <navLabel>
+          <text>Implementing bidirectional RNNs</text>
+        </navLabel>
+        <content src="text/part0097.html#2SG6I0-5e1e3ce63feb42db9ae6338e8302dfdb"/>
+        <navPoint class="chapter" id="num_89" playOrder="88">
+          <navLabel>
+            <text>How to do it...</text>
+          </navLabel>
+          <content src="text/part0098.html#2TEN40-5e1e3ce63feb42db9ae6338e8302dfdb"/>
+        </navPoint>
+      </navPoint>
+      <navPoint class="chapter" id="num_90" playOrder="89">
+        <navLabel>
+          <text>Character-level text generation</text>
+        </navLabel>
+        <content src="text/part0099.html#2UD7M0-5e1e3ce63feb42db9ae6338e8302dfdb"/>
+        <navPoint class="chapter" id="num_91" playOrder="90">
+          <navLabel>
+            <text>How to do it...</text>
+          </navLabel>
+          <content src="text/part0100.html#2VBO80-5e1e3ce63feb42db9ae6338e8302dfdb"/>
+        </navPoint>
+      </navPoint>
+    </navPoint>
+    <navPoint class="chapter" id="num_92" playOrder="91">
+      <navLabel>
+        <text>Reinforcement Learning</text>
+      </navLabel>
+      <content src="text/part0101.html#30A8Q0-5e1e3ce63feb42db9ae6338e8302dfdb"/>
+      <navPoint class="chapter" id="num_93" playOrder="92">
+        <navLabel>
+          <text>Introduction</text>
+        </navLabel>
+        <content src="text/part0102.html#318PC0-5e1e3ce63feb42db9ae6338e8302dfdb"/>
+      </navPoint>
+      <navPoint class="chapter" id="num_94" playOrder="93">
+        <navLabel>
+          <text>Implementing policy gradients</text>
+        </navLabel>
+        <content src="text/part0103.html#3279U0-5e1e3ce63feb42db9ae6338e8302dfdb"/>
+        <navPoint class="chapter" id="num_95" playOrder="94">
+          <navLabel>
+            <text>Getting ready</text>
+          </navLabel>
+          <content src="text/part0104.html#335QG0-5e1e3ce63feb42db9ae6338e8302dfdb"/>
+        </navPoint>
+        <navPoint class="chapter" id="num_96" playOrder="95">
+          <navLabel>
+            <text>How to do it...</text>
+          </navLabel>
+          <content src="text/part0105.html#344B20-5e1e3ce63feb42db9ae6338e8302dfdb"/>
+        </navPoint>
+      </navPoint>
+      <navPoint class="chapter" id="num_97" playOrder="96">
+        <navLabel>
+          <text>Implementing a deep Q-learning algorithm</text>
+        </navLabel>
+        <content src="text/part0106.html#352RK0-5e1e3ce63feb42db9ae6338e8302dfdb"/>
+        <navPoint class="chapter" id="num_98" playOrder="97">
+          <navLabel>
+            <text>Getting ready</text>
+          </navLabel>
+          <content src="text/part0107.html#361C60-5e1e3ce63feb42db9ae6338e8302dfdb"/>
+        </navPoint>
+        <navPoint class="chapter" id="num_99" playOrder="98">
+          <navLabel>
+            <text>How to do it...</text>
+          </navLabel>
+          <content src="text/part0108.html#36VSO0-5e1e3ce63feb42db9ae6338e8302dfdb"/>
+        </navPoint>
+      </navPoint>
+    </navPoint>
+    <navPoint class="chapter" id="num_100" playOrder="99">
+      <navLabel>
+        <text>Generative Adversarial Networks</text>
+      </navLabel>
+      <content src="text/part0109.html#37UDA0-5e1e3ce63feb42db9ae6338e8302dfdb"/>
+      <navPoint class="chapter" id="num_101" playOrder="100">
+        <navLabel>
+          <text>Introduction</text>
+        </navLabel>
+        <content src="text/part0110.html#38STS0-5e1e3ce63feb42db9ae6338e8302dfdb"/>
+      </navPoint>
+      <navPoint class="chapter" id="num_102" playOrder="101">
+        <navLabel>
+          <text>Understanding GANs</text>
+        </navLabel>
+        <content src="text/part0111.html#39REE0-5e1e3ce63feb42db9ae6338e8302dfdb"/>
+        <navPoint class="chapter" id="num_103" playOrder="102">
+          <navLabel>
+            <text>How to do it...</text>
+          </navLabel>
+          <content src="text/part0112.html#3APV00-5e1e3ce63feb42db9ae6338e8302dfdb"/>
+        </navPoint>
+      </navPoint>
+      <navPoint class="chapter" id="num_104" playOrder="103">
+        <navLabel>
+          <text>Implementing Deep Convolutional GANs (DCGANs)</text>
+        </navLabel>
+        <content src="text/part0113.html#3BOFI0-5e1e3ce63feb42db9ae6338e8302dfdb"/>
+        <navPoint class="chapter" id="num_105" playOrder="104">
+          <navLabel>
+            <text>How to do it...</text>
+          </navLabel>
+          <content src="text/part0114.html#3CN040-5e1e3ce63feb42db9ae6338e8302dfdb"/>
+        </navPoint>
+      </navPoint>
+      <navPoint class="chapter" id="num_106" playOrder="105">
+        <navLabel>
+          <text>Upscaling the resolution of images with Super-Resolution GANs (SRGANs)</text>
+        </navLabel>
+        <content src="text/part0115.html#3DLGM0-5e1e3ce63feb42db9ae6338e8302dfdb"/>
+        <navPoint class="chapter" id="num_107" playOrder="106">
+          <navLabel>
+            <text>How to do it...</text>
+          </navLabel>
+          <content src="text/part0116.html#3EK180-5e1e3ce63feb42db9ae6338e8302dfdb"/>
+        </navPoint>
+      </navPoint>
+    </navPoint>
+    <navPoint class="chapter" id="num_108" playOrder="107">
+      <navLabel>
+        <text>Computer Vision</text>
+      </navLabel>
+      <content src="text/part0117.html#3FIHQ0-5e1e3ce63feb42db9ae6338e8302dfdb"/>
+      <navPoint class="chapter" id="num_109" playOrder="108">
+        <navLabel>
+          <text>Introduction</text>
+        </navLabel>
+        <content src="text/part0118.html#3GH2C0-5e1e3ce63feb42db9ae6338e8302dfdb"/>
+      </navPoint>
+      <navPoint class="chapter" id="num_110" playOrder="109">
+        <navLabel>
+          <text>Augmenting images with computer vision techniques</text>
+        </navLabel>
+        <content src="text/part0119.html#3HFIU0-5e1e3ce63feb42db9ae6338e8302dfdb"/>
+        <navPoint class="chapter" id="num_111" playOrder="110">
+          <navLabel>
+            <text>How to do it...</text>
+          </navLabel>
+          <content src="text/part0120.html#3IE3G0-5e1e3ce63feb42db9ae6338e8302dfdb"/>
+        </navPoint>
+      </navPoint>
+      <navPoint class="chapter" id="num_112" playOrder="111">
+        <navLabel>
+          <text>Classifying objects in images</text>
+        </navLabel>
+        <content src="text/part0121.html#3JCK20-5e1e3ce63feb42db9ae6338e8302dfdb"/>
+        <navPoint class="chapter" id="num_113" playOrder="112">
+          <navLabel>
+            <text>How to do it...</text>
+          </navLabel>
+          <content src="text/part0122.html#3KB4K0-5e1e3ce63feb42db9ae6338e8302dfdb"/>
+        </navPoint>
+      </navPoint>
+      <navPoint class="chapter" id="num_114" playOrder="113">
+        <navLabel>
+          <text>Localizing an object in images</text>
+        </navLabel>
+        <content src="text/part0123.html#3L9L60-5e1e3ce63feb42db9ae6338e8302dfdb"/>
+        <navPoint class="chapter" id="num_115" playOrder="114">
+          <navLabel>
+            <text>How to do it...</text>
+          </navLabel>
+          <content src="text/part0124.html#3M85O0-5e1e3ce63feb42db9ae6338e8302dfdb"/>
+        </navPoint>
+        <navPoint class="chapter" id="num_116" playOrder="115">
+          <navLabel>
+            <text>Real-time detection frameworks</text>
+          </navLabel>
+          <content src="text/part0125.html#3N6MA0-5e1e3ce63feb42db9ae6338e8302dfdb"/>
+        </navPoint>
+      </navPoint>
+      <navPoint class="chapter" id="num_117" playOrder="116">
+        <navLabel>
+          <text>Segmenting classes in images with U-net</text>
+        </navLabel>
+        <content src="text/part0126.html#3O56S0-5e1e3ce63feb42db9ae6338e8302dfdb"/>
+        <navPoint class="chapter" id="num_118" playOrder="117">
+          <navLabel>
+            <text>How to do it...</text>
+          </navLabel>
+          <content src="text/part0127.html#3P3NE0-5e1e3ce63feb42db9ae6338e8302dfdb"/>
+        </navPoint>
+      </navPoint>
+      <navPoint class="chapter" id="num_119" playOrder="118">
+        <navLabel>
+          <text>Scene understanding (semantic segmentation)</text>
+        </navLabel>
+        <content src="text/part0128.html#3Q2800-5e1e3ce63feb42db9ae6338e8302dfdb"/>
+        <navPoint class="chapter" id="num_120" playOrder="119">
+          <navLabel>
+            <text>How to do it...</text>
+          </navLabel>
+          <content src="text/part0129.html#3R0OI0-5e1e3ce63feb42db9ae6338e8302dfdb"/>
+        </navPoint>
+      </navPoint>
+      <navPoint class="chapter" id="num_121" playOrder="120">
+        <navLabel>
+          <text>Finding facial key points</text>
+        </navLabel>
+        <content src="text/part0130.html#3RV940-5e1e3ce63feb42db9ae6338e8302dfdb"/>
+        <navPoint class="chapter" id="num_122" playOrder="121">
+          <navLabel>
+            <text>How to do it...</text>
+          </navLabel>
+          <content src="text/part0131.html#3STPM0-5e1e3ce63feb42db9ae6338e8302dfdb"/>
+        </navPoint>
+      </navPoint>
+      <navPoint class="chapter" id="num_123" playOrder="122">
+        <navLabel>
+          <text>Recognizing faces</text>
+        </navLabel>
+        <content src="text/part0132.html#3TSA80-5e1e3ce63feb42db9ae6338e8302dfdb"/>
+        <navPoint class="chapter" id="num_124" playOrder="123">
+          <navLabel>
+            <text>How to do it...</text>
+          </navLabel>
+          <content src="text/part0133.html#3UQQQ0-5e1e3ce63feb42db9ae6338e8302dfdb"/>
+        </navPoint>
+      </navPoint>
+      <navPoint class="chapter" id="num_125" playOrder="124">
+        <navLabel>
+          <text>Transferring styles to images</text>
+        </navLabel>
+        <content src="text/part0134.html#3VPBC0-5e1e3ce63feb42db9ae6338e8302dfdb"/>
+        <navPoint class="chapter" id="num_126" playOrder="125">
+          <navLabel>
+            <text>How to do it...</text>
+          </navLabel>
+          <content src="text/part0135.html#40NRU0-5e1e3ce63feb42db9ae6338e8302dfdb"/>
+        </navPoint>
+      </navPoint>
+    </navPoint>
+    <navPoint class="chapter" id="num_127" playOrder="126">
+      <navLabel>
+        <text>Natural Language Processing</text>
+      </navLabel>
+      <content src="text/part0136.html#41MCG0-5e1e3ce63feb42db9ae6338e8302dfdb"/>
+      <navPoint class="chapter" id="num_128" playOrder="127">
+        <navLabel>
+          <text>Introduction</text>
+        </navLabel>
+        <content src="text/part0137.html#42KT20-5e1e3ce63feb42db9ae6338e8302dfdb"/>
+      </navPoint>
+      <navPoint class="chapter" id="num_129" playOrder="128">
+        <navLabel>
+          <text>Analyzing sentiment</text>
+        </navLabel>
+        <content src="text/part0138.html#43JDK0-5e1e3ce63feb42db9ae6338e8302dfdb"/>
+        <navPoint class="chapter" id="num_130" playOrder="129">
+          <navLabel>
+            <text>How to do it...</text>
+          </navLabel>
+          <content src="text/part0139.html#44HU60-5e1e3ce63feb42db9ae6338e8302dfdb"/>
+        </navPoint>
+      </navPoint>
+      <navPoint class="chapter" id="num_131" playOrder="130">
+        <navLabel>
+          <text>Translating sentences</text>
+        </navLabel>
+        <content src="text/part0140.html#45GEO0-5e1e3ce63feb42db9ae6338e8302dfdb"/>
+        <navPoint class="chapter" id="num_132" playOrder="131">
+          <navLabel>
+            <text>How to do it...</text>
+          </navLabel>
+          <content src="text/part0141.html#46EVA0-5e1e3ce63feb42db9ae6338e8302dfdb"/>
+        </navPoint>
+      </navPoint>
+      <navPoint class="chapter" id="num_133" playOrder="132">
+        <navLabel>
+          <text>Summarizing text</text>
+        </navLabel>
+        <content src="text/part0142.html#47DFS0-5e1e3ce63feb42db9ae6338e8302dfdb"/>
+        <navPoint class="chapter" id="num_134" playOrder="133">
+          <navLabel>
+            <text>How to do it...</text>
+          </navLabel>
+          <content src="text/part0143.html#48C0E0-5e1e3ce63feb42db9ae6338e8302dfdb"/>
+        </navPoint>
+      </navPoint>
+    </navPoint>
+    <navPoint class="chapter" id="num_135" playOrder="134">
+      <navLabel>
+        <text>Speech Recognition and Video Analysis</text>
+      </navLabel>
+      <content src="text/part0144.html#49AH00-5e1e3ce63feb42db9ae6338e8302dfdb"/>
+      <navPoint class="chapter" id="num_136" playOrder="135">
+        <navLabel>
+          <text>Introduction</text>
+        </navLabel>
+        <content src="text/part0145.html#4A91I0-5e1e3ce63feb42db9ae6338e8302dfdb"/>
+      </navPoint>
+      <navPoint class="chapter" id="num_137" playOrder="136">
+        <navLabel>
+          <text>Implementing a speech recognition pipeline from scratch</text>
+        </navLabel>
+        <content src="text/part0146.html#4B7I40-5e1e3ce63feb42db9ae6338e8302dfdb"/>
+        <navPoint class="chapter" id="num_138" playOrder="137">
+          <navLabel>
+            <text>How to do it...</text>
+          </navLabel>
+          <content src="text/part0147.html#4C62M0-5e1e3ce63feb42db9ae6338e8302dfdb"/>
+        </navPoint>
+      </navPoint>
+      <navPoint class="chapter" id="num_139" playOrder="138">
+        <navLabel>
+          <text>Identifying speakers with voice recognition</text>
+        </navLabel>
+        <content src="text/part0148.html#4D4J80-5e1e3ce63feb42db9ae6338e8302dfdb"/>
+        <navPoint class="chapter" id="num_140" playOrder="139">
+          <navLabel>
+            <text>How to do it...</text>
+          </navLabel>
+          <content src="text/part0149.html#4E33Q0-5e1e3ce63feb42db9ae6338e8302dfdb"/>
+        </navPoint>
+      </navPoint>
+      <navPoint class="chapter" id="num_141" playOrder="140">
+        <navLabel>
+          <text>Understanding videos with deep learning</text>
+        </navLabel>
+        <content src="text/part0150.html#4F1KC0-5e1e3ce63feb42db9ae6338e8302dfdb"/>
+        <navPoint class="chapter" id="num_142" playOrder="141">
+          <navLabel>
+            <text>How to do it...</text>
+          </navLabel>
+          <content src="text/part0151.html#4G04U0-5e1e3ce63feb42db9ae6338e8302dfdb"/>
+        </navPoint>
+      </navPoint>
+    </navPoint>
+    <navPoint class="chapter" id="num_143" playOrder="142">
+      <navLabel>
+        <text>Time Series and Structured Data</text>
+      </navLabel>
+      <content src="text/part0152.html#4GULG0-5e1e3ce63feb42db9ae6338e8302dfdb"/>
+      <navPoint class="chapter" id="num_144" playOrder="143">
+        <navLabel>
+          <text>Introduction</text>
+        </navLabel>
+        <content src="text/part0153.html#4HT620-5e1e3ce63feb42db9ae6338e8302dfdb"/>
+      </navPoint>
+      <navPoint class="chapter" id="num_145" playOrder="144">
+        <navLabel>
+          <text>Predicting stock prices with neural networks</text>
+        </navLabel>
+        <content src="text/part0154.html#4IRMK0-5e1e3ce63feb42db9ae6338e8302dfdb"/>
+        <navPoint class="chapter" id="num_146" playOrder="145">
+          <navLabel>
+            <text>How to do it...</text>
+          </navLabel>
+          <content src="text/part0155.html#4JQ760-5e1e3ce63feb42db9ae6338e8302dfdb"/>
+        </navPoint>
+      </navPoint>
+      <navPoint class="chapter" id="num_147" playOrder="146">
+        <navLabel>
+          <text>Predicting bike sharing demand</text>
+        </navLabel>
+        <content src="text/part0156.html#4KONO0-5e1e3ce63feb42db9ae6338e8302dfdb"/>
+        <navPoint class="chapter" id="num_148" playOrder="147">
+          <navLabel>
+            <text>How to do it...</text>
+          </navLabel>
+          <content src="text/part0157.html#4LN8A0-5e1e3ce63feb42db9ae6338e8302dfdb"/>
+        </navPoint>
+      </navPoint>
+      <navPoint class="chapter" id="num_149" playOrder="148">
+        <navLabel>
+          <text>Using a shallow neural network for binary classification</text>
+        </navLabel>
+        <content src="text/part0158.html#4MLOS0-5e1e3ce63feb42db9ae6338e8302dfdb"/>
+        <navPoint class="chapter" id="num_150" playOrder="149">
+          <navLabel>
+            <text>How to do it...</text>
+          </navLabel>
+          <content src="text/part0159.html#4NK9E0-5e1e3ce63feb42db9ae6338e8302dfdb"/>
+        </navPoint>
+      </navPoint>
+    </navPoint>
+    <navPoint class="chapter" id="num_151" playOrder="150">
+      <navLabel>
+        <text>Game Playing Agents and Robotics</text>
+      </navLabel>
+      <content src="text/part0160.html#4OIQ00-5e1e3ce63feb42db9ae6338e8302dfdb"/>
+      <navPoint class="chapter" id="num_152" playOrder="151">
+        <navLabel>
+          <text>Introduction</text>
+        </navLabel>
+        <content src="text/part0161.html#4PHAI0-5e1e3ce63feb42db9ae6338e8302dfdb"/>
+      </navPoint>
+      <navPoint class="chapter" id="num_153" playOrder="152">
+        <navLabel>
+          <text>Learning to drive a car with end-to-end learning</text>
+        </navLabel>
+        <content src="text/part0162.html#4QFR40-5e1e3ce63feb42db9ae6338e8302dfdb"/>
+        <navPoint class="chapter" id="num_154" playOrder="153">
+          <navLabel>
+            <text>Getting started</text>
+          </navLabel>
+          <content src="text/part0163.html#4REBM0-5e1e3ce63feb42db9ae6338e8302dfdb"/>
+        </navPoint>
+        <navPoint class="chapter" id="num_155" playOrder="154">
+          <navLabel>
+            <text>How to do it...</text>
+          </navLabel>
+          <content src="text/part0164.html#4SCS80-5e1e3ce63feb42db9ae6338e8302dfdb"/>
+        </navPoint>
+      </navPoint>
+      <navPoint class="chapter" id="num_156" playOrder="155">
+        <navLabel>
+          <text>Learning to play games with deep reinforcement learning</text>
+        </navLabel>
+        <content src="text/part0165.html#4TBCQ0-5e1e3ce63feb42db9ae6338e8302dfdb"/>
+        <navPoint class="chapter" id="num_157" playOrder="156">
+          <navLabel>
+            <text>How to do it...</text>
+          </navLabel>
+          <content src="text/part0166.html#4U9TC0-5e1e3ce63feb42db9ae6338e8302dfdb"/>
+        </navPoint>
+      </navPoint>
+      <navPoint class="chapter" id="num_158" playOrder="157">
+        <navLabel>
+          <text>Genetic Algorithm (GA) to optimize hyperparameters</text>
+        </navLabel>
+        <content src="text/part0167.html#4V8DU0-5e1e3ce63feb42db9ae6338e8302dfdb"/>
+        <navPoint class="chapter" id="num_159" playOrder="158">
+          <navLabel>
+            <text>How to do it..</text>
+          </navLabel>
+          <content src="text/part0168.html#506UG0-5e1e3ce63feb42db9ae6338e8302dfdb"/>
+        </navPoint>
+      </navPoint>
+    </navPoint>
+    <navPoint class="chapter" id="num_160" playOrder="159">
+      <navLabel>
+        <text>Hyperparameter Selection, Tuning, and Neural Network Learning</text>
+      </navLabel>
+      <content src="text/part0169.html#515F20-5e1e3ce63feb42db9ae6338e8302dfdb"/>
+      <navPoint class="chapter" id="num_161" playOrder="160">
+        <navLabel>
+          <text>Introduction</text>
+        </navLabel>
+        <content src="text/part0170.html#523VK0-5e1e3ce63feb42db9ae6338e8302dfdb"/>
+      </navPoint>
+      <navPoint class="chapter" id="num_162" playOrder="161">
+        <navLabel>
+          <text>Visualizing training with TensorBoard and Keras</text>
+        </navLabel>
+        <content src="text/part0171.html#532G60-5e1e3ce63feb42db9ae6338e8302dfdb"/>
+        <navPoint class="chapter" id="num_163" playOrder="162">
+          <navLabel>
+            <text>How to do it...</text>
+          </navLabel>
+          <content src="text/part0172.html#5410O0-5e1e3ce63feb42db9ae6338e8302dfdb"/>
+        </navPoint>
+      </navPoint>
+      <navPoint class="chapter" id="num_164" playOrder="163">
+        <navLabel>
+          <text>Working with batches and mini-batches</text>
+        </navLabel>
+        <content src="text/part0173.html#54VHA0-5e1e3ce63feb42db9ae6338e8302dfdb"/>
+        <navPoint class="chapter" id="num_165" playOrder="164">
+          <navLabel>
+            <text>How to do it...</text>
+          </navLabel>
+          <content src="text/part0174.html#55U1S0-5e1e3ce63feb42db9ae6338e8302dfdb"/>
+        </navPoint>
+      </navPoint>
+      <navPoint class="chapter" id="num_166" playOrder="165">
+        <navLabel>
+          <text>Using grid search for parameter tuning</text>
+        </navLabel>
+        <content src="text/part0175.html#56SIE0-5e1e3ce63feb42db9ae6338e8302dfdb"/>
+        <navPoint class="chapter" id="num_167" playOrder="166">
+          <navLabel>
+            <text>How to do it...</text>
+          </navLabel>
+          <content src="text/part0176.html#57R300-5e1e3ce63feb42db9ae6338e8302dfdb"/>
+        </navPoint>
+      </navPoint>
+      <navPoint class="chapter" id="num_168" playOrder="167">
+        <navLabel>
+          <text>Learning rates and learning rate schedulers</text>
+        </navLabel>
+        <content src="text/part0177.html#58PJI0-5e1e3ce63feb42db9ae6338e8302dfdb"/>
+        <navPoint class="chapter" id="num_169" playOrder="168">
+          <navLabel>
+            <text>How to do it...</text>
+          </navLabel>
+          <content src="text/part0178.html#59O440-5e1e3ce63feb42db9ae6338e8302dfdb"/>
+        </navPoint>
+      </navPoint>
+      <navPoint class="chapter" id="num_170" playOrder="169">
+        <navLabel>
+          <text>Comparing optimizers</text>
+        </navLabel>
+        <content src="text/part0179.html#5AMKM0-5e1e3ce63feb42db9ae6338e8302dfdb"/>
+        <navPoint class="chapter" id="num_171" playOrder="170">
+          <navLabel>
+            <text>How to do it...</text>
+          </navLabel>
+          <content src="text/part0180.html#5BL580-5e1e3ce63feb42db9ae6338e8302dfdb"/>
+        </navPoint>
+      </navPoint>
+      <navPoint class="chapter" id="num_172" playOrder="171">
+        <navLabel>
+          <text>Determining the depth of the network</text>
+        </navLabel>
+        <content src="text/part0181.html#5CJLQ0-5e1e3ce63feb42db9ae6338e8302dfdb"/>
+      </navPoint>
+      <navPoint class="chapter" id="num_173" playOrder="172">
+        <navLabel>
+          <text>Adding dropouts to prevent overfitting</text>
+        </navLabel>
+        <content src="text/part0182.html#5DI6C0-5e1e3ce63feb42db9ae6338e8302dfdb"/>
+        <navPoint class="chapter" id="num_174" playOrder="173">
+          <navLabel>
+            <text>How to do it...</text>
+          </navLabel>
+          <content src="text/part0183.html#5EGMU0-5e1e3ce63feb42db9ae6338e8302dfdb"/>
+        </navPoint>
+      </navPoint>
+      <navPoint class="chapter" id="num_175" playOrder="174">
+        <navLabel>
+          <text>Making a model more robust with data augmentation</text>
+        </navLabel>
+        <content src="text/part0184.html#5FF7G0-5e1e3ce63feb42db9ae6338e8302dfdb"/>
+        <navPoint class="chapter" id="num_176" playOrder="175">
+          <navLabel>
+            <text>How to do it...</text>
+          </navLabel>
+          <content src="text/part0185.html#5GDO20-5e1e3ce63feb42db9ae6338e8302dfdb"/>
+        </navPoint>
+        <navPoint class="chapter" id="num_177" playOrder="176">
+          <navLabel>
+            <text>Leveraging test-time augmentation (TTA) to boost accuracy</text>
+          </navLabel>
+          <content src="text/part0186.html#5HC8K0-5e1e3ce63feb42db9ae6338e8302dfdb"/>
+        </navPoint>
+      </navPoint>
+    </navPoint>
+    <navPoint class="chapter" id="num_178" playOrder="177">
+      <navLabel>
+        <text>Network Internals</text>
+      </navLabel>
+      <content src="text/part0187.html#5IAP60-5e1e3ce63feb42db9ae6338e8302dfdb"/>
+      <navPoint class="chapter" id="num_179" playOrder="178">
+        <navLabel>
+          <text>Introduction</text>
+        </navLabel>
+        <content src="text/part0188.html#5J99O0-5e1e3ce63feb42db9ae6338e8302dfdb"/>
+      </navPoint>
+      <navPoint class="chapter" id="num_180" playOrder="179">
+        <navLabel>
+          <text>Visualizing training with TensorBoard</text>
+        </navLabel>
+        <content src="text/part0189.html#5K7QA0-5e1e3ce63feb42db9ae6338e8302dfdb"/>
+        <navPoint class="chapter" id="num_181" playOrder="180">
+          <navLabel>
+            <text>How to do it..</text>
+          </navLabel>
+          <content src="text/part0190.html#5L6AS0-5e1e3ce63feb42db9ae6338e8302dfdb"/>
+        </navPoint>
+        <navPoint class="chapter" id="num_182" playOrder="181">
+          <navLabel>
+            <text>Visualizing the network architecture with TensorBoard</text>
+          </navLabel>
+          <content src="text/part0191.html#5M4RE0-5e1e3ce63feb42db9ae6338e8302dfdb"/>
+        </navPoint>
+      </navPoint>
+      <navPoint class="chapter" id="num_183" playOrder="182">
+        <navLabel>
+          <text>Analyzing network weights and more</text>
+        </navLabel>
+        <content src="text/part0192.html#5N3C00-5e1e3ce63feb42db9ae6338e8302dfdb"/>
+        <navPoint class="chapter" id="num_184" playOrder="183">
+          <navLabel>
+            <text>How to do it...</text>
+          </navLabel>
+          <content src="text/part0193.html#5O1SI0-5e1e3ce63feb42db9ae6338e8302dfdb"/>
+        </navPoint>
+      </navPoint>
+      <navPoint class="chapter" id="num_185" playOrder="184">
+        <navLabel>
+          <text>Freezing layers</text>
+        </navLabel>
+        <content src="text/part0194.html#5P0D40-5e1e3ce63feb42db9ae6338e8302dfdb"/>
+        <navPoint class="chapter" id="num_186" playOrder="185">
+          <navLabel>
+            <text>How to do it...</text>
+          </navLabel>
+          <content src="text/part0195.html#5PUTM0-5e1e3ce63feb42db9ae6338e8302dfdb"/>
+        </navPoint>
+      </navPoint>
+      <navPoint class="chapter" id="num_187" playOrder="186">
+        <navLabel>
+          <text>Storing the network topology and trained weights</text>
+        </navLabel>
+        <content src="text/part0196.html#5QTE80-5e1e3ce63feb42db9ae6338e8302dfdb"/>
+        <navPoint class="chapter" id="num_188" playOrder="187">
+          <navLabel>
+            <text>How to do it...</text>
+          </navLabel>
+          <content src="text/part0197.html#5RRUQ0-5e1e3ce63feb42db9ae6338e8302dfdb"/>
+        </navPoint>
+      </navPoint>
+    </navPoint>
+    <navPoint class="chapter" id="num_189" playOrder="188">
+      <navLabel>
+        <text>Pretrained Models</text>
+      </navLabel>
+      <content src="text/part0198.html#5SQFC0-5e1e3ce63feb42db9ae6338e8302dfdb"/>
+      <navPoint class="chapter" id="num_190" playOrder="189">
+        <navLabel>
+          <text>Introduction</text>
+        </navLabel>
+        <content src="text/part0199.html#5TOVU0-5e1e3ce63feb42db9ae6338e8302dfdb"/>
+      </navPoint>
+      <navPoint class="chapter" id="num_191" playOrder="190">
+        <navLabel>
+          <text>Large-scale visual recognition with GoogLeNet/Inception</text>
+        </navLabel>
+        <content src="text/part0200.html#5UNGG0-5e1e3ce63feb42db9ae6338e8302dfdb"/>
+        <navPoint class="chapter" id="num_192" playOrder="191">
+          <navLabel>
+            <text>How to do it...</text>
+          </navLabel>
+          <content src="text/part0201.html#5VM120-5e1e3ce63feb42db9ae6338e8302dfdb"/>
+        </navPoint>
+      </navPoint>
+      <navPoint class="chapter" id="num_193" playOrder="192">
+        <navLabel>
+          <text>Extracting bottleneck features with ResNet</text>
+        </navLabel>
+        <content src="text/part0202.html#60KHK0-5e1e3ce63feb42db9ae6338e8302dfdb"/>
+        <navPoint class="chapter" id="num_194" playOrder="193">
+          <navLabel>
+            <text>How to do it...</text>
+          </navLabel>
+          <content src="text/part0203.html#61J260-5e1e3ce63feb42db9ae6338e8302dfdb"/>
+        </navPoint>
+      </navPoint>
+      <navPoint class="chapter" id="num_195" playOrder="194">
+        <navLabel>
+          <text>Leveraging pretrained VGG models for new classes</text>
+        </navLabel>
+        <content src="text/part0204.html#62HIO0-5e1e3ce63feb42db9ae6338e8302dfdb"/>
+        <navPoint class="chapter" id="num_196" playOrder="195">
+          <navLabel>
+            <text>How to do it...</text>
+          </navLabel>
+          <content src="text/part0205.html#63G3A0-5e1e3ce63feb42db9ae6338e8302dfdb"/>
+        </navPoint>
+      </navPoint>
+      <navPoint class="chapter" id="num_197" playOrder="196">
+        <navLabel>
+          <text>Fine-tuning with Xception</text>
+        </navLabel>
+        <content src="text/part0206.html#64EJS0-5e1e3ce63feb42db9ae6338e8302dfdb"/>
+        <navPoint class="chapter" id="num_198" playOrder="197">
+          <navLabel>
+            <text>How to do it...</text>
+          </navLabel>
+          <content src="text/part0207.html#65D4E0-5e1e3ce63feb42db9ae6338e8302dfdb"/>
+        </navPoint>
+      </navPoint>
+    </navPoint>
+  </navMap>
+</ncx>
