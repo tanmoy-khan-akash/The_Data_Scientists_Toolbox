@@ -21,7 +21,7 @@ In short, it has almost everything you need to become a successful data scientis
 
 ✅ Follow this link and spread the word around the world.
 
-#### Link: 🔗 https://drive.google.com/drive/folders/1CgN7DE3pNRNh_4BA_zrrMLqWz6KquwuD?usp=sharing 
+#### Link: 🔗 https://drive.google.com/drive/u/0/folders/1HEbGQ791_5CXONET6yQZgKYOF7swH64U
 ------------------------------------------------------------------------------------------------------------------------------------------
 
 These resources are perfect for both beginners and advanced learners.
