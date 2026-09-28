@@ -1,0 +1,79 @@
+<html>
+<head>
+<style>
+p {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	color: #000000;
+}
+h1 {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 14px;
+	color: #000099;
+}
+body {
+	margin: 0px;
+}
+.redtext {
+	color: #FF0000;
+}
+a {
+	color: #009900;
+}
+a:link {
+	color: #000099;
+	text-decoration: underline;
+}
+a:visited {
+	color: #666666;
+	text-decoration: none;
+
+}
+a:hover {
+	text-decoration: none;
+	background-color: #CCCCCC;
+}
+a:active {
+	text-decoration: none;
+
+}
+
+.menu {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	color: #000000;
+}
+.menu a:link {
+	color: #336600;
+	text-decoration: none;
+}
+.menu a:visited {
+	color: #666666;
+	text-decoration: none;
+}
+
+.menu a:hover {
+	color: #990000;
+	text-decoration: none;
+}
+
+.menu a:active {
+	color: #666666;
+	text-decoration: none;
+}   
+.w3c-default{
+    width: 70%;
+    margin: auto;
+    padding: 50px;
+    border: 1px solid rgb(216, 216, 216);
+    margin-top: 20px;
+    border-radius: 10px;
+}
+</style>
+</head>
+<body>
+<div class="w3c-default">
+                <p style=""><strong style="">Key Terms</strong></p><p style=""><img src="https://udemy-images.s3.amazonaws.com:443/redactor/2015-11-26_04-05-16-086cacbf20055a302780fa151fc6d2f1/communication.jpg" style=" max-width:100%;"></p><p style=""><strong style="">Hadoop</strong> - A tool that can store and analyze massive amounts of data. At it&#039;s core Hadoop has two primary components. The first is to process data (MapReduce) and the second is to store data (HDFS)</p><p style=""><strong style="">Commodity Hardware </strong>- off the shelf hardware. </p><p style=""><strong style="">Pig </strong>- Like actual pigs, who eat almost anything, the Pig programming language is designed to handle any kind of data—hence the name!</p><p style=""><strong style="">Hive</strong> - Allows anyone who is already fluent with SQL (which is commonplace for relational data-base developers) to leverage the Hadoop platform right out of the gate.</p><p style=""><strong style="">HDFS</strong> - A Distributed File System. </p><p style=""><strong style="">Block</strong> - When you store a file in HDFS, the system breaks it down into a set of individual blocks and stores these blocks in various slave nodes in the Hadoop cluster.</p><p style="">The concept of storing a file as a collection of blocks is entirely consistent with how file systems normally work. But what’s different about HDFS is the scale. A typical block size that you’d see in a file system under Linux is 4KB, whereas a typical block size in Hadoop is 128MB.</p><p style=""><strong style="">MapReduce</strong> - The term MapReduce actually refers to two separate and distinct tasks that Hadoop programs perform. The first is the map job, which takes a set of data and converts it into another set of data, where individual elements are broken down into tuples (key/value pairs).The reduce job takes the output from a map as input and combines those data tuples into a smaller set of tuples. As the sequence of the name MapReduce implies, the reduce job is always performed after the map job.</p><p style=""><strong style="">NameNode</strong> - HDFS clients perform filesystem metadata operations through a single server called the NameNode. It&#039;s the brains of the operation. There can only be one of them. </p><p style=""><strong style="">DataNode </strong>- A DataNode stores data in the Hadoop File System.  A functional filesystem has more than one DataNode, with data replicated across them. On startup, a DataNode connects to the NameNode;  spinning until that service comes up. It then responds to requests from the NameNode or filesystem operations.Secondary NameNode - purpose is to have a checkpoint in HDFS. Its just a helper node for NameNode.</p>            </div>
+        </div>
+<body>
+</html>
