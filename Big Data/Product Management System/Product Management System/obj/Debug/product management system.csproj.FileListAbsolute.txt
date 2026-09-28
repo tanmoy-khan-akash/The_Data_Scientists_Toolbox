@@ -1,0 +1,30 @@
+c:\users\user-pc\documents\visual studio 2013\Projects\product management system\product management system\bin\Debug\product management system.exe.config
+C:\Users\user-pc\documents\visual studio 2013\Projects\product management system\product management system\obj\Debug\product management system.csprojResolveAssemblyReference.cache
+C:\Users\user-pc\documents\visual studio 2013\Projects\product management system\product management system\obj\Debug\product_management_system.PL.Form_login.resources
+C:\Users\user-pc\documents\visual studio 2013\Projects\product management system\product management system\obj\Debug\product_management_system.Properties.Resources.resources
+C:\Users\user-pc\documents\visual studio 2013\Projects\product management system\product management system\obj\Debug\product management system.csproj.GenerateResource.Cache
+C:\Users\user-pc\documents\visual studio 2013\Projects\product management system\product management system\bin\Debug\product management system.exe
+C:\Users\user-pc\documents\visual studio 2013\Projects\product management system\product management system\bin\Debug\product management system.pdb
+C:\Users\user-pc\documents\visual studio 2013\Projects\product management system\product management system\obj\Debug\product management system.exe
+C:\Users\user-pc\documents\visual studio 2013\Projects\product management system\product management system\obj\Debug\product management system.pdb
+C:\Users\user-pc\documents\visual studio 2013\Projects\product management system\product management system\obj\Debug\product_management_system.PL.Form_main.resources
+C:\Users\user-pc\documents\visual studio 2013\Projects\product management system\product management system\obj\Debug\product_management_system.PL.Form_add_product.resources
+C:\Users\user-pc\documents\visual studio 2013\Projects\product management system\product management system\obj\Debug\product_management_system.PL.Form_product_show.resources
+C:\Users\user-pc\documents\visual studio 2013\Projects\product management system\product management system\obj\Debug\product_management_system.PL.review.resources
+C:\Users\user-pc\documents\visual studio 2013\Projects\product management system\product management system\obj\Debug\product_management_system.report.frm_rpt.resources
+C:\Users\amna\Documents\Visual Studio 2013\Projects\product management system\product management system\bin\Debug\product management system.exe.config
+C:\Users\amna\Documents\Visual Studio 2013\Projects\product management system\product management system\obj\Debug\product management system.exe
+C:\Users\amna\Documents\Visual Studio 2013\Projects\product management system\product management system\obj\Debug\product management system.pdb
+C:\Users\amna\Documents\Visual Studio 2013\Projects\product management system\product management system\obj\Debug\product management system.csprojResolveAssemblyReference.cache
+C:\Users\amna\Documents\Visual Studio 2013\Projects\product management system\product management system\obj\Debug\product_management_system.PL.Form_add_product.resources
+C:\Users\amna\Documents\Visual Studio 2013\Projects\product management system\product management system\obj\Debug\product_management_system.PL.Form_login.resources
+C:\Users\amna\Documents\Visual Studio 2013\Projects\product management system\product management system\obj\Debug\product_management_system.PL.Form_main.resources
+C:\Users\amna\Documents\Visual Studio 2013\Projects\product management system\product management system\obj\Debug\product_management_system.PL.Form_product_show.resources
+C:\Users\amna\Documents\Visual Studio 2013\Projects\product management system\product management system\obj\Debug\product_management_system.PL.review.resources
+C:\Users\amna\Documents\Visual Studio 2013\Projects\product management system\product management system\obj\Debug\product_management_system.Properties.Resources.resources
+C:\Users\amna\Documents\Visual Studio 2013\Projects\product management system\product management system\obj\Debug\product_management_system.report.frm_rpt.resources
+C:\Users\amna\Documents\Visual Studio 2013\Projects\product management system\product management system\obj\Debug\product management system.csproj.GenerateResource.Cache
+C:\Users\amna\Documents\Visual Studio 2013\Projects\product management system\product management system\bin\Debug\product management system.exe
+C:\Users\amna\Documents\Visual Studio 2013\Projects\product management system\product management system\bin\Debug\product management system.pdb
+C:\Users\amna\Documents\Visual Studio 2013\Projects\product management system\product management system\obj\Debug\product_management_system.PL.form_categories.resources
+C:\Users\amna\Documents\Visual Studio 2013\Projects\product management system\product management system\obj\Debug\product_management_system.PL.Form_customer.resources
