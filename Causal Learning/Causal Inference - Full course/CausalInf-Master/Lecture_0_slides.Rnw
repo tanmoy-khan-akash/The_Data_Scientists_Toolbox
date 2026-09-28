@@ -1,0 +1,1861 @@
+\documentclass{beamer}
+\beamertemplatenavigationsymbolsempty
+\usepackage{xcolor}
+\usepackage{graphicx}
+% sous titres
+\usepackage{subfig}
+% package to generate commands with double letters in maths
+\usepackage{dsfont}
+\newcommand{\esp}[1]{\mathbb{E}[ #1 ]}
+\newcommand{\var}[1]{\mathbb{V}[ #1 ]}
+\newcommand{\cov}[1]{\mathbb{C}[ #1 ]}
+\newcommand{\un}[1]{\mathds{1}[ #1 \geq0]}
+\newcommand{\unn}[1]{\mathds{1}[ #1 <0]}
+\newcommand{\uns}[1]{\mathds{1}[ #1 ]}
+\newcommand\Ind{\protect\mathpalette{\protect\independenT}{\perp}}
+\def\independenT#1#2{\mathrel{\setbox0\hbox{$#1#2$}\copy0\kern-\wd0\mkern4mu\box0}} 
+\newcommand{\plim}[1]{\text{plim}_{ #1 \rightarrow \infty}}
+\newcommand{\plims}{\text{plim}}
+\newcommand{\partder}[2]{\frac{\partial #1}{\partial #2}}
+% math package (for align environment)
+\usepackage{amsmath}
+\usepackage{amsfonts}
+
+<<libraries,eval=TRUE,include=FALSE>>=
+library(MASS)
+library(RColorBrewer)
+library(gplots)
+library(snowfall)
+library(ggplot2)
+library(xtable)
+@
+
+% math environments
+%\newtheorem{theorem}{Theorem}
+%\newtheorem{definition}{Definition}
+\newtheorem{assumption}{Assumption}
+%\newenvironment{proof}{\textsc{Proof}:}{\rule{1ex}{1ex}}
+
+\title[]{EPE - Lecture 0 \\ The Two Fundamental Problems of Inference}
+
+\author[]{\textbf{Sylvain Chab\'e-Ferret}}
+
+\institute[TSE]{
+  Toulouse School of Economics, Inra
+  }
+
+\date[]{January 2017}
+
+\AtBeginSection[]
+{
+\begin{frame}<beamer>
+    \frametitle{Outline}
+    \tableofcontents[currentsection,hideallsubsections]
+\end{frame}
+}
+
+\begin{document}
+
+\begin{frame}
+  \titlepage
+\end{frame}
+
+\begin{frame}
+ \frametitle{In a nutshell}
+ In this lecture, we are going to study the two fundamentals problems that we face when estimating the effect of an intervention on an outcome. 
+ We are also going to study the properties of two intuitive estimators.
+\end{frame}   
+
+<<param,eval=TRUE,echo=FALSE,results='hide'>>=
+param <- c(8,.5,.28,1500,0.9,0.01,0.05,0.05,0.05,0.1)
+names(param) <- c("barmu","sigma2mu","sigma2U","barY","rho","theta","sigma2epsilon","sigma2eta","delta","baralpha")
+@
+%
+<<delta.y.tt,eval=TRUE,echo=FALSE,results='hide'>>=
+delta.y.tt <- function(param){
+  return(param["baralpha"]+param["theta"]*param["barmu"]-param["theta"]*((param["sigma2mu"]*dnorm((log(param["barY"])-param["barmu"])/(sqrt(param["sigma2mu"]+param["sigma2U"]))))/(sqrt(param["sigma2mu"]+param["sigma2U"])*pnorm((log(param["barY"])-param["barmu"])/(sqrt(param["sigma2mu"]+param["sigma2U"]))))))
+}
+@
+%
+<<delta.y.ate,eval=TRUE,echo=FALSE,results='hide'>>=
+delta.y.ate <- function(param){
+  return(param["baralpha"]+param["theta"]*param["barmu"])
+}
+@
+
+\begin{frame}
+ \frametitle{Example}
+<<goal,eval=TRUE,echo=FALSE,results='hide',echo=FALSE,warning=FALSE,error=FALSE,message=FALSE,fig.cap='Our goal',fig.align='center',out.width='.65\\textwidth',fig.pos='htbp'>>=
+R <- 0
+xlim.big <- c(-1.5,0.5)
+xlim.small <- c(-0.15,0.55)
+col.obs <- 'black'
+col.unobs <- 'red'
+lty.obs <- 1
+lty.unobs <- 2
+adj <- 0
+plot(1, type="n", xlab="", ylab="", xlim=xlim.small, ylim=c(0, 10))
+abline(v=delta.y.tt(param))
+abline(v=R)
+text(x=c(R,delta.y.tt(param)),y=c(adj),labels=c('R','TT'),pos=2)
+@
+\end{frame}   
+
+\begin{frame}
+    \frametitle{Outline}
+    \tableofcontents[hideallsubsections]
+\end{frame}
+
+\section{The Fundamental Problem of Causal Inference}
+
+\begin{frame}
+ \frametitle{The Fundamental Problem of Causal Inference}
+$TT$ is unobserved even when $N=\infty$.
+\end{frame}   
+
+\begin{frame}
+ \frametitle{The Fundamental Problem of Causal Inference: illustration}
+%
+<<FPCI,eval=TRUE,echo=FALSE,results='hide',echo=FALSE,warning=FALSE,error=FALSE,message=FALSE,fig.cap='FPCI',fig.align='center',out.width='.65\\textwidth',fig.pos='htbp'>>=
+plot(1, type="n", xlab="", ylab="", xlim=xlim.small, ylim=c(0, 10))
+abline(v=delta.y.tt(param),col=col.unobs,lty=lty.unobs)
+abline(v=R)
+text(x=c(R,delta.y.tt(param)),y=c(adj),labels=c('R','TT'),pos=2,col=c(col.obs,col.unobs),lty=c(lty.obs,lty.unobs))
+@
+%
+\end{frame}   
+
+\subsection{Rubin Causal Model}
+
+\begin{frame}
+ \frametitle{Rubin Causal Model: Components}
+%
+\begin{itemize}
+		\item Treatment allocation rule
+		\item Potential outcomes
+		\item Swithcing equation
+\end{itemize}
+%
+\end{frame}   
+
+\begin{frame}
+ \frametitle{Treatment Allocation Rule}
+%
+\begin{itemize}
+		\item $D_i=1$: if unit $i$ receives the treatment
+		\item $D_i=0$: if unit $i$ does NOT receive the treatment
+\end{itemize}
+%
+\end{frame}   
+
+\begin{frame}
+ \frametitle{Example: Sharp Cutoff Rule}
+%
+\begin{align*}
+  D_i & = \uns{Y_i^B\leq\bar{Y}}
+\end{align*}
+%
+where $\uns{A}$ is the indicator function, taking value $1$ when $A$ is true and $0$ otherwise.
+\end{frame}   
+
+\begin{frame}
+ \frametitle{Numerical Example of Sharp Cutoff Rule}
+%
+\begin{align*}
+D_i & = \uns{y_i^B\leq\bar{y}} \\
+y_i^B & =\mu_i+U_i^B \\
+\bar{y} & = \log\bar{Y} \\
+\mu_i & \sim\mathcal{N}(\bar{\mu},\sigma^2_{\mu})\\
+U_i^B & \sim\mathcal{N}(0,\sigma^2_{U})
+\end{align*}
+%
+\end{frame}   
+
+
+\begin{frame}
+ \frametitle{The parameter values used in the simulations}
+<<param.print,eval=TRUE,echo=FALSE,results='asis'>>=
+param.export <- xtable(as.data.frame(param))
+print(param.export)
+@
+\end{frame}   
+
+%
+<<simul,eval=TRUE,echo=FALSE,results='hide'>>=
+set.seed(1234)
+N <-1000
+mu <- rnorm(N,param["barmu"],sqrt(param["sigma2mu"]))
+UB <- rnorm(N,0,sqrt(param["sigma2U"]))
+yB <- mu + UB 
+Ds <- rep(0,N)
+Ds[yB<=log(param["barY"])] <- 1 
+epsilon <- rnorm(N,0,sqrt(param["sigma2epsilon"]))
+eta<- rnorm(N,0,sqrt(param["sigma2eta"]))
+U0 <- param["rho"]*UB + epsilon
+y0 <- mu +  U0 + param["delta"]
+alpha <- param["baralpha"]+  param["theta"]*mu + eta
+y1 <- y0+alpha
+Y0 <- exp(y0)
+Y1 <- exp(y1)
+y <- y1*Ds+y0*(1-Ds)
+Y <- Y1*Ds+Y0*(1-Ds)
+@
+%
+
+\begin{frame}
+ \frametitle{Numerical Example of Sharp Cutoff Rule}
+%
+<<histyb,eval=TRUE,echo=FALSE,results='hide',fig.cap='Histogram of $y_B$',fig.align='center',out.width='.7\\textwidth'>>=
+# building histogram of yB with cutoff point at ybar
+# Number of steps
+Nsteps.1 <- 15
+#step width
+step.1 <- (log(param["barY"])-min(yB[Ds==1]))/Nsteps.1
+Nsteps.0 <- (-log(param["barY"])+max(yB[Ds==0]))/step.1
+breaks <- cumsum(c(min(yB[Ds==1]),c(rep(step.1,Nsteps.1+Nsteps.0+1))))
+hist(yB,breaks=breaks,main="")
+abline(v=log(param["barY"]),col="red")
+@
+%
+\end{frame}   
+
+\begin{frame}
+ \frametitle{Numerical Example of Sharp Cutoff Rule}
+%
+<<table.D.sharp,eval=TRUE,echo=FALSE,results='asis',warning=FALSE,error=FALSE,message=FALSE>>=
+table.D.sharp <- table(Ds)
+xtable(table.D.sharp,caption='Treatment allocation with sharp cutoff rule',label='tab:table.D.sharp')
+@
+\end{frame}   
+
+\begin{frame}
+ \frametitle{Other Allocation Rules}
+%
+\begin{description}
+  \item[Fuzzy cutoff rule] $D_i  = \uns{Y_i^B+V_i\leq\bar{Y}}$
+  \item[Self-selection rule] $D_i = \uns{\underbrace{Y_i^1-Y_i^0-C_i}{D^*_i}\geq0}$
+  \item[Eligibility \& self-select] $D_i = \uns{D^*_i\geq0}E_i$ 
+  \item[Other rules] Awareness, eligibility, application, accepted, shows up
+\end{description}
+%
+\end{frame}   
+
+
+\begin{frame}
+ \frametitle{Potential Outcomes}
+%
+\begin{itemize}
+		\item $Y_i^1$: outcome we would observe if unit $i$ was given the treatment
+		\item $Y_i^0$: outcome we would observe if unit $i$ was NOT given the treatment
+\end{itemize}
+%
+\end{frame}   
+
+\begin{frame}
+ \frametitle{Potential Outcomes: Numerical Example}
+%
+\begin{align*}
+y^0_i & =\mu_i+\delta+U_i^0 \\
+U_i^0 & =\rho U_i^B+\epsilon_i \\
+\epsilon_i & \sim\mathcal{N}(0,\sigma^2_{\epsilon})\\
+y_i^1 & =y^0_i + \alpha_i \\
+\alpha_i & = \bar{\alpha}+\theta\mu_i+\eta_i \\
+\eta_i & \sim\mathcal{N}(0,\sigma^2_{\eta})
+\end{align*}
+%
+\end{frame}   
+
+\begin{frame}
+ \frametitle{Potential Outcomes: Numerical Example}
+%
+<<plot.y1.y0,eval=TRUE,echo=FALSE,results='hide',fig.cap='Potential outcomes',fig.align='center',out.width='.7\\textwidth',fig.pos='htbp'>>=
+plot(yB,y0,pch=1,col='blue',xlim=c(5,11),ylim=c(5,11),xlab="yB",ylab="Outcomes")
+points(yB,y1,pch=3,col='green')
+legend(5,11,c('y0','y1'),pch=c(1,3),col=c('blue','green'),ncol=1)
+@
+%
+\end{frame}   
+
+\begin{frame}
+ \frametitle{Individual Level Causal Effect}
+%
+\begin{align*}
+  \Delta_i^Y & =Y_i^1 -Y^0_i
+\end{align*}
+%
+\end{frame}   
+
+\begin{frame}
+ \frametitle{Individual Level Causal Effect: Numerical Example}
+%
+\begin{align*}
+\Delta^y_i & = \alpha_i = \bar{\alpha}+\theta\mu_i+\eta_i
+\end{align*}
+%
+\end{frame}   
+
+\begin{frame}
+ \frametitle{Individual Level Causal Effect: Numerical Example}
+%
+<<hist.alpha,eval=TRUE,echo=FALSE,results='hide',fig.cap='Histogram of $\\Delta^y$',fig.align='center',out.width='.7\\textwidth',fig.pos='htbp'>>=
+hist(alpha,main="",prob=TRUE)
+curve(dnorm(x, mean=(param["baralpha"]+param["theta"]*param["barmu"]), sd=sqrt(param["theta"]^2*param["sigma2mu"]+param["sigma2eta"])), add=TRUE,col='red')
+@
+%
+\end{frame}   
+
+\begin{frame}
+\frametitle{TT: Average Treatment Effect on the Treated}
+%
+\begin{align*}
+\Delta_{TT}^Y & =\esp{\Delta_i^Y|D_i=1} \\
+\Delta^Y_{TT_s} & = \frac{1}{\sum_{i=1}^ND_i}\sum_{i=1}^N(Y_i^1-Y_i^0)D_i
+\end{align*}
+%
+\end{frame}
+
+\begin{frame}
+ \frametitle{TT: Numerical Example}
+%
+<<plot.y1.y0.TT,eval=TRUE,echo=FALSE,results='hide',fig.cap='Potential outcomes',fig.align='center',out.width='.7\\textwidth',fig.pos='htbp'>>=
+plot(yB[Ds==1],y0[Ds==1],pch=1,col='blue',xlim=c(5,11),ylim=c(5,11),xlab="yB",ylab="Outcomes")
+points(yB[Ds==1],y1[Ds==1],pch=3,col='green')
+legend(5,11,c('y0|D=1','y1|D=1'),pch=c(1,3),col=c('blue','green'),ncol=1)
+@
+%
+\end{frame}   
+
+\begin{frame}
+\frametitle{TT: Numerical Example}
+In the numerical example used in the class, we can derive the value of TT in the population:
+%
+\begin{align*}
+\Delta_{TT}^y & =\bar{\alpha}+\theta\bar{\mu} -\theta\frac{\sigma^2_{\mu}}{\sqrt{\sigma^2_{\mu}+\sigma^2_{U}}}\frac{\phi\left(\frac{\bar{y}-\bar{\mu}}{\sqrt{\sigma^2_{\mu}+\sigma^2_{U}}}\right)}{\Phi\left(\frac{\bar{y}-\bar{\mu}}{\sqrt{\sigma^2_{\mu}+\sigma^2_{U}}}\right)},
+\end{align*}
+%
+where $\bar{y}=\ln(\bar{Y})$ and where $\phi$ and $\Phi$ are respectively the density and the cumulative distribution functions of the standard normal.
+
+The value of TT in our example is \Sexpr{round(delta.y.tt(param),2)}.\\
+% the function for computing it is in the code chunk above named delta.y.tt
+The value of TT$_s$ in our example is \Sexpr{round(mean(alpha[Ds==1]),3)}
+\end{frame}
+
+\begin{frame}
+\frametitle{Proof}
+\tiny
+%
+\begin{align*}
+\Delta^y_{TT} & = \esp{\Delta_i^Y|D_i=1}\\
+              & = \bar{\alpha}+\theta\esp{\mu_i|\mu_i+U_i^B\leq\bar{y}}\\
+              & = \bar{\alpha}+\theta\left(\bar{\mu} - \frac{\sigma^2_{\mu}}{\sqrt{\sigma^2_{\mu}+\sigma^2_{U}}}\frac{\phi\left(\frac{\bar{y}-\bar{\mu}}{\sqrt{\sigma^2_{\mu}+\sigma^2_{U}}}\right)}{\Phi\left(\frac{\bar{y}-\bar{\mu}}{\sqrt{\sigma^2_{\mu}+\sigma^2_{U}}}\right)}\right).
+\end{align*}
+%
+The second equality follows from the definition of $\Delta_i^Y$ and $D_i$ and from the fact that $\eta_i$ is independent from $\mu_i$ and $U_i^B$.
+The third equality comes from the formula for the expectation of a censored bivariate normal random variable.
+\normalsize
+\end{frame}
+
+\begin{frame}
+ \frametitle{Treatment Effects: Numerical Example}
+%
+<<hist.alpha.TT,eval=TRUE,echo=FALSE,results='hide',fig.cap='Histogram of $\\Delta^y$',fig.align='center',out.width='.7\\textwidth',fig.pos='htbp'>>=
+hist(alpha,main="",prob=TRUE)
+curve(dnorm(x, mean=(param["baralpha"]+param["theta"]*param["barmu"]), sd=sqrt(param["theta"]^2*param["sigma2mu"]+param["sigma2eta"])), add=TRUE,col='red')
+abline(v=delta.y.tt(param),col="red")
+abline(v=mean(alpha[Ds==1]),col="blue")
+text(x=c(delta.y.tt(param),mean(alpha[Ds==1])),y=c(adj),labels=c('TT','TTs'),pos=c(4,2),col=c('red','blue'))
+@
+%
+\end{frame}   
+
+\begin{frame}
+\frametitle{Other Treatment Effects}
+%
+\begin{align*}
+\Delta_{ATE}^Y & =\esp{\Delta_i^Y} \\
+\Delta^Y_{ATE_s} & = \frac{1}{N}\sum_{i=1}^N(Y_i^1-Y_i^0)
+\end{align*}
+%
+Less interesting parameter.
+\end{frame}
+
+\begin{frame}
+\frametitle{ATE: Numerical Example}
+%
+\begin{align*}
+\Delta^y_{ATE} & = \esp{\Delta^y_i}\\
+              & = \bar{\alpha}+\theta\bar{\mu}.
+\end{align*}
+%
+The value of ATE in our example is \Sexpr{round(delta.y.ate(param),2)}.\\
+% the function for computing it is in the code chunk above named delta.y.tt
+The value of ATE$_s$ in our example is \Sexpr{round(mean(alpha),3)}
+\end{frame}
+
+\begin{frame}
+ \frametitle{Switching Equation}
+%
+\begin{align*}
+Y_i & = 
+\begin{cases}
+Y_i^1 & \text{ if } D_i=1 \\
+Y_i^0 & \text{ if } D_i=0 
+\end{cases} \\
+ & = D_iY_i^1 + (1-D_i)Y^0_i
+\end{align*}
+%
+\end{frame}   
+
+
+\begin{frame}
+ \frametitle{The Switching Equation: Numerical Example}
+%
+<<plot.y1.y0.yB,eval=TRUE,fig.cap='Observed and potential outcomes',fig.subcap=c('Observed outcomes','Potential outcomes'),fig.align='center',out.width='.5\\textwidth',echo=FALSE,results='hide',fig.pos='htbp'>>=
+plot(yB[Ds==0],y0[Ds==0],pch=1,xlim=c(5,11),ylim=c(5,11),xlab="yB",ylab="Outcomes")
+points(yB[Ds==1],y1[Ds==1],pch=3)
+legend(5,11,c('y|D=0','y|D=1'),pch=c(1,3))
+abline(v=log(param["barY"]),col=col.unobs)
+
+plot(yB[Ds==0],y0[Ds==0],pch=1,xlim=c(5,11),ylim=c(5,11),xlab="yB",ylab="Outcomes")
+points(yB[Ds==1],y1[Ds==1],pch=3)
+points(yB[Ds==0],y1[Ds==0],pch=3,col='green')
+points(yB[Ds==1],y0[Ds==1],pch=1,col='blue')
+abline(v=log(param["barY"]),col='red')
+legend(5,11,c('y0|D=0','y1|D=1','y0|D=1','y1|D=0'),pch=c(1,3,1,3),col=c(col.obs,col.obs,'blue','green'),ncol=2)
+@
+%
+\end{frame}   
+
+\begin{frame}
+ \frametitle{The Fundamental Problem of Causal Inference}
+%
+\begin{theorem}[Fundamental problem of causal inference]\label{th:FPCI}
+It is impossible to observe TT, either in the population or in the sample.
+\end{theorem}
+%
+\end{frame}   
+
+\begin{frame}
+\frametitle{Why is TT Unobserved? Counterfactual}
+%
+\begin{align*}
+\Delta_{TT}^Y & =\esp{\Delta_i^Y|D_i=1} \\
+              & = \esp{Y_i^1-Y_i^0|D_i=1} \\
+              & = \esp{Y_i^1|D_i=1}-\esp{Y_i^0|D_i=1} \\
+              & = \esp{Y_i|D_i=1}-\color{red}\underbrace{\esp{Y_i^0|D_i=1}}_{Counterfactual}\\
+\Delta_{TT_s}^Y & = \frac{1}{\sum_{i=1}^ND_i}\sum_{i=1}^NY_iD_i- \color{red}\underbrace{\frac{1}{\sum_{i=1}^ND_i}\sum_{i=1}^NY_i^0D_i}_{Counterfactual}
+\end{align*}
+%
+\end{frame}
+
+\begin{frame}
+\frametitle{Why is TT Unobserved? Illustration}
+%
+<<plot.counter,eval=TRUE,fig.cap='Evolution of average outcomes in the treated and control group',fig.subcap=c('Average outcomes','Individual outcomes'),fig.align='center',out.width='.5\\textwidth',echo=FALSE,results='hide',fig.pos='htbp'>>=
+x <- c(1,2)
+y11 <- c(mean(yB[Ds==1]),mean(y[Ds==1]))
+y10 <- c(mean(yB[Ds==1]),mean(y0[Ds==1]))
+y00 <- c(mean(yB[Ds==0]),mean(y0[Ds==0]))
+plot(x,y11,ylim=c(5,11),type='o',pch=3,xlab='Time',ylab='Average outcomes',col=col.obs)
+points(x,y10,pch=1,type='o',lty=2,col='blue')
+points(x,y00,pch=1,type='o',lty=6,col=col.obs)
+legend(1,11,c('Untreated (observed)','Treated (observed)','Treated (counterfactual)'),pch=c(1,3,1),lty=c(6,1,2),ncol=1,col=c(col.obs,col.obs,'blue'))
+
+plot(yB[Ds==0],y0[Ds==0],pch=1,xlim=c(5,11),ylim=c(5,11),xlab="yB",ylab="Outcomes")
+points(yB[Ds==1],y1[Ds==1],pch=3)
+points(yB[Ds==0],y1[Ds==0],pch=3,col='green')
+points(yB[Ds==1],y0[Ds==1],pch=1,col='blue')
+abline(v=log(param["barY"]),col='red')
+legend(5,11,c('y0|D=0','y1|D=1','y0|D=1','y1|D=0'),pch=c(1,3,1,3),col=c(col.obs,col.obs,'blue','green'),ncol=2)
+@
+%
+\end{frame}
+
+% I could use the true population values for the illustration.
+% that would be more coherent with the overall N=\infty idea
+% But it is ok as is for the moment.
+
+\subsection{Solutions to the FPCI: Identification and Estimators}
+
+\begin{frame}
+\frametitle{Identification}
+What can we do to solve the fundamental Problem of Causal Inference?
+%
+\begin{itemize}
+  \item Use an observed quantity E (for Estimator) to recover TT
+  \item When there exists E such that, under some assumptions, E=TT, we say that TT is identified under these assumptions
+  \item When E$\neq$TT, we say that E is biased with B=E-TT.
+\end{itemize}
+%
+\end{frame}
+
+\begin{frame}
+\frametitle{Various Estimators}
+%
+\begin{enumerate}
+  \item Intuitive comparisons
+  \item Observational methods
+  \item Natural experiments
+  \item Randomized Controlled Trials (RCTs)
+  \item Controlled experiments
+  \item Structural models
+\end{enumerate}
+%
+\end{frame}
+
+\section{Intuitive Comparisons and Their Biases}
+
+\subsection{Definition of Intuitive Comparisons}
+
+\begin{frame}
+\frametitle{Intuitive Comparisons}
+%
+\begin{itemize}
+  \item With/Without (WW): 
+  %
+  \begin{align*}
+    \Delta^Y_{WW} & = \esp{Y_i|D_i=1} - \esp{Y_i|D_i=0} \\
+    \hat{\Delta^Y_{WW}} & = \frac{1}{\sum_{i=1}^N D_i}\sum_{i=1}^N Y_iD_i-\frac{1}{\sum_{i=1}^N (1-D_i)}\sum_{i=1}^N Y_i(1-D_i)
+  \end{align*}
+  \item Before/After (BA): 
+  %
+  \begin{align*}
+    \Delta^Y_{BA} & = \esp{Y_i|D_i=1} - \esp{Y_i^B|D_i=1}\\
+    \hat{\Delta^Y_{BA}} & = \frac{1}{\sum_{i=1}^N D_i}\sum_{i=1}^N Y_iD_i-\frac{1}{\sum_{i=1}^N D_i}\sum_{i=1}^N Y^B_iD_i
+  \end{align*}
+  %
+\end{itemize}
+%
+\end{frame}
+
+\begin{frame}
+\frametitle{Intuitive Comparisons: Illustration}
+%
+<<plot.intuit,eval=TRUE,fig.cap='Evolution of average outcomes in the treated and control group',fig.align='center',out.width='.65\\textwidth',echo=FALSE,results='hide',fig.pos='htbp'>>=
+x <- c(1,2)
+y11 <- c(mean(yB[Ds==1]),mean(y[Ds==1]))
+y10 <- c(mean(yB[Ds==1]),mean(y0[Ds==1]))
+y00 <- c(mean(yB[Ds==0]),mean(y0[Ds==0]))
+plot(x,y11,ylim=c(6.5,8.5),type='o',pch=1,xlab='Time',ylab='Average outcomes',col=col.obs)
+points(x,y10,pch=2,type='o',lty=2,col=col.unobs)
+points(x,y00,pch=3,type='o',lty=6,col=col.obs)
+legend(1,8,c('Untreated (observed)','Treated (observed)','Treated (counterfactual)'),pch=c(3,1,2),lty=c(6,1,2),ncol=1,col=c(col.obs,col.obs,col.unobs))
+@
+%
+\end{frame}
+
+%
+<<WW.SB,eval=TRUE,echo=FALSE,results='hide'>>=
+delta.y.sb <- function(param){
+  return(-(param["sigma2mu"]+param["rho"]*param["sigma2U"])/sqrt(param["sigma2mu"]+param["sigma2U"])
+         *dnorm((log(param["barY"])-param["barmu"])/(sqrt(param["sigma2mu"]+param["sigma2U"])))
+         *(1/pnorm((log(param["barY"])-param["barmu"])/(sqrt(param["sigma2mu"]+param["sigma2U"])))
+           +1/(1-pnorm((log(param["barY"])-param["barmu"])/(sqrt(param["sigma2mu"]+param["sigma2U"]))))))
+}
+delta.y.ww <- function(param){
+  return(delta.y.tt(param)+delta.y.sb(param))
+}
+@
+%
+<<BA.TB,eval=TRUE,echo=FALSE,results='hide'>>=
+delta.y.tb <- function(param){
+  return(param["delta"]
+          +(1-param["rho"])*((param["sigma2U"])/sqrt(param["sigma2mu"]+param["sigma2U"]))
+         *dnorm((log(param["barY"])-param["barmu"])/(sqrt(param["sigma2mu"]+param["sigma2U"])))
+         /pnorm((log(param["barY"])-param["barmu"])/(sqrt(param["sigma2mu"]+param["sigma2U"]))))
+}
+delta.y.ba <- function(param){
+  return(delta.y.tt(param)+ delta.y.tb(param))
+}
+@
+%
+
+\begin{frame}
+\frametitle{Intuitive Comparisons: Numerical Example}
+%
+\begin{align*}
+\hat{\Delta^y_{WW}} & =\Sexpr{round(mean(y[Ds==1])-mean(y[Ds==0]),3)}\\
+\Delta^y_{WW} & = \Sexpr{round(delta.y.ww(param),3)} \\
+\hat{\Delta^y_{BA}} & = \Sexpr{round(mean(y[Ds==1])-mean(yB[Ds==1]),3)}\\
+\Delta^y_{BA} & = \Sexpr{round(delta.y.ba(param),3)} 
+\end{align*}
+%
+\end{frame}
+
+\begin{frame}
+ \frametitle{Intuitive Comparisons: Numerical Example}
+<<WW.num,eval=TRUE,echo=FALSE,results='hide',echo=FALSE,warning=FALSE,error=FALSE,message=FALSE,fig.cap='WW',fig.align='center',out.width='.65\\textwidth',fig.pos='htbp'>>=
+plot(1, type="n", xlab="", ylab="", xlim=xlim.big, ylim=c(0, 10))
+abline(v=R)
+abline(v=delta.y.tt(param),col=col.unobs,lty=lty.unobs)
+abline(v=delta.y.ww(param),col=col.obs)
+abline(v=delta.y.ba(param),col=col.obs)
+text(x=c(R,delta.y.tt(param),delta.y.ww(param),delta.y.ba(param)),y=c(adj),labels=c('R','TT','WW','BA'),pos=c(2,2,2,4),col=c(col.obs,col.unobs,col.obs,col.obs),lty=c(lty.obs,lty.unobs,lty.obs,lty.obs))
+@
+\end{frame}   
+
+\subsection{Biases of Intuitive Comparisons}
+
+\begin{frame}
+\frametitle{Biases of Intuitive Comparisons: Selection Bias and Time Trend Bias}
+%
+\begin{align*}
+  \Delta^Y_{SB} & =\Delta^Y_{WW}-\Delta^Y_{TT}\\
+                & = \esp{Y^1_i|D_i=1} -\esp{Y^0_i|D_i=0} - (\esp{Y^1_i|D_i=1} - \esp{Y^0_i|D_i=1}) \\
+                & = \esp{Y^0_i|D_i=1} - \esp{Y^0_i|D_i=0} \\
+  \Delta^Y_{TB} & = \Delta^Y_{BA}-\Delta^Y_{TT} \\
+                & = \esp{Y^1_i|D_i=1} -\esp{Y^B_i|D_i=1} - (\esp{Y^1_i|D_i=1} - \esp{Y^0_i|D_i=1}) \\
+                & = \esp{Y^0_i|D_i=1} - \esp{Y^B_i|D_i=1}
+\end{align*}
+%
+\end{frame}
+
+\begin{frame}
+\frametitle{Selection Bias: Numerical Example}
+%
+\begin{itemize}
+  \item In the population, $\Delta^y_{SB}=$\Sexpr{round(delta.y.sb(param),3)}
+  \item In the sample, $\hat{\Delta^y_{SB}}=$\Sexpr{round(mean(y0[Ds==1])-mean(y[Ds==0]),3)}
+  \item The counterfactual average outcome for the treated is $\frac{1}{\sum_{i=1}^ND_i}\sum_{i=1}^ND_iy^0_i=$ \Sexpr{round(mean(y0[Ds==1]),3)}
+  \item The average outcome for the untreated that we use to proxy for it is equal to $\frac{1}{\sum_{i=1}^N(1-D_i)}\sum_{i=1}^N(1-D_i)y_i=$\Sexpr{round(mean(y0[Ds==0]),3)}
+\end{itemize}
+%
+\end{frame}
+
+\begin{frame}
+\frametitle{Proof}
+\tiny
+%
+\begin{align*}
+\Delta^y_{SB}     & = \esp{\mu_i|\mu_i+U_i^B\leq\bar{y}}-\esp{\mu_i|\mu_i+U_i^B>\bar{y}} \\
+                  & \phantom{=} + \rho\left(\esp{U_i^B|\mu_i+U_i^B\leq\bar{y}}-\esp{U_i^B|\mu_i+U_i^B>\bar{y}}\right) \\
+                  & = \bar{\mu} - \frac{\sigma^2_{\mu}}{\sqrt{\sigma^2_{\mu}+\sigma^2_{U}}}\frac{\phi\left(\frac{\bar{y}-\bar{\mu}}{\sqrt{\sigma^2_{\mu}+\sigma^2_{U}}}\right)}{\Phi\left(\frac{\bar{y}-\bar{\mu}}{\sqrt{\sigma^2_{\mu}+\sigma^2_{U}}}\right)}
+                  -\left(\bar{\mu}+\frac{\sigma^2_{\mu}}{\sqrt{\sigma^2_{\mu}+\sigma^2_{U}}}\frac{\phi\left(\frac{\bar{y}-\bar{\mu}}{\sqrt{\sigma^2_{\mu}+\sigma^2_{U}}}\right)}{1-\Phi\left(\frac{\bar{y}-\bar{\mu}}{\sqrt{\sigma^2_{\mu}+\sigma^2_{U}}}\right)}\right) \\
+                  & \phantom{=} + \rho\left(-\frac{\sigma^2_{U}}{\sqrt{\sigma^2_{\mu}+\sigma^2_{U}}}\frac{\phi\left(\frac{\bar{y}-\bar{\mu}}{\sqrt{\sigma^2_{\mu}+\sigma^2_{U}}}\right)}{\Phi\left(\frac{\bar{y}-\bar{\mu}}{\sqrt{\sigma^2_{\mu}+\sigma^2_{U}}}\right)}
+                  -\frac{\sigma^2_{U}}{\sqrt{\sigma^2_{\mu}+\sigma^2_{U}}}\frac{\phi\left(\frac{\bar{y}-\bar{\mu}}{\sqrt{\sigma^2_{\mu}+\sigma^2_{U}}}\right)}{1-\Phi\left(\frac{\bar{y}-\bar{\mu}}{\sqrt{\sigma^2_{\mu}+\sigma^2_{U}}}\right)}\right)\\
+                  & = -\frac{\sigma^2_{\mu}+\rho\sigma^2_{U}}{\sqrt{\sigma^2_{\mu}+\sigma^2_{U}}}\left(\frac{\phi\left(\frac{\bar{y}-\bar{\mu}}{\sqrt{\sigma^2_{\mu}+\sigma^2_{U}}}\right)}{\Phi\left(\frac{\bar{y}-\bar{\mu}}{\sqrt{\sigma^2_{\mu}+\sigma^2_{U}}}\right)}+\frac{\phi\left(\frac{\bar{y}-\bar{\mu}}{\sqrt{\sigma^2_{\mu}+\sigma^2_{U}}}\right)}{1-\Phi\left(\frac{\bar{y}-\bar{\mu}}{\sqrt{\sigma^2_{\mu}+\sigma^2_{U}}}\right)}\right)
+\end{align*}
+%
+\normalsize
+\end{frame}
+
+\begin{frame}
+\frametitle{Time Trend Bias: Numerical Example}
+%
+\begin{itemize}
+  \item In the population, $\Delta^y_{TB}=$\Sexpr{round(delta.y.tb(param),3)}
+  \item In the sample, $\hat{\Delta^y_{TB}}=$\Sexpr{round(mean(y0[Ds==1])-mean(yB[Ds==1]),3)}
+  \item The counterfactual average outcome for the treated is $\frac{1}{\sum_{i=1}^ND_i}\sum_{i=1}^ND_iy^0_i=$ \Sexpr{round(mean(y0[Ds==1]),3)}
+  \item The average outcome for the treated before the treatment that we use to proxy for it is equal to $\frac{1}{\sum_{i=1}^ND_i}\sum_{i=1}^ND_iy^B_i=$\Sexpr{round(mean(yB[Ds==1]),3)}
+\end{itemize}
+%
+\end{frame}
+
+\subsection{Confounders}
+
+\begin{frame}
+\frametitle{Bias of Intuitive Estimators: Confounders}
+\begin{itemize}
+  \item Intuitive comparisons are biased because they generally fail to enforce the \textit{ceteris paribus}, every else is held constant, condition.
+  \item Generally, other influences are correlated with treatment allocation
+  \item These influences are called confounders, as they confound the effect of the treatment.
+  \item Because of confounders, correlation $\neq$ causation
+\end{itemize}
+\end{frame}
+
+% maybe joke about Karl Pearson and superiority of correlation over causality.
+
+\begin{frame}
+\frametitle{Why is There Selection Bias? Treatment Allocation}
+\begin{itemize}
+  \item The treatment allocation rule might generate selection bias.
+  \item Example: the threshold eligibility rule conditions on pre-treatment outcomes
+  \item Sicker individuals (or individuals with lower earnings) tend to enter the program
+  \item As sickness and earnings persists, participants tend to exhibit lower outcomes than non participants
+\end{itemize}
+%
+\end{frame}
+
+\begin{frame}
+\frametitle{Confounders: Numerical Example}
+%
+\begin{align*}
+D_i & = \uns{y^B_i\leq\bar{y}}\\
+y_i^B & = \mu_i + U_i^B \\
+y_i^0 & = \mu_i+\delta+\rho U_i^B + \epsilon_i \\
+\Delta^y_{SB}     & = \esp{\mu_i|\mu_i+U_i^B\leq\bar{y}}-\esp{\mu_i|\mu_i+U_i^B>\bar{y}} \\
+                  & \phantom{=} + \rho\left(\esp{U_i^B|\mu_i+U_i^B\leq\bar{y}}-\esp{U_i^B|\mu_i+U_i^B>\bar{y}}\right)
+\end{align*}
+%
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Selection Bias and Cross-Sectional Confounders}
+%
+<<conf.factors.CS,eval=TRUE,fig.cap='Distribution of the confounding factors in the treated and control group',fig.subcap=c('$\\mu_i$','$U_i^B$'),fig.align='center',out.width='.5\\textwidth',echo=FALSE,results='hide',fig.pos='htbp'>>=
+hist(mu[Ds==0],col=rgb(0.1,0.1,0.1,0.5),xlim=c(5,11),ylim=c(0,1),xlab="mu",main="",freq=F)
+hist(mu[Ds==1],add=T, col=rgb(0.8,0.8,0.8,0.5),freq=F)
+
+hist(UB[Ds==0],col=rgb(0.1,0.1,0.1,0.5),xlab="UB",main="",freq=F,ylim=c(0,1))
+hist(UB[Ds==1],add=T, col=rgb(0.8,0.8,0.8,0.5),freq=F)
+@
+%
+\end{frame}
+
+\begin{frame}
+\frametitle{Selection Bias and Potential Outcomes}
+%
+<<sel.bias.pot.out,eval=TRUE,fig.cap='Distribution of $y_i^0$ in the treated and control group',fig.align='center',out.width='.65\\textwidth',echo=FALSE,results='hide',fig.pos='htbp'>>=
+hist(y0[Ds==0],col=rgb(0.1,0.1,0.1,0.5),xlim=c(5,11),ylim=c(0,1),xlab="y0",main="",freq=F)
+hist(y0[Ds==1],add=T, col=rgb(0.8,0.8,0.8,0.5),freq=F)
+@
+%
+\end{frame}
+
+%
+<<SB.decomp,eval=TRUE,echo=FALSE,results='hide'>>=
+delta.y.sb.mu <- function(param){
+  return(-(param["sigma2mu"])/sqrt(param["sigma2mu"]+param["sigma2U"])
+         *dnorm((log(param["barY"])-param["barmu"])/(sqrt(param["sigma2mu"]+param["sigma2U"])))
+         *(1/pnorm((log(param["barY"])-param["barmu"])/(sqrt(param["sigma2mu"]+param["sigma2U"])))
+           +1/(1-pnorm((log(param["barY"])-param["barmu"])/(sqrt(param["sigma2mu"]+param["sigma2U"]))))))
+}
+delta.y.sb.U <- function(param){
+  return(-(param["rho"]*param["sigma2U"])/sqrt(param["sigma2mu"]+param["sigma2U"])
+         *dnorm((log(param["barY"])-param["barmu"])/(sqrt(param["sigma2mu"]+param["sigma2U"])))
+         *(1/pnorm((log(param["barY"])-param["barmu"])/(sqrt(param["sigma2mu"]+param["sigma2U"])))
+           +1/(1-pnorm((log(param["barY"])-param["barmu"])/(sqrt(param["sigma2mu"]+param["sigma2U"]))))))
+}
+@
+%
+
+\begin{frame}
+\frametitle{Selection Bias and Confounders: Numerical Example}
+The contribution of $\mu_i$ to selection bias is \Sexpr{round(delta.y.sb.mu(param),3)} while that of $U_i^0$ is of \Sexpr{round(delta.y.sb.U(param),3)}.
+\end{frame}
+
+\begin{frame}
+\frametitle{Why is There Time Trend Bias? Temporal Confounders}
+\begin{itemize}
+  \item The treatment might be concomittant to other changes in the economy.
+  \item Example: price changes, technology diffusion, business cycle, etc.
+  \item The treatment allocation rule might interact with outcome dynamics and generate regression to the mean 
+  \item Example: initially sicker individuals eventually get better even without treatment
+\end{itemize}
+%
+\end{frame}
+
+\begin{frame}
+\frametitle{Why is There Time Trend Bias? Numerical Example}
+%
+\begin{align*}
+\Delta^y_{TB}     & = \delta + \esp{\mu_i|D_i=1}-\esp{\mu_i|D_i=1} + (\rho-1)\esp{U_i^B|D_i=1}\\
+                  & = \delta + (\rho-1)\esp{U_i^B|\mu_i+U_i^B\leq\bar{y}}
+\end{align*}
+%
+\end{frame}
+
+\begin{frame}
+\frametitle{Time Trend Bias and Confounders: Numerical Example}
+The contribution of $\delta$ to selection bias is \Sexpr{param['delta']} while that of $U^B_i$ is of \Sexpr{round(delta.y.tb(param)-param["delta"],3)}.
+\end{frame}
+
+\subsection{Conditions of Validity of Intuitive Comparisons}
+
+\subsubsection{With/without comparison}
+
+\begin{frame}
+\frametitle{Identifying TT Using WW: Assumption}
+%
+\begin{assumption}[No selection bias]\label{hyp:noselb}
+%
+\begin{align*}
+\esp{Y_i^0|D_i=1} & = \esp{Y_i^0|D_i=0}.
+\end{align*}
+%
+\end{assumption}
+%
+\end{frame}
+
+\begin{frame}
+\frametitle{Identifying TT Using WW: Theorem}
+%
+\begin{theorem}\label{th:wwtt}
+Under this assumption, $WW$ identifies the $TT$ parameter:
+%
+\begin{align*}
+\Delta^Y_{WW} & = \Delta^Y_{TT}.
+\end{align*}
+%
+\end{theorem}
+%
+%
+\begin{proof}
+%
+\begin{align*}
+\Delta^Y_{WW} & = \esp{Y_i|D_i=1}-\esp{Y_i|D_i=0}\\
+              & = \esp{Y_i^1|D_i=1}-\esp{Y_i^0|D_i=0}\\
+              & = \esp{Y_i^1|D_i=1}-\esp{Y_i^0|D_i=1} \\
+              & = \Delta^Y_{TT},
+\end{align*}
+where the second equation uses the switching equation and the third uses the assumption.
+\end{proof}
+%
+\end{frame}
+
+\begin{frame}
+ \frametitle{No Selection Bias in The Model Used in the Simulations}
+%
+\begin{align*}
+D_i & = \uns{V_i\leq\bar{y}} \\
+V_i & \sim\mathcal{N}(\bar{\mu},\sigma^2_{\mu}+\sigma^2_{U}),
+\end{align*}
+%
+where $\bar{y}=\ln(\bar{Y})$.
+\end{frame}   
+
+%
+<<simul.no.selb,eval=TRUE,echo=FALSE,results='hide'>>=
+set.seed(1234)
+N <-1000
+mu <- rnorm(N,param["barmu"],sqrt(param["sigma2mu"]))
+UB <- rnorm(N,0,sqrt(param["sigma2U"]))
+yB <- mu + UB 
+Ds <- rep(0,N)
+V <- rnorm(N,param["barmu"],sqrt(param["sigma2mu"]+param["sigma2U"]))
+Ds[V<=log(param["barY"])] <- 1 
+epsilon <- rnorm(N,0,sqrt(param["sigma2epsilon"]))
+eta<- rnorm(N,0,sqrt(param["sigma2eta"]))
+U0 <- param["rho"]*UB + epsilon
+y0 <- mu +  U0 + param["delta"]
+alpha <- param["baralpha"]+  param["theta"]*mu + eta
+y1 <- y0+alpha
+Y0 <- exp(y0)
+Y1 <- exp(y1)
+y <- y1*Ds+y0*(1-Ds)
+Y <- Y1*Ds+Y0*(1-Ds)
+@
+%
+
+\begin{frame}
+\frametitle{Absence of Selection Bias: Illustration}
+%
+<<no.sel.bias.obs.pot,eval=TRUE,fig.cap='Observed and potential outcomes',fig.subcap=c('Observed outcomes','Potential outcomes'),fig.align='center',out.width='.5\\textwidth',echo=FALSE,results='hide',fig.pos='htbp'>>=
+plot(V[Ds==0],y0[Ds==0],pch=1,xlim=c(5,11),ylim=c(5,11),xlab="V",ylab="Outcomes")
+points(V[Ds==1],y1[Ds==1],pch=3)
+legend(5,11,c('y|D=0','y|D=1'),pch=c(1,3))
+abline(v=log(param["barY"]),col=col.unobs)
+
+plot(V[Ds==0],y0[Ds==0],pch=1,xlim=c(5,11),ylim=c(5,11),xlab="V",ylab="Outcomes")
+points(V[Ds==1],y1[Ds==1],pch=3)
+points(V[Ds==0],y1[Ds==0],pch=3,col=col.unobs)
+points(V[Ds==1],y0[Ds==1],pch=1,col=col.unobs)
+abline(v=log(param["barY"]),col=col.unobs)
+legend(5,11,c('y0|D=0','y1|D=1','y0|D=1','y1|D=0'),pch=c(1,3,1,3),col=c(col.obs,col.obs,col.unobs,col.unobs),ncol=2)
+@
+%
+\end{frame}
+
+\begin{frame}
+\frametitle{TT in the Example Without Selection Bias}
+In the numerical example used in the class, we can derive the value of TT in the absence of Selection Bias:
+%
+\begin{align*}
+\Delta^y_{TT} & = \esp{\Delta^y_i|D_i=1}\\
+              & = \bar{\alpha}+\theta\esp{\mu_i|V_i\leq\bar{y}}\\
+              & = \bar{\alpha}+\theta\esp{\mu_i}\\
+              & = \bar{\alpha}+\theta\bar{\mu}.
+\end{align*}
+%
+The value of TT in our example without selection bias is \Sexpr{delta.y.ate(param)}.\\
+% the function for computing it is in the code chunk above named delta.y.ate
+$\hat{\Delta^y_{TT}}=$\Sexpr{round(mean(alpha[Ds==1]),3)}$\approx$\Sexpr{round(mean(y[Ds==1])-mean(y[Ds==0]),3)}$=\hat{\Delta^y_{WW}}$
+\end{frame}
+
+\begin{frame}
+\frametitle{Placebo Test}
+ In the absence of the treatment, no treatment effect should be detected before the program is implemented
+%
+\begin{align*}
+  \Delta^{Y^B}_{WW} & = \esp{Y_i^B|D_i=1} - \esp{Y_i^B|D_i=0} \\
+                    & = 0
+\end{align*}
+%
+\end{frame}
+
+\begin{frame}
+\frametitle{Placebo Test: Numerical Example}
+$\hat{\esp{Y_i^B|D_i=1}}=$ \Sexpr{round(mean(yB[Ds==1]),3)}$\approx$\Sexpr{round(mean(yB[Ds==0]),3)}$=\hat{\esp{Y_i^B|D_i=0}}$
+\end{frame}
+
+\subsubsection{Before/after comparison}
+
+\begin{frame}
+\frametitle{Identifying TT Using BA: Assumption}
+%
+\begin{assumption}[No time trend bias]\label{hyp:notb}
+%
+\begin{align*}
+\esp{Y_i^0|D_i=1} & = \esp{Y_i^B|D_i=1}.
+\end{align*}
+%
+\end{assumption}
+%
+\end{frame}
+
+\begin{frame}
+\frametitle{Identifying TT Using BA: Theorem}
+%
+\begin{theorem}\label{th:batt}
+Under this assumption, $BA$ identifies the $TT$ parameter:
+%
+\begin{align*}
+\Delta^Y_{BA} & = \Delta^Y_{TT}.
+\end{align*}
+%
+\end{theorem}
+%
+%
+\begin{proof}
+%
+\begin{align*}
+\Delta^Y_{BA} & = \esp{Y_i|D_i=1}-\esp{Y_i^B|D_i=1}\\
+              & = \esp{Y_i^1|D_i=1}-\esp{Y_i^0|D_i=1}\\
+              & = \Delta^Y_{TT}
+\end{align*}
+\end{proof}
+%
+\end{frame}
+
+\begin{frame}
+ \frametitle{No Time Trend Bias in The Model Used in the Simulations}
+%
+\begin{align*}
+\delta & = 0 \\
+\rho & = 0
+\end{align*}
+%
+\end{frame}   
+
+%
+<<param.no.tb,eval=TRUE,echo=FALSE>>=
+param <- c(8,0.5,.28,1500,1,0.01,0.05,0.05,0,0.1)
+names(param) <- c("barmu","sigma2mu","sigma2U","barY","rho","theta","sigma2epsilon","sigma2eta","delta","baralpha")
+@
+%
+%
+<<simul.no.tb,eval=TRUE,echo=FALSE,results='hide'>>=
+set.seed(1234)
+mu <- rnorm(N,param["barmu"],sqrt(param["sigma2mu"]))
+UB <- rnorm(N,0,sqrt(param["sigma2U"]))
+yB <- mu + UB 
+YB <- exp(yB)
+Ds <- rep(0,N)
+Ds[YB<=param["barY"]] <- 1 
+epsilon <- rnorm(N,0,sqrt(param["sigma2epsilon"]))
+eta<- rnorm(N,0,sqrt(param["sigma2eta"]))
+U0 <- param["rho"]*UB + epsilon
+y0 <- mu +  U0 + param["delta"]
+alpha <- param["baralpha"]+  param["theta"]*mu + eta
+y1 <- y0+alpha
+Y0 <- exp(y0)
+Y1 <- exp(y1)
+y <- y1*Ds+y0*(1-Ds)
+Y <- Y1*Ds+Y0*(1-Ds)
+@
+%
+
+\begin{frame}
+\frametitle{TT in the Example Without Time Trend Bias}
+$\hat{\Delta^y_{BA}}=$ \Sexpr{round(mean(y[Ds==1])-mean(yB[Ds==1]),3)}$\approx$\Sexpr{round(mean(alpha[Ds==1]),3)}$=\Delta^y_{TT_s}$.
+\end{frame}
+
+\begin{frame}
+\frametitle{Placebo test for the BA estimator}
+We cannot perform a placebo test using two periods of pre-treatment outcomes for the treated since we have generated only one period of pre-treatment outcome. 
+We will be able to perform this test later in the DID lecture.\\
+
+We can perfom the placebo test that applies the $BA$ estimator to the untreated.
+$\hat{\Delta^y_{BA|D=0}}=$\Sexpr{round(mean(y[Ds==0])-mean(yB[Ds==0]),3)}$\approx0$
+\end{frame}
+
+\begin{frame}
+\frametitle{Exercises}
+%
+\begin{enumerate}
+  \item Install R, Miktex and Rstudio
+  \item Install knitr package
+  \item Configure Rstudio with knitr
+  \item Create a knitr file .Rnw
+  \item Generate the data with baseline parameter values
+  \item plot Figure 1 and Table 1
+  \item plot potential outcomes along $y^B_i$ as in the slides
+  \item Compute $TT_s$, $\hat{WW}$ and $\hat{SB}$ 
+  \item Compute $\hat{BA}$ and $\hat{TB}$
+  \item Generate data without selection bias and compute $\hat{WW}$ and $\hat{SB}$
+  \item Compute placebo test
+  \item Generate data without time trend bias and compute $\hat{BA}$ and $\hat{TB}$
+  \item Compute placebo test
+\end{enumerate}
+%
+\end{frame}
+
+\section{The Fundamental Problem of Statistical Inference}
+
+\subsection{Sampling Noise: Illustration, Definition and Reporting}
+
+\subsubsection{Sampling Noise: Illustration}
+
+\begin{frame}
+ \frametitle{The Fundamental Problem of Statistical Inference}
+$E$ is unobserved when $N<\infty$.
+\end{frame}   
+
+<<param.reset,eval=TRUE,echo=FALSE,results='hide'>>=
+param <- c(8,.5,.28,1500,0.9,0.01,0.05,0.05,0.05,0.1)
+names(param) <- c("barmu","sigma2mu","sigma2U","barY","rho","theta","sigma2epsilon","sigma2eta","delta","baralpha")
+@
+%
+
+\begin{frame}
+ \frametitle{FPSI: Illustration}
+<<FPSI.illus,eval=TRUE,echo=FALSE,results='hide',echo=FALSE,warning=FALSE,error=FALSE,message=FALSE,fig.cap='FPSI',fig.align='center',out.width='.65\\textwidth',fig.pos='htbp'>>=
+plot(1, type="n", xlab="", ylab="", xlim=xlim.small, ylim=c(0, 10))
+abline(v=R)
+abline(v=delta.y.ate(param),col=col.unobs,lty=lty.unobs)
+abline(v=delta.y.ate(param),col=col.unobs,lty=lty.unobs)
+text(x=c(R,delta.y.ate(param),delta.y.ate(param)),y=c(adj),labels=c('R','TT','E'),pos=c(2,2,4),col=c(col.obs,col.unobs,col.unobs),lty=c(lty.obs,lty.unobs,lty.obs))
+@
+\end{frame}   
+
+\begin{frame}
+ \frametitle{What Do We Observe? Sample Estimator}
+From a sample of size $N$, we can form an estimator $\hat{E}$ analogous to the population estimator $E$.
+\end{frame}   
+
+\begin{frame}
+ \frametitle{Sample Estimator: Example of WW}
+  %
+  \begin{align*}
+    \Delta^Y_{WW} & = \esp{Y_i|D_i=1} - \esp{Y_i|D_i=0} \\
+    \hat{\Delta^Y_{WW}} & = \frac{1}{\sum_{i=1}^N D_i}\sum_{i=1}^N Y_iD_i-\frac{1}{\sum_{i=1}^N (1-D_i)}\sum_{i=1}^N Y_i(1-D_i).
+  \end{align*}
+%
+\end{frame}   
+
+%
+<<simul.no.selb.12345,eval=TRUE,echo=FALSE,results='hide'>>=
+set.seed(12345)
+N <-1000
+mu <- rnorm(N,param["barmu"],sqrt(param["sigma2mu"]))
+UB <- rnorm(N,0,sqrt(param["sigma2U"]))
+yB <- mu + UB 
+Ds <- rep(0,N)
+V <- rnorm(N,param["barmu"],sqrt(param["sigma2mu"]+param["sigma2U"]))
+Ds[V<=log(param["barY"])] <- 1 
+epsilon <- rnorm(N,0,sqrt(param["sigma2epsilon"]))
+eta<- rnorm(N,0,sqrt(param["sigma2eta"]))
+U0 <- param["rho"]*UB + epsilon
+y0 <- mu +  U0 + param["delta"]
+alpha <- param["baralpha"]+  param["theta"]*mu + eta
+y1 <- y0+alpha
+Y0 <- exp(y0)
+Y1 <- exp(y1)
+y <- y1*Ds+y0*(1-Ds)
+Y <- Y1*Ds+Y0*(1-Ds)
+hat.delta.y.ww.12345 <- (1/sum(Ds))*sum(y*Ds)-(1/sum(1-Ds))*sum(y*(1-Ds))
+@
+%
+%
+<<simul.no.selb.1234,eval=TRUE,echo=FALSE,results='hide'>>=
+set.seed(1234)
+N <-1000
+mu <- rnorm(N,param["barmu"],sqrt(param["sigma2mu"]))
+UB <- rnorm(N,0,sqrt(param["sigma2U"]))
+yB <- mu + UB 
+Ds <- rep(0,N)
+V <- rnorm(N,param["barmu"],sqrt(param["sigma2mu"]+param["sigma2U"]))
+Ds[V<=log(param["barY"])] <- 1 
+epsilon <- rnorm(N,0,sqrt(param["sigma2epsilon"]))
+eta<- rnorm(N,0,sqrt(param["sigma2eta"]))
+U0 <- param["rho"]*UB + epsilon
+y0 <- mu +  U0 + param["delta"]
+alpha <- param["baralpha"]+  param["theta"]*mu + eta
+y1 <- y0+alpha
+Y0 <- exp(y0)
+Y1 <- exp(y1)
+y <- y1*Ds+y0*(1-Ds)
+Y <- Y1*Ds+Y0*(1-Ds)
+hat.delta.y.ww.1234 <- (1/sum(Ds))*sum(y*Ds)-(1/sum(1-Ds))*sum(y*(1-Ds))
+@
+%
+
+\begin{frame}
+ \frametitle{Illustration}
+<<hat.WW.illus,eval=TRUE,echo=FALSE,results='hide',echo=FALSE,warning=FALSE,error=FALSE,message=FALSE,fig.cap='Sample Estimators',fig.align='center',out.width='.65\\textwidth',fig.pos='htbp'>>=
+plot(1, type="n", xlab="", ylab="", xlim=xlim.small, ylim=c(0, 10))
+abline(v=R)
+abline(v=delta.y.ate(param),col=col.unobs,lty=lty.unobs)
+abline(v=delta.y.ate(param),col=col.unobs,lty=lty.unobs)
+abline(v=hat.delta.y.ww.1234,col=col.obs,lty=lty.obs)
+abline(v=hat.delta.y.ww.12345,col=col.obs,lty=lty.obs)
+text(x=c(R,delta.y.ate(param),delta.y.ate(param),hat.delta.y.ww.1234,hat.delta.y.ww.12345),y=c(adj,adj,adj,adj,0.5),labels=c('R','TT','E',expression(hat('E1')),expression(hat('E2'))),pos=c(2,2,4,2,4),col=c(col.obs,col.unobs,col.unobs,col.obs,col.obs),lty=c(lty.obs,lty.unobs,lty.unobs,lty.obs,lty.obs))
+@
+\end{frame}   
+
+\begin{frame}
+ \frametitle{Why Does $\hat{E}\neq E$? Sampling Noise}
+Even with random sampling, a given sample does not perfectly represent the population. Some parts are overrepresented, some parts underrepresented:
+%
+\begin{itemize}
+  \item The treated and untreated groups might have different distributions of the confounders.
+  \item The distribution of the individual treatment effect might differ from the population one.
+\end{itemize}
+%
+For each given sample, we are going to make a mistake.
+
+Because of sampling noise, $\hat{E}$ gives a blurry image of $E$.
+\end{frame}   
+
+%
+<<monte.carlo,eval=TRUE,echo=FALSE,warning=FALSE,error=FALSE,message=FALSE,results='hide',cache=TRUE>>=
+monte.carlo.ww <- function(s,N,param){
+  set.seed(s)
+  mu <- rnorm(N,param["barmu"],sqrt(param["sigma2mu"]))
+  UB <- rnorm(N,0,sqrt(param["sigma2U"]))
+  yB <- mu + UB 
+  YB <- exp(yB)
+  Ds <- rep(0,N)
+  V <- rnorm(N,param["barmu"],sqrt(param["sigma2mu"]+param["sigma2U"]))
+  Ds[V<=log(param["barY"])] <- 1 
+  epsilon <- rnorm(N,0,sqrt(param["sigma2epsilon"]))
+  eta<- rnorm(N,0,sqrt(param["sigma2eta"]))
+  U0 <- param["rho"]*UB + epsilon
+  y0 <- mu +  U0 + param["delta"]
+  alpha <- param["baralpha"]+  param["theta"]*mu + eta
+  y1 <- y0+alpha
+  Y0 <- exp(y0)
+  Y1 <- exp(y1)
+  y <- y1*Ds+y0*(1-Ds)
+  Y <- Y1*Ds+Y0*(1-Ds)
+  return(c((1/sum(Ds))*sum(y*Ds)-(1/sum(1-Ds))*sum(y*(1-Ds)),var(y[Ds==1]),var(y[Ds==0]),mean(Ds)))
+}
+
+simuls.ww.N <- function(N,Nsim,param){
+  simuls.ww <- matrix(unlist(lapply(1:Nsim,monte.carlo.ww,N=N,param=param)),nrow=Nsim,ncol=4,byrow=TRUE)
+  colnames(simuls.ww) <- c('WW','V1','V0','p')
+  return(simuls.ww)
+}
+
+sf.simuls.ww.N <- function(N,Nsim,param){
+  sfInit(parallel=TRUE,cpus=8)
+  sim <- matrix(unlist(sfLapply(1:Nsim,monte.carlo.ww,N=N,param=param)),nrow=Nsim,ncol=4,byrow=TRUE)
+  sfStop()
+  colnames(sim) <- c('WW','V1','V0','p')
+  return(sim)
+}
+
+Nsim <- 1000
+#Nsim <- 10
+N.sample <- c(100,1000,10000,100000)
+#N.sample <- c(100,1000,10000)
+
+simuls.ww <- lapply(N.sample,sf.simuls.ww.N,Nsim=Nsim,param=param)
+names(simuls.ww) <- N.sample
+@
+%
+
+\begin{frame}
+ \frametitle{Sampling Noise: Illustration}
+%
+<<monte.carlo.hist,dependson='monte.carlo',eval=TRUE,echo=FALSE,warning=FALSE,error=FALSE,message=FALSE,results='hide',fig.cap='Distribution of the $WW$ estimator over replications of samples of different sizes',fig.align='center',out.width='.65\\textwidth',fig.pos='htbp'>>=
+par(mfrow=c(2,2))
+for (i in 1:length(simuls.ww)){
+  hist(simuls.ww[[i]][,'WW'],main=paste('N=',as.character(N.sample[i])),xlab=expression(hat(Delta^yWW)),xlim=c(-0.15,0.55))
+  abline(v=delta.y.ate(param),col="red")
+}
+@
+%
+\end{frame}   
+
+% it would be cool to test the validity of the CLT using non normal shocks (student, Beta, Cauchy)
+
+\begin{frame}
+ \frametitle{What Can We Do to Solve the Fundamental Problem of Statistical Inference?}
+%
+\begin{enumerate}
+  \item Estimate sampling noise and report it adequately (using confidence intervals)
+  \item Decrease sampling noise
+  \begin{itemize}
+   \item Increasing sample size
+   \item Stratifying
+   \item Conditioning
+  \end{itemize}
+\end{enumerate}
+%
+\end{frame}   
+
+\subsubsection{Sampling Noise: Definition}
+
+\begin{frame}
+ \frametitle{Sampling Noise: a Definition}
+ %
+\begin{definition}[Sampling Noise (Symmetric)] 
+Sampling noise $2\epsilon$ is the width of the symmetric interval around TT within which $\delta*100$\% of the sample estimators fall, where $\delta$ is the confidence level:
+\end{definition}
+%
+\begin{align*}
+\Pr(|\hat{E}-TT|\leq\epsilon) &= \delta
+\end{align*}
+%
+\end{frame}   
+
+\begin{frame}
+ \frametitle{Another Definition of Sampling Noise}
+ %
+\begin{definition}[Sampling Noise (Asymmetric)] 
+Sampling noise $2\epsilon$ is the width of the possibly asymmetric interval around TT such that each tail not in the interval contains $(1-\delta/2)*100$\% of the sample estimators, where $\delta$ is the confidence level:
+\end{definition}
+%
+\begin{align*}
+2\epsilon & = \hat{E}_{\frac{1+\delta}{2}}-\hat{E}_{\frac{1-\delta}{2}},
+\end{align*}
+%
+where $\hat{E}_{q}$ is the $q^{\text{th}}$ quantile of the distribution of $\hat{E}$.
+\end{frame}   
+
+\begin{frame}
+ \frametitle{What is Sampling Noise? Illustration}
+<<precision,dependson='monte.carlo',eval=TRUE,echo=FALSE,results='hide',echo=FALSE,warning=FALSE,error=FALSE,message=FALSE,fig.cap='Symmetric sampling noise of the WW estimator (99\\% confidence) fot the population TT',fig.align='center',out.width='.65\\textwidth',fig.pos='htbp'>>=
+delta <- 0.99
+precision.ww <- function(k){
+  return(2*quantile(abs(simuls.ww[[k]][,'WW']-delta.y.ate(param)),probs=c(delta)))
+}
+precision.ww.N <- sapply(1:length(simuls.ww),precision.ww)
+precision <- as.data.frame(cbind(N.sample,precision.ww.N,rep(delta.y.ate(param),length(simuls.ww))))
+colnames(precision) <- c('N','precision','TT')
+ggplot(precision, aes(x=as.factor(N), y=TT)) +
+  geom_bar(position=position_dodge(), stat="identity", colour='black') +
+  geom_errorbar(aes(ymin=TT-precision/2, ymax=TT+precision/2), width=.2,position=position_dodge(.9),color='red') +
+  xlab("Sample Size") 
+@
+\end{frame}   
+
+\begin{frame}
+ \frametitle{Sampling Noise of the Sample Treatment Effect}
+ \centering
+\includegraphics[width=0.7\textwidth]{./figure/precision_pop_sample-1.pdf}
+\end{frame}   
+
+\begin{frame}
+ \frametitle{Sampling Noise of the Sample Treatment Effect}
+Imbens and Rubin show that sampling noise for $WW$ when estimating $TT$ and $TT_s$ is extremely close, up to a covariance term between potential outcomes that is in general impossible to estimate.
+\end{frame}   
+
+\subsubsection{Reporting Sampling Noise Using Confidence Intervals}
+
+\begin{frame}
+ \frametitle{Reporting Sampling Noise Using Confidence Intervals}
+%
+\begin{theorem}[Confidence interval]\label{th:conf.inter}
+For a given level of confidence $\delta$ and corresponding level of symmetric sampling noise $2\epsilon$ of the estimator $\hat{E}$ of $TT$, the confidence interval $\left\{\hat{E}-\epsilon,\hat{E}+\epsilon\right\}$ is such that the probability that it contains $TT$ is equal to $\delta$ over sample replications:
+%
+\begin{align*}
+  \Pr(\hat{E}-\epsilon\leq TT\leq\hat{E}+\epsilon) & = \delta.
+\end{align*}
+%
+\end{theorem}
+%
+\end{frame}   
+
+\begin{frame}
+ \frametitle{Reporting Sampling Noise Using Confidence Intervals: Illustration}
+ \centering
+\includegraphics[width=0.6\textwidth]{./figure/conf_interval-1.pdf}
+\end{frame}   
+
+\subsection{Estimating Sampling Noise}
+
+\begin{frame}
+ \frametitle{How Can We Estimate Sampling Noise?}
+%
+\begin{enumerate}
+  \item Upper bound using Chebyshev's inequality
+  \item Approximation using CLT (asymptotic)
+  \item Approximation using resampling methods (bootstrap)
+  \item Approximation using Fisher's permutation method
+\end{enumerate}
+%
+\end{frame}  
+
+\subsubsection{Assumptions}
+
+\begin{frame}
+ \frametitle{Assumptions: No selection bias}
+%
+\begin{assumption}[No selection bias]\label{hyp:noselb}
+We assume the following:
+%
+\begin{align*}
+\esp{Y_i^0|D_i=1} & = \esp{Y_i^0|D_i=0}.
+\end{align*}
+%
+\end{assumption}
+%
+\end{frame}  
+
+\begin{frame}
+ \frametitle{Assumptions: Full rank}
+%
+\begin{assumption}[Full rank]\label{hyp:fullrank}
+We assume that there is at least one observation in the sample that receives the treatment and one observation that does not receive it: 
+\begin{align*}
+\exists i,j\leq N \text{ such that } & D_i=1 \& D_j=0.
+\end{align*}
+\end{assumption}
+%
+\end{frame}  
+
+\begin{frame}
+ \frametitle{Assumptions: i.i.d. sampling}
+%
+\begin{assumption}[i.i.d. sampling]\label{hyp:iid}
+We assume that the observations in the sample are identically and independently distributed: 
+\begin{align*}
+\forall i,j\leq N\text{, }i\neq j\text{, } & (Y_i,D_i)\Ind(Y_j,D_j),\\
+                                           & (Y_i,D_i)\&(Y_j,D_j)\sim F_{Y,D}.
+\end{align*}
+\end{assumption}
+%
+\end{frame}  
+
+\begin{frame}
+ \frametitle{Assumptions: Finite variances}
+%
+\begin{assumption}[Finite variance of $\hat{\Delta^Y_{WW}}$]\label{hyp:finitevar}
+We assume that $\var{Y^1|D_i=1}$ and $\var{Y^0|D_i=0}$ are finite.
+\end{assumption}
+%
+\end{frame}  
+
+\subsubsection{Estimating Sampling Noise Using Chebyshev's Inequality}
+
+\begin{frame}
+ \frametitle{Chebyshev's Inequality}
+%
+\begin{theorem}[Chebyshev's inequality]\label{th:cheb}
+For any unbiased estimator $\hat{\theta}$, sampling noise level $2\epsilon$ and confidence level $\delta$, sampling noise is bounded from above:
+%
+\begin{align*}
+2\epsilon \leq 2\sqrt{\frac{\var{\hat{\theta}}}{1-\delta}}.
+\end{align*}
+%
+\end{theorem}
+%
+In order to use this theorem to gauge the precision of WW, we need to recover values $\var{\hat{\Delta^Y_{WW}}}$.
+\end{frame}  
+
+\begin{frame}
+ \frametitle{Chebyshev's Upper Bound on Sampling Noise of WW}
+%
+\begin{theorem}[Chebyshev's Upper bound on the sampling noise of $\hat{WW}$]\label{th:upp.samp.noise}
+Under Assumption No Selection Bias, Full Rank, i.i.d. and Finite Variances, for a given confidence level $\delta$, the sampling noise of the $\hat{WW}$ estimator is bounded from above:
+%
+\begin{align*}
+2\epsilon \leq 2\sqrt{\frac{1}{N(1-\delta)}\left(\frac{\var{Y_i^1|D_i=1}}{\Pr(D_i=1)}+\frac{\var{Y_i^0|D_i=0}}{1-\Pr(D_i=1)}\right)}\equiv 2\bar{\epsilon}.
+\end{align*}
+%
+\end{theorem}
+%
+\end{frame}  
+
+\begin{frame}
+ \frametitle{Chebyshev's Upper Bound on Sampling Noise of WW: Illustration}
+ \centering
+\includegraphics[width=0.7\textwidth]{./figure/samp_noise_ww_cheb_all-1.pdf}
+\end{frame}   
+
+\begin{frame}
+ \frametitle{Chebyshev's Upper Bound on Sampling Noise of WW: Illustration}
+ \centering
+\includegraphics[width=0.7\textwidth]{./figure/samp_noise_ww_cheb_plot-1.pdf}
+\end{frame}   
+
+\begin{frame}
+ \frametitle{Chebyshev's Upper Bound on Confidence Intervals: Illustration}
+ \centering
+\includegraphics[width=0.6\textwidth]{./figure/conf_interval_cheb-1.pdf}
+\end{frame}   
+
+\subsubsection{Estimating Sampling Noise Using the Central Limit Theorem}
+
+\begin{frame}
+ \frametitle{Problems with Chebyshev's Inequality}
+%
+\begin{itemize}
+  \item $\bar{\epsilon}>\epsilon$ is too conservative (wide): overestimate sampling noise and underestimate precision
+  \item $\bar{N}>N$ is too large: overestimate sample size
+\end{itemize}
+%
+Instead of bounds, why not try to obtain approximations?
+\end{frame}  
+
+\begin{frame}
+ \frametitle{Central Limit Theorem}
+%
+\begin{theorem}[Central Limit Theorem]\label{th:CLT}
+Let $X_i$ be i.i.d. random variables with $\esp{X_i}=\mu$ and $\var{X_i}=\sigma^2$, and define $Z_N=\frac{\frac{1}{N}\sum_{i=1}^NX_i-\mu}{\frac{\sigma}{\sqrt{N}}}$, then, for all $z$ we have:
+%
+\begin{align*}
+\lim_{N\rightarrow\infty}\Pr(Z_N\leq z) & = \Phi(z),
+\end{align*}
+%
+where $\Phi$ is the cumulative distribution function of the centered standardized normal.
+\end{theorem}
+We say that $Z_N$ converges in distribution to a standard normal random variable, and we denote: $Z_N\stackrel{d}{\rightarrow}\mathcal{N}(0,1)$.
+\end{frame}  
+
+\begin{frame}
+ \frametitle{Asymptotic Distribution of WW}
+%
+\begin{theorem}[CLT-based Estimate of Sampling Noise of WW]\label{th:asympnoiseWW}
+Under Assumptions No Selection Bias, Full Rank, i.i.d. and Finite Variances, for a given confidence level $\delta$ and sample size $N$, the sampling noise of $\hat{WW}$ can be approximated as follows:
+%
+\begin{align*}
+2\epsilon & \approx 2\Phi^{-1}\left(\frac{\delta+1}{2}\right)\frac{1}{\sqrt{N}}\sqrt{\frac{\var{Y_i^1|D_i=1}}{\Pr(D_i=1)}+\frac{\var{Y_i^0|D_i=0}}{1-\Pr(D_i=1)}} \equiv 2\tilde{\epsilon}.
+\end{align*}
+%
+\end{theorem}
+\end{frame}  
+
+\begin{frame}
+ \frametitle{CLT approximation of Sampling Noise of WW: Illustration}
+ \centering
+\includegraphics[width=0.7\textwidth]{./figure/samp_noise_ww_CLT_all-1.pdf}
+\end{frame}   
+
+\begin{frame}
+ \frametitle{CLT approximation of Sampling Noise of WW: Illustration}
+ \centering
+\includegraphics[width=0.7\textwidth]{./figure/samp_noise_ww_CLT_plot-1.pdf}
+\end{frame}   
+
+\begin{frame}
+ \frametitle{CLT approximation of Confidence Intervals: Illustration}
+ \centering
+\includegraphics[width=0.6\textwidth]{./figure/conf_interval_CLT-1.pdf}
+\end{frame}   
+
+\begin{frame}
+ \frametitle{Proof: outline}
+In order to prove this theorem, I follow the following procedure:
+%
+\begin{enumerate}
+  \item Prove that WW = OLS
+  \item Prove that OLS is normally asymptotically distributed using
+  %
+  \begin{itemize}
+    \item CLT
+    \item Slutsky's Theorem
+    \item Delta Method
+  \end{itemize}
+  %
+\end{enumerate}
+%
+\end{frame}  
+
+\begin{frame}
+ \frametitle{Where it OLS Makes Sense: WW is OLS!}
+%
+\begin{lemma}[WW is OLS]
+Under the Full Rank Assumption, the OLS coefficient $\beta$ in the following regression: 
+%
+\begin{align*}
+		Y_i &  = \alpha +  \beta D_i + U_i
+	\end{align*}
+%
+is the WW estimator:
+%
+\begin{align*}
+\hat{\beta}_{OLS} & = \frac{\frac{1}{N}\sum_{i=1}^N\left(Y_i-\frac{1}{N}\sum_{i=1}^NY_i\right)\left(D_i-\frac{1}{N}\sum_{i=1}^ND_i\right)}{\frac{1}{N}\sum_{i=1}^N\left(D_i-\frac{1}{N}\sum_{i=1}^ND_i\right)^2} \\
+  								& = \hat{\Delta^Y_{WW}}.
+\end{align*}
+%
+\end{lemma}
+%
+\end{frame}  
+
+\begin{frame}
+ \frametitle{From RCM to OLS}
+%
+\begin{align*}
+    Y_i &  = \alpha +  \beta D_i + U_i
+	\end{align*}
+%
+Using RCM, we can also show that:
+%
+\begin{align*}
+    \alpha & = \esp{Y_i^0|D_i=0}  \\
+    \beta  & =  \Delta^Y_{TT} \\
+    U_i    & = Y^0_i-\esp{Y^0_i|D_i=0} + D_i(\Delta^Y_i-\Delta^Y_{TT})
+	\end{align*}
+\end{frame}  
+
+\begin{frame}
+ \frametitle{No Selection Bias and the Error Term } 
+Under No Selection Bias, $U_i$ is mean independent of $D_i$:
+%
+\begin{align*}
+    \esp{U_i|D_i=0} & = \esp{Y^0_i|D_i=0}-\esp{Y^0_i|D_i=0}=0   \\
+    \esp{U_i|D_i=1} & = \esp{Y^0_i|D_i=1}-\esp{Y^0_i|D_i=0} \\
+                    & =\esp{Y^0_i|D_i=0}-\esp{Y^0_i|D_i=0}=0
+  \end{align*}
+%
+\end{frame}  
+
+\begin{frame}
+ \frametitle{RCM, OLS and Heteroskedasticity}
+ Under No Selection Bias, we have:
+ %
+\begin{align*}
+    U_i    & = (1-D_i)(Y^0_i-\esp{Y^0_i|D_i=0}) + D_i(Y_i^1-\esp{Y^1_i|D_i=1})
+  \end{align*}
+%
+There is heteroskedasticity because the outcomes of the treated and of the untreated have different variances:
+%
+\begin{align*}
+    \var{U_i|D_i=d} & = \esp{U_i^2|D_i=d}  \\
+                    & = \esp{(Y^d_i-\esp{Y^d_i|D_i=d})^2|D_i=d}  \\
+                    & = \var{Y_i^d|D_i=d}
+  \end{align*}
+%
+\end{frame}  
+
+\begin{frame}
+ \frametitle{Using OLS Heteroskedasticity-Robust Strandard Errors}
+Use sandwich library and vcovHC command.
+
+Rough estimate
+%
+\begin{itemize}
+  \item 95\% Sampling Noise $\approx$ 4*s.e.
+  \item 99\% Sampling Noise $\approx$ 5*s.e.
+\end{itemize}
+%
+\end{frame}  
+
+\subsubsection{Estimating Sampling Noise Using Resampling Methods}
+
+\begin{frame}
+ \frametitle{Problems with the CLT}
+%
+\begin{itemize}
+  \item Sometimes imprecise in small samples (if non normal errors)
+  \item Bad in the tails (nonuniform approximation)
+  \item Asymptotic variance sometimes difficult to compute (more complex estimators, more complex autocorrelation structure)
+\end{itemize}
+%
+\end{frame}  
+
+\begin{frame}
+ \frametitle{Resampling Methods}
+Idea: use the sample as a population, draw samples from it, apply the estimator and assess its precision
+%
+\begin{description}
+  \item[Jackknife:] leave-one-out samples
+  \item[Bootstrap:] sampling with replacement, might increase precision, less robust
+  \item[Subsampling:] sampling without replacement, generally conservative, very robust
+  \item[Randomization inference:] for RCTs, reshuffle the treatment dummy
+\end{description}
+%
+\end{frame}  
+
+\begin{frame}
+ \frametitle{The Bootstrap}
+Percentile method
+%
+\begin{enumerate}
+  \item Draw a sample $k$ with replacement from the original sample
+  \item Compute the estimator on the bootstrapped sample: $\hat{E}^*_k$
+  \item Repeat $N_{\text{sim}}$ times
+  \item Compute the estimate of sampling noise as follows: $\hat{E}^*_{\frac{1+\delta}{2}}-\hat{E}^*_{\frac{1-\delta}{2}}$
+\end{enumerate}
+%
+Other methods (asymptotically pivotal statistics) bring asymptotic refinements.
+\end{frame}  
+
+\begin{frame}
+ \frametitle{Validity of the Bootstrap}
+%
+\begin{theorem}[Mammen (1992)]\label{th:mammen92}
+Let $\left\{X_i:i=1,\dots,N\right\}$ be a random sample from a population.
+For a sequence of functions $g_N$ and sequences of numbers $t_N$ and $\sigma_N$, define $\bar{g}_N=\frac{1}{N}\sum_{i=1}^Ng_N(X_i)$ and $T_N=(\bar{g}_N-t_N)/\sigma_N$. 
+For the bootstrap sample $\left\{X^*_i:i=1,\dots,N\right\}$, define $\bar{g}^*_N=\frac{1}{N}\sum_{i=1}^Ng_N(X^*_i)$ and $T^*_N=(\bar{g}^*_N-\bar{g}_N)/\sigma_N$. 
+Let $G_N(\tau)=\Pr(T_N\leq\tau)$ and $G^*_N(\tau)=\Pr(T^*_N\leq\tau)$, where this last probability distribution is taken over bootstrap sampling replications.
+Then $G^*_N$ consistently estimates $G_N$ if and only if $T_N\stackrel{d}{\rightarrow}\mathcal{N}(0,1)$.
+\end{theorem}
+%
+\end{frame}  
+
+\begin{frame}
+ \frametitle{Bootstrapped Estimate of Sampling Noise of WW}
+%
+\begin{theorem}[Bootstrapped Estimate of Sampling Noise of WW]\label{th:bootnoiseWW}
+Under Assumptions No Selection Bias, Full Rank, i.i.d. and Finite Variances, for a given confidence level $\delta$ and sample size $N$, the sampling noise of $\hat{WW}$ can be approximated as follows:
+%
+\begin{align*}
+2\epsilon & \approx \hat{E}^*_{\frac{1+\delta}{2}}-\hat{E}^*_{\frac{1-\delta}{2}} \equiv 2\tilde{\epsilon}^b.
+\end{align*}
+%
+\end{theorem}
+%
+\end{frame}  
+
+\begin{frame}
+ \frametitle{Bootstrapped Estimate of Sampling Noise of WW: Illustration}
+ \centering
+\includegraphics[width=0.7\textwidth]{./figure/samp_noise_ww_boot_all-1.pdf}
+\end{frame}   
+
+\begin{frame}
+ \frametitle{Bootstrapped Estimate of Sampling Noise of WW: Illustration}
+ \centering
+\includegraphics[width=0.7\textwidth]{./figure/samp_noise_ww_boot_plot-1.pdf}
+\end{frame}   
+
+\begin{frame}
+ \frametitle{Bootstrapped Estimate of Confidence Intervals of WW: Illustration}
+ \centering
+\includegraphics[width=0.6\textwidth]{./figure/conf_interval_boot-1.pdf}
+\end{frame}   
+
+\begin{frame}
+ \frametitle{Fisher's Exact Permutation Method}
+%
+\begin{enumerate}
+  \item Draw a vector $k$ of treatment indicators at random
+  \item Compute the estimator $\hat{E}$ on the original sample using the new treatment allocation: $\hat{E}^*_k$
+  \item Repeat $N_{\text{sim}}$ times
+  \item Compute the estimate of sampling noise as follows: $\hat{E}^*_{\frac{1+\delta}{2}}-\hat{E}^*_{\frac{1-\delta}{2}}$
+\end{enumerate}
+%
+Provides valid exact (finite sample) distribution of any test statistics under the sharp null assumption of all individual treatment effects are zero.
+\end{frame}  
+
+\begin{frame}
+ \frametitle{Fisher's Based Estimate of Sampling Noise of WW: Illustration}
+ \centering
+\includegraphics[width=0.7\textwidth]{./figure/samp_noise_ww_fisher_all-1.pdf}
+\end{frame}   
+
+\begin{frame}
+ \frametitle{Fisher's Based Estimate of Sampling Noise of WW: Illustration}
+ \centering
+\includegraphics[width=0.7\textwidth]{./figure/samp_noise_ww_fisher_plot-1.pdf}
+\end{frame}   
+
+\begin{frame}
+ \frametitle{Fisher's Based Estimate of Confidence Intervals of WW: Illustration}
+ \centering
+\includegraphics[width=0.6\textwidth]{./figure/conf_interval_fisher-1.pdf}
+\end{frame}   
+
+\subsection{Decreasing Sampling Noise}
+
+\begin{frame}
+ \frametitle{Decreasing Sampling Noise}
+ %
+  \begin{itemize}
+   \item Increasing sample size
+   \item Stratifying
+   \item Conditioning
+  \end{itemize}
+  %
+\end{frame}   
+
+\begin{frame}
+ \frametitle{Increasing Sample Size}
+%
+\begin{corollary}[CLT-based Estimate of Sample Size of WW]\label{th:asympsampsizeWW}
+Under Assumptions No Selection Bias, Full Rank, i.i.d. and Finite Variances, for a given confidence level $\delta$, the sample size needed to reach a level of sampling noise $2\epsilon$ with the $\hat{WW}$ estimator can be approximated as follows:
+%
+\begin{align*}
+N & \approx 4\left(\frac{\Phi^{-1}\left(\frac{\delta+1}{2}\right)}{2\epsilon}\right)^2\left(\frac{\var{Y_i^1|D_i=1}}{\Pr(D_i=1)}+\frac{\var{Y_i^0|D_i=0}}{1-\Pr(D_i=1)}\right) \equiv \tilde{N}.
+\end{align*}
+%
+\end{corollary}
+%
+\end{frame}   
+
+\subsection{The Perils of p-values and Test Statistics}
+
+\subsection{Problems with pvalues}
+
+\begin{frame}
+ \frametitle{The Perils of p-values and Test Statistics}
+%
+\begin{enumerate}
+  \item Test statistics and p-values are not designed for scientific inquiry but for industrial decisions
+  \item Test statistics and p-values give a false cutoff sense of confidence
+  \item Statistically significant treatment effects are biased, all the more so as sampling noise is large
+  \item Marginally significant results have very low signal to noise ratio
+\end{enumerate}
+%
+\end{frame}  
+
+\begin{frame}
+ \frametitle{Statistically Significant Results Are Biased}
+ \centering
+\includegraphics[width=0.6\textwidth]{./figure/pvalues_CLT-1.pdf}
+Ioannidis and coauthors show that 80\% of results in economics are overestimated y a factor of 2.
+\end{frame}   
+
+\begin{frame}
+ \frametitle{Marginally Statistically Significant Results Are Very Noisy}
+%
+\begin{align*}
+ \left|\frac{\hat{\Delta^Y_{WW}}}{\hat{\sigma_{\Delta^Y_{WW}}}}\right| \geq & \Sexpr{round(qnorm(1-0.05/2),2)}\\
+ \Rightarrow  \left|\frac{\hat{\Delta^Y_{WW}}}{2\tilde{\epsilon}}\right|\geq & \Sexpr{round(qnorm(1-0.05/2)/(2*qnorm((delta+1)/2)),2)}
+\end{align*}
+%
+\end{frame}   
+
+<<function.signal.to.noise,eval=TRUE,echo=FALSE,results='hide'>>=
+signal.to.noise <- function(alpha,kappa,delta){
+  return((qnorm(kappa)+qnorm(1-alpha))/(2*qnorm((delta+1)/2)))
+}
+@
+%
+
+\begin{frame}
+ \frametitle{Typically Powered Studies Are Very Noisy}
+%
+\begin{align*}
+  \frac{\beta_A}{2\epsilon} & \approx \frac{\left(\Phi^{-1}\left(\kappa\right)+\Phi^{-1}\left(1-\alpha\right)\right)\sqrt{\var{\hat{E}}}}
+                                            {2\Phi^{-1}\left(\frac{\delta+1}{2}\right)\sqrt{\var{\hat{E}}}} \\
+                            & = \frac{\left(\Phi^{-1}\left(\kappa\right)+\Phi^{-1}\left(1-\alpha\right)\right)}
+                                            {2\Phi^{-1}\left(\frac{\delta+1}{2}\right)}                          
+\end{align*}
+%
+For the usual values for $\alpha$ (0.05) and $\kappa$ (0.8) and a two-sided t-test, the signal to noise ratio for $\delta=$ 0.99 is of \Sexpr{round(signal.to.noise(0.05/2,0.8,0.99),2)}.
+\end{frame}   
+
+\subsubsection{The Consequences of Using pvalues on Science}
+
+\begin{frame}
+ \frametitle{The Consequences of Using pvalues on Science}
+%
+\begin{enumerate}
+  \item Publication bias and replication crisis
+  \item Low-powered studies and imprecise estimates
+\end{enumerate}
+%
+\end{frame}  
+
+\begin{frame}
+ \frametitle{What Are the Margins of Manipulation?}
+ %
+\begin{itemize}
+  \item Choice of specification
+  \item choice of controls
+  \item choice of method
+  \item choice of data
+  \item choice of outcome
+  \item Multiple research teams
+\end{itemize}
+%
+\end{frame}  
+
+\begin{frame}
+ \frametitle{Publication Bias}
+\begin{center}
+\includegraphics[width=.55\textwidth]{figure/Star_Wars_graph}
+\end{center}
+\tiny
+From \href{https://sites.google.com/site/yanoszylberberg/home/Star_Wars.pdf?attredirects=0}{Brodeur et al., "Star Wars: the Empirics Strike Back", forthcoming, AEJ: Applied}.
+\normalsize
+\end{frame}  
+
+\begin{frame}
+ \frametitle{Publication Bias (continued)}
+\begin{center}
+\includegraphics[width=.95\textwidth]{figure/ioannidis}\\
+\includegraphics[width=.95\textwidth]{figure/simmons_PS}
+\end{center}
+
+See also the excellent discussion on the \href{http://marginalrevolution.com/marginalrevolution/2005/09/why_most_publis.html}{Marginal Revolution blog}.
+\end{frame}  
+
+\begin{frame}
+ \frametitle{Replication problem}
+\begin{center}
+\includegraphics[width=.65\textwidth]{figure/kahneman_crisis}
+\end{center}
+\end{frame}  
+
+\begin{frame}
+ \frametitle{Imprecise studies}
+\begin{center}
+\includegraphics[width=.65\textwidth]{./figure/power_smaldino.jpg}
+\end{center}
+\end{frame}  
+
+\subsubsection{What to do?}
+
+\begin{frame}
+ \frametitle{What to do?}
+ %
+\begin{enumerate}
+  \item Ban p-values and significance testing
+  \item Decrease samling noise
+  \item Register pre-analysis plans, for example on the \href{https://www.socialscienceregistry.org/}{AEA website}.
+  \item Use blind data analysis (see this \href{http://www.nature.com/news/how-scientists-fool-themselves-and-how-they-can-stop-1.18517}{excellent article})
+  \item Do robustness checks
+  \item Do a Meta-Analysis
+  \item Reproduce results
+\end{enumerate}
+%
+\end{frame}  
+
+\begin{frame}
+ \frametitle{Ban pvalues}
+\begin{center}
+\includegraphics[width=.95\textwidth]{figure/ban_pvalues}
+\end{center}
+At least, report confidence intervals and compute signal to noise ratio for your results.
+\end{frame}  
+
+\begin{frame}
+ \frametitle{Meta-analysis Funnel Graphs Without publication Bias}
+\begin{center}
+\includegraphics[width=.45\textwidth]{./figure/funnel_nobias.jpg}
+\includegraphics[width=.45\textwidth]{./figure/funnel_nobias2.jpg}
+\end{center}
+\end{frame}  
+
+\begin{frame}
+ \frametitle{Meta-analysis Funnel Graphs With publication Bias}
+\begin{center}
+\includegraphics[width=0.9\textwidth]{./figure/funnel_bias.jpg}
+\end{center}
+\end{frame}  
+
+\begin{frame}
+\frametitle{Exercises}
+%
+\begin{enumerate}
+  \item Estimate Cheyshev's upper bound on precision in generated data
+  \item Estimate CLT-based approximation to sampling noise in generated data
+  \item Estimate bootstrapped approximation to sampling noise in generated data
+  \item Estimate Fisher-based approximation to sampling noise in generated data
+  \item Follow the same steps in the treatment arm of your RCT
+  \item Advanced: for those who fill like it, look at what happens when the treatment effect is in levels, not logs (Use Monte Carlos). 
+  CLT should perform less well in small samples.
+\end{enumerate}
+%
+\end{frame}
+
+
+
+\end{document}
